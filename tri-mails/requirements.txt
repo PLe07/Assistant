@@ -1,0 +1,6 @@
+# Dépendances du module de tri des mails (Python 3.10 minimum)
+anthropic>=1.11,<2              # parler à Claude
+google-api-python-client>=2.200,<3  # parler à Gmail (lire, étiqueter)
+google-auth-oauthlib>=1.5,<2    # fenêtre « Se connecter avec Google » (1re fois)
+google-auth-httplib2>=0.4,<1    # transporte le jeton Google à chaque échange
+python-dotenv>=1.2,<2           # lit les secrets du fichier .env
