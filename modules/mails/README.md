@@ -31,8 +31,8 @@ cd ~/Assistant && source .venv/bin/activate
 |---|---|
 | Savoir si le tri tourne | `python -m modules.mails --etat` (et `python assistant.py etat`) |
 | Voir ce qui a été trié | `python assistant.py journal` (lignes `[mails]`) |
-| **Mettre tout l'assistant en pause** | Icône → *Tout mettre en pause*, ou `python assistant.py pause` |
-| Arrêter seulement le tri | `reglages.json` → `modules.mails.actif` : `false` |
+| **Mettre tout l’assistant en pause** | Icône → *Tout mettre en pause*, ou `python assistant.py pause` |
+| Arrêter seulement le tri | `python assistant.py desactiver mails` (et `activer mails` pour le relancer) |
 | Trier tout de suite, sans attendre | `python -m modules.mails --reel` |
 | Tester un réglage sans rien modifier | `python -m modules.mails --test 20` |
 
@@ -64,7 +64,7 @@ Le journal détaillé est dans `logs/assistant.log` (lignes `[mails]`).
 
 ## Tout retirer proprement
 
-1. `reglages.json` → `modules.mails.actif` : `false` (ou `python service.py desinstaller` pour tout l'assistant)
+1. `python assistant.py desactiver mails` (ou `python service.py desinstaller` pour tout l'assistant)
 2. Retirer l'accès Gmail : <https://myaccount.google.com/permissions> (ligne « Tri mails »)
 3. Révoquer le jeton Claude : <https://claude.ai/settings/claude-code>
 4. Les étiquettes restent dans Gmail : supprime-les dans *Paramètres → Libellés*

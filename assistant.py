@@ -8,6 +8,8 @@
     python assistant.py test-claude     un tout petit appel à Claude (modèles rapide et fort)
     python assistant.py test-plantage   fait planter le module « battement » une fois (test de relance)
     python assistant.py renouveler-jeton  nouveau jeton Claude (il dure 1 an), enregistré sans l'afficher
+    python assistant.py activer mails     active un module (il démarre dans les 2 secondes)
+    python assistant.py desactiver mails  désactive un module (il s'arrête dans les 2 secondes)
 """
 
 import argparse
@@ -141,6 +143,24 @@ def renouveler_jeton() -> int:
     return 0
 
 
+def _module_existe(nom: str) -> bool:
+    dossier = config.RACINE / "modules"
+    return (dossier / f"{nom}.py").exists() or (dossier / nom / "__main__.py").exists()
+
+
+def changer_module(nom: str | None, actif: bool) -> int:
+    if not nom:
+        print("Précise le module, par exemple :  python assistant.py activer mails")
+        return 2
+    if actif and not _module_existe(nom):
+        print(f"⛔ Module « {nom} » introuvable dans modules/.")
+        return 1
+    config.activer_module(nom, actif)
+    print(f"✅ Module « {nom} » {'activé : il démarre' if actif else 'désactivé : il s’arrête'} dans les 2 secondes"
+          + (" (sauf pause globale)." if actif else "."))
+    return 0
+
+
 def main() -> int:
     actions = {
         "pause": pause, "reprendre": reprendre, "etat": afficher_etat, "journal": journal,
@@ -148,8 +168,12 @@ def main() -> int:
         "renouveler-jeton": renouveler_jeton,
     }
     parser = argparse.ArgumentParser(description="Commandes de l'assistant")
-    parser.add_argument("action", choices=actions)
-    return actions[parser.parse_args().action]()
+    parser.add_argument("action", choices=[*actions, "activer", "desactiver"])
+    parser.add_argument("module", nargs="?", help="pour activer / desactiver : le nom du module")
+    args = parser.parse_args()
+    if args.action in ("activer", "desactiver"):
+        return changer_module(args.module, args.action == "activer")
+    return actions[args.action]()
 
 
 if __name__ == "__main__":

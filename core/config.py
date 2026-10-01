@@ -133,9 +133,9 @@ def ecrire(reglages: dict) -> None:
     os.replace(temporaire, FICHIER_REGLAGES)
 
 
-def mettre_en_pause(pause: bool) -> None:
-    """L'interrupteur maître. Fonctionne même si tu as cassé reglages.json en l'éditant :
-    ta version est alors mise de côté (reglages.json.casse-…), jamais effacée."""
+def _modifier(changement) -> None:
+    """Change une valeur de reglages.json sans toucher au reste. Fonctionne même si tu as
+    cassé le fichier en l'éditant : ta version est mise de côté (reglages.json.casse-…), jamais effacée."""
     try:
         perso = json.loads(FICHIER_REGLAGES.read_text(encoding="utf-8")) if FICHIER_REGLAGES.exists() else {}
         if not isinstance(perso, dict):
@@ -144,5 +144,21 @@ def mettre_en_pause(pause: bool) -> None:
         copie = FICHIER_REGLAGES.with_name(f"reglages.json.casse-{time.strftime('%Y%m%d-%H%M%S')}")
         FICHIER_REGLAGES.rename(copie)
         perso = copy.deepcopy(_dernier_valide or DEFAUTS)
-    perso["pause_globale"] = pause
+    changement(perso)
     ecrire(perso)
+
+
+def mettre_en_pause(pause: bool) -> None:
+    """L'interrupteur maître : fonctionne toujours, même avec un fichier cassé."""
+    _modifier(lambda perso: perso.__setitem__("pause_globale", pause))
+
+
+def activer_module(nom: str, actif: bool) -> None:
+    def changement(perso: dict) -> None:
+        if not isinstance(perso.get("modules"), dict):
+            perso["modules"] = {}
+        if not isinstance(perso["modules"].get(nom), dict):
+            perso["modules"][nom] = {}
+        perso["modules"][nom]["actif"] = actif
+
+    _modifier(changement)
