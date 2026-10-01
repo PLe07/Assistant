@@ -23,6 +23,11 @@ class Micro:
     def __enter__(self):
         import sounddevice as sd
 
+        try:  # relit la liste des micros : l'un a pu être branché, débranché ou changé depuis
+            sd._terminate()
+            sd._initialize()
+        except Exception:
+            pass
         self.flux = sd.InputStream(samplerate=p.TAUX, channels=1, dtype="float32", blocksize=p.BLOC,
                                    device=self.appareil, callback=self._recevoir)
         self.flux.start()
