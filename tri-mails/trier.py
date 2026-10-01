@@ -231,6 +231,12 @@ def passage_reel(memoire: Memoire, log: logging.Logger, arriere_plan: bool, ratt
     return bilan
 
 
+def _echec(memoire: Memoire, log: logging.Logger, niveau: int, message: str) -> int:
+    log.log(niveau, "%s", message)
+    memoire.ecrire("derniere_erreur", f"{time.time()}|{message}")
+    return 1
+
+
 def mode_reel(arriere_plan: bool, rattrapage_heures: float) -> int:
     log = _journal(console=not arriere_plan)
     if config.FICHIER_PAUSE.exists():
@@ -248,15 +254,13 @@ def mode_reel(arriere_plan: bool, rattrapage_heures: float) -> int:
             if arriere_plan and pause and time.time() < float(pause):
                 return 0  # Claude était en panne il y a peu : on le laisse souffler
             bilan = passage_reel(memoire, log, arriere_plan, rattrapage_heures)
+            memoire.ecrire("dernier_passage_ok", time.time())  # lu par « python service.py etat »
         except (ConnexionImpossible, MauvaiseBoite) as e:
-            log.error("%s", e)
-            return 1
+            return _echec(memoire, log, logging.ERROR, str(e))
         except HttpError as e:
-            log.error("Gmail a répondu une erreur (%s) : %s", e.status_code, e.reason)
-            return 1
+            return _echec(memoire, log, logging.ERROR, f"Gmail a répondu une erreur ({e.status_code}) : {e.reason}")
         except OSError as e:
-            log.warning("Problème réseau, nouvel essai au prochain passage : %s", e)
-            return 1
+            return _echec(memoire, log, logging.WARNING, f"Problème réseau, nouvel essai au prochain passage : {e}")
         finally:
             memoire.fermer()
 
