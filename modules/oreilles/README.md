@@ -50,8 +50,9 @@ Toujours d'abord : `cd ~/Assistant && source .venv/bin/activate`
 | `micro` | `null` ou un numéro | Le micro à utiliser (voir `--micros`) |
 | `modele_transcription` | `"small"` | `"base"` : plus léger, moins précis |
 
-`niveau_proactivite` (en haut du fichier) règle l'exigence : 0 = jamais d'appel à Claude,
-1 = 2 vérifications/heure et confiance ≥ 90, 2 = 4/heure et ≥ 80, 3 = 8/heure et ≥ 70.
+`niveau_proactivite` (en haut du fichier) règle l'exigence : 0 = aucune initiative (seul
+« Assistant, … » est pris en compte), 1 = 2 vérifications/heure et confiance ≥ 90,
+2 = 4/heure et ≥ 80, 3 = 8/heure et ≥ 70. « Assistant, … » passe toujours (sauf pause).
 
 Tes propres déclencheurs : une phrase par ligne dans `donnees/oreilles/declencheurs.txt`
 (ex. « déclaration d'impôts »).

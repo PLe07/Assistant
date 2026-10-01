@@ -2,9 +2,10 @@
 
     python menubar.py
 
-🟢 tout va bien · 🎙 micro ouvert · 💡 une aide t'attend · ⏸ en pause · ⚠️ un module a un problème
-· ⚪ superviseur arrêté.
-Le menu permet de tout mettre en pause ou de couper le micro d'un clic. Quitter l'icône
+🟢 tout va bien · 🎙 micro ouvert · 👁 écran observé · 💡 une aide t'attend · ⏸ en pause
+· ⚠️ un module a un problème · ⚪ superviseur arrêté.
+Le menu permet de tout mettre en pause, de couper le micro ou l'écran d'un clic, et de demander
+de l'aide sur la fenêtre que tu as sous les yeux. Quitter l'icône
 n'arrête PAS l'assistant : pour ça, utilise « Tout mettre en pause ».
 """
 
@@ -23,7 +24,10 @@ PAUSE = "⏸  Tout mettre en pause"
 REPRENDRE = "▶️  Reprendre"
 COUPER_MICRO = "🎙  Couper le micro"
 RALLUMER_MICRO = "🎙  Rallumer le micro (coupé)"
-SYMBOLES_AIDE = {"proposee": "💡", "demandee": "⏳", "prete": "✅"}
+COUPER_ECRAN = "👁  Couper l'écran"
+RALLUMER_ECRAN = "👁  Rallumer l'écran (coupé)"
+AIDE_ECRAN = "👁  M'aider avec cet écran"
+SYMBOLES_AIDE = {"proposee": "💡", "demandee": "⏳", "a_capturer": "⏳", "prete": "✅"}
 
 
 def _cacher_du_dock() -> None:
@@ -43,6 +47,7 @@ class Icone(rumps.App):
         self.ligne_jour = rumps.MenuItem("…")
         self.bouton_pause = rumps.MenuItem(PAUSE, callback=self.basculer_pause)
         self.bouton_micro = rumps.MenuItem(COUPER_MICRO, callback=self.basculer_micro)
+        self.bouton_ecran = rumps.MenuItem(COUPER_ECRAN, callback=self.basculer_ecran)
         self.aides = rumps.MenuItem("💡 Aides")
         self.sous_menu = rumps.MenuItem("Modules")
         self.attendues: set[int] = set()  # aides demandées depuis l'icône, en cours de rédaction
@@ -52,7 +57,9 @@ class Icone(rumps.App):
             None,
             self.bouton_pause,
             self.bouton_micro,
+            self.bouton_ecran,
             None,
+            rumps.MenuItem(AIDE_ECRAN, callback=self.aide_ecran),
             self.aides,
             self.sous_menu,
             rumps.MenuItem("Notification de test", callback=self.test_notif),
@@ -83,6 +90,7 @@ class Icone(rumps.App):
         self.ligne_jour.title = f"Aujourd'hui : {envoyees} notif · Claude {appels}/{plafond}"
         self.bouton_pause.title = REPRENDRE if r["pause"] else PAUSE
         self.bouton_micro.title = RALLUMER_MICRO if r["pause_micro"] else COUPER_MICRO
+        self.bouton_ecran.title = RALLUMER_ECRAN if r["pause_ecran"] else COUPER_ECRAN
 
         self.aides.clear()
         for a in r["aides"]:
@@ -113,6 +121,25 @@ class Icone(rumps.App):
         coupe = not config.charger()["pause_micro"]
         config.mettre_capteur_en_pause("micro", coupe)
         log.info("Micro %s depuis l'icône", "coupé" if coupe else "rallumé")
+        self.rafraichir()
+
+    def basculer_ecran(self, _) -> None:
+        coupe = not config.charger()["pause_ecran"]
+        config.mettre_capteur_en_pause("ecran", coupe)
+        log.info("Écran %s depuis l'icône", "coupé" if coupe else "rallumé")
+        self.rafraichir()
+
+    def aide_ecran(self, _) -> None:
+        """La fenêtre que tu as sous les yeux est lue par le module « yeux », puis Claude t'aide."""
+        r = etat.resume()
+        yeux = next((m for m in r["modules"] if m["nom"] == "yeux"), None)
+        if r["pause"] or r["pause_ecran"] or yeux is None or yeux["statut"] != "actif":
+            rumps.alert(title="👁 Les yeux ne sont pas actifs",
+                        message="L'écran est coupé, en pause ou le module « yeux » est désactivé.\n"
+                                "Pour l'activer :  python assistant.py activer yeux", ok="Fermer")
+            return
+        self.attendues.add(etat.demander_capture("yeux"))  # la fenêtre de l'aide s'ouvrira toute seule
+        log.info("Aide demandée sur l'écran depuis l'icône")
         self.rafraichir()
 
     def ouvrir_aide(self, item) -> None:

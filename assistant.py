@@ -9,6 +9,7 @@
     python assistant.py test-plantage   fait planter le module « battement » une fois (test de relance)
     python assistant.py renouveler-jeton  nouveau jeton Claude (il dure 1 an), enregistré sans l'afficher
     python assistant.py micro off         COUPE le micro tout de suite (micro on pour le rallumer)
+    python assistant.py ecran off         COUPE l'écran tout de suite (ecran on pour le rallumer)
     python assistant.py activer mails     active un module (il démarre dans les 2 secondes)
     python assistant.py desactiver mails  désactive un module (il s'arrête dans les 2 secondes)
 """
@@ -45,6 +46,11 @@ def afficher_etat() -> int:
               else f" · son reçu il y a {int(son)} s" if son < 30
               else f" · ⚠️ AUCUN son reçu depuis {int(son // 60)} min (autorisation macOS ?)")
     print("   🎙 Micro : " + ("ouvert (écoute en cours)" if r["micro_actif"] else "coupé" if r["pause_micro"] else "fermé") + detail)
+    vu = r["ecran_regard"]
+    detail = ("" if not r["ecran_actif"] else f" · mode {r['mode_yeux']}" + (
+        " · démarrage…" if vu is None else f" · dernier coup d'œil il y a {int(vu)} s" if vu < 120
+        else " · en veille (absent, écran verrouillé ou appli exclue)"))
+    print("   👁 Écran : " + ("observé" if r["ecran_actif"] else "coupé" if r["pause_ecran"] else "non observé") + detail)
     if r["aides"]:
         print(f"   💡 {len(r['aides'])} aide(s) t'attendent dans le menu de l'icône")
     if r["modules"]:
@@ -151,6 +157,16 @@ def renouveler_jeton() -> int:
     return 0
 
 
+def ecran(valeur: str | None) -> int:
+    if valeur not in ("on", "off"):
+        print("Utilise :  python assistant.py ecran off  (couper)  ou  ecran on  (rallumer)")
+        return 2
+    config.mettre_capteur_en_pause("ecran", valeur == "off")
+    print("👁  Écran coupé : plus aucun coup d'œil dans les 2 secondes." if valeur == "off"
+          else "👁  Écran rallumé : l'observation reprend dans les 2 secondes (si le module yeux est activé).")
+    return 0
+
+
 def micro(valeur: str | None) -> int:
     if valeur not in ("on", "off"):
         print("Utilise :  python assistant.py micro off  (couper)  ou  micro on  (rallumer)")
@@ -186,11 +202,13 @@ def main() -> int:
         "renouveler-jeton": renouveler_jeton,
     }
     parser = argparse.ArgumentParser(description="Commandes de l'assistant")
-    parser.add_argument("action", choices=[*actions, "activer", "desactiver", "micro"])
-    parser.add_argument("module", nargs="?", help="activer / desactiver : le module ; micro : on ou off")
+    parser.add_argument("action", choices=[*actions, "activer", "desactiver", "micro", "ecran"])
+    parser.add_argument("module", nargs="?", help="activer / desactiver : le module ; micro, ecran : on ou off")
     args = parser.parse_args()
     if args.action == "micro":
         return micro(args.module)
+    if args.action == "ecran":
+        return ecran(args.module)
     if args.action in ("activer", "desactiver"):
         return changer_module(args.module, args.action == "activer")
     return actions[args.action]()

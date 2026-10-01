@@ -1,10 +1,10 @@
 """Le micro (sounddevice). Le son passe par une petite file en mémoire (6 secondes au plus)."""
 
 import queue
-import subprocess
 
 import numpy as np
 
+from core.mac import sur_secteur  # noqa: F401 (utilisé par l'écoute)
 from modules.oreilles import parametres as p
 
 
@@ -46,12 +46,3 @@ def lister_micros() -> list[str]:
     import sounddevice as sd
 
     return [f"{i} : {d['name']}" for i, d in enumerate(sd.query_devices()) if d["max_input_channels"] > 0]
-
-
-def sur_secteur() -> bool:
-    """True si le Mac est branché (en cas de doute, on considère qu'il l'est)."""
-    try:
-        sortie = subprocess.run(["pmset", "-g", "batt"], capture_output=True, text=True, timeout=5).stdout
-    except (OSError, subprocess.TimeoutExpired):
-        return True
-    return "Battery Power" not in sortie
