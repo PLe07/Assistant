@@ -17,6 +17,7 @@ import time
 
 import numpy as np
 
+from core import config, etat
 from core.journal import journal
 from core.module import executer
 from core.notifications import notifier
@@ -64,14 +65,26 @@ def ecouter(ctx_arret, log, ecoute, interactif: bool = False) -> None:
                     controle = time.time()
                     ecoute.servir_demandes()
                     ecoute.oublier()
+                    if interactif:
+                        if _micro_interdit():
+                            print("\n⏸  Micro coupé (pause ou bouton de l'icône) : test arrêté.")
+                            ctx_arret.set()
+                            break
+                        etat.ecrire("micro_test", time.time())  # 🎙 sur l'icône pendant le test aussi
                     if p.reglage("uniquement_sur_secteur", False) and not sur_secteur():
                         break
         decoupeur.vider()
+        if interactif:
+            etat.effacer("micro_test")
         log.info("Écoute arrêtée (micro fermé)")
 
 
+def _micro_interdit() -> bool:
+    r = config.charger()
+    return r["pause_globale"] or r["pause_micro"]
+
+
 def boucle(ctx) -> None:
-    from core import etat
     from modules.oreilles.ecoute import Ecoute
 
     # Si l'écoute précédente a été coupée net, ses aides en attente ne peuvent plus être rédigées.
@@ -89,6 +102,9 @@ def mode_test(avec_claude: bool) -> int:
 
     from modules.oreilles.ecoute import Ecoute
 
+    if _micro_interdit():
+        print("⏸  Le micro est coupé (pause globale ou « micro off ») : rallume-le d'abord.")
+        return 1
     print("MODE TEST : rien n'est enregistré, aucune notification." + (" Claude est consulté (quota)." if avec_claude else ""))
     print("Chargement du modèle de transcription…")
     ecoute = Ecoute(journal("oreilles"), test=True, avec_claude=avec_claude)
@@ -139,7 +155,7 @@ def main(argv: list[str]) -> int:
         from modules.oreilles.transcription import Transcripteur
 
         print("Téléchargement du modèle (une seule fois, quelques minutes)…")
-        Transcripteur(p.reglage("modele_transcription", "small")).charger()
+        Transcripteur(p.reglage("modele_transcription", "small")).charger(telecharger=True)
         print(f"✅ Modèle prêt dans {p.MODELES}")
         return 0
     if args.phrase is not None:

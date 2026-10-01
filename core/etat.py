@@ -230,12 +230,14 @@ def resume() -> dict:
             (debut_du_jour(),),
         ).fetchone()
     appels, tokens_entree, tokens_sortie = appels_aujourdhui()
-    micro_actif = any(m["statut"] == "actif" and config.CAPTEURS.get(m["nom"]) == "micro" for m in mods)
+    test = lire("micro_test")  # le mode test (python -m modules.oreilles --test) ouvre aussi le micro
+    micro_actif = (any(m["statut"] == "actif" and config.CAPTEURS.get(m["nom"]) == "micro" for m in mods)
+                   or (test is not None and time.time() - float(test) < 5))
     aides = [a for a in aides_recentes(time.time() - 2 * 3600) if not a["vue"] and a["statut"] in ("proposee", "demandee", "prete")]
     if reglages["pause_globale"]:
         icone = "⏸"
     elif not superviseur_actif:
-        icone = "⚪"
+        icone = "🎙" if micro_actif else "⚪"
     else:
         # 🎙 reste toujours visible quand le micro est ouvert, même s'il y a une aide ou une erreur.
         icone = ("🎙" if micro_actif else "") + ("⚠️" if en_erreur else "") + ("💡" if aides else "") or "🟢"

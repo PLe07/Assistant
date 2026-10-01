@@ -16,13 +16,21 @@ class Transcripteur:
         self.nom = modele
         self.modele = None
 
-    def charger(self) -> None:
-        """Charge le modèle (le télécharge la toute première fois, environ 460 Mo pour « small »)."""
+    def charger(self, telecharger: bool = False) -> None:
+        """Charge le modèle depuis le disque, sans aucune connexion à Internet.
+        telecharger=True (commande --telecharger) : le récupère une fois, environ 460 Mo pour « small »."""
         if self.modele is None:
             from faster_whisper import WhisperModel
 
             p.MODELES.mkdir(parents=True, exist_ok=True)
-            self.modele = WhisperModel(self.nom, device="cpu", compute_type="int8", download_root=str(p.MODELES))
+            try:
+                self.modele = WhisperModel(self.nom, device="cpu", compute_type="int8", download_root=str(p.MODELES),
+                                           local_files_only=not telecharger)
+            except Exception as e:
+                if telecharger:
+                    raise
+                raise RuntimeError(f"Modèle de transcription « {self.nom} » absent : lance  "
+                                   "python -m modules.oreilles --telecharger") from e
 
     @staticmethod
     def contient_de_la_voix(audio: np.ndarray) -> bool:
