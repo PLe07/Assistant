@@ -52,6 +52,7 @@ Toujours d'abord : `cd ~/Assistant && source .venv/bin/activate`
 | Voir en direct ce qui déclencherait | `python -m modules.yeux --test --rapide` (Ctrl + C pour arrêter) |
 | Tester un texte, sans capture | `python -m modules.yeux --texte "Erreur : fichier introuvable"` |
 | Passer en vraies aides / revenir au journal | `python -m modules.yeux --mode reel` / `--mode journal` |
+| **Essai guidé, en vrai** (bouton, erreur à l'écran, couper l'écran) | `python -m modules.yeux --essai` |
 | Voir ce qui aurait déclenché | `grep "Aurait déclenché" logs/assistant.log` |
 
 ## Réglages (`reglages.json` → `modules` → `yeux`)

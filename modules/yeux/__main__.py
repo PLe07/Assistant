@@ -11,6 +11,7 @@ Sous le superviseur (sans option) : observe en fond, rien n'est conservé.
                                                     sans notification (--rapide : délais divisés par 10)
     python -m modules.yeux --texte "Erreur : …" [--avec-claude]   teste un texte, sans capture
     python -m modules.yeux --mode journal|reel      journal : note ce qui aurait déclenché, sans appeler Claude
+    python -m modules.yeux --essai                  essai guidé, en vrai : bouton, erreur à l'écran, couper l'écran
 """
 
 import argparse
@@ -248,6 +249,7 @@ def main(argv: list[str]) -> int:
     modes.add_argument("--test", action="store_true", help="en direct, sans rien déclencher")
     modes.add_argument("--texte", help="teste un texte, sans capture")
     modes.add_argument("--mode", choices=["journal", "reel"], help="journal (sans Claude) ou reel")
+    modes.add_argument("--essai", action="store_true", help="essai guidé, en vrai, de bout en bout")
     parser.add_argument("--delai", type=int, default=5, help="--une-fois : secondes pour changer de fenêtre")
     parser.add_argument("--rapide", action="store_true", help="--test : délais divisés par 10")
     parser.add_argument("--avec-claude", action="store_true", help="montre aussi l'avis de Claude (quota)")
@@ -260,6 +262,10 @@ def main(argv: list[str]) -> int:
         return tester_texte(args.texte, args.avec_claude)
     if args.mode:
         return changer_mode(args.mode)
+    if args.essai:
+        from modules.yeux.essai import essai
+
+        return essai()
     return mode_test(args.rapide, args.avec_claude)
 
 
