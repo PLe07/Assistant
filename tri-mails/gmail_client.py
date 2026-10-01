@@ -344,3 +344,15 @@ def creer_etiquette(service, nom: str, fond: str, texte: str) -> str:
             raise
         corps.pop("color")  # couleur refusée par Gmail : on crée quand même, sans couleur
         return service.users().labels().create(userId="me", body=corps).execute()["id"]
+
+
+# --- Application d'un bac (mode réel) --------------------------------------------
+
+
+def appliquer_bac(service, msg_id: str, id_etiquette: str, archiver: bool) -> None:
+    """Pose UNE étiquette et, si demandé, sort le mail de la boîte de réception.
+
+    C'est la seule modification possible : pas de corbeille, pas de spam, pas de suppression.
+    """
+    corps = {"addLabelIds": [id_etiquette], "removeLabelIds": ["INBOX"] if archiver else []}
+    service.users().messages().modify(userId="me", id=msg_id, body=corps).execute()

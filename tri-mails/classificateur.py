@@ -38,6 +38,8 @@ class Classement:
 class Resultat:
     classements: dict = field(default_factory=dict)  # id du mail → Classement
     erreurs: list = field(default_factory=list)
+    non_tentes: set = field(default_factory=set)  # pas envoyés à Claude (panne) : à retenter
+    indisponible: bool = False
     appels: int = 0
     tokens_entree: int = 0
     tokens_sortie: int = 0
@@ -266,6 +268,8 @@ def classer(mails: list[Mail], au_fil=None) -> Resultat:
             classements, usage = classer_lot(lot, systeme)
         except ClaudeIndisponible as e:
             res.erreurs.append(str(e))
+            res.indisponible = True
+            res.non_tentes.update(m.id for reste in lots[n - 1 :] for m in reste)
             break  # inutile d'insister : on réessaiera au prochain passage
         except ReponseInvalide as e:
             res.erreurs.append(f"Lot {n} : {e}")

@@ -47,6 +47,15 @@ DELAI_CLAUDE_SECONDES = 180
 FICHIER_PROMPT = DOSSIER / "prompt_classification.md"
 FICHIER_REGLES_PERSO = DOSSIER / "regles_perso.txt"  # local, jamais sur GitHub
 
+# --- Mode réel ----------------------------------------------------------------
+
+RATTRAPAGE_PREMIER_PASSAGE_HEURES = 24  # 1er passage : trie aussi les mails des dernières 24 h
+MAX_PAR_PASSAGE = 50  # au-delà, la suite est traitée au passage suivant
+TENTATIVES_MAX = 3  # mail que Claude n'arrive pas à classer : laissé tel quel après 3 essais
+PAUSE_APRES_PANNE_MINUTES = 15  # Claude indisponible : on attend avant de réessayer
+FICHIER_PAUSE = DOSSIER / "PAUSE"  # s'il existe, le tri ne fait rien
+DOSSIER_LOGS = DOSSIER / "logs"
+
 # --- Pré-tri gratuit (sans appeler Claude) ----------------------------------
 # Un expéditeur cité dans regles_perso.txt passe toujours par Claude.
 
