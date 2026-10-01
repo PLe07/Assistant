@@ -23,9 +23,12 @@ FICHIER_REGLAGES = RACINE / "reglages.json"
 load_dotenv(RACINE / ".env")
 
 NIVEAUX_PROACTIVITE = {0: "muet", 1: "discret", 2: "normal", 3: "présent"}
+CAPTEURS = {"oreilles": "micro", "yeux": "ecran"}  # modules coupés par « pause micro » / « pause écran »
 
 DEFAUTS = {
     "pause_globale": False,
+    "pause_micro": False,
+    "pause_ecran": False,
     "niveau_proactivite": 2,
     "heures_silencieuses": {"debut": "22:30", "fin": "07:30"},
     "claude": {"modele_rapide": "haiku", "modele_fort": "sonnet", "appels_max_par_jour": 60},
@@ -39,7 +42,14 @@ DEFAUTS = {
             "regle_r2_reseaux_sociaux": True,
             "rattrapage_premier_passage_heures": 24,
         },
-        "oreilles": {"actif": False},
+        "oreilles": {
+            "actif": False,
+            "mode": "passif",
+            "mot_appel": "assistant",
+            "modele_transcription": "small",
+            "uniquement_sur_secteur": False,
+            "micro": None,
+        },
         "yeux": {"actif": False, "applis_exclues": ["Banque", "1Password", "Messages", "WhatsApp"]},
     },
 }
@@ -66,8 +76,9 @@ def _nettoyer(r: dict, erreurs: list) -> dict:
         erreurs.append(f"{chemin} : {attendu} (valeur lue : {lu!r}), j'utilise {defaut!r}")
         return copy.deepcopy(defaut)
 
-    if not isinstance(r["pause_globale"], bool):
-        r["pause_globale"] = remettre("pause_globale", r["pause_globale"], False, "true ou false attendu")
+    for cle in ("pause_globale", "pause_micro", "pause_ecran"):
+        if not isinstance(r[cle], bool):
+            r[cle] = remettre(cle, r[cle], False, "true ou false attendu")
     n = r["niveau_proactivite"]
     if isinstance(n, bool) or n not in NIVEAUX_PROACTIVITE:
         r["niveau_proactivite"] = remettre("niveau_proactivite", n, 2, "0, 1, 2 ou 3 attendu")
@@ -151,6 +162,11 @@ def _modifier(changement) -> None:
 def mettre_en_pause(pause: bool) -> None:
     """L'interrupteur maître : fonctionne toujours, même avec un fichier cassé."""
     _modifier(lambda perso: perso.__setitem__("pause_globale", pause))
+
+
+def mettre_capteur_en_pause(capteur: str, pause: bool) -> None:
+    """« micro » ou « ecran » : coupe (ou rallume) les modules qui l'utilisent."""
+    _modifier(lambda perso: perso.__setitem__(f"pause_{capteur}", pause))
 
 
 def activer_module(nom: str, actif: bool) -> None:
