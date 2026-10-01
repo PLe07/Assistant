@@ -135,19 +135,23 @@ def _capturer_cg(id_fenetre: int):
                                           id_fenetre, Quartz.kCGWindowImageBoundsIgnoreFraming)
 
 
+_ORDRE = ["ScreenCaptureKit", "CoreGraphics"]  # la méthode qui vient de marcher passe en premier
+
+
 def capturer(id_fenetre: int, methode: str | None = None):
     """(image en mémoire, méthode utilisée) ou (None, raison)."""
-    essais = [("ScreenCaptureKit", _capturer_sck), ("CoreGraphics", _capturer_cg)]
+    fonctions = {"ScreenCaptureKit": _capturer_sck, "CoreGraphics": _capturer_cg}
     erreurs = []
-    for nom, fonction in essais:
-        if methode and nom != methode:
-            continue
+    for nom in [methode] if methode else list(_ORDRE):
         try:
-            image = fonction(id_fenetre)
+            image = fonctions[nom](id_fenetre)
         except Exception as e:  # méthode absente sur cette version de macOS…
             erreurs.append(f"{nom} : {type(e).__name__}")
             continue
         if image is not None:
+            if not methode and _ORDRE[0] != nom:  # pas d'attente inutile au prochain coup d'œil
+                _ORDRE.remove(nom)
+                _ORDRE.insert(0, nom)
             return image, nom
         erreurs.append(f"{nom} : rien reçu")
     return None, " · ".join(erreurs)

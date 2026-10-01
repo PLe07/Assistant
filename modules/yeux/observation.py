@@ -29,6 +29,13 @@ class Observation(Assistance):
         self.capteur = capteur or Capteur()
         self.detecteur = detecteur or Detecteur()
         self.capture_en_echec = False
+        self.dernier_message = ""
+
+    def annoncer(self, message: str) -> None:
+        """Mode test : n'affiche pas dix fois de suite la même ligne."""
+        if message != self.dernier_message:
+            self.dernier_message = message
+            self.afficher(message)
 
     def decider(self, extrait_):
         return aide.decider(extrait_)
@@ -52,10 +59,10 @@ class Observation(Assistance):
         raison = exclue(f, p.applis_exclues(), p.titres_exclus())
         if raison:
             if self.test:
-                self.afficher(f"🙈 {f['appli']} : {raison}, rien n'est capturé")
+                self.annoncer(f"🙈 {f['appli']} : {raison}, rien n'est capturé")
             return
         if self.test and f["appli"] in TERMINAUX:  # il se lirait lui-même
-            self.afficher(f"·  {f['appli']} ignoré pendant le test : passe sur la fenêtre à tester")
+            self.annoncer(f"·  {f['appli']} ignoré pendant le test : passe sur la fenêtre à tester")
             return
         lignes = self._lire(f)
         if lignes is None:
@@ -64,7 +71,7 @@ class Observation(Assistance):
         declenchements = self.detecteur.analyser(f"{f['appli']}|{f['titre']}", lignes, lire_perso(p.FICHIER_DECLENCHEURS))
         if self.test:
             attente = ", ".join(f"{t} dans {s} s" for t, s in self.detecteur.en_cours()) or "aucun signal"
-            self.afficher(f"👁  {f['appli']} · {len(lignes)} lignes lues · {attente}")
+            self.annoncer(f"👁  {f['appli']} · {len(lignes)} lignes lues · {attente}")
         for d in declenchements:
             texte = f"Signal repéré : {d.type}\n{extrait(f, lignes, d.lignes, p.EXTRAIT_MAX)}"
             if not self.test and p.mode() == "journal":

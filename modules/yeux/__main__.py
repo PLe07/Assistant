@@ -46,7 +46,7 @@ def observer(arret, log, obs, interactif: bool = False) -> None:
             elif obs.capteur.absent(p.ABSENT_APRES):
                 obs.detecteur.oublier()  # tu n'es pas là (ou écran verrouillé) : on ne regarde pas
                 if interactif:
-                    print("💤 Tu sembles absent (ou l'écran est verrouillé) : rien n'est capturé")
+                    obs.annoncer("💤 Tu sembles absent (ou l'écran est verrouillé) : rien n'est capturé")
             else:
                 obs.regarder()
         if interactif:
