@@ -54,7 +54,11 @@ def ecouter(ctx_arret, log, ecoute, interactif: bool = False) -> None:
                         muet_depuis = muet_depuis or time.time()
                         if time.time() - muet_depuis > p.SILENCE_NUMERIQUE_ALERTE:
                             log.error("Micro muet (zéros absolus) : autorisation macOS probablement refusée")
-                            print(f"⛔ {ALERTE_MICRO}") if interactif else notifier("Assistant", ALERTE_MICRO, module="oreilles")
+                            if interactif:  # lancé depuis le Terminal : c'est le Terminal qui doit être autorisé
+                                print("\n⛔ Micro bloqué par macOS : Réglages Système → Confidentialité et sécurité → Micro "
+                                      "→ coche « Terminal », puis relance le test.")
+                            else:
+                                notifier("Assistant", ALERTE_MICRO, module="oreilles")
                             muet_depuis = float("inf")
                     else:
                         muet_depuis = None
