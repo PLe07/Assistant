@@ -128,9 +128,12 @@ def etat() -> int:
             continue
         infos = _launchctl("print", f"{_cible()}/{label}").stdout
         pid = re.search(r"\bpid = (\d+)", infos)
-        code = re.search(r"last exit code = (\S+)", infos)
-        print(f"✅ {nom} : " + (f"en marche (pid {pid.group(1)})" if pid else "chargé, pas en marche pour l'instant")
-              + (f" · dernier code de sortie : {code.group(1)}" if code else ""))
+        code = re.search(r"last exit code = (.+)", infos)
+        sortie = ""
+        if code:
+            valeur = code.group(1).strip()
+            sortie = " · jamais arrêté depuis son lancement" if valeur.startswith("(never") else f" · dernier code de sortie : {valeur}"
+        print(f"✅ {nom} : " + (f"en marche (pid {pid.group(1)})" if pid else "chargé, pas en marche pour l'instant") + sortie)
     if _charge(ANCIEN_TRI):
         print(f"⚠️  L'ancien service du tri ({ANCIEN_TRI}) est encore installé.")
     return 0

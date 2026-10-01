@@ -113,6 +113,17 @@ def constater_chute(s: Suivi) -> None:
         s.alerte_envoyee = True
 
 
+def _capteur_coupe(nom: str, reglages: dict) -> str | None:
+    """« micro » ou « ecran » si ce module utilise un capteur que tu as coupé."""
+    capteur = config.CAPTEURS.get(nom)
+    return capteur if capteur and reglages.get(f"pause_{capteur}") else None
+
+
+def _voulu(nom: str, reglages: dict) -> bool:
+    actif = reglages["modules"].get(nom, {}).get("actif", False)
+    return actif and not reglages["pause_globale"] and not _capteur_coupe(nom, reglages)
+
+
 def _statut(s: Suivi, reglages: dict) -> tuple:
     actif = reglages["modules"].get(s.nom, {}).get("actif", False)
     if s.vivant():
@@ -121,6 +132,8 @@ def _statut(s: Suivi, reglages: dict) -> tuple:
         return (s.nom, "introuvable", "fichier absent dans modules/", None, s.relances)
     if reglages["pause_globale"] and actif:
         return (s.nom, "en pause", "", None, s.relances)
+    if actif and _capteur_coupe(s.nom, reglages):
+        return (s.nom, "en pause", f"{_capteur_coupe(s.nom, reglages)} coupé", None, s.relances)
     if not actif:
         return (s.nom, "désactivé", "", None, s.relances)
     if s.prochain_essai > time.time():
@@ -178,7 +191,7 @@ def main() -> int:
             log.info("⏸  PAUSE GLOBALE : tout est arrêté" if pause else "▶️  Actif")
             pause_vue = pause
 
-        voulus = set() if pause else {n for n, r in reglages["modules"].items() if r.get("actif")}
+        voulus = {n for n in reglages["modules"] if _voulu(n, reglages)}
         for nom in reglages["modules"]:
             suivis.setdefault(nom, Suivi(nom))
 
@@ -186,7 +199,8 @@ def main() -> int:
             if s.processus is not None and not s.vivant():
                 constater_chute(s)
             if s.nom not in voulus:
-                arreter(s, "pause globale" if pause else "désactivé")
+                coupe = _capteur_coupe(s.nom, reglages)
+                arreter(s, "pause globale" if pause else f"{coupe} coupé" if coupe else "désactivé")
                 s.introuvable = False
             elif not s.vivant() and time.time() >= s.prochain_essai:
                 lancer(s)

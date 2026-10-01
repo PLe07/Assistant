@@ -18,6 +18,9 @@ from pathlib import Path
 from core import config, etat
 from core.journal import journal
 
+# Sans consigne, Claude Code enverrait ses propres instructions (des milliers de tokens).
+SYSTEME_PAR_DEFAUT = "Tu es l'assistant personnel de l'utilisateur. Réponds en français, de façon brève et directe."
+
 PAUSE_APRES_PANNE = 15 * 60
 DELAI_SECONDES = 180
 ESSAIS = 2
@@ -131,8 +134,7 @@ def demander(
 
     commande = [binaire_claude(), "-p", "--model", nom_modele, "--effort", effort,
                 "--output-format", "json", "--no-session-persistence", "--safe-mode", "--strict-mcp-config"]
-    if systeme:
-        commande += ["--system-prompt", systeme]
+    commande += ["--system-prompt", systeme or SYSTEME_PAR_DEFAUT]
     if schema:
         commande += ["--json-schema", json.dumps(schema)]
     commande += ["--tools", ",".join(outils or [])]  # en dernier : --tools accepte une liste

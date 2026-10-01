@@ -23,6 +23,10 @@ CREATE TABLE IF NOT EXISTS notifications (
     id INTEGER PRIMARY KEY, quand REAL, module TEXT, titre TEXT, message TEXT,
     empreinte TEXT, envoyee INTEGER, raison TEXT
 );
+CREATE TABLE IF NOT EXISTS aides (
+    id INTEGER PRIMARY KEY, quand REAL, module TEXT, titre TEXT, statut TEXT, texte TEXT,
+    vue INTEGER DEFAULT 0, maj REAL
+);
 CREATE TABLE IF NOT EXISTS appels_claude (
     id INTEGER PRIMARY KEY, quand REAL, module TEXT, modele TEXT, ok INTEGER,
     tokens_entree INTEGER, tokens_sortie INTEGER, erreur TEXT
@@ -150,6 +154,64 @@ def appels_aujourdhui() -> tuple[int, int, int]:
     return n, entree, sortie
 
 
+# --- Aides proposées (💡) ----------------------------------------------------------------
+# Statuts : proposee → demandee (clic sur 💡) → prete / echec / expiree.
+# Seuls le titre et l'aide rédigée par Claude sont ici : jamais ce que tu as dit.
+
+
+def proposer_aide(module: str, titre: str) -> int:
+    with connexion() as db:
+        return db.execute(
+            "INSERT INTO aides (quand, module, titre, statut, texte, maj) VALUES (?, ?, ?, 'proposee', '', ?)",
+            (time.time(), module, titre, time.time()),
+        ).lastrowid
+
+
+def aides_recentes(depuis: float) -> list[dict]:
+    with connexion() as db:
+        lignes = db.execute(
+            "SELECT id, quand, module, titre, statut, texte, vue FROM aides WHERE quand >= ? ORDER BY quand DESC",
+            (depuis,),
+        ).fetchall()
+    return [dict(zip(("id", "quand", "module", "titre", "statut", "texte", "vue"), l)) for l in lignes]
+
+
+def demander_aide(id_aide: int) -> bool:
+    with connexion() as db:
+        return db.execute(
+            "UPDATE aides SET statut = 'demandee', maj = ? WHERE id = ? AND statut = 'proposee'",
+            (time.time(), id_aide),
+        ).rowcount == 1
+
+
+def aides_demandees(module: str) -> list[dict]:
+    with connexion() as db:
+        lignes = db.execute("SELECT id, titre FROM aides WHERE module = ? AND statut = 'demandee'", (module,)).fetchall()
+    return [{"id": i, "titre": t} for i, t in lignes]
+
+
+def finir_aide(id_aide: int, texte: str, statut: str) -> None:
+    with connexion() as db:
+        db.execute("UPDATE aides SET texte = ?, statut = ?, maj = ? WHERE id = ?", (texte, statut, time.time(), id_aide))
+
+
+def expirer_aides(module: str, texte: str) -> None:
+    """Les aides pas encore rédigées de ce module ne pourront plus l'être (extraits oubliés)."""
+    with connexion() as db:
+        db.execute("UPDATE aides SET texte = ?, statut = 'expiree', maj = ? "
+                   "WHERE module = ? AND statut IN ('proposee', 'demandee')", (texte, time.time(), module))
+
+
+def marquer_vue(id_aide: int) -> None:
+    with connexion() as db:
+        db.execute("UPDATE aides SET vue = 1 WHERE id = ?", (id_aide,))
+
+
+def purger_aides(avant: float) -> None:
+    with connexion() as db:
+        db.execute("DELETE FROM aides WHERE quand < ?", (avant,))
+
+
 # --- Résumé (pour l'icône et la commande « etat ») ---------------------------------
 
 
@@ -168,17 +230,26 @@ def resume() -> dict:
             (debut_du_jour(),),
         ).fetchone()
     appels, tokens_entree, tokens_sortie = appels_aujourdhui()
+    test = lire("micro_test")  # le mode test (python -m modules.oreilles --test) ouvre aussi le micro
+    micro_actif = (any(m["statut"] == "actif" and config.CAPTEURS.get(m["nom"]) == "micro" for m in mods)
+                   or (test is not None and time.time() - float(test) < 5))
+    son = lire("oreilles_son")  # dernier instant où le micro a transmis du son (jamais le son lui-même)
+    micro_son = time.time() - float(son) if micro_actif and son is not None else None
+    aides = [a for a in aides_recentes(time.time() - 2 * 3600) if not a["vue"] and a["statut"] in ("proposee", "demandee", "prete")]
     if reglages["pause_globale"]:
         icone = "⏸"
     elif not superviseur_actif:
-        icone = "⚪"
-    elif en_erreur:
-        icone = "⚠️"
+        icone = "🎙" if micro_actif else "⚪"
     else:
-        icone = "🟢"
+        # 🎙 reste toujours visible quand le micro est ouvert, même s'il y a une aide ou une erreur.
+        icone = ("🎙" if micro_actif else "") + ("⚠️" if en_erreur else "") + ("💡" if aides else "") or "🟢"
     return {
         "icone": icone,
         "pause": reglages["pause_globale"],
+        "pause_micro": reglages["pause_micro"],
+        "micro_actif": micro_actif,
+        "micro_son": micro_son,
+        "aides": aides,
         "superviseur_actif": superviseur_actif,
         "modules": mods,
         "proactivite": reglages["niveau_proactivite"],

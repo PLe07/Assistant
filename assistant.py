@@ -8,6 +8,7 @@
     python assistant.py test-claude     un tout petit appel à Claude (modèles rapide et fort)
     python assistant.py test-plantage   fait planter le module « battement » une fois (test de relance)
     python assistant.py renouveler-jeton  nouveau jeton Claude (il dure 1 an), enregistré sans l'afficher
+    python assistant.py micro off         COUPE le micro tout de suite (micro on pour le rallumer)
     python assistant.py activer mails     active un module (il démarre dans les 2 secondes)
     python assistant.py desactiver mails  désactive un module (il s'arrête dans les 2 secondes)
 """
@@ -39,6 +40,13 @@ def afficher_etat() -> int:
     print(f"{r['icone']}  Superviseur : {'actif' if r['superviseur_actif'] else 'ARRÊTÉ (python superviseur.py)'}"
           + ("  ·  EN PAUSE (python assistant.py reprendre)" if r["pause"] else ""))
     print(f"   Proactivité : {r['proactivite']} ({config.NIVEAUX_PROACTIVITE[r['proactivite']]})")
+    son = r["micro_son"]
+    detail = ("" if not r["micro_actif"] else " · démarrage…" if son is None
+              else f" · son reçu il y a {int(son)} s" if son < 30
+              else f" · ⚠️ AUCUN son reçu depuis {int(son // 60)} min (autorisation macOS ?)")
+    print("   🎙 Micro : " + ("ouvert (écoute en cours)" if r["micro_actif"] else "coupé" if r["pause_micro"] else "fermé") + detail)
+    if r["aides"]:
+        print(f"   💡 {len(r['aides'])} aide(s) t'attendent dans le menu de l'icône")
     if r["modules"]:
         print("\nModules")
         for m in r["modules"]:
@@ -143,6 +151,16 @@ def renouveler_jeton() -> int:
     return 0
 
 
+def micro(valeur: str | None) -> int:
+    if valeur not in ("on", "off"):
+        print("Utilise :  python assistant.py micro off  (couper)  ou  micro on  (rallumer)")
+        return 2
+    config.mettre_capteur_en_pause("micro", valeur == "off")
+    print("🎙  Micro coupé : l'écoute s'arrête dans les 2 secondes." if valeur == "off"
+          else "🎙  Micro rallumé : l'écoute reprend dans les 2 secondes (si le module oreilles est activé).")
+    return 0
+
+
 def _module_existe(nom: str) -> bool:
     dossier = config.RACINE / "modules"
     return (dossier / f"{nom}.py").exists() or (dossier / nom / "__main__.py").exists()
@@ -168,9 +186,11 @@ def main() -> int:
         "renouveler-jeton": renouveler_jeton,
     }
     parser = argparse.ArgumentParser(description="Commandes de l'assistant")
-    parser.add_argument("action", choices=[*actions, "activer", "desactiver"])
-    parser.add_argument("module", nargs="?", help="pour activer / desactiver : le nom du module")
+    parser.add_argument("action", choices=[*actions, "activer", "desactiver", "micro"])
+    parser.add_argument("module", nargs="?", help="activer / desactiver : le module ; micro : on ou off")
     args = parser.parse_args()
+    if args.action == "micro":
+        return micro(args.module)
     if args.action in ("activer", "desactiver"):
         return changer_module(args.module, args.action == "activer")
     return actions[args.action]()
