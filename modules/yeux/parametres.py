@@ -21,6 +21,9 @@ APPLIS_EXCLUES = [
     "com.apple.Passwords", "com.apple.keychainaccess", "com.apple.MobileSMS",
     "Python",  # l'icône de l'assistant elle-même (ses fenêtres d'aide)
 ]
+# Pas regardées, non par discrétion mais parce que c'est inutile : tu y parles déjà à Claude directement
+# (sinon nos échanges, pleins de mots comme « erreur », déclenchent des vérifications pour rien).
+APPLIS_IGNOREES = ["Claude", "com.anthropic.claudefordesktop"]
 TITRES_EXCLUS = [
     "banque", "bank", "revolut", "boursorama", "bnp", "société générale", "societe generale", "crédit agricole",
     "credit agricole", "crédit mutuel", "credit mutuel", "caisse d'épargne", "caisse d'epargne", "lcl", "cic",

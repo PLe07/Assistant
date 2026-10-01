@@ -111,7 +111,7 @@ def diagnostic() -> int:
         print("⛔ Ce module ne fonctionne que sur un Mac.")
         return 1
     from modules.yeux import capture
-    from modules.yeux.filtres import exclue
+    from modules.yeux.filtres import exclue, ignoree
 
     ok = capture.autorise()
     print(("✅" if ok else "⛔") + " Autorisation « Enregistrement de l'écran » : " + ("accordée" if ok else "PAS ENCORE")
@@ -127,8 +127,8 @@ def diagnostic() -> int:
         print("⛔ Aucune fenêtre trouvée au premier plan.")
         return 1
     print(f"✅ Fenêtre au premier plan : {f['appli']}")
-    raison = exclue(f, p.applis_exclues(), p.titres_exclus())
-    print(f"   {'🙈 exclue (' + raison + ') : en vrai, elle ne serait pas capturée' if raison else 'pas exclue'}")
+    raison = exclue(f, p.applis_exclues(), p.titres_exclus()) or ignoree(f, p.APPLIS_IGNOREES)
+    print(f"   {'🙈 pas regardée (' + raison + ') : en vrai, elle ne serait pas capturée' if raison else 'pas exclue'}")
     print(f"   Absent ? {'oui' if capture.inactif_depuis() > p.ABSENT_APRES else 'non'} · écran verrouillé ? "
           f"{'oui' if capture.ecran_verrouille() else 'non'}")
     for methode in ("ScreenCaptureKit", "CoreGraphics"):
@@ -149,7 +149,7 @@ def une_fois(delai: int) -> int:
         return 1
     from modules.yeux import capture
     from modules.yeux.declencheurs import signaux
-    from modules.yeux.filtres import exclue, extrait
+    from modules.yeux.filtres import exclue, extrait, ignoree
 
     for reste in range(delai, 0, -1):
         print(f"\rPasse sur la fenêtre à lire… {reste} ", end="", flush=True)
@@ -159,7 +159,7 @@ def une_fois(delai: int) -> int:
     if f is None:
         print("⛔ Aucune fenêtre trouvée au premier plan.")
         return 1
-    raison = exclue(f, p.applis_exclues(), p.titres_exclus())
+    raison = exclue(f, p.applis_exclues(), p.titres_exclus()) or ignoree(f, p.APPLIS_IGNOREES)
     if raison:
         print(f"🙈 {f['appli']} : {raison}. Rien n'a été capturé.")
         return 0

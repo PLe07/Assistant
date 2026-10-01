@@ -17,7 +17,7 @@ from modules.yeux import aide
 from modules.yeux import parametres as p
 from modules.yeux.capture import TERMINAUX, Capteur
 from modules.yeux.declencheurs import Detecteur, lire_perso
-from modules.yeux.filtres import exclue, extrait
+from modules.yeux.filtres import exclue, extrait, ignoree
 
 
 class Observation(Assistance):
@@ -60,7 +60,7 @@ class Observation(Assistance):
         f = self.capteur.fenetre()
         if f is None:
             return
-        raison = exclue(f, p.applis_exclues(), p.titres_exclus())
+        raison = exclue(f, p.applis_exclues(), p.titres_exclus()) or ignoree(f, p.APPLIS_IGNOREES)
         if raison:
             if self.test:
                 self.annoncer(f"🙈 {f['appli']} : {raison}, rien n'est capturé")
@@ -95,6 +95,10 @@ class Observation(Assistance):
             raison = exclue(f, p.applis_exclues(), p.titres_exclus())
             if raison:
                 etat.finir_aide(a["id"], f"Je n'ai rien capturé : {raison}. C'est voulu, pour ta vie privée.", "echec")
+                continue
+            raison = ignoree(f, p.APPLIS_IGNOREES)
+            if raison:
+                etat.finir_aide(a["id"], f"Je n'ai rien capturé : {raison}.", "echec")
                 continue
             lignes = self._lire(f)
             if not lignes:

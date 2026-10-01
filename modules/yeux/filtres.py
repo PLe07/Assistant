@@ -10,18 +10,27 @@ def _simple(texte: str) -> str:
     return re.sub(r"\s+", " ", texte.lower()).strip()
 
 
-def exclue(fenetre: dict, applis: list[str], titres: list[str]) -> str | None:
-    """La raison pour laquelle cette fenêtre ne doit pas être capturée, ou None."""
+def _appli_dans(fenetre: dict, applis: list[str]) -> bool:
     appli, bundle = _simple(fenetre.get("appli", "")), _simple(fenetre.get("bundle", ""))
-    for a in applis:
-        a = _simple(a)
-        if a and (a == appli or a == bundle or appli.startswith(a)):
-            return f"appli exclue ({fenetre.get('appli', '')})"
+    return any(a and (a == appli or a == bundle or appli.startswith(a)) for a in map(_simple, applis))
+
+
+def exclue(fenetre: dict, applis: list[str], titres: list[str]) -> str | None:
+    """La raison pour laquelle cette fenêtre ne doit pas être capturée (vie privée), ou None."""
+    if _appli_dans(fenetre, applis):
+        return f"appli exclue ({fenetre.get('appli', '')})"
     titre = _simple(fenetre.get("titre", ""))
     for t in titres:
         t = _simple(t)
         if t and re.search(rf"(?<![a-z0-9]){re.escape(t)}(?![a-z0-9])", titre):
             return "site ou fenêtre exclus (titre)"
+    return None
+
+
+def ignoree(fenetre: dict, applis: list[str]) -> str | None:
+    """Une fenêtre qu'il est inutile de regarder (l'appli Claude elle-même), ou None."""
+    if _appli_dans(fenetre, applis):
+        return f"tu parles déjà à Claude dans « {fenetre.get('appli', '')} » : pose-lui ta question directement"
     return None
 
 

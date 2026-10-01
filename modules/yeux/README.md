@@ -31,6 +31,8 @@ appeler Claude. Quand le journal te convient : `python -m modules.yeux --mode re
   KeePassXC, LastPass, Messages, WhatsApp, Signal, Telegram, Messenger, et toute fenêtre dont le
   titre contient une banque (Revolut, BNP, Boursorama, Crédit Agricole…), impots.gouv, ameli,
   Doctolib, « navigation privée » ou « mot de passe ».
+- **Pas regardée non plus** : l'appli Claude elle-même. Tu y parles déjà à Claude, et nos échanges
+  (pleins de mots comme « erreur ») déclencheraient des vérifications pour rien.
 - **Masqués avant l'envoi à Claude** : IBAN, numéros (carte, sécu, fiscal…), téléphones, e-mails,
   mots de passe et clés (`sk-ant-…`).
 - **Rien n'est capturé** quand l'écran est verrouillé ou que tu es absent depuis 5 minutes.
