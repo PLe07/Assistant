@@ -51,12 +51,15 @@ def mails_envoyes(n: int = p.MAILS_MAX) -> list[str]:
     service = service_gmail(interactif=False)
     moi = verifier_boite(service, mp.GMAIL_ATTENDU)
     rep = service.users().messages().list(userId="me", labelIds=["SENT"], maxResults=n).execute()
-    textes = []
+    textes, noms = [], []
     for m in rep.get("messages", []):
-        texte = lire_mail(service, m["id"], moi, longueur=p.TEXTE_MAX).extrait
-        texte = re.sub(r"\[lien\]", "", texte).strip()
+        mail = lire_mail(service, m["id"], moi, longueur=p.TEXTE_MAX)
+        noms.append(mail.expediteur_nom)
+        texte = re.sub(r"\[lien\]", "", mail.extrait).strip()
         if len(texte) >= p.TEXTE_MINI:
             textes.append(texte)
+    if noms:  # le nom affiché dans tes mails envoyés (« De : … ») : ta signature, si tu ne l'as pas déjà mise
+        remplir_signature(max(set(noms), key=noms.count))
     return textes
 
 
@@ -140,6 +143,51 @@ def texte_fiche(f: dict) -> str:
             f"Échantillon dans ton style :\n\n{f['echantillon']}\n\n"
             f"Ça ne te ressemble pas ? Retouche {p.STYLE}, ou dépose d'autres textes à toi dans "
             f"{p.MES_TEXTES} et refais la fiche.")
+
+
+def signature() -> str:
+    """Ton prénom et nom, tels qu'écrits dans ton profil ("" si la ligne est vide)."""
+    creer_profil()
+    for ligne in p.PROFIL.read_text(encoding="utf-8").splitlines():
+        if ligne.startswith(p.SIGNATURE) and ":" in ligne:
+            return ligne.split(":", 1)[1].strip()
+    return ""
+
+
+def nom_gmail() -> str:
+    """Le nom affiché dans ton dernier mail envoyé (« De : Prénom Nom »), lu sur ton Mac ; "" si Gmail ne répond pas."""
+    from email.utils import parseaddr
+
+    from modules.mails import parametres as mp
+    from modules.mails.gmail import _decoder_entete, service_gmail, verifier_boite
+
+    try:
+        service = service_gmail(interactif=False)
+        verifier_boite(service, mp.GMAIL_ATTENDU)
+        ids = service.users().messages().list(userId="me", labelIds=["SENT"], maxResults=1).execute().get("messages", [])
+        if not ids:
+            return ""
+        entetes = service.users().messages().get(userId="me", id=ids[0]["id"], format="metadata",
+                                                metadataHeaders=["From"]).execute()["payload"]["headers"]
+        de = next((h["value"] for h in entetes if h["name"].lower() == "from"), "")
+        return parseaddr(_decoder_entete(de))[0]  # « =?UTF-8?…?= » → « Léo… »
+    except Exception as e:  # Gmail pas connecté… : la signature restera à compléter
+        log.info("Rédacteur : nom Gmail illisible (%s)", type(e).__name__)
+        return ""
+
+
+def remplir_signature(nom: str) -> bool:
+    """Met ce nom dans ton profil, seulement si la ligne de signature est vide (jamais d'écrasement)."""
+    nom = " ".join((nom or "").split())[:60]
+    if not nom or "@" in nom or signature():
+        return False
+    lignes = p.PROFIL.read_text(encoding="utf-8").splitlines()
+    if not any(l.startswith(p.SIGNATURE) for l in lignes):
+        lignes.insert(min(4, len(lignes)), f"{p.SIGNATURE} :")  # un profil créé avant cette ligne
+    p.PROFIL.write_text("\n".join(f"{p.SIGNATURE} : {nom}" if l.startswith(p.SIGNATURE) else l for l in lignes) + "\n",
+                        encoding="utf-8")
+    log.info("Rédacteur : signature mise dans ton profil (d'après tes mails envoyés)")
+    return True
 
 
 def creer_profil() -> bool:

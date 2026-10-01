@@ -13,11 +13,13 @@ EXTRAIT_MAX = 6000  # caractères de tes textes envoyés UNE fois à Claude pour
 TEXTE_MAX = 1200  # par mail ou texte
 TEXTE_MINI = 60  # un mail plus court (« ok merci ») n'apprend rien sur ton style
 
-PROFIL_MODELE = """# Mon profil (pour les lettres de motivation)
+SIGNATURE = "Prénom et nom (pour signer)"
+PROFIL_MODELE = f"""# Mon profil (pour signer, et pour les lettres de motivation)
 
 Ce fichier reste sur ton Mac. Complète ce que tu veux après les deux-points ; le rédacteur
 n'invente rien, une info absente devient [À COMPLÉTER] dans la lettre.
 
+{SIGNATURE} :
 Formation actuelle (diplôme, année) :
 École / université :
 Alternance recherchée (poste, rythme école/entreprise, date de début) :
