@@ -40,6 +40,17 @@ def _cacher_du_dock() -> None:
         pass
 
 
+def _au_premier_plan() -> None:
+    """Une icône de barre de menu n'est jamais l'appli « active » : sans ça, ses fenêtres
+    (l'aide de Claude…) peuvent s'ouvrir cachées derrière les autres."""
+    try:
+        from AppKit import NSApplication
+
+        NSApplication.sharedApplication().activateIgnoringOtherApps_(True)
+    except Exception:
+        pass
+
+
 class Icone(rumps.App):
     def __init__(self):
         super().__init__("Assistant", title="⚪", quit_button=None)
@@ -48,8 +59,13 @@ class Icone(rumps.App):
         self.bouton_pause = rumps.MenuItem(PAUSE, callback=self.basculer_pause)
         self.bouton_micro = rumps.MenuItem(COUPER_MICRO, callback=self.basculer_micro)
         self.bouton_ecran = rumps.MenuItem(COUPER_ECRAN, callback=self.basculer_ecran)
+        # rumps ne crée un sous-menu qu'au premier élément ajouté, et ne sait pas vider un sous-menu
+        # qui n'existe pas encore : on en met un tout de suite (sinon « Aides » et « Modules » restent grisés).
         self.aides = rumps.MenuItem("💡 Aides")
+        self.aides.add(rumps.MenuItem("(aucune pour l'instant)"))
         self.sous_menu = rumps.MenuItem("Modules")
+        self.sous_menu.add(rumps.MenuItem("…"))
+        self.derniere_erreur = ""
         self.attendues: set[int] = set()  # aides demandées depuis l'icône, en cours de rédaction
         self.menu = [
             self.ligne_etat,
@@ -71,6 +87,14 @@ class Icone(rumps.App):
         self.minuteur.start()
 
     def rafraichir(self, _=None) -> None:
+        try:
+            self._rafraichir()
+        except Exception as e:  # jamais en silence : une erreur de l'icône est notée (une fois) dans le journal
+            if str(e) != self.derniere_erreur:
+                self.derniere_erreur = str(e)
+                log.exception("Icône : mise à jour impossible")
+
+    def _rafraichir(self) -> None:
         try:
             r = etat.resume()
         except Exception as e:  # l'icône ne doit jamais planter
@@ -104,15 +128,17 @@ class Icone(rumps.App):
             self.aides.add(rumps.MenuItem("Effacer ces aides", callback=self.effacer_aides))
         else:
             self.aides.add(rumps.MenuItem("(aucune pour l'instant)"))
-        for a in etat.aides_recentes(time.time() - 2 * 3600):  # une aide demandée vient d'être rédigée ?
-            if a["id"] in self.attendues and a["statut"] in ("prete", "echec", "expiree"):
-                self.attendues.discard(a["id"])
-                self.afficher_aide(a)
 
         self.sous_menu.clear()
         for m in r["modules"] or [{"nom": "(superviseur arrêté)", "statut": "", "detail": ""}]:
             texte = f"{m['nom']} : {m['statut']}" + (f" ({m['detail'][:60]})" if m.get("detail") else "")
             self.sous_menu.add(rumps.MenuItem(texte))
+
+        # En dernier : la fenêtre d'une aide attend que tu la fermes, le menu doit être à jour avant.
+        for a in etat.aides_recentes(time.time() - 2 * 3600):  # une aide demandée vient d'être rédigée ?
+            if a["id"] in self.attendues and a["statut"] in ("prete", "echec", "expiree"):
+                self.attendues.discard(a["id"])
+                self.afficher_aide(a)
 
     def basculer_pause(self, _) -> None:
         pause = not config.charger()["pause_globale"]
@@ -137,6 +163,7 @@ class Icone(rumps.App):
         r = etat.resume()
         yeux = next((m for m in r["modules"] if m["nom"] == "yeux"), None)
         if r["pause"] or r["pause_ecran"] or yeux is None or yeux["statut"] != "actif":
+            _au_premier_plan()
             rumps.alert(title="👁 Les yeux ne sont pas actifs",
                         message="L'écran est coupé, en pause ou le module « yeux » est désactivé.\n"
                                 "Pour l'activer :  python assistant.py activer yeux", ok="Fermer")
@@ -158,6 +185,7 @@ class Icone(rumps.App):
     def afficher_aide(self, a: dict) -> None:
         etat.marquer_vue(a["id"])
         texte = a["texte"] or "(aucun texte)"
+        _au_premier_plan()
         if rumps.alert(title=f"💡 {a['titre']}", message=texte, ok="Fermer", cancel="Copier") == 0:
             subprocess.run(["pbcopy"], input=texte, text=True)
 
@@ -171,6 +199,7 @@ class Icone(rumps.App):
 
         affichee, raison = notifier("Assistant", "Notification de test ✅", test=True)
         if not affichee:
+            _au_premier_plan()
             rumps.alert("Notification non affichée", raison)
 
     def ouvrir_journal(self, _) -> None:
