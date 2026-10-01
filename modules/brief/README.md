@@ -7,7 +7,9 @@ Icône → **☀️ Mon brief** (ou `python assistant.py brief`) : en quelques s
   encore dans ta boîte de réception ;
 - ⏰ **tes rappels du jour** (app Rappels), et ceux en retard.
 
-Rien d'automatique : il s'affiche quand tu le demandes. Le 🎬 film du soir s'ajoutera avec le module 7.
+- 🎬 **ton film du soir**, si tu l'as demandé aujourd'hui au concierge ciné.
+
+Rien d'automatique : il s'affiche quand tu le demandes.
 
 ## La première fois
 

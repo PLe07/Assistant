@@ -6,6 +6,7 @@ Le tri est 100 % local (aucun appel à Claude pour trier) :
 - « note que… », « retiens que… »                           → noté dans ta mémoire ;
 - « rédige un mail… », « écris une lettre… »                 → le rédacteur dans ton style (modules/redacteur) ;
 - « cherche sur internet… », « fais une recherche… »         → la recherche sourcée (modules/recherche) ;
+- « je regarde quoi ce soir ? »                              → le concierge ciné (modules/cine) ;
 - par écrit : une autre question → ton second cerveau ; le reste → noté ;
 - à la voix : une autre demande → la 💡 habituelle (Claude propose, tu cliques).
 """
@@ -31,6 +32,8 @@ NOTE = re.compile(r"^\W*(note|notes|noter|retiens|retenir|mémorise|souviens-toi
 REDACTION = re.compile(r"^\W*(rédige|redige|rédiger|écris|ecris|écrire|prépare|prepare)(-moi)?\s+"
                        r"(un|une|le|la|mon|ma|ce|cette)\s+(\w+\s+)?(mail|e-mail|courriel|message|lettre|post|réponse|texte)\b"
                        r"|\baide-moi à (rédiger|écrire)\b", re.I)
+CINE = re.compile(r"\b(je|on) (regarde|mate|matte)s? quoi\b|\bquoi (regarder|mater)\b|\bqu'est-ce que (je|on) "
+                  r"(regarde|mate)\b|\b(un|quel) (film|série) (à|a|pour) (voir|regarder|ce soir)\b", re.I)
 RECHERCHE = re.compile(r"\b(sur|dans) (internet|le web|google)\b|\b(fais|lance)(-moi)? une recherche\b"
                        r"|\brecherche (web|internet)\b", re.I)
 QUESTION = re.compile(r"\?\s*$|^\W*(comment|pourquoi|combien|quel|quelle|quels|quelles|qui|où|quand|est-ce|"
@@ -51,7 +54,7 @@ def _texte(t: str) -> str:
 
 
 def classer(texte: str) -> str:
-    """« rappel », « souvenir » (question à ta mémoire), « note », « redaction », « recherche » (sur le web),
+    """« rappel », « souvenir » (question à ta mémoire), « note », « redaction », « cine », « recherche » (sur le web),
     « question » ou « autre »."""
     t = _texte(texte)
     if SOUVENIR.search(t):
@@ -62,6 +65,8 @@ def classer(texte: str) -> str:
         return "note"
     if REDACTION.search(t):
         return "redaction"
+    if CINE.search(t):
+        return "cine"
     if RECHERCHE.search(t):
         return "recherche"
     if QUESTION.search(t):

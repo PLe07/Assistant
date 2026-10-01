@@ -5,7 +5,8 @@ Tout est lu SUR TON MAC, aucun appel à Claude, rien n'est modifié :
   événements qui se répètent, comme tes cours de chaque semaine) ;
 - 📬 les mails à traiter : ceux que le tri a mis en 🔴 Important-Répondre ou ⏰ Action-Deadline et qui sont
   encore dans ta boîte de réception (Gmail, lecture seule) ;
-- ⏰ les rappels du jour : l'app Rappels (ceux d'aujourd'hui, et ceux en retard).
+- ⏰ les rappels du jour : l'app Rappels (ceux d'aujourd'hui, et ceux en retard) ;
+- 🎬 ton film du soir, si tu l'as déjà demandé aujourd'hui au concierge ciné.
 Un bloc qui ne répond pas (autorisation, Gmail…) est signalé, les autres s'affichent quand même.
 """
 
@@ -297,6 +298,13 @@ def composer(maintenant: datetime | None = None) -> str:
         quand = (f"⚠️ en retard ({r['quand']:%d/%m})" if r["en_retard"]
                  else "aujourd'hui" if r["quand"].hour == 0 and r["quand"].minute == 0 else f"{r['quand']:%H:%M}")
         lignes.append(f"   {quand}  {r['quoi']}" + (f" ({r['liste']})" if r["liste"] else ""))
+
+    try:
+        from modules.cine import cine
+
+        lignes.append(f"\n🎬 Ce soir\n   {cine.ligne_du_jour()}")
+    except Exception:
+        log.exception("Brief : ligne ciné impossible")
 
     log.info("Brief composé en %.1f s (%d événement(s), %d mail(s), %d rappel(s))", time.time() - debut,
              len(evenements or []), total, len(rappels or []))

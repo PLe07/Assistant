@@ -34,13 +34,14 @@ NOTER = "✍️  Noter ou demander…"
 CHERCHER = "🔎  Chercher dans ma mémoire…"
 RECHERCHER = "🌐  Rechercher sur le web…"
 BRIEF = "☀️  Mon brief"
+CINE = "🎬  Je regarde quoi ce soir ?"
 COACH = "🎓  Coach"
 VEILLE = "📰  Veille"
 QUOI_DE_NEUF = "📰  Quoi de neuf ?"
 REDACTEUR = "✒️  Rédacteur"
 DEPENSES = "🧾  Dépenses"
 # Ces modules écrivent eux-mêmes dans ta mémoire (ou n'y mettent rien), et leurs titres ont déjà leur symbole.
-MODULES_AUTONOMES = ("memoire", "veille", "recherche", "redacteur", "depenses", "brief")
+MODULES_AUTONOMES = ("memoire", "veille", "recherche", "redacteur", "depenses", "brief", "cine")
 SYMBOLES_AIDE = {"proposee": "💡", "demandee": "⏳", "a_capturer": "⏳", "prete": "✅"}
 
 
@@ -139,6 +140,7 @@ class Icone(rumps.App):
             None,
             rumps.MenuItem(AIDE_ECRAN, callback=self.aide_ecran),
             rumps.MenuItem(BRIEF, callback=self.brief),
+            rumps.MenuItem(CINE, callback=self.cine),
             rumps.MenuItem(NOTER, callback=self.noter),
             rumps.MenuItem(CHERCHER, callback=self.chercher),
             rumps.MenuItem(RECHERCHER, callback=self.rechercher),
@@ -276,7 +278,7 @@ class Icone(rumps.App):
             if _fenetre(title=a["titre"], message=texte, ok="Fermer", cancel=libelle) == 0:
                 ouvrir(None)
         else:
-            titre = a["titre"] if a.get("module") in ("redacteur", "depenses", "brief") else f"💡 {a['titre']}"
+            titre = a["titre"] if a.get("module") in ("redacteur", "depenses", "brief", "cine") else f"💡 {a['titre']}"
             if _fenetre(title=titre, message=texte, ok="Fermer", cancel="Copier") == 0:
                 subprocess.run(["pbcopy"], input=texte, text=True)
 
@@ -295,6 +297,8 @@ class Icone(rumps.App):
             self._rechercher(texte)
         elif genre == "redaction":
             self._rediger(texte)
+        elif genre == "cine":
+            self._cine(texte)
         elif genre in ("souvenir", "question"):  # la réponse s'ouvrira toute seule dans une fenêtre
             id_aide = etat.proposer_aide("memoire", f"🧠 {texte[:70]}")
             etat.demander_aide(id_aide)
@@ -385,6 +389,20 @@ class Icone(rumps.App):
 
         log.info("Brief demandé depuis l'icône")
         self._en_fond("brief", "☀️ Mon brief", brief.composer)
+
+    # --- Concierge ciné (phase 5) ---------------------------------------------------------------------
+
+    def cine(self, _) -> None:
+        demande = _saisie("🎬 Je regarde quoi ce soir ?", "Ton humeur et ton temps ? (« envie de rire, 1h30 », « une série "
+                          "prenante, 2 épisodes »). Laisse vide : il te surprend.", ok="Proposer", hauteur=24)
+        if demande is not None:
+            self._cine(demande)
+
+    def _cine(self, demande: str) -> None:
+        from modules.cine import cine
+
+        log.info("Ciné demandé depuis l'icône")
+        self._en_fond("cine", "🎬 Ce soir", lambda: cine.texte_proposition(cine.proposer(demande, "icone")))
 
     # --- Rédacteur dans ta voix (phase 5) ---------------------------------------------------------
 

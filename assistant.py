@@ -44,6 +44,9 @@ Rédacteur dans ta voix (phase 5) :
 Brief du jour (phase 5), sans Claude :
     python assistant.py brief             ton agenda du jour, tes mails à traiter, tes rappels du jour
 
+Concierge ciné (phase 5) :
+    python assistant.py cine "envie de rire, 1h30"   3 films ou séries pour ce soir
+
 Dépenses (phase 5) :
     python assistant.py depenses          le total du mois, par catégorie (depenses 2026-09 : un autre mois)
     python assistant.py depenses ajouter photo.jpg   ajoute un reçu (photo ou PDF)
@@ -345,6 +348,8 @@ def noter(texte: str | None) -> int:
         return recherche(texte)
     if genre == "redaction":
         return rediger(texte)
+    if genre == "cine":
+        return cine(texte)
     if genre in ("souvenir", "question"):
         return demander_memoire(texte)
     if genre == "rappel":
@@ -543,6 +548,12 @@ def depenses(suite: str | None) -> int:
     return 2
 
 
+def cine(demande: str | None) -> int:
+    from modules.cine import terminal
+
+    return terminal.lancer(demande)
+
+
 def brief() -> int:
     from modules.brief import terminal
 
@@ -563,7 +574,8 @@ def main() -> int:
     }
     avec_texte = {"noter": noter, "demander": demander_memoire, "memoire": afficher_memoire, "oublier": oublier,
                   "rappels": rappels, "micro": micro, "ecran": ecran, "coach": coach, "veille": veille,
-                  "recherche": recherche, "rediger": rediger, "depenses": depenses}
+                  "recherche": recherche, "rediger": rediger, "depenses": depenses,
+                  "cine": cine}
     parser = argparse.ArgumentParser(description="Commandes de l'assistant")
     parser.add_argument("action", choices=[*actions, *avec_texte, "activer", "desactiver", "habitudes", "essai-memoire"])
     parser.add_argument("suite", nargs="*", help="activer / desactiver : le module ; micro, ecran : on ou off ; "
