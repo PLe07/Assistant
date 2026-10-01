@@ -108,9 +108,20 @@ def notifications_envoyees_depuis(instant: float) -> int:
 
 
 def deja_envoyee(empreinte: str, depuis: float) -> bool:
+    """Ce message a-t-il déjà été affiché (ou tenté sans succès) depuis cet instant ?"""
     with connexion() as db:
         return db.execute(
-            "SELECT 1 FROM notifications WHERE envoyee = 1 AND empreinte = ? AND quand >= ? LIMIT 1",
+            "SELECT 1 FROM notifications WHERE empreinte = ? AND quand >= ? "
+            "AND (envoyee = 1 OR raison = 'échec de l''affichage') LIMIT 1",
+            (empreinte, depuis),
+        ).fetchone() is not None
+
+
+def deja_retenue(empreinte: str, depuis: float) -> bool:
+    """Ce message a-t-il déjà été retenu (nuit, limite, pause) depuis cet instant ?"""
+    with connexion() as db:
+        return db.execute(
+            "SELECT 1 FROM notifications WHERE empreinte = ? AND quand >= ? AND envoyee = 0 LIMIT 1",
             (empreinte, depuis),
         ).fetchone() is not None
 

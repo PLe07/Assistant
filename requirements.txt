@@ -2,3 +2,6 @@
 # Le cerveau (Claude) passe par Claude Code et ton abonnement : pas de bibliothèque à installer.
 python-dotenv>=1.2,<2   # lit le jeton Claude dans le fichier .env
 rumps>=0.4,<1           # l'icône dans la barre du haut (installe aussi pyobjc, le pont Python ↔ macOS)
+google-api-python-client>=2.200,<3  # module mails : parler à Gmail (lire, étiqueter)
+google-auth-oauthlib>=1.5,<2    # module mails : fenêtre « Se connecter avec Google »
+google-auth-httplib2>=0.4,<1    # module mails : transporte le jeton Google

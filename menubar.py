@@ -96,5 +96,15 @@ class Icone(rumps.App):
 
 
 if __name__ == "__main__":
+    import fcntl
+    import sys
+
+    config.DONNEES.mkdir(exist_ok=True)
+    verrou = open(config.DONNEES / "icone.verrou", "w")
+    try:
+        fcntl.flock(verrou, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        print("L'icône tourne déjà : regarde en haut à droite de l'écran.")
+        sys.exit(0)
     _cacher_du_dock()
     Icone().run()

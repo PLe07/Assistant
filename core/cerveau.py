@@ -52,7 +52,7 @@ def _expliquer(texte: str) -> tuple[str, bool]:
     """(message clair, faut-il faire une pause de 15 min ?)"""
     bas = texte.lower()
     if "401" in bas or "authenticat" in bas or "bearer" in bas:
-        return "Jeton Claude refusé (expiré ou révoqué) : lance  python tri-mails/renouveler_jeton.py", True
+        return "Jeton Claude refusé (expiré ou révoqué) : lance  python assistant.py renouveler-jeton", True
     if "limit" in bas or "quota" in bas or "429" in bas:
         return "Quota de l'abonnement atteint : nouvel essai dans 15 min.", True
     return f"Claude Code a renvoyé une erreur : {texte.strip()[:300]}", False

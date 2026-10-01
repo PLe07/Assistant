@@ -31,7 +31,14 @@ DEFAUTS = {
     "claude": {"modele_rapide": "haiku", "modele_fort": "sonnet", "appels_max_par_jour": 60},
     "modules": {
         "battement": {"actif": True, "toutes_les_secondes": 60},
-        "mails": {"actif": False},
+        "mails": {
+            "actif": False,
+            "toutes_les_secondes": 180,
+            "modele": "fort",
+            "regle_r1_promotions": True,
+            "regle_r2_reseaux_sociaux": True,
+            "rattrapage_premier_passage_heures": 24,
+        },
         "oreilles": {"actif": False},
         "yeux": {"actif": False, "applis_exclues": ["Banque", "1Password", "Messages", "WhatsApp"]},
     },

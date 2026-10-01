@@ -129,6 +129,26 @@ def _statut(s: Suivi, reglages: dict) -> tuple:
     return (s.nom, "démarrage", "", None, s.relances)
 
 
+def nettoyer_orphelins() -> None:
+    """Après un arrêt brutal du superviseur, ses anciens modules ont pu rester en vie
+    (micro, écran…). On les arrête avant de relancer quoi que ce soit."""
+    for m in etat.modules():
+        pid = m.get("pid")
+        if not pid:
+            continue
+        commande = subprocess.run(["ps", "-o", "command=", "-p", str(pid)], capture_output=True, text=True).stdout
+        if f"-m modules.{m['nom']}" not in commande:
+            continue  # ce numéro appartient à un autre programme : on n'y touche pas
+        os.kill(pid, signal.SIGTERM)
+        for _ in range(50):
+            if subprocess.run(["kill", "-0", str(pid)], capture_output=True).returncode != 0:
+                break
+            time.sleep(0.1)
+        else:
+            os.kill(pid, signal.SIGKILL)
+        log.warning("Module « %s » resté orphelin (pid %d) : arrêté", m["nom"], pid)
+
+
 def main() -> int:
     config.DONNEES.mkdir(exist_ok=True)
     verrou = open(config.DONNEES / "superviseur.verrou", "w")
@@ -142,6 +162,7 @@ def main() -> int:
     signal.signal(signal.SIGTERM, lambda *_: arret.set())
     signal.signal(signal.SIGINT, lambda *_: arret.set())
     log.info("Superviseur démarré (pid %d)", os.getpid())
+    nettoyer_orphelins()
 
     suivis: dict[str, Suivi] = {}
     erreurs_vues: list[str] = []
