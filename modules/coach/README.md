@@ -1,18 +1,25 @@
-# Le coach DCG / AMF : la fiche
+# Le coach DCG : la fiche
+
+**Il ne fait rien tout seul** : pas d'horaire, pas de notification. Il t'interroge quand tu le lui demandes.
 
 ## Comment ça marche
 
-1. Tu **copies tes cours** dans `donnees/coach/cours/`, un dossier par matière (PDF, Word, RTF, texte).
-   Ils sont lus **sur ton Mac** et découpés en morceaux d'environ une page.
-2. Chaque jour à **18:30**, le coach prépare **3 questions** : d'abord celles à revoir, puis des nouvelles
-   que Claude tire d'**un seul morceau** de tes cours (jamais le cours entier). Une notification discrète te le dit.
-3. Tu réponds quand tu veux : icône → **« 🎓 Coach »**, `python assistant.py coach`, ou « Assistant, interroge-moi ».
-4. **Correction** : les QCM sur ton Mac ; les questions rédigées par Claude (note sur 5, ce qui manquait, l'idée à retenir).
-5. **Révisions espacées** : une question ratée revient dès le lendemain ; une question réussie revient
-   de plus en plus tard (2, 4, 8, 16 jours). Tes notions faibles sont visées en priorité.
+1. Icône en haut à droite → **« 🎓 Coach »** → choisis une **UE du DCG** (UE1 à UE13).
+2. Une petite fenêtre demande **combien de questions** (de 3 à 10).
+3. Claude prépare les questions (10 à 30 s), puis elles s'ouvrent **une par une** : tu réponds, « Valider ».
+   Pour un QCM, tape juste la lettre. « Plus tard » : tu reprendras là où tu t'es arrêté (même UE).
+4. La **correction** s'ouvre toute seule : une note sur 5 par question, ce qui manquait, l'idée à retenir.
+5. **Révisions espacées** : une question ratée revient à ta prochaine séance de cette UE ; une question réussie
+   revient de plus en plus tard (2, 4, 8, 16 jours). Tes notions faibles sont visées en priorité.
 
-Pas de cours pour une matière (par défaut : « Certification AMF ») ? Claude t'interroge sur le
-programme général, et la question est marquée « à vérifier ».
+Les questions viennent de **tes cours** si tu en as mis dans le dossier de l'UE, sinon du **programme officiel**
+(la question le dit : ton prof peut avoir insisté sur autre chose).
+
+## Tes cours
+
+Dans `donnees/coach/cours/`, il y a un dossier par UE (créés pour toi). **Copie**-y tes cours : PDF, Word, RTF
+ou texte. Ils sont lus **sur ton Mac** ; seul un extrait d'une page part à Claude pour préparer les questions.
+Un fichier Pages : ouvre-le, puis Fichier → Exporter vers → Word (ou PDF).
 
 ## Les commandes
 
@@ -20,22 +27,14 @@ Toujours d'abord : `cd ~/Assistant && source .venv/bin/activate`
 
 | Je veux… | Commande |
 |---|---|
-| Voir les cours trouvés (et ouvrir le dossier) | `python assistant.py coach cours` · `open ~/Assistant/donnees/coach/cours` |
-| Répondre à mes questions du jour | `python assistant.py coach` ou icône → « 🎓 Coach » |
-| Voir mes progrès et mes points faibles | `python assistant.py coach bilan` |
-| Recevoir les questions chaque jour à l'heure dite | `python assistant.py activer coach` |
-| Arrêter | `python assistant.py desactiver coach` |
-
-## Réglages (`reglages.json` → `modules.coach`)
-
-| Réglage | Par défaut | Rôle |
-|---|---|---|
-| `heure` | `"18:30"` | heure des questions du jour |
-| `questions` | `3` | nombre de questions par jour (1 à 10) |
-| `matieres_sans_support` | `["Certification AMF"]` | matières interrogées sans cours (programme général) |
+| Une séance (sans l'icône) | `python assistant.py coach` |
+| Voir les cours trouvés, UE par UE | `python assistant.py coach cours` |
+| Ouvrir le dossier des cours | icône → 🎓 Coach → « 📚 Ouvrir le dossier de mes cours » |
+| Voir mes progrès et mes points faibles | `python assistant.py coach bilan` ou icône → 🎓 Coach → « 📊 Mon bilan » |
+| Revoir ma dernière correction | icône → 🎓 Coach → « 📄 Revoir ma dernière correction » |
 
 ## Confidentialité et coût
 
 - Tes cours, tes réponses et tes notes restent sur ton Mac (`donnees/coach/`, lisible par toi seul).
-- Seul l'extrait du jour (une page) part à Claude pour les questions, et tes réponses rédigées pour la correction.
-- Environ **2 appels par jour** (1 pour les questions, 1 pour la correction ; 0 si tout est en QCM).
+- Seul l'extrait d'une page part à Claude pour les questions, puis tes réponses rédigées pour la correction.
+- **2 appels par séance** (1 pour les questions, 1 pour la correction ; 0 s'il n'y a que des QCM). Rien d'autre.

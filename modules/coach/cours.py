@@ -1,10 +1,10 @@
 """Tes cours, lus SUR TON MAC : PDF, Word, RTF, texte. Ils ne sont jamais envoyés en entier :
 seul un extrait (un « morceau » d'environ une page) part à Claude pour préparer les questions du jour.
 
-Range-les dans donnees/coach/cours/, un dossier par matière :
-    cours/DCG UE11 Contrôle de gestion/chapitre1.pdf
-    cours/Droit des sociétés/fiches.docx
-Un fichier posé directement dans cours/ forme sa propre matière (son nom).
+Range-les dans donnees/coach/cours/, dans le dossier de leur UE (créés pour toi) :
+    cours/UE11 Contrôle de gestion/chapitre1.pdf
+    cours/UE2 Droit des sociétés et des groupements d'affaires/fiches.docx
+Un dossier ou un fichier dont le nom contient « UE » suivi du numéro est aussi reconnu (« DCG ue 11 »).
 """
 
 import re
@@ -30,9 +30,19 @@ def fichiers() -> list[Path]:
     return sorted(f for f in p.COURS.rglob("*") if f.is_file() and not any(x.startswith(".") for x in f.relative_to(p.COURS).parts))
 
 
-def matiere(chemin: Path) -> str:
+def matiere(chemin: Path) -> str | None:
+    """L'UE d'un cours, d'après son dossier (ou son nom). None : on ne sait pas où le ranger."""
     parties = chemin.relative_to(p.COURS).parts
-    return parties[0] if len(parties) > 1 else chemin.stem
+    return p.ue_de(parties[0]) or (p.ue_de(chemin.name) if len(parties) > 1 else None)
+
+
+def creer_dossiers() -> None:
+    """Un dossier par UE (ceux qui manquent seulement : rien n'est jamais déplacé ni effacé)."""
+    p.COURS.mkdir(parents=True, exist_ok=True)
+    deja = {p.ue_de(d.name) for d in p.COURS.iterdir() if d.is_dir()}
+    for ue in p.UE:
+        if ue not in deja:
+            (p.COURS / ue).mkdir(exist_ok=True)
 
 
 def _pdf(chemin: Path) -> str:

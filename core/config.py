@@ -60,12 +60,6 @@ DEFAUTS = {
             "applis_exclues": [],  # en plus de la liste de base (mots de passe, messageries…)
             "titres_exclus": [],  # en plus de la liste de base (banques, impots.gouv, ameli…)
         },
-        "coach": {
-            "actif": False,
-            "heure": "18:30",
-            "questions": 3,
-            "matieres_sans_support": ["Certification AMF"],  # interrogé sur le programme général si pas de cours
-        },
     },
 }
 
@@ -199,6 +193,15 @@ def changer_mode_rappels(mode: str) -> None:
         if not isinstance(perso.get("rappels"), dict):
             perso["rappels"] = {}
         perso["rappels"]["mode"] = mode
+
+    _modifier(changement)
+
+
+def retirer_module(nom: str) -> None:
+    """Retire de reglages.json un module qui n'existe plus (ses autres réglages ne servent plus à rien)."""
+    def changement(perso: dict) -> None:
+        if isinstance(perso.get("modules"), dict):
+            perso["modules"].pop(nom, None)
 
     _modifier(changement)
 

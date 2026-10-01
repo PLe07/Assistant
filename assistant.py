@@ -22,9 +22,9 @@ Mémoire, rappels, second cerveau (phase 4) :
     python assistant.py habitudes         ce que l'Assistant a appris de tes habitudes (aucun contenu)
     python assistant.py essai-memoire     essai guidé, en vrai (--etape N pour une seule étape)
 
-Coach DCG/AMF (phase 5) :
-    python assistant.py coach             tes questions du jour, ici, puis la correction
-    python assistant.py coach cours       les cours trouvés (dossier donnees/coach/cours)
+Coach DCG (phase 5), seulement quand tu le demandes :
+    python assistant.py coach             choisis une UE et 3 à 10 questions, réponds ici, puis la correction
+    python assistant.py coach cours       les cours trouvés, UE par UE (dossier donnees/coach/cours)
     python assistant.py coach bilan       tes progrès et tes points faibles
 """
 
@@ -103,13 +103,10 @@ def afficher_etat() -> int:
     except Exception as e:  # la mémoire ne doit jamais empêcher « etat » de répondre
         print(f"   🧠 Mémoire illisible : {e}")
     try:
-        from modules.coach import parametres as coach_p
         from modules.coach import seance
 
-        c = seance.etat_du_jour()
-        if c["total"] or config.charger()["modules"].get("coach", {}).get("actif"):
-            print("   🎓 Coach : " + (f"{c['total'] - c['a_repondre']}/{c['total']} réponse(s) aujourd'hui" if c["total"]
-                                     else "pas encore de questions aujourd'hui") + f" · questions à {coach_p.heure()}")
+        if seance.derniere():
+            print(f"   🎓 Coach : dernière séance le {seance.derniere()[:10]} · {seance.a_revoir()} question(s) à revoir")
     except Exception as e:
         print(f"   🎓 Coach illisible : {e}")
     if r["modules"]:
@@ -257,6 +254,10 @@ def changer_module(nom: str | None, actif: bool) -> int:
     if actif and not _module_existe(nom):
         print(f"⛔ Module « {nom} » introuvable dans modules/.")
         return 1
+    if not actif and not _module_existe(nom):  # un ancien module (ex. le coach, devenu un simple bouton)
+        config.retirer_module(nom)
+        print(f"✅ « {nom} » retiré des réglages : ce n'est plus un module qui tourne en fond.")
+        return 0
     config.activer_module(nom, actif)
     print(f"✅ Module « {nom} » {'activé : il démarre' if actif else 'désactivé : il s’arrête'} dans les 2 secondes"
           + (" (sauf pause globale)." if actif else "."))
@@ -289,8 +290,6 @@ def noter(texte: str | None) -> int:
         print('Utilise :  python assistant.py noter "le code du portail est 1234"')
         return 2
     genre = consignes.classer(texte)
-    if genre == "coach":
-        return coach(None)
     if genre in ("souvenir", "question"):
         return demander_memoire(texte)
     if genre == "rappel":
