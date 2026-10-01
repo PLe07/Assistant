@@ -1,0 +1,4 @@
+# Dépendances de l'assistant (Python 3.10 minimum ; testé avec 3.14)
+# Le cerveau (Claude) passe par Claude Code et ton abonnement : pas de bibliothèque à installer.
+python-dotenv>=1.2,<2   # lit le jeton Claude dans le fichier .env
+rumps>=0.4,<1           # l'icône dans la barre du haut (installe aussi pyobjc, le pont Python ↔ macOS)

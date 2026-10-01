@@ -25,3 +25,9 @@ __pycache__/
 
 # --- Expéditeurs jamais archivés (local, peut contenir des noms) ---
 jamais_archiver.txt
+
+# --- Assistant : données et réglages personnels (restent sur le Mac) ---
+donnees/
+/reglages.json
+/reglages.json.casse-*
+.reglages.*.tmp
