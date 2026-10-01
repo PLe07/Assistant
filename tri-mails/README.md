@@ -1,3 +1,7 @@
+> ⚠️ **Ancienne version.** Depuis la phase 1 de l'assistant, le tri des mails est le module
+> `modules/mails/` piloté par le superviseur : voir **`modules/mails/README.md`**.
+> Ce dossier est gardé comme sauvegarde (code et données d'origine), sans être utilisé.
+
 # Tri automatique des mails : la fiche
 
 ## Comment ça marche
