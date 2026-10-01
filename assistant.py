@@ -72,6 +72,8 @@ def afficher_etat() -> int:
     vue = r["icone_vue"]
     if vue is not None and vue[0] <= 60:
         print(f"   Icône : affiche « {vue[1]} » (vérifié il y a {int(vue[0])} s)")
+    elif vue is None and r["icone_fenetre"] is None:  # juste après « service.py installer » : elle démarre
+        print("   Icône : pas encore de nouvelles (elle démarre ; si ça dure plus d'une minute : python service.py installer)")
     elif r["icone_fenetre"] is not None:
         print("   ⚠️  L'icône est figée : une fenêtre de l'Assistant est restée ouverte (peut-être cachée derrière"
               "\n       tes autres fenêtres). Trouve-la et clique « Fermer » : l'icône repart aussitôt.")

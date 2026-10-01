@@ -31,7 +31,7 @@ ERREUR = """Traceback (most recent call last):
     import pandas
 ModuleNotFoundError: No module named 'pandas'
 """
-DELAIS = {"bouton": 180, "redaction": 180, "lecture": 300, "declencheur": 420, "ecran": 120}  # secondes d'attente au plus
+DELAIS = {"bouton": 180, "redaction": 180, "clic": 300, "lecture": 300, "declencheur": 420, "ecran": 120}  # secondes d'attente au plus
 DECLENCHEUR = re.compile(r"Déclencheur « erreur » \(TextEdit\) → Claude : (aide proposée|pas d'aide utile) \(confiance (\d+)\)")
 
 
@@ -124,7 +124,7 @@ def _pas_pret() -> str | None:
     if r["icone_fenetre"] is not None:
         return ("une fenêtre de l'Assistant est restée ouverte (peut-être cachée derrière tes autres fenêtres) :"
                 " trouve-la et clique « Fermer », puis relance l'essai")
-    if r["icone_vue"] is None or r["icone_vue"][0] > 30:
+    if not _attendre(lambda: (etat.resume()["icone_vue"] or (99,))[0] < 30, 20, 1):  # elle vient peut-être de démarrer
         return "l'icône du haut de l'écran ne répond pas : python service.py installer"
     return None
 
@@ -234,9 +234,9 @@ def _resultat_declencheur(r, debut: float, resultats: list) -> None:
     print("      1. clique sur l'icône ;")
     print("      2. passe la souris (sans cliquer) sur « 💡 Aides (… à lire) » : une petite liste s'ouvre à côté ;")
     print(f"      3. clique sur la ligne « 💡 {titre} ».")
-    print(f"   Claude rédige alors l'aide et sa fenêtre s'ouvre (10 à 30 s). J'attends ({DELAIS['redaction'] // 60} min au plus)…")
+    print(f"   Claude rédige alors l'aide et sa fenêtre s'ouvre (10 à 30 s). J'attends ({DELAIS['clic'] // 60} min au plus)…")
     fini = a and _attendre(lambda: next((x for x in etat.aides_recentes(debut) if x["id"] == a["id"]
-                                         and x["statut"] in ("prete", "echec", "expiree")), None), DELAIS["redaction"])
+                                         and x["statut"] in ("prete", "echec", "expiree")), None), DELAIS["clic"])
     if fini and fini["statut"] == "prete":
         ouverte = _fenetre_ouverte(a["id"], debut)
         print("   ✅ Aide rédigée, et sa fenêtre s'est ouverte. Lis-la, puis clique « Fermer »." if ouverte
