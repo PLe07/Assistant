@@ -46,22 +46,26 @@ def ecouter(ctx_arret, log, ecoute, interactif: bool = False) -> None:
         decoupeur = Decoupeur(p.TAUX, p.BLOC)
         with Micro(p.reglage("micro")) as micro:
             log.info("Écoute active (micro ouvert)")
-            muet_depuis, controle = None, time.time()
+            controle = dernier_son = time.time()
+            alerte, note_son = False, 0.0
             while not ctx_arret.is_set():
                 bloc = micro.lire()
-                if bloc is not None:
-                    if not np.any(bloc):  # zéros absolus : macOS refuse le micro
-                        muet_depuis = muet_depuis or time.time()
-                        if time.time() - muet_depuis > p.SILENCE_NUMERIQUE_ALERTE:
-                            log.error("Micro muet (zéros absolus) : autorisation macOS probablement refusée")
-                            if interactif:  # lancé depuis le Terminal : c'est le Terminal qui doit être autorisé
-                                print("\n⛔ Micro bloqué par macOS : Réglages Système → Confidentialité et sécurité → Micro "
-                                      "→ coche « Terminal », puis relance le test.")
-                            else:
-                                notifier("Assistant", ALERTE_MICRO, module="oreilles")
-                            muet_depuis = float("inf")
+                if bloc is not None and np.any(bloc):
+                    dernier_son = time.time()
+                    if alerte:
+                        log.info("Le micro transmet de nouveau du son")
+                        alerte = False
+                elif not alerte and time.time() - dernier_son > p.SILENCE_NUMERIQUE_ALERTE:
+                    # Aucun son, ou des zéros absolus : c'est ce que fait macOS quand il refuse le micro.
+                    log.error("Micro muet : aucun son reçu depuis %d s, autorisation macOS probablement refusée",
+                              p.SILENCE_NUMERIQUE_ALERTE)
+                    if interactif:  # lancé depuis le Terminal : c'est le Terminal qui doit être autorisé
+                        print("\n⛔ Micro bloqué par macOS : Réglages Système → Confidentialité et sécurité → Micro "
+                              "→ coche « Terminal », puis relance le test.")
                     else:
-                        muet_depuis = None
+                        notifier("Assistant", ALERTE_MICRO, module="oreilles")
+                    alerte = True
+                if bloc is not None:
                     phrase = decoupeur.ajouter(bloc)
                     if phrase is not None:
                         ecoute.traiter_phrase(phrase)
@@ -69,6 +73,9 @@ def ecouter(ctx_arret, log, ecoute, interactif: bool = False) -> None:
                     controle = time.time()
                     ecoute.servir_demandes()
                     ecoute.oublier()
+                    if controle - note_son >= 5:  # pour « assistant.py etat » : le micro reçoit-il du son ?
+                        etat.ecrire("oreilles_son", dernier_son)
+                        note_son = controle
                     if interactif:
                         if _micro_interdit():
                             print("\n⏸  Micro coupé (pause ou bouton de l'icône) : test arrêté.")
@@ -78,6 +85,7 @@ def ecouter(ctx_arret, log, ecoute, interactif: bool = False) -> None:
                     if p.reglage("uniquement_sur_secteur", False) and not sur_secteur():
                         break
         decoupeur.vider()
+        etat.effacer("oreilles_son")
         if interactif:
             etat.effacer("micro_test")
         log.info("Écoute arrêtée (micro fermé)")

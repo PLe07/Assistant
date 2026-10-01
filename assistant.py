@@ -40,7 +40,11 @@ def afficher_etat() -> int:
     print(f"{r['icone']}  Superviseur : {'actif' if r['superviseur_actif'] else 'ARRÊTÉ (python superviseur.py)'}"
           + ("  ·  EN PAUSE (python assistant.py reprendre)" if r["pause"] else ""))
     print(f"   Proactivité : {r['proactivite']} ({config.NIVEAUX_PROACTIVITE[r['proactivite']]})")
-    print("   🎙 Micro : " + ("ouvert (écoute en cours)" if r["micro_actif"] else "coupé" if r["pause_micro"] else "fermé"))
+    son = r["micro_son"]
+    detail = ("" if not r["micro_actif"] else " · démarrage…" if son is None
+              else f" · son reçu il y a {int(son)} s" if son < 30
+              else f" · ⚠️ AUCUN son reçu depuis {int(son // 60)} min (autorisation macOS ?)")
+    print("   🎙 Micro : " + ("ouvert (écoute en cours)" if r["micro_actif"] else "coupé" if r["pause_micro"] else "fermé") + detail)
     if r["aides"]:
         print(f"   💡 {len(r['aides'])} aide(s) t'attendent dans le menu de l'icône")
     if r["modules"]:

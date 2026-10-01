@@ -233,6 +233,8 @@ def resume() -> dict:
     test = lire("micro_test")  # le mode test (python -m modules.oreilles --test) ouvre aussi le micro
     micro_actif = (any(m["statut"] == "actif" and config.CAPTEURS.get(m["nom"]) == "micro" for m in mods)
                    or (test is not None and time.time() - float(test) < 5))
+    son = lire("oreilles_son")  # dernier instant où le micro a transmis du son (jamais le son lui-même)
+    micro_son = time.time() - float(son) if micro_actif and son is not None else None
     aides = [a for a in aides_recentes(time.time() - 2 * 3600) if not a["vue"] and a["statut"] in ("proposee", "demandee", "prete")]
     if reglages["pause_globale"]:
         icone = "⏸"
@@ -246,6 +248,7 @@ def resume() -> dict:
         "pause": reglages["pause_globale"],
         "pause_micro": reglages["pause_micro"],
         "micro_actif": micro_actif,
+        "micro_son": micro_son,
         "aides": aides,
         "superviseur_actif": superviseur_actif,
         "modules": mods,
