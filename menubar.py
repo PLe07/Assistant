@@ -32,6 +32,7 @@ RALLUMER_ECRAN = "👁  Rallumer l'écran (coupé)"
 AIDE_ECRAN = "👁  M'aider avec cet écran"
 NOTER = "✍️  Noter ou demander…"
 CHERCHER = "🔎  Chercher dans ma mémoire…"
+RECHERCHER = "🌐  Rechercher sur le web…"
 COACH = "🎓  Coach"
 VEILLE = "📰  Veille"
 QUOI_DE_NEUF = "📰  Quoi de neuf ?"
@@ -118,6 +119,7 @@ class Icone(rumps.App):
             rumps.MenuItem(AIDE_ECRAN, callback=self.aide_ecran),
             rumps.MenuItem(NOTER, callback=self.noter),
             rumps.MenuItem(CHERCHER, callback=self.chercher),
+            rumps.MenuItem(RECHERCHER, callback=self.rechercher),
             self.bouton_coach,
             self.bouton_veille,
             self.aides,
@@ -237,17 +239,19 @@ class Icone(rumps.App):
             item.title = f"⏳ {a['titre']} (je prépare l'aide…)"
 
     def afficher_aide(self, a: dict) -> None:
-        # Le second cerveau et la veille écrivent eux-mêmes dans ta mémoire.
-        if a.get("statut") == "prete" and not a.get("vue") and a.get("module") not in ("memoire", "veille"):
+        # Le second cerveau, la veille et la recherche écrivent eux-mêmes dans ta mémoire.
+        if a.get("statut") == "prete" and not a.get("vue") and a.get("module") not in ("memoire", "veille", "recherche"):
             try:  # une aide que tu ouvres entre dans ta mémoire (les réponses du second cerveau y sont déjà)
                 memoire.noter("aide", a["titre"], a["module"], detail=a["texte"])
             except Exception:
                 log.exception("Mémoire : aide pas enregistrée")
         etat.marquer_vue(a["id"])
         texte = texte_simple(a["texte"]) or "(aucun texte)"
-        if a.get("module") == "veille":  # le bouton ouvre la page avec les liens
-            if _fenetre(title=a["titre"], message=texte, ok="Fermer", cancel="Ouvrir les liens") == 0:
-                self.veille_page(None)
+        liens = {"veille": ("Ouvrir les liens", self.veille_page), "recherche": ("Ouvrir les sources", self.recherche_page)}
+        if a.get("module") in liens:  # le 2e bouton ouvre la page avec les liens cliquables
+            libelle, ouvrir = liens[a["module"]]
+            if _fenetre(title=a["titre"], message=texte, ok="Fermer", cancel=libelle) == 0:
+                ouvrir(None)
         elif _fenetre(title=f"💡 {a['titre']}", message=texte, ok="Fermer", cancel="Copier") == 0:
             subprocess.run(["pbcopy"], input=texte, text=True)
 
@@ -256,12 +260,15 @@ class Icone(rumps.App):
     def noter(self, _) -> None:
         texte = _saisie("✍️ Noter ou demander",
                         "Une note (« le code du portail est… »), un rappel (« rappelle-moi demain à 9 h d'appeler "
-                        "la banque ») ou une question à ta mémoire (« qu'est-ce que j'avais noté sur… ? »).",
+                        "la banque »), une question à ta mémoire (« qu'est-ce que j'avais noté sur… ? ») ou une "
+                        "recherche (« cherche sur internet le plafond du PEA »).",
                         ok="Envoyer")
         if not texte:
             return
         genre = consignes.classer(texte)
-        if genre in ("souvenir", "question"):  # la réponse s'ouvrira toute seule dans une fenêtre
+        if genre == "recherche":
+            self._rechercher(texte)
+        elif genre in ("souvenir", "question"):  # la réponse s'ouvrira toute seule dans une fenêtre
             id_aide = etat.proposer_aide("memoire", f"🧠 {texte[:70]}")
             etat.demander_aide(id_aide)
             self.attendues.add(id_aide)
@@ -308,6 +315,41 @@ class Icone(rumps.App):
         if _fenetre(title=f"🔎 « {requete} » : {len(trouves)} souvenir(s)", message="\n\n".join(lignes),
                     ok="Fermer", cancel="Copier") == 0:
             subprocess.run(["pbcopy"], input="\n\n".join(lignes), text=True)
+
+    # --- Recherche sourcée (phase 5) ----------------------------------------------------------------
+
+    def rechercher(self, _) -> None:
+        question = _saisie("🌐 Rechercher sur le web", "Ta question (« quel est le plafond du PEA en 2026 ? »). Claude "
+                           "cherche sur le web et te répond en 5 lignes, avec ses sources (20 à 90 s).", ok="Rechercher")
+        if question:
+            self._rechercher(question)
+
+    def _rechercher(self, question: str) -> None:
+        """Claude cherche en fond ; la réponse s'ouvre toute seule (comme une aide 💡)."""
+        id_aide = etat.proposer_aide("recherche", f"🌐 {question[:70]}")
+        etat.demander_aide(id_aide)
+        self.attendues.add(id_aide)
+        log.info("Recherche sur le web demandée depuis l'icône")
+
+        def chercher():
+            from modules.recherche import recherche
+
+            try:
+                etat.finir_aide(id_aide, recherche.texte_resultat(recherche.chercher(question, "icone")), "prete")
+            except Exception as e:  # jamais en silence : la fenêtre dit pourquoi
+                log.info("Recherche impossible (%s)", type(e).__name__)
+                etat.finir_aide(id_aide, f"Recherche impossible : {e}", "echec")
+
+        threading.Thread(target=chercher, daemon=True).start()
+        self.rafraichir()
+
+    def recherche_page(self, _) -> None:
+        from modules.recherche import parametres as rp
+
+        if rp.PAGE.exists():
+            subprocess.run(["open", str(rp.PAGE)], check=False)
+        else:
+            _fenetre(title="🌐 Pas encore de recherche", message="Lance d'abord : 🌐 Rechercher sur le web…", ok="Fermer")
 
     # --- Coach (phase 5) : seulement quand tu le demandes ---------------------------------------------
 

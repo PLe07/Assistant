@@ -94,10 +94,12 @@ def verifier_sources() -> list[dict]:
         try:
             articles, flux = lecture.lire_source(s["adresse"])
             recent = max((a["publie"] for a in articles if a["publie"]), default=None)
+            brute = next((a["date_brute"] for a in articles if a["date_brute"]), "")
             etats.append({**s, "flux": flux, "articles": len(articles), "recent": recent, "erreur": "",
-                          "exemple": articles[0]["titre"] if articles else ""})
+                          "exemple": articles[0]["titre"] if articles else "", "date_brute": brute})
         except lecture.SourceIllisible as e:
-            etats.append({**s, "flux": "", "articles": 0, "recent": None, "erreur": str(e), "exemple": ""})
+            etats.append({**s, "flux": "", "articles": 0, "recent": None, "erreur": str(e), "exemple": "",
+                          "date_brute": ""})
     return etats
 
 
@@ -282,7 +284,9 @@ def texte_sources(etats: list[dict]) -> str:
         if s["erreur"]:
             lignes.append(f"⛔ {s['nom']} : {s['erreur']}\n   {s['adresse']}")
             continue
-        recent = f", le plus récent du {datetime.fromtimestamp(s['recent']):%d/%m/%Y}" if s["recent"] else ""
+        recent = (f", le plus récent du {datetime.fromtimestamp(s['recent']):%d/%m/%Y}" if s["recent"]
+                  else f" (dates illisibles, ex. « {s['date_brute']} » : copie-moi cette ligne)" if s["date_brute"]
+                  else " (ce site ne date pas ses articles)" if s["articles"] else "")
         lignes.append(f"✅ {s['nom']} : {s['articles']} article(s){recent}"
                       + (f"\n   ex. « {s['exemple'][:90]} »" if s["exemple"] else "")
                       + (f"\n   (flux trouvé sur la page : {s['flux']})" if s["flux"] != s["adresse"] else ""))

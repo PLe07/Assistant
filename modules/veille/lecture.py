@@ -8,6 +8,7 @@ Si l'adresse donnée est une page web et pas un flux, il cherche le flux annonc�
 import html
 import re
 import ssl
+import unicodedata
 import urllib.error
 import urllib.request
 import xml.etree.ElementTree as ET
@@ -21,6 +22,11 @@ AGENT = "Assistant-veille/1.0 (lecteur RSS personnel)"
 _LIEN_FLUX = re.compile(r"<link\b[^>]*type=[\"']application/(?:rss|atom)\+xml[\"'][^>]*>", re.I)
 _HREF = re.compile(r"href=[\"']([^\"']+)[\"']", re.I)
 _BALISE = re.compile(r"<[^>]+>")
+# Dates à la française : « 01/10/2026 », « 1 octobre 2026 », « mer., 01 oct. 2026 10:00:00 +0200 »…
+_DATE_FR = re.compile(r"\b(\d{1,2})[/.-](\d{1,2})[/.-](\d{4})\b")
+_DATE_MOIS = re.compile(r"\b(\d{1,2})(?:er)?\s+([^\W\d_]{3,9})\.?\s+(\d{4})\b")
+_MOIS = ["janvier", "fevrier", "mars", "avril", "mai", "juin", "juillet", "aout", "septembre", "octobre", "novembre",
+         "decembre"]
 
 
 class SourceIllisible(Exception):
@@ -64,6 +70,27 @@ def nettoyer(texte: str | None, n: int = 300) -> str:
     return t if len(t) <= n else t[: n - 1].rsplit(" ", 1)[0] + "…"
 
 
+def _sans_accents(texte: str) -> str:
+    return "".join(c for c in unicodedata.normalize("NFD", texte) if unicodedata.category(c) != "Mn").lower()
+
+
+def _date_fr(texte: str) -> datetime | None:
+    m = _DATE_FR.search(texte)
+    if m:
+        jour, mois, annee = int(m[1]), int(m[2]), int(m[3])
+    else:
+        m = _DATE_MOIS.search(texte)
+        mot = _sans_accents(m[2]) if m else ""
+        mois = next((i + 1 for i, nom in enumerate(_MOIS) if nom.startswith(mot) or mot.startswith(nom[:4])), 0)
+        if not m or not mois:
+            return None
+        jour, annee = int(m[1]), int(m[3])
+    try:
+        return datetime(annee, mois, jour)
+    except ValueError:
+        return None
+
+
 def _date(texte: str | None) -> float | None:
     texte = (texte or "").strip()
     if not texte:
@@ -74,7 +101,10 @@ def _date(texte: str | None) -> float | None:
         try:
             d = datetime.fromisoformat(texte.replace("Z", "+00:00"))  # Atom : « 2026-09-30T10:00:00Z »
         except ValueError:
-            return None
+            d = _date_fr(texte)
+            if d is None:
+                return None
+            return d.timestamp()  # une date sans heure : minuit, heure de ton Mac
     if d.tzinfo is None:
         d = d.replace(tzinfo=timezone.utc)
     return d.timestamp()
@@ -118,18 +148,19 @@ def analyser(contenu: bytes, adresse: str) -> list[dict]:
             if _local(e.tag) != "entry":
                 continue
             lien = urljoin(adresse, _lien_atom(e).strip())
+            brute = _texte_de(e, "published", "updated")
             articles.append({"cle": _texte_de(e, "id").strip() or lien, "titre": _texte_de(e, "title"), "lien": lien,
-                             "resume": _texte_de(e, "summary", "content"),
-                             "publie": _date(_texte_de(e, "published", "updated"))})
+                             "resume": _texte_de(e, "summary", "content"), "publie": _date(brute), "date_brute": brute})
     elif nature in ("rss", "rdf"):
         canal = _enfant(racine, "channel")
         # RSS 2.0 : les articles sont dans le canal ; RSS 1.0 (« rdf ») : à côté du canal.
         parent = canal if nature == "rss" and canal is not None else racine
         for e in [x for x in parent if _local(x.tag) == "item"]:
             lien = urljoin(adresse, _texte_de(e, "link").strip())
+            brute = _texte_de(e, "pubdate", "date", "published")
             articles.append({"cle": _texte_de(e, "guid").strip() or lien, "titre": _texte_de(e, "title"), "lien": lien,
-                             "resume": _texte_de(e, "description", "encoded", "summary"),
-                             "publie": _date(_texte_de(e, "pubdate", "date", "published"))})
+                             "resume": _texte_de(e, "description", "encoded", "summary"), "publie": _date(brute),
+                             "date_brute": " ".join(brute.split())[:60]})
     else:
         raise SourceIllisible("ce n'est pas un flux RSS")
     propres = []

@@ -17,6 +17,7 @@ Un assistant personnel qui tourne en arrière-plan sur le Mac : un système nerv
 | `core/memoire.py`, `core/rappels.py`, `core/consignes.py` | Phase 4 · mémoire, rappels Apple, second cerveau (voir `MEMOIRE.md`) |
 | `modules/coach/` | Phase 5 · le coach DCG, à la demande (voir `modules/coach/README.md`) |
 | `modules/veille/` | Phase 5 · la veille patrimoine + DCG, à la demande (voir `modules/veille/README.md`) |
+| `modules/recherche/` | Phase 5 · la recherche sourcée sur le web (voir `modules/recherche/README.md`) |
 | `tri-mails/` | Ancienne version du tri, gardée en sauvegarde |
 
 Restent **sur le Mac uniquement** (exclus de GitHub) : `.env`, `reglages.json`, `donnees/`, `logs/`.

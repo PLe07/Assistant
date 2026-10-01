@@ -31,6 +31,10 @@ Veille patrimoine + DCG (phase 5), seulement quand tu la demandes :
     python assistant.py veille            lit les sites officiels, Claude choisit ce qui compte pour toi
     python assistant.py veille sources    vérifie que chaque site se lit bien (sans Claude, rien n'est gardé)
     python assistant.py veille page       ouvre la page de ta dernière veille (avec les liens)
+
+Recherche sourcée (phase 5) :
+    python assistant.py recherche "…"     Claude cherche sur le web : réponse en 5 lignes + sources vérifiées
+    python assistant.py recherche page    la page de tes 20 dernières recherches (liens cliquables)
 """
 
 import argparse
@@ -122,6 +126,14 @@ def afficher_etat() -> int:
             print(f"   📰 Veille : {ligne}")
     except Exception as e:
         print(f"   📰 Veille illisible : {e}")
+    try:
+        from modules.recherche import recherche as rech
+
+        ligne = rech.resume_etat()
+        if ligne:
+            print(f"   🌐 Recherche : {ligne}")
+    except Exception as e:
+        print(f"   🌐 Recherche illisible : {e}")
     if r["modules"]:
         print("\nModules")
         for m in r["modules"]:
@@ -303,6 +315,8 @@ def noter(texte: str | None) -> int:
         print('Utilise :  python assistant.py noter "le code du portail est 1234"')
         return 2
     genre = consignes.classer(texte)
+    if genre == "recherche":
+        return recherche(texte)
     if genre in ("souvenir", "question"):
         return demander_memoire(texte)
     if genre == "rappel":
@@ -462,6 +476,15 @@ def veille(quoi: str | None) -> int:
     return actions[quoi]()
 
 
+def recherche(question: str | None) -> int:
+    from modules.recherche import terminal
+
+    if not question:
+        print('Utilise :  python assistant.py recherche "quel est le plafond du PEA ?"  ·  recherche page')
+        return 2
+    return terminal.page() if question == "page" else terminal.lancer(question)
+
+
 def essai_memoire(etape: int | None) -> int:
     from core.essai_memoire import essai
 
@@ -475,11 +498,12 @@ def main() -> int:
         "renouveler-jeton": renouveler_jeton,
     }
     avec_texte = {"noter": noter, "demander": demander_memoire, "memoire": afficher_memoire, "oublier": oublier,
-                  "rappels": rappels, "micro": micro, "ecran": ecran, "coach": coach, "veille": veille}
+                  "rappels": rappels, "micro": micro, "ecran": ecran, "coach": coach, "veille": veille,
+                  "recherche": recherche}
     parser = argparse.ArgumentParser(description="Commandes de l'assistant")
     parser.add_argument("action", choices=[*actions, *avec_texte, "activer", "desactiver", "habitudes", "essai-memoire"])
     parser.add_argument("suite", nargs="*", help="activer / desactiver : le module ; micro, ecran : on ou off ; "
-                                                 "noter, demander, memoire : ton texte")
+                                                 "noter, demander, memoire, recherche : ton texte")
     parser.add_argument("--etape", type=int, choices=[1, 2, 3, 4, 5], help="essai-memoire : une seule étape")
     args = parser.parse_args()
     suite = " ".join(args.suite).strip() or None

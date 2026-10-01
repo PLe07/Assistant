@@ -4,6 +4,7 @@ Le tri est 100 % local (aucun appel à Claude pour trier) :
 - « rappelle-moi… », « pense à… », « n'oublie pas de… »      → un rappel Apple (core/rappels.py) ;
 - « qu'est-ce que je t'avais dit sur… », « tu te souviens… » → ton second cerveau : ta mémoire + Claude ;
 - « note que… », « retiens que… »                           → noté dans ta mémoire ;
+- « cherche sur internet… », « fais une recherche… »         → la recherche sourcée (modules/recherche) ;
 - par écrit : une autre question → ton second cerveau ; le reste → noté ;
 - à la voix : une autre demande → la 💡 habituelle (Claude propose, tu cliques).
 """
@@ -26,6 +27,8 @@ SOUVENIR = re.compile(
 RAPPEL = re.compile(r"\b(rappelle|rappelez)[- ]moi\b|^\W*pense à\b|\bpense à me\b|\bn'oublie pas (de|d')", re.I)
 NOTE = re.compile(r"^\W*(note|notes|noter|retiens|retenir|mémorise|souviens-toi|garde en mémoire)\b"
                   r"(\s+(bien|que|qu'|ça|ceci|cela))*[\s:,]*", re.I)
+RECHERCHE = re.compile(r"\b(sur|dans) (internet|le web|google)\b|\b(fais|lance)(-moi)? une recherche\b"
+                       r"|\brecherche (web|internet)\b", re.I)
 QUESTION = re.compile(r"\?\s*$|^\W*(comment|pourquoi|combien|quel|quelle|quels|quelles|qui|où|quand|est-ce|"
                       r"c'est quoi|qu'est-ce|que veut|explique|dis-moi)\b", re.I)
 
@@ -44,7 +47,7 @@ def _texte(t: str) -> str:
 
 
 def classer(texte: str) -> str:
-    """« rappel », « souvenir » (question à ta mémoire), « note », « question » ou « autre »."""
+    """« rappel », « souvenir » (question à ta mémoire), « note », « recherche » (sur le web), « question » ou « autre »."""
     t = _texte(texte)
     if SOUVENIR.search(t):
         return "souvenir"
@@ -52,6 +55,8 @@ def classer(texte: str) -> str:
         return "rappel"
     if NOTE.match(t) and NOTE.sub("", t, count=1).strip():
         return "note"
+    if RECHERCHE.search(t):
+        return "recherche"
     if QUESTION.search(t):
         return "question"
     return "autre"
