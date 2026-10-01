@@ -32,6 +32,8 @@ DEFAUTS = {
     "niveau_proactivite": 2,
     "heures_silencieuses": {"debut": "22:30", "fin": "07:30"},
     "claude": {"modele_rapide": "haiku", "modele_fort": "sonnet", "appels_max_par_jour": 60},
+    # Rappels Apple : « test » = rien n'est créé, une notification dit ce qui l'aurait été.
+    "rappels": {"mode": "test", "liste": "Assistant"},
     "modules": {
         "battement": {"actif": True, "toutes_les_secondes": 60},
         "mails": {
@@ -110,6 +112,15 @@ def _nettoyer(r: dict, erreurs: list) -> dict:
         if isinstance(m, bool) or not isinstance(m, int) or m < 0:
             cl["appels_max_par_jour"] = remettre("claude.appels_max_par_jour", m, 60, "nombre entier ≥ 0 attendu")
 
+    rp = r["rappels"]
+    if not isinstance(rp, dict):
+        r["rappels"] = remettre("rappels", rp, DEFAUTS["rappels"], "objet attendu")
+    else:
+        if rp.get("mode") not in ("test", "reel"):
+            rp["mode"] = remettre("rappels.mode", rp.get("mode"), "test", "« test » ou « reel » attendu")
+        if not isinstance(rp.get("liste"), str) or not rp["liste"].strip():
+            rp["liste"] = remettre("rappels.liste", rp.get("liste"), "Assistant", "nom de liste attendu")
+
     if not isinstance(r["modules"], dict):
         r["modules"] = remettre("modules", r["modules"], DEFAUTS["modules"], "objet attendu")
     for nom, reglage in list(r["modules"].items()):
@@ -174,6 +185,16 @@ def mettre_en_pause(pause: bool) -> None:
 def mettre_capteur_en_pause(capteur: str, pause: bool) -> None:
     """« micro » ou « ecran » : coupe (ou rallume) les modules qui l'utilisent."""
     _modifier(lambda perso: perso.__setitem__(f"pause_{capteur}", pause))
+
+
+def changer_mode_rappels(mode: str) -> None:
+    """« test » (rien n'est créé) ou « reel » (les rappels sont ajoutés à l'app Rappels)."""
+    def changement(perso: dict) -> None:
+        if not isinstance(perso.get("rappels"), dict):
+            perso["rappels"] = {}
+        perso["rappels"]["mode"] = mode
+
+    _modifier(changement)
 
 
 def activer_module(nom: str, actif: bool) -> None:

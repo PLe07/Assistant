@@ -299,6 +299,7 @@ def resume() -> dict:
         "superviseur_actif": superviseur_actif,
         "modules": mods,
         "proactivite": reglages["niveau_proactivite"],
+        "rappels": reglages["rappels"],
         "notifications": (envoyees, bloquees),
         "claude": (appels, reglages["claude"]["appels_max_par_jour"], tokens_entree, tokens_sortie),
     }

@@ -75,6 +75,14 @@ class Detecteur:
         return trouve
 
 
+def retirer_mot_appel(phrase: str, mot_appel: str = "assistant") -> str:
+    """« Assistant, rappelle-moi… » → « rappelle-moi… » (ta demande, sans le mot d'appel)."""
+    texte = " ".join((phrase or "").replace("’", "'").split())
+    if not mot_appel:
+        return texte
+    return re.sub(rf"^\W*(?:hey |ok |dis |eh )?{re.escape(mot_appel)}\b[\s,!.?:]*", "", texte, count=1, flags=re.I) or texte
+
+
 def lire_perso(fichier) -> list[str]:
     if not fichier.exists():
         return []

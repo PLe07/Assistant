@@ -12,6 +12,15 @@
     python assistant.py ecran off         COUPE l'écran tout de suite (ecran on pour le rallumer)
     python assistant.py activer mails     active un module (il démarre dans les 2 secondes)
     python assistant.py desactiver mails  désactive un module (il s'arrête dans les 2 secondes)
+
+Mémoire, rappels, second cerveau (phase 4) :
+    python assistant.py noter "…"         une note, un rappel (« rappelle-moi demain à 9 h de… ») ou une question
+    python assistant.py demander "…"      une question à ton second cerveau (ta mémoire + Claude)
+    python assistant.py memoire [mots]    cherche dans ta mémoire (sans mots : les derniers souvenirs)
+    python assistant.py oublier 12        efface le souvenir n° 12 (oublier tout : TOUT effacer, avec confirmation)
+    python assistant.py rappels [test|reel]  les derniers rappels ; passe en mode test ou réel
+    python assistant.py habitudes         ce que l'Assistant a appris de tes habitudes (aucun contenu)
+    python assistant.py essai-memoire     essai guidé, en vrai (--etape N pour une seule étape)
 """
 
 import argparse
@@ -80,6 +89,14 @@ def afficher_etat() -> int:
     else:
         print("   ⚠️  L'icône du haut de l'écran ne se met plus à jour" + (f" (depuis {int(vue[0] // 60)} min)" if vue else "")
               + " : python service.py installer")
+    try:
+        from core import memoire
+
+        rp = r["rappels"]
+        print(f"   🧠 Mémoire : {memoire.compter()} souvenir(s) · rappels en mode "
+              + ("réel" if rp["mode"] == "reel" else "test (rien n'est créé)") + f", liste « {rp['liste']} »")
+    except Exception as e:  # la mémoire ne doit jamais empêcher « etat » de répondre
+        print(f"   🧠 Mémoire illisible : {e}")
     if r["modules"]:
         print("\nModules")
         for m in r["modules"]:
@@ -231,22 +248,200 @@ def changer_module(nom: str | None, actif: bool) -> int:
     return 0
 
 
+# --- Mémoire, rappels, second cerveau ---------------------------------------------------------
+
+
+def _date(quand: float) -> str:
+    from datetime import datetime
+
+    return f"{datetime.fromtimestamp(quand):%d/%m/%Y %H:%M}"
+
+
+def _afficher_souvenir(x: dict) -> None:
+    from core.memoire import GENRES
+
+    print(f"  n° {x['id']} · {_date(x['quand'])} · {GENRES.get(x['genre'], '·')} {x['genre']} ({x['source']})")
+    print(f"     {x['texte']}")
+    if x["detail"]:
+        detail = x["detail"] if len(x["detail"]) <= 400 else x["detail"][:400] + "…"
+        print("     → " + detail.replace("\n", "\n       "))
+
+
+def noter(texte: str | None) -> int:
+    from core import consignes
+
+    if not texte:
+        print('Utilise :  python assistant.py noter "le code du portail est 1234"')
+        return 2
+    genre = consignes.classer(texte)
+    if genre in ("souvenir", "question"):
+        return demander_memoire(texte)
+    if genre == "rappel":
+        print("⏰ Rappel : Claude comprend quoi et quand…")
+        message = consignes.rappeler(texte, "terminal", notif=False)
+        if message is not None:
+            print(message)
+            return 1 if message.startswith("⛔") else 0
+        print("   (Claude n'y voit pas un rappel : je le garde comme note.)")
+    print(consignes.noter(texte, "terminal", notif=False))
+    return 0
+
+
+def demander_memoire(question: str | None) -> int:
+    from core import consignes
+
+    if not question:
+        print('Utilise :  python assistant.py demander "qu\'est-ce que j\'avais noté sur le dentiste ?"')
+        return 2
+    print("🧠 Je cherche dans ta mémoire…\n")
+    print(consignes.repondre(question, "terminal"))
+    return 0
+
+
+def afficher_memoire(requete: str | None) -> int:
+    from core import memoire
+
+    total = memoire.compter()
+    trouves = memoire.chercher(requete, 20) if requete else memoire.derniers(15)
+    if requete:
+        print(f"🔎 « {requete} » : {len(trouves)} souvenir(s) trouvé(s) sur {total}\n")
+    else:
+        print(f"🧠 Ta mémoire : {total} souvenir(s). Les plus récents :\n")
+    for x in trouves:
+        _afficher_souvenir(x)
+    if not trouves:
+        print("   (rien)" if requete else '   (vide : python assistant.py noter "…" pour commencer)')
+    print("\nEffacer un souvenir :  python assistant.py oublier <n°>")
+    return 0
+
+
+def oublier(cible: str | None) -> int:
+    from core import memoire
+
+    if cible == "tout":
+        n = memoire.compter()
+        print(f"⚠️  Tu vas effacer TOUTE ta mémoire ({n} souvenirs) et tes habitudes. C'est irréversible.")
+        if input("   Tape OUI (en majuscules) pour confirmer : ").strip() != "OUI":
+            print("Annulé : rien n'a été effacé.")
+            return 1
+        print(f"🗑  Mémoire effacée ({memoire.oublier_tout()} souvenirs).")
+        return 0
+    if not cible or not cible.isdigit():
+        print("Utilise :  python assistant.py oublier 12   (le n° vient de « python assistant.py memoire »)")
+        return 2
+    x = memoire.lire(int(cible))
+    if x is None:
+        print(f"Aucun souvenir n° {cible}.")
+        return 1
+    _afficher_souvenir(x)
+    if input("   Effacer ce souvenir ? Tape oui pour confirmer : ").strip().lower() != "oui":
+        print("Annulé : rien n'a été effacé.")
+        return 1
+    memoire.oublier(x["id"])
+    print(f"🗑  Souvenir n° {cible} effacé.")
+    return 0
+
+
+def rappels(mode: str | None) -> int:
+    from core import memoire
+
+    if mode in ("test", "reel"):
+        config.changer_mode_rappels(mode)
+        if mode == "test":
+            print("🧪 Rappels en mode test : rien n'est créé, une notification dit ce qui l'aurait été.")
+        else:
+            liste = config.charger()["rappels"]["liste"]
+            print(f"⏰ Rappels en mode réel : ils sont ajoutés à l'app Rappels (liste « {liste} », créée au besoin).")
+            print("   La première fois, macOS demande : « Python souhaite contrôler Rappels » → clique « Autoriser ».")
+            print("   (Depuis le Terminal, c'est « Terminal » qui le demande.)")
+        return 0
+    if mode is not None:
+        print("Utilise :  python assistant.py rappels   (voir)  ·  rappels test  ·  rappels reel")
+        return 2
+    r = config.charger()["rappels"]
+    print(f"⏰ Rappels : mode {'RÉEL (ajoutés à l’app Rappels)' if r['mode'] == 'reel' else 'TEST (rien n’est créé)'}"
+          f" · liste « {r['liste']} »\n")
+    derniers = [x for x in memoire.derniers(200) if x["genre"] == "rappel"][:10]
+    for x in derniers:
+        _afficher_souvenir(x)
+    if not derniers:
+        print('   Aucun rappel pour l\'instant. Essaie :  python assistant.py noter "rappelle-moi demain à 9 h de …"')
+    return 0
+
+
+def habitudes() -> int:
+    import time
+    from collections import Counter
+    from datetime import datetime
+
+    from core import memoire
+    from core.memoire import GENRES
+
+    h = memoire.habitudes(time.time() - 30 * 86400)
+    print("Tes habitudes (30 derniers jours) · aucun contenu n'est gardé : seulement quand, où et quel type.\n")
+    s = h["souvenirs"]
+    print(f"Ce que tu lui as confié : {sum(s.values())} souvenir(s)"
+          + (" (" + " · ".join(f"{GENRES.get(g, '·')} {n} {g}" for g, n in sorted(s.items())) + ")" if s else ""))
+    it = h["intentions"]
+    print(f"Ce que l'Assistant a remarqué ou fait pour toi : {len(it)} fois")
+    if not it:
+        print("   (rien encore : ça se remplit tout seul quand les oreilles et les yeux sont actifs)")
+        return 0
+    for source in ("oreilles", "yeux"):
+        types = Counter(x["type"] for x in it if x["source"] == source)
+        if types:
+            print(f"   {'🎙' if source == 'oreilles' else '👁'} {source} : {sum(types.values())} ("
+                  + ", ".join(f"{t} {n}" for t, n in types.most_common()) + ")")
+    proposees = [x for x in it if x["decision"] in ("proposee", "demandee")]
+    ouvertes = [x for x in proposees if x["ouverte"]]
+    if proposees:
+        print(f"   💡 proposées : {len(proposees)} · ouvertes : {len(ouvertes)} ({100 * len(ouvertes) // len(proposees)} %)")
+        jamais = [t for t, n in Counter(x["type"] for x in proposees).items()
+                  if n >= 3 and not any(x["ouverte"] for x in proposees if x["type"] == t)]
+        if jamais:
+            print(f"   Tu n'ouvres jamais les 💡 « {', '.join(jamais)} » : dis-le-moi si tu veux qu'il arrête de les proposer.")
+    limites = sum(1 for x in it if x["decision"] == "limite")
+    if limites:
+        print(f"   Limite par heure atteinte {limites} fois (réglage : niveau_proactivite)")
+    moments = Counter("matin (6 h-12 h)" if 6 <= d.hour < 12 else "après-midi (12 h-18 h)" if 12 <= d.hour < 18
+                      else "soir (18 h-23 h)" if 18 <= d.hour < 23 else "nuit"
+                      for d in (datetime.fromtimestamp(x["quand"]) for x in it))
+    print("Tes moments : " + " · ".join(f"{m} {n}" for m, n in moments.most_common()))
+    applis = Counter(x["appli"] for x in it if x["appli"])
+    if applis:
+        print("Tes applis : " + " · ".join(f"{a} {n}" for a, n in applis.most_common(6)))
+    return 0
+
+
+def essai_memoire(etape: int | None) -> int:
+    from core.essai_memoire import essai
+
+    return essai(etape)
+
+
 def main() -> int:
     actions = {
         "pause": pause, "reprendre": reprendre, "etat": afficher_etat, "journal": journal,
         "test-notif": test_notif, "test-claude": test_claude, "test-plantage": test_plantage,
         "renouveler-jeton": renouveler_jeton,
     }
+    avec_texte = {"noter": noter, "demander": demander_memoire, "memoire": afficher_memoire, "oublier": oublier,
+                  "rappels": rappels, "micro": micro, "ecran": ecran}
     parser = argparse.ArgumentParser(description="Commandes de l'assistant")
-    parser.add_argument("action", choices=[*actions, "activer", "desactiver", "micro", "ecran"])
-    parser.add_argument("module", nargs="?", help="activer / desactiver : le module ; micro, ecran : on ou off")
+    parser.add_argument("action", choices=[*actions, *avec_texte, "activer", "desactiver", "habitudes", "essai-memoire"])
+    parser.add_argument("suite", nargs="*", help="activer / desactiver : le module ; micro, ecran : on ou off ; "
+                                                 "noter, demander, memoire : ton texte")
+    parser.add_argument("--etape", type=int, choices=[1, 2, 3, 4, 5], help="essai-memoire : une seule étape")
     args = parser.parse_args()
-    if args.action == "micro":
-        return micro(args.module)
-    if args.action == "ecran":
-        return ecran(args.module)
+    suite = " ".join(args.suite).strip() or None
+    if args.action in avec_texte:
+        return avec_texte[args.action](suite)
     if args.action in ("activer", "desactiver"):
-        return changer_module(args.module, args.action == "activer")
+        return changer_module(suite, args.action == "activer")
+    if args.action == "habitudes":
+        return habitudes()
+    if args.action == "essai-memoire":
+        return essai_memoire(args.etape)
     return actions[args.action]()
 
 

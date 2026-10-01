@@ -10,16 +10,18 @@
 Les deux textes d'essai sont des fichiers temporaires, effacés à la fin. Rien d'autre n'est créé.
 """
 
-import os
 import re
 import subprocess
-import sys
 import tempfile
 import time
 from pathlib import Path
 
 from core import config, etat
-from core.journal import FICHIER as JOURNAL
+from core.essai import appeler as _appeler
+from core.essai import attendre as _attendre
+from core.essai import journal_depuis as _journal_depuis
+from core.essai import pret_a as _pret_a
+from core.essai import taille_journal as _taille_journal
 from modules.yeux import parametres as p
 
 EXERCICE = """Exercice (essai de l'Assistant)
@@ -42,39 +44,12 @@ def _ouvrir(texte: str, nom: str) -> Path:
     return chemin
 
 
-def _appeler() -> None:
-    """Un petit son, et le Terminal revient devant toi : impossible de rater le moment
-    (même si macOS n'affiche pas les notifications)."""
-    try:
-        subprocess.run(["afplay", "/System/Library/Sounds/Glass.aiff"], check=False, timeout=5)
-    except Exception:
-        pass
-    appli = {"Apple_Terminal": "Terminal", "iTerm.app": "iTerm"}.get(os.environ.get("TERM_PROGRAM", ""))
-    if appli:
-        subprocess.run(["open", "-a", appli], check=False)
 
 
-def _attendre(condition, secondes: float, pas: float = 2):
-    fin = time.time() + secondes
-    while time.time() < fin:
-        resultat = condition()
-        if resultat:
-            return resultat
-        time.sleep(pas)
-    return None
 
 
-def _taille_journal() -> int:
-    return JOURNAL.stat().st_size if JOURNAL.exists() else 0
 
 
-def _journal_depuis(position: int) -> str:
-    try:
-        with open(JOURNAL, encoding="utf-8", errors="replace") as f:
-            f.seek(position if JOURNAL.stat().st_size >= position else 0)  # le journal a pu être archivé
-            return f.read()
-    except OSError:
-        return ""
 
 
 def _fenetre_ouverte(id_aide: int, debut: float) -> bool:
@@ -129,23 +104,8 @@ def _pas_pret() -> str | None:
     return None
 
 
-def _vider_clavier() -> None:
-    """Oublie ce qui a été tapé pendant l'attente : une touche en trop ne doit pas sauter une étape."""
-    try:
-        import termios
-
-        termios.tcflush(sys.stdin, termios.TCIFLUSH)
-    except Exception:
-        pass
 
 
-def _pret_a(actions: list[str]) -> None:
-    print("   Ce que tu vas faire :")
-    for numero, action in zip("①②③④⑤", actions):
-        print(f"   {numero} {action}")
-    _vider_clavier()
-    input("   ➜ Appuie sur Entrée pour commencer… ")
-    print("   (Ne tape plus rien ici : le Terminal voit tout seul ce qui se passe.)")
 
 
 def _bouton(resultats: list) -> None:

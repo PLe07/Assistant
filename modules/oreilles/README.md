@@ -11,6 +11,9 @@
    contexte) et répond juste « puis-je aider concrètement ? ».
 5. Si oui : notification « 💡 … » et l'icône affiche 💡. Clique sur 💡 → l'aide, rédigée par
    Claude **Sonnet** seulement à ce moment-là, s'ouvre dans une fenêtre (bouton « Copier »).
+6. Depuis la phase 4 : « Assistant, rappelle-moi… », « Assistant, note que… » et « Assistant, qu'est-ce
+   que je t'avais dit sur… » vont directement à ta mémoire et à tes rappels (voir `MEMOIRE.md`).
+   « pense à… » entendu **sans** « Assistant » ne crée rien : une 💡 te propose le rappel, ton clic le crée.
 
 | L'icône | Veut dire |
 |---|---|
@@ -22,6 +25,8 @@
 
 - **Rien n'est enregistré** : ni son, ni texte. Le journal dit ce qui s'est passé (« déclencheur
   besoin → aide proposée »), jamais ce que tu as dit.
+- **Une seule exception** : ce que tu adresses à l'Assistant (« Assistant, … ») entre dans ta mémoire,
+  sur ton Mac, jusqu'à ce que tu l'effaces (`MEMOIRE.md`). Les conversations autour de toi, jamais.
 - La phrase envoyée à Claude reste **en mémoire vive** 30 min au plus (pour rédiger l'aide si tu
   cliques), puis elle est oubliée. Couper le micro l'efface aussitôt.
 - Seuls le titre de l'aide et le texte écrit par Claude sont gardés, 2 heures au plus.

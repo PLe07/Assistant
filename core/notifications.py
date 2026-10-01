@@ -54,11 +54,17 @@ def _afficher(titre: str, message: str) -> bool:
     return True
 
 
-def notifier(titre: str, message: str, module: str = "assistant", urgent: bool = False, test: bool = False) -> tuple[bool, str]:
+PRIVE = "(contenu privé : voir ta mémoire)"
+
+
+def notifier(titre: str, message: str, module: str = "assistant", urgent: bool = False, test: bool = False,
+             prive: bool = False) -> tuple[bool, str]:
     """Envoie une notification si le garde l'autorise. Renvoie (affichée ?, raison si bloquée).
 
     urgent : passe outre la limite par heure et les heures silencieuses (jamais la pause).
     test   : notification demandée à la main pour essayer, passe outre tout sauf la pause.
+    prive  : le texte (une note, un rappel…) n'est écrit ni dans le journal ni dans l'état :
+             il n'existe que dans ta mémoire, que tu peux effacer.
     """
     reglages = config.charger()
     empreinte = _empreinte(module, titre, message)
@@ -85,9 +91,10 @@ def notifier(titre: str, message: str, module: str = "assistant", urgent: bool =
     if not raison and not affichee:
         raison = "échec de l'affichage"
     # Une notification d'essai (test-notif, essai guidé) ne consomme pas ta limite par heure.
-    etat.noter_notification(module, titre, message, empreinte, affichee, raison or ("test" if test else ""))
+    etat.noter_notification(module, titre, PRIVE if prive else message, empreinte, affichee,
+                            raison or ("test" if test else ""))
     if affichee:
-        log.info("Notification [%s] %s · %s", module, titre, message)
+        log.info("Notification [%s] %s · %s", module, titre, PRIVE if prive else message)
     elif raison == "échec de l'affichage":
         log.warning("Notification non affichée par macOS [%s] %s", module, titre)
     else:
