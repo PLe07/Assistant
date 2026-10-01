@@ -84,7 +84,8 @@ def notifier(titre: str, message: str, module: str = "assistant", urgent: bool =
     affichee = not raison and _afficher(titre, message)
     if not raison and not affichee:
         raison = "échec de l'affichage"
-    etat.noter_notification(module, titre, message, empreinte, affichee, raison)
+    # Une notification d'essai (test-notif, essai guidé) ne consomme pas ta limite par heure.
+    etat.noter_notification(module, titre, message, empreinte, affichee, raison or ("test" if test else ""))
     if affichee:
         log.info("Notification [%s] %s · %s", module, titre, message)
     elif raison == "échec de l'affichage":

@@ -107,7 +107,8 @@ def noter_notification(module, titre, message, empreinte, envoyee: bool, raison:
 def notifications_envoyees_depuis(instant: float) -> int:
     with connexion() as db:
         return db.execute(
-            "SELECT COUNT(*) FROM notifications WHERE envoyee = 1 AND quand >= ?", (instant,)
+            "SELECT COUNT(*) FROM notifications WHERE envoyee = 1 AND COALESCE(raison, '') != 'test' AND quand >= ?",
+            (instant,)
         ).fetchone()[0]
 
 

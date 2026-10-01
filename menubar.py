@@ -180,6 +180,7 @@ class Icone(rumps.App):
         if a["statut"] == "prete":
             self.afficher_aide(a)
         elif a["statut"] == "proposee" and etat.demander_aide(a["id"]):
+            log.info("Aide n°%d demandée depuis l'icône (💡)", a["id"])
             self.attendues.add(a["id"])  # Claude rédige ; la fenêtre s'ouvrira toute seule
             item.title = f"⏳ {a['titre']} (je prépare l'aide…)"
 
