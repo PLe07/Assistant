@@ -69,6 +69,15 @@ def afficher_etat() -> int:
     print("   👁 Écran : " + ("observé" if r["ecran_actif"] else "coupé" if r["pause_ecran"] else "non observé") + detail)
     if r["aides"]:
         print(f"   💡 {len(r['aides'])} aide(s) t'attendent dans le menu de l'icône")
+    vue = r["icone_vue"]
+    if vue is not None and vue[0] <= 60:
+        print(f"   Icône : affiche « {vue[1]} » (vérifié il y a {int(vue[0])} s)")
+    elif r["icone_fenetre"] is not None:
+        print("   ⚠️  L'icône est figée : une fenêtre de l'Assistant est restée ouverte (peut-être cachée derrière"
+              "\n       tes autres fenêtres). Trouve-la et clique « Fermer » : l'icône repart aussitôt.")
+    else:
+        print("   ⚠️  L'icône du haut de l'écran ne se met plus à jour" + (f" (depuis {int(vue[0] // 60)} min)" if vue else "")
+              + " : python service.py installer")
     if r["modules"]:
         print("\nModules")
         for m in r["modules"]:

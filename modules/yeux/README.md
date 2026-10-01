@@ -75,4 +75,5 @@ Le niveau de proactivité est le même que pour les oreilles (`niveau_proactivit
 | Notification « Les yeux n'ont pas l'autorisation de voir l'écran » | Réglages Système → Confidentialité et sécurité → Enregistrement de l'écran : active Python, puis icône → « Couper l'écran » et « Rallumer » |
 | `etat` dit « en veille » | Normal si tu étais absent, écran verrouillé, ou sur une appli exclue |
 | Trop de 💡 | Baisse `niveau_proactivite`, ou repasse en `--mode journal` |
+| L'icône n'affiche pas la 💡 alors que `etat` en compte | `etat` dit pourquoi : une fenêtre de l'Assistant restée ouverte (cachée derrière les autres) fige l'icône → ferme-la ; sinon `python service.py installer` |
 | macOS redemande l'autorisation chaque mois | Voulu par Apple depuis macOS 15 : clique « Autoriser » |

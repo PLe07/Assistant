@@ -31,7 +31,7 @@ ERREUR = """Traceback (most recent call last):
     import pandas
 ModuleNotFoundError: No module named 'pandas'
 """
-DELAIS = {"bouton": 180, "redaction": 180, "declencheur": 420, "ecran": 120}  # secondes d'attente au plus
+DELAIS = {"bouton": 180, "redaction": 180, "lecture": 300, "declencheur": 420, "ecran": 120}  # secondes d'attente au plus
 DECLENCHEUR = re.compile(r"Déclencheur « erreur » \(TextEdit\) → Claude : (aide proposée|pas d'aide utile) \(confiance (\d+)\)")
 
 
@@ -82,6 +82,29 @@ def _fenetre_ouverte(id_aide: int, debut: float) -> bool:
     return bool(_attendre(lambda: next((x["vue"] for x in etat.aides_recentes(debut) if x["id"] == id_aide), 0), 15, 1))
 
 
+def _icone_affiche(signe: str, secondes: float = 10) -> tuple[bool, str]:
+    """L'icône affiche-t-elle ce signe, à jour ? (ce qu'elle affiche est noté dans l'état toutes les 10 s)."""
+    vu = {}
+
+    def ok():
+        vu["r"] = etat.resume()["icone_vue"]
+        return vu["r"] is not None and vu["r"][0] < 15 and signe in vu["r"][1]
+
+    if _attendre(ok, secondes, 1):
+        return True, vu["r"][1]
+    r = vu.get("r")
+    if etat.resume()["icone_fenetre"] is not None:
+        return False, ("elle est figée par une fenêtre de l'Assistant restée ouverte (peut-être cachée derrière"
+                       " tes autres fenêtres) : trouve-la et clique « Fermer »")
+    return False, ("aucune nouvelle de l'icône" if r is None else
+                   f"elle affiche « {r[1]} », mise à jour il y a {int(r[0])} s") + " : relance-la, python service.py installer"
+
+
+def _fenetre_fermee(secondes: float) -> bool:
+    """Tant qu'une fenêtre de l'Assistant est ouverte, l'icône est figée : on attend que tu la fermes."""
+    return bool(_attendre(lambda: etat.resume()["icone_fenetre"] is None, secondes, 1))
+
+
 def _yeux_statut() -> str | None:
     return next((m["statut"] for m in etat.modules() if m["nom"] == "yeux"), None)
 
@@ -98,6 +121,11 @@ def _pas_pret() -> str | None:
         return "le module yeux n'est pas actif : python assistant.py activer yeux"
     if p.mode() != "reel":
         return "les yeux sont en mode journal : python -m modules.yeux --mode reel"
+    if r["icone_fenetre"] is not None:
+        return ("une fenêtre de l'Assistant est restée ouverte (peut-être cachée derrière tes autres fenêtres) :"
+                " trouve-la et clique « Fermer », puis relance l'essai")
+    if r["icone_vue"] is None or r["icone_vue"][0] > 30:
+        return "l'icône du haut de l'écran ne répond pas : python service.py installer"
     return None
 
 
@@ -144,10 +172,12 @@ def _bouton(resultats: list) -> None:
                                    and x["statut"] in ("prete", "echec", "expiree")), None), DELAIS["redaction"])
     if fini and fini["statut"] == "prete":
         ouverte = _fenetre_ouverte(a["id"], debut)
-        print("   ✅ Aide rédigée, et sa fenêtre s'est ouverte." if ouverte
+        print("   ✅ Aide rédigée, et sa fenêtre s'est ouverte. Lis-la, puis clique « Fermer »." if ouverte
               else "   ⚠️  Aide rédigée, mais l'icône n'a pas ouvert sa fenêtre.")
         resultats.append(f"✅ 1. Bouton : écran lu ({a['titre']}), aide rédigée et ouverte" if ouverte
                          else f"⚠️ 1. Bouton : aide rédigée ({a['titre']}), mais fenêtre pas ouverte")
+        if ouverte and not _fenetre_fermee(DELAIS["lecture"]):  # sinon l'icône reste figée pour la suite
+            print("   ⚠️  La fenêtre de l'aide est toujours ouverte : ferme-la (« Fermer »), sinon l'icône reste figée.")
     else:
         raison = fini["texte"][:150] if fini else "pas de réponse à temps"
         print(f"   ❌ Pas d'aide : {raison}")
@@ -194,8 +224,13 @@ def _resultat_declencheur(r, debut: float, resultats: list) -> None:
                                 and x["statut"] != "a_capturer"), None), 30, 1)
     titre = a["titre"] if a else "?"
     print(f"   ✅ Déclencheur vu, Claude propose une aide (confiance {r[1]}) : « {titre} »")
+    affiche, detail = _icone_affiche("💡")
+    print(f"   ✅ L'icône affiche bien la 💡 (« {detail} »)." if affiche
+          else f"   ⚠️  L'icône n'affiche pas la 💡 : {detail}.")
+    position = _taille_journal()
     _appeler()
-    print("\n   🔔 Ta 💡 est prête ! L'icône tout en haut à droite affiche maintenant 💡. Alors :")
+    print("\n   🔔 Ta 💡 est prête ! " + ("L'icône tout en haut à droite affiche maintenant 💡. " if affiche else "")
+          + "Alors :")
     print("      1. clique sur l'icône ;")
     print("      2. passe la souris (sans cliquer) sur « 💡 Aides (… à lire) » : une petite liste s'ouvre à côté ;")
     print(f"      3. clique sur la ligne « 💡 {titre} ».")
@@ -204,13 +239,19 @@ def _resultat_declencheur(r, debut: float, resultats: list) -> None:
                                          and x["statut"] in ("prete", "echec", "expiree")), None), DELAIS["redaction"])
     if fini and fini["statut"] == "prete":
         ouverte = _fenetre_ouverte(a["id"], debut)
-        print("   ✅ Aide rédigée, et sa fenêtre s'est ouverte." if ouverte
+        print("   ✅ Aide rédigée, et sa fenêtre s'est ouverte. Lis-la, puis clique « Fermer »." if ouverte
               else "   ⚠️  Aide rédigée, mais l'icône n'a pas ouvert sa fenêtre.")
+        if ouverte and not _fenetre_fermee(DELAIS["lecture"]):
+            print("   ⚠️  La fenêtre de l'aide est toujours ouverte : ferme-la (« Fermer »), sinon l'icône reste figée.")
         resultats.append(f"✅ 2. Erreur à l'écran : 💡 proposée (confiance {r[1]}), aide rédigée et ouverte" if ouverte
                          else f"⚠️ 2. Erreur à l'écran : 💡 proposée (confiance {r[1]}), aide rédigée, fenêtre pas ouverte")
     else:
-        print("   ⚠️  L'aide n'a pas été rédigée (pas de clic sur la ligne 💡 dans « 💡 Aides » ?)")
-        resultats.append(f"⚠️ 2. Erreur à l'écran : 💡 proposée (confiance {r[1]}), mais aide pas ouverte")
+        clic = "demandée depuis l'icône (💡)" in _journal_depuis(position)
+        print("   ⚠️  Ton clic est bien arrivé à l'icône, mais l'aide n'a pas été rédigée à temps." if clic else
+              "   ⚠️  L'icône n'a reçu aucun clic sur la ligne 💡 (dans « 💡 Aides »).")
+        resultats.append(f"⚠️ 2. Erreur à l'écran : 💡 proposée (confiance {r[1]}), icône "
+                         + ("avec 💡" if affiche else "SANS 💡") + (", clic reçu mais aide pas rédigée" if clic
+                                                                     else ", aucun clic reçu"))
 
 
 def _couper(resultats: list) -> None:

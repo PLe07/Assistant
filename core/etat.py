@@ -269,6 +269,10 @@ def resume() -> dict:
     aides = [a for a in aides_recentes(time.time() - 2 * 3600)
              if not a["vue"] and a["statut"] in ("proposee", "demandee", "prete", "a_capturer")]
     capteurs = ("🎙" if micro_actif else "") + ("👁" if ecran_actif else "")
+    note = (lire("icone_titre") or "").split("|", 1)  # ce que l'icône affiche vraiment, et depuis quand
+    icone_vue = (time.time() - float(note[0]), note[1]) if len(note) == 2 and note[0].isdigit() else None
+    fenetre = lire("icone_fenetre")  # une fenêtre de l'icône est ouverte : l'icône est figée tant qu'elle l'est
+    icone_fenetre = time.time() - float(fenetre) if fenetre is not None else None
     if reglages["pause_globale"]:
         icone = "⏸"
     elif not superviseur_actif:
@@ -284,6 +288,8 @@ def resume() -> dict:
         "micro_son": micro_son,
         "micro_muet": micro_muet,
         "micro_nom": micro_nom,
+        "icone_vue": icone_vue,
+        "icone_fenetre": icone_fenetre,
         "pause_ecran": reglages["pause_ecran"],
         "ecran_actif": ecran_actif,
         "ecran_regard": ecran_regard,

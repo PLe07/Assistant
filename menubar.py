@@ -51,6 +51,17 @@ def _au_premier_plan() -> None:
         pass
 
 
+def _fenetre(*args, **kwargs) -> int:
+    """Ouvre une fenêtre devant toi. Tant qu'elle est ouverte, l'icône est figée (macOS) :
+    c'est noté dans l'état, pour que « etat » et l'essai puissent te le dire."""
+    _au_premier_plan()
+    etat.ecrire("icone_fenetre", f"{time.time():.0f}")
+    try:
+        return rumps.alert(*args, **kwargs)
+    finally:
+        etat.effacer("icone_fenetre")
+
+
 class Icone(rumps.App):
     def __init__(self):
         super().__init__("Assistant", title="⚪", quit_button=None)
@@ -66,6 +77,7 @@ class Icone(rumps.App):
         self.sous_menu = rumps.MenuItem("Modules")
         self.sous_menu.add(rumps.MenuItem("…"))
         self.derniere_erreur = ""
+        self.titre_note = ("", 0.0)  # ce que l'icône affiche, noté dans l'état (pour « etat » et l'essai)
         self.attendues: set[int] = set()  # aides demandées depuis l'icône, en cours de rédaction
         self.menu = [
             self.ligne_etat,
@@ -102,6 +114,9 @@ class Icone(rumps.App):
             self.ligne_etat.title = f"État illisible : {e}"
             return
         self.title = r["icone"]
+        if r["icone"] != self.titre_note[0] or time.time() - self.titre_note[1] > 10:
+            etat.ecrire("icone_titre", f"{time.time():.0f}|{r['icone']}")
+            self.titre_note = (r["icone"], time.time())
         if r["pause"]:
             self.ligne_etat.title = "En pause : rien ne tourne"
         elif not r["superviseur_actif"]:
@@ -164,8 +179,7 @@ class Icone(rumps.App):
         r = etat.resume()
         yeux = next((m for m in r["modules"] if m["nom"] == "yeux"), None)
         if r["pause"] or r["pause_ecran"] or yeux is None or yeux["statut"] != "actif":
-            _au_premier_plan()
-            rumps.alert(title="👁 Les yeux ne sont pas actifs",
+            _fenetre(title="👁 Les yeux ne sont pas actifs",
                         message="L'écran est coupé, en pause ou le module « yeux » est désactivé.\n"
                                 "Pour l'activer :  python assistant.py activer yeux", ok="Fermer")
             return
@@ -187,8 +201,7 @@ class Icone(rumps.App):
     def afficher_aide(self, a: dict) -> None:
         etat.marquer_vue(a["id"])
         texte = a["texte"] or "(aucun texte)"
-        _au_premier_plan()
-        if rumps.alert(title=f"💡 {a['titre']}", message=texte, ok="Fermer", cancel="Copier") == 0:
+        if _fenetre(title=f"💡 {a['titre']}", message=texte, ok="Fermer", cancel="Copier") == 0:
             subprocess.run(["pbcopy"], input=texte, text=True)
 
     def effacer_aides(self, _) -> None:
@@ -201,8 +214,7 @@ class Icone(rumps.App):
 
         affichee, raison = notifier("Assistant", "Notification de test ✅", test=True)
         if not affichee:
-            _au_premier_plan()
-            rumps.alert("Notification non affichée", raison)
+            _fenetre("Notification non affichée", raison)
 
     def ouvrir_journal(self, _) -> None:
         subprocess.run(["open", "-a", "Console", str(JOURNAL)])
@@ -220,4 +232,5 @@ if __name__ == "__main__":
         print("L'icône tourne déjà : regarde en haut à droite de l'écran.")
         sys.exit(0)
     _cacher_du_dock()
+    etat.effacer("icone_fenetre")  # une fenêtre restée ouverte quand l'icône a été arrêtée
     Icone().run()
