@@ -68,6 +68,7 @@ def connexion():
         if nouveau:
             os.chmod(FICHIER, 0o600)  # lisible par toi seul
         db.execute("PRAGMA journal_mode=WAL")
+        db.execute("PRAGMA secure_delete = ON")  # ce qui est effacé est écrasé par des zéros, pas juste « libéré »
         db.executescript(_SCHEMA)
         if _index_ok is None or not _index_ok:
             existe = db.execute("SELECT 1 FROM sqlite_master WHERE name = 'souvenirs_index'").fetchone()
@@ -153,7 +154,10 @@ def lire(id_souvenir: int) -> dict | None:
 
 def oublier(id_souvenir: int) -> bool:
     with connexion() as db:
-        return db.execute("DELETE FROM souvenirs WHERE id = ?", (id_souvenir,)).rowcount == 1
+        efface = db.execute("DELETE FROM souvenirs WHERE id = ?", (id_souvenir,)).rowcount == 1
+        if efface and _index_ok:  # l'index aussi oublie ses mots (sinon ils resteraient dans le fichier)
+            db.execute("INSERT INTO souvenirs_index(souvenirs_index) VALUES ('optimize')")
+        return efface
 
 
 def oublier_tout() -> int:
@@ -161,6 +165,8 @@ def oublier_tout() -> int:
     with connexion() as db:
         n = db.execute("DELETE FROM souvenirs").rowcount
         db.execute("DELETE FROM intentions")
+        if _index_ok:
+            db.execute("INSERT INTO souvenirs_index(souvenirs_index) VALUES ('rebuild')")  # index vidé pour de bon
     with connexion() as db:
         db.execute("VACUUM")  # le fichier est réécrit : les anciens souvenirs ne traînent pas sur le disque
     return n

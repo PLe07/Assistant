@@ -14,6 +14,7 @@ Une 💡 peut aussi proposer une ACTION (« Créer le rappel … ? ») : ton cli
 Chaque déclencheur est noté dans tes habitudes (core/memoire.py), sans aucun contenu.
 """
 
+import re
 import threading
 import time
 from collections import deque
@@ -60,6 +61,14 @@ def decider(message: str, systeme: str, module: str) -> Decision:
 
 def rediger(message: str, systeme: str, module: str) -> str:
     return demander(message, module=module, systeme=systeme, modele="fort").texte.strip()
+
+
+def texte_simple(texte: str) -> str:
+    """Les fenêtres de macOS n'affichent pas la mise en forme Markdown : **gras**, # titres et `code`
+    deviennent du texte simple (sinon les astérisques s'affichent tels quels)."""
+    texte = re.sub(r"\*\*(.+?)\*\*|__(.+?)__", lambda m: m.group(1) or m.group(2), texte or "")
+    texte = re.sub(r"^#{1,6}\s+", "", texte, flags=re.M)
+    return texte.replace("`", "")
 
 
 def niveau() -> int:

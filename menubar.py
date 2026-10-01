@@ -17,6 +17,7 @@ from datetime import datetime
 import rumps
 
 from core import config, consignes, etat, memoire
+from core.aides import texte_simple
 from core.journal import FICHIER as JOURNAL
 from core.journal import journal
 
@@ -226,7 +227,7 @@ class Icone(rumps.App):
             except Exception:
                 log.exception("Mémoire : aide pas enregistrée")
         etat.marquer_vue(a["id"])
-        texte = a["texte"] or "(aucun texte)"
+        texte = texte_simple(a["texte"]) or "(aucun texte)"
         if _fenetre(title=f"💡 {a['titre']}", message=texte, ok="Fermer", cancel="Copier") == 0:
             subprocess.run(["pbcopy"], input=texte, text=True)
 
