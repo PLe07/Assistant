@@ -1,0 +1,24 @@
+# --- Secrets : ne JAMAIS envoyer sur GitHub ---
+.env
+credentials.json
+token.json
+client_secret*.json
+
+# --- Données personnelles qui restent sur le Mac ---
+regles_perso.txt
+*.db
+*.db-journal
+logs/
+*.log
+PAUSE
+
+# --- Python ---
+.venv/
+__pycache__/
+*.pyc
+
+# --- macOS ---
+.DS_Store
+
+# --- Verrou du tri (un seul passage à la fois) ---
+.verrou
