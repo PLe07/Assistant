@@ -32,6 +32,7 @@ def afficher(mails, res) -> None:
     print()
     for i, mail in enumerate(mails, 1):
         print(f"{i:>2}. {mail.date:%d/%m %H:%M} · {_court(mail.expediteur_nom, 28)} · « {_court(mail.objet, 60)} »")
+        print(f"    <{mail.expediteur_adresse}>")
         c = res.classements.get(mail.id)
         if c is None:
             print("    ❔ Non classé (erreur, voir plus bas)")

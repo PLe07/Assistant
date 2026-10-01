@@ -79,10 +79,20 @@ def _regles_perso() -> str:
 
 
 def _cite_dans_regles_perso(mail: Mail, regles: str) -> bool:
+    """L'adresse, ou son domaine (sous-domaines compris), est-elle citée dans regles_perso.txt ?
+
+    « u-bordeaux.fr » couvre aussi « iae.u-bordeaux.fr ». Un domaine qui n'apparaît
+    que dans une adresse (« marie@gmail.com ») ne couvre pas tout gmail.com.
+    """
     adresse = mail.expediteur_adresse
-    domaine = adresse.partition("@")[2]
+    if not adresse or not regles:
+        return False
     texte = regles.lower()
-    return bool(adresse and adresse in texte) or bool(domaine and domaine in texte)
+    if re.search(rf"(?<![\w.+-]){re.escape(adresse)}(?![\w-])", texte):
+        return True
+    morceaux = adresse.partition("@")[2].split(".")
+    domaines = [".".join(morceaux[i:]) for i in range(len(morceaux) - 1)]  # jamais « fr » seul
+    return any(re.search(rf"(?<![\w@.-]){re.escape(d)}(?![\w-])", texte) for d in domaines if d)
 
 
 def pre_trier(mail: Mail, regles: str = "") -> Classement | None:
