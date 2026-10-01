@@ -11,6 +11,7 @@ Les deux textes d'essai sont des fichiers temporaires, effacés à la fin. Rien 
 
 import re
 import subprocess
+import sys
 import tempfile
 import time
 from pathlib import Path
@@ -82,14 +83,31 @@ def _pas_pret() -> str | None:
     return None
 
 
-def _pret_a(texte: str) -> None:
-    input(f"\n{texte}\n   Appuie sur Entrée quand tu es prêt… ")
+def _vider_clavier() -> None:
+    """Oublie ce qui a été tapé pendant l'attente : une touche en trop ne doit pas sauter une étape."""
+    try:
+        import termios
+
+        termios.tcflush(sys.stdin, termios.TCIFLUSH)
+    except Exception:
+        pass
+
+
+def _pret_a(actions: list[str]) -> None:
+    print("   Ce que tu vas faire :")
+    for numero, action in zip("①②③④⑤", actions):
+        print(f"   {numero} {action}")
+    _vider_clavier()
+    input("   ➜ Appuie sur Entrée pour commencer… ")
+    print("   (Ne tape plus rien ici : le Terminal voit tout seul ce qui se passe.)")
 
 
 def _bouton(resultats: list) -> None:
     print("\n━━ 1/3 · Le bouton « M'aider avec cet écran » ━━")
-    _pret_a("   Je vais ouvrir TextEdit avec un petit exercice.\n"
-            "   Ensuite : clique l'icône 🎙👁 en haut à droite → « 👁 M'aider avec cet écran ».")
+    _pret_a(["Appuie sur Entrée : une fenêtre TextEdit s'ouvre avec un petit exercice de TVA.",
+             "Tout en haut à droite de l'écran (près de l'heure), clique sur l'icône 🎙👁.",
+             "Dans le menu qui s'ouvre, clique sur « 👁 M'aider avec cet écran ».",
+             "Attends 10 à 30 s : une fenêtre s'ouvre avec l'aide de Claude. Lis-la, puis « Fermer »."])
     debut = time.time()
     _ouvrir(EXERCICE, "assistant-essai-exercice.txt")
     print(f"   J'attends ton clic ({DELAIS['bouton'] // 60} min au plus)…")
@@ -117,9 +135,12 @@ def _bouton(resultats: list) -> None:
 
 def _declencheur(resultats: list) -> None:
     print("\n━━ 2/3 · Une erreur qui reste à l'écran ━━")
-    _pret_a("   Je vais ouvrir TextEdit avec une erreur Python.\n"
-            "   Ensuite : laisse cette fenêtre DEVANT toi environ 4 minutes, en bougeant la souris de temps\n"
-            "   en temps. Une notification te dira de revenir ici.")
+    _pret_a(["Appuie sur Entrée : TextEdit affiche une fausse erreur Python.",
+             "Laisse cette fenêtre devant toi environ 4 minutes. Ne change pas de fenêtre ;\n"
+             "     bouge juste la souris de temps en temps (sinon il te croit absent).",
+             "Si une notification « 💡 … » apparaît : clique sur l'icône 🎙👁, puis sur la ligne\n"
+             "     qui commence par 💡. L'aide de Claude s'ouvre.",
+             "Une notification « Essai : l'étape 2 est finie » te dira de revenir ici."])
     debut, position = time.time(), _taille_journal()
     _ouvrir(ERREUR, "assistant-essai-erreur.txt")
     print(f"   J'attends le déclencheur ({DELAIS['declencheur'] // 60} min au plus)…")
@@ -131,8 +152,11 @@ def _declencheur(resultats: list) -> None:
         m = DECLENCHEUR.search(texte)
         return (m.group(1), int(m.group(2))) if m else None
 
-    r = _attendre(vu, DELAIS["declencheur"], 5)
+    _resultat_declencheur(_attendre(vu, DELAIS["declencheur"], 5), debut, resultats)
     notifier("Assistant", "Essai : l'étape 2 est finie, reviens sur le Terminal.", module="essai", test=True)
+
+
+def _resultat_declencheur(r, debut: float, resultats: list) -> None:
     if r is None:
         print("   ❌ Aucun déclencheur vu. La fenêtre est-elle restée devant ? (5 min sans souris = « absent »)")
         resultats.append("❌ 2. Erreur à l'écran : aucun déclencheur")
@@ -150,7 +174,7 @@ def _declencheur(resultats: list) -> None:
                                 and x["statut"] != "a_capturer"), None), 30, 1)
     titre = a["titre"] if a else "?"
     print(f"   ✅ Déclencheur vu, Claude propose une aide (confiance {r[1]}) : « {titre} »")
-    print("   → Clique l'icône, puis la ligne 💡 : Claude rédige l'aide (10 à 30 s).")
+    print("   → Clique sur l'icône 🎙👁, puis sur la ligne 💡 : Claude rédige l'aide (10 à 30 s).")
     fini = a and _attendre(lambda: next((x for x in etat.aides_recentes(debut) if x["id"] == a["id"]
                                          and x["statut"] in ("prete", "echec", "expiree")), None), DELAIS["redaction"])
     if fini and fini["statut"] == "prete":
@@ -163,14 +187,15 @@ def _declencheur(resultats: list) -> None:
 
 def _couper(resultats: list) -> None:
     print("\n━━ 3/3 · Couper et rallumer l'écran ━━")
-    print("   → Clique l'icône, puis « 👁 Couper l'écran ».")
+    _pret_a(["Appuie sur Entrée.",
+             "Clique sur l'icône 🎙👁, puis sur « 👁 Couper l'écran » : le 👁 disparaît de l'icône.",
+             "Reclique sur l'icône, puis sur « 👁 Rallumer l'écran » : le 👁 revient."])
     coupe = _attendre(lambda: config.charger()["pause_ecran"] and _yeux_statut() != "actif", DELAIS["ecran"])
     if not coupe:
         print("   ❌ L'écran n'a pas été coupé.")
         resultats.append("❌ 3. Couper l'écran : pas vu")
         return
     print("   ✅ Écran coupé : le module yeux est arrêté, 👁 a disparu de l'icône.")
-    print("   → Maintenant « 👁 Rallumer l'écran ».")
     rallume = _attendre(lambda: not config.charger()["pause_ecran"] and _yeux_statut() == "actif", DELAIS["ecran"])
     print("   ✅ Écran rallumé : 👁 est revenu." if rallume else "   ❌ L'écran n'a pas été rallumé.")
     resultats.append("✅ 3. Couper / rallumer l'écran" if rallume else "⚠️ 3. Écran coupé, mais pas rallumé")
@@ -181,8 +206,9 @@ def essai() -> int:
     if raison:
         print(f"⛔ Avant l'essai : {raison}")
         return 1
-    print("ESSAI GUIDÉ DES YEUX, en vrai (3 étapes, environ 8 minutes, 2 à 4 appels à Claude).")
-    print("Ctrl + C pour arrêter à tout moment.")
+    print("ESSAI GUIDÉ DES YEUX, en vrai : 3 étapes, environ 8 minutes, 2 à 4 appels à Claude.")
+    print("On vérifie que : ① le bouton d'aide marche, ② l'Assistant remarque tout seul une erreur")
+    print("qui reste affichée, ③ tu peux couper l'écran. Ctrl + C pour arrêter à tout moment.")
     resultats: list[str] = []
     try:
         _bouton(resultats)
