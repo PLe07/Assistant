@@ -119,6 +119,7 @@ class Icone(rumps.App):
         self.bouton_micro.title = RALLUMER_MICRO if r["pause_micro"] else COUPER_MICRO
         self.bouton_ecran.title = RALLUMER_ECRAN if r["pause_ecran"] else COUPER_ECRAN
 
+        self.aides.title = f"💡 Aides ({len(r['aides'])} à lire)" if r["aides"] else "💡 Aides"
         self.aides.clear()
         for a in r["aides"]:
             item = rumps.MenuItem(f"{SYMBOLES_AIDE.get(a['statut'], '💡')} {a['titre']}", callback=self.ouvrir_aide)

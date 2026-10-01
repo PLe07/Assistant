@@ -253,6 +253,7 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--delai", type=int, default=5, help="--une-fois : secondes pour changer de fenêtre")
     parser.add_argument("--rapide", action="store_true", help="--test : délais divisés par 10")
     parser.add_argument("--avec-claude", action="store_true", help="montre aussi l'avis de Claude (quota)")
+    parser.add_argument("--etape", type=int, choices=[1, 2, 3], help="--essai : une seule étape")
     args = parser.parse_args(argv)
     if args.diagnostic:
         return diagnostic()
@@ -265,7 +266,7 @@ def main(argv: list[str]) -> int:
     if args.essai:
         from modules.yeux.essai import essai
 
-        return essai()
+        return essai(args.etape)
     return mode_test(args.rapide, args.avec_claude)
 
 

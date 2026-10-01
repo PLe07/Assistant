@@ -132,7 +132,7 @@ class Assistance:
         with self.verrou:
             self.extraits[id_aide] = (extrait, time.time())
         # Ce que tu as demandé passe même en heures silencieuses (jamais pendant la pause).
-        notifier("Assistant", f"💡 {decision.titre} — clique sur 💡 en haut de l'écran", module=self.module,
+        notifier("Assistant", f"💡 {decision.titre} — pour la lire : icône en haut à droite → « 💡 Aides »", module=self.module,
                  urgent=demande)
 
     # --- les aides demandées depuis l'icône ------------------------------------------------

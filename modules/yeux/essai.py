@@ -1,6 +1,7 @@
 """Essai guidé, en vrai : le Terminal te dit quoi faire, puis vérifie que chaque étape a marché.
 
-    python -m modules.yeux --essai
+    python -m modules.yeux --essai              les 3 étapes
+    python -m modules.yeux --essai --etape 2    une seule étape
 
 1. le bouton « 👁 M'aider avec cet écran » sur un petit exercice ouvert dans TextEdit ;
 2. une erreur laissée à l'écran → vérification automatique « puis-je aider ? » ;
@@ -64,6 +65,11 @@ def _journal_depuis(position: int) -> str:
         return ""
 
 
+def _fenetre_ouverte(id_aide: int, debut: float) -> bool:
+    """L'icône marque une aide « vue » quand elle ouvre sa fenêtre."""
+    return bool(_attendre(lambda: next((x["vue"] for x in etat.aides_recentes(debut) if x["id"] == id_aide), 0), 15, 1))
+
+
 def _yeux_statut() -> str | None:
     return next((m["statut"] for m in etat.modules() if m["nom"] == "yeux"), None)
 
@@ -125,8 +131,11 @@ def _bouton(resultats: list) -> None:
     fini = _attendre(lambda: next((x for x in etat.aides_recentes(debut) if x["id"] == a["id"]
                                    and x["statut"] in ("prete", "echec", "expiree")), None), DELAIS["redaction"])
     if fini and fini["statut"] == "prete":
-        print("   ✅ Aide rédigée : sa fenêtre a dû s'ouvrir toute seule.")
-        resultats.append(f"✅ 1. Bouton : écran lu ({a['titre']}) et aide rédigée")
+        ouverte = _fenetre_ouverte(a["id"], debut)
+        print("   ✅ Aide rédigée, et sa fenêtre s'est ouverte." if ouverte
+              else "   ⚠️  Aide rédigée, mais l'icône n'a pas ouvert sa fenêtre.")
+        resultats.append(f"✅ 1. Bouton : écran lu ({a['titre']}), aide rédigée et ouverte" if ouverte
+                         else f"⚠️ 1. Bouton : aide rédigée ({a['titre']}), mais fenêtre pas ouverte")
     else:
         raison = fini["texte"][:150] if fini else "pas de réponse à temps"
         print(f"   ❌ Pas d'aide : {raison}")
@@ -138,8 +147,9 @@ def _declencheur(resultats: list) -> None:
     _pret_a(["Appuie sur Entrée : TextEdit affiche une fausse erreur Python.",
              "Laisse cette fenêtre devant toi environ 4 minutes. Ne change pas de fenêtre ;\n"
              "     bouge juste la souris de temps en temps (sinon il te croit absent).",
-             "Si une notification « 💡 … » apparaît : clique sur l'icône 🎙👁, puis sur la ligne\n"
-             "     qui commence par 💡. L'aide de Claude s'ouvre.",
+             "Au bout de 3 à 4 min, l'icône en haut à droite affiche 💡 (une notification aussi). Alors :\n"
+             "     clique sur l'icône, puis passe la souris sur « 💡 Aides » : une petite liste s'ouvre\n"
+             "     à côté. Clique sur la ligne « 💡 … » de cette liste : l'aide de Claude s'ouvre.",
              "Une notification « Essai : l'étape 2 est finie » te dira de revenir ici."])
     debut, position = time.time(), _taille_journal()
     _ouvrir(ERREUR, "assistant-essai-erreur.txt")
@@ -174,14 +184,19 @@ def _resultat_declencheur(r, debut: float, resultats: list) -> None:
                                 and x["statut"] != "a_capturer"), None), 30, 1)
     titre = a["titre"] if a else "?"
     print(f"   ✅ Déclencheur vu, Claude propose une aide (confiance {r[1]}) : « {titre} »")
-    print("   → Clique sur l'icône 🎙👁, puis sur la ligne 💡 : Claude rédige l'aide (10 à 30 s).")
+    print("   → Icône 🎙👁 → passe la souris sur « 💡 Aides » → clique la ligne 💡 : Claude rédige l'aide (10 à 30 s).")
+    notifier("Assistant", "Essai : ta 💡 est prête. Icône en haut à droite → passe sur « 💡 Aides » → clique la ligne 💡.",
+             module="essai", test=True)
     fini = a and _attendre(lambda: next((x for x in etat.aides_recentes(debut) if x["id"] == a["id"]
                                          and x["statut"] in ("prete", "echec", "expiree")), None), DELAIS["redaction"])
     if fini and fini["statut"] == "prete":
-        print("   ✅ Aide rédigée : sa fenêtre a dû s'ouvrir.")
-        resultats.append(f"✅ 2. Erreur à l'écran : 💡 proposée (confiance {r[1]}) et aide rédigée")
+        ouverte = _fenetre_ouverte(a["id"], debut)
+        print("   ✅ Aide rédigée, et sa fenêtre s'est ouverte." if ouverte
+              else "   ⚠️  Aide rédigée, mais l'icône n'a pas ouvert sa fenêtre.")
+        resultats.append(f"✅ 2. Erreur à l'écran : 💡 proposée (confiance {r[1]}), aide rédigée et ouverte" if ouverte
+                         else f"⚠️ 2. Erreur à l'écran : 💡 proposée (confiance {r[1]}), aide rédigée, fenêtre pas ouverte")
     else:
-        print("   ⚠️  L'aide n'a pas été rédigée (pas de clic sur 💡 ?)")
+        print("   ⚠️  L'aide n'a pas été rédigée (pas de clic sur la ligne 💡 dans « 💡 Aides » ?)")
         resultats.append(f"⚠️ 2. Erreur à l'écran : 💡 proposée (confiance {r[1]}), mais aide pas ouverte")
 
 
@@ -201,19 +216,21 @@ def _couper(resultats: list) -> None:
     resultats.append("✅ 3. Couper / rallumer l'écran" if rallume else "⚠️ 3. Écran coupé, mais pas rallumé")
 
 
-def essai() -> int:
+def essai(etape: int | None = None) -> int:
     raison = _pas_pret()
     if raison:
         print(f"⛔ Avant l'essai : {raison}")
         return 1
-    print("ESSAI GUIDÉ DES YEUX, en vrai : 3 étapes, environ 8 minutes, 2 à 4 appels à Claude.")
+    etapes = [(1, _bouton), (2, _declencheur), (3, _couper)]
+    etapes = [e for e in etapes if etape is None or e[0] == etape]
+    print("ESSAI GUIDÉ DES YEUX, en vrai : 3 étapes, environ 8 minutes, 2 à 4 appels à Claude." if etape is None
+          else f"ESSAI GUIDÉ DES YEUX, en vrai : étape {etape} seulement.")
     print("On vérifie que : ① le bouton d'aide marche, ② l'Assistant remarque tout seul une erreur")
     print("qui reste affichée, ③ tu peux couper l'écran. Ctrl + C pour arrêter à tout moment.")
     resultats: list[str] = []
     try:
-        _bouton(resultats)
-        _declencheur(resultats)
-        _couper(resultats)
+        for _, faire in etapes:
+            faire(resultats)
     except KeyboardInterrupt:
         print("\nEssai interrompu.")
     finally:
