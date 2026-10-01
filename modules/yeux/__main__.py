@@ -197,7 +197,11 @@ def tester_texte(texte: str, avec_claude: bool) -> int:
         return 0
     obs = Observation(journal("yeux"), test=True, avec_claude=avec_claude)
     f = {"appli": "Test", "titre": ""}
-    for (type_, _), idx in sorted(trouves.items()):
+    par_type: dict[str, list[int]] = {}  # une erreur sur plusieurs lignes = UN signal, comme en vrai
+    for (type_, _), idx in trouves.items():
+        par_type.setdefault(type_, []).extend(idx)
+    for type_, idx in sorted(par_type.items()):
+        idx = sorted(set(idx))
         print(f"⚡ signal « {type_} » : déclencherait après {p.DELAIS[type_] // 60} min à l'écran"
               if p.DELAIS[type_] else f"⚡ signal « {type_} » : déclencherait aussitôt")
         if avec_claude:
