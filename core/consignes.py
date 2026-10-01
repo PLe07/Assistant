@@ -3,6 +3,7 @@
 Le tri est 100 % local (aucun appel à Claude pour trier) :
 - « rappelle-moi… », « pense à… », « n'oublie pas de… »      → un rappel Apple (core/rappels.py) ;
 - « qu'est-ce que je t'avais dit sur… », « tu te souviens… » → ton second cerveau : ta mémoire + Claude ;
+- « interroge-moi », « fais-moi réviser »                    → le coach (tes questions du jour) ;
 - « note que… », « retiens que… »                           → noté dans ta mémoire ;
 - par écrit : une autre question → ton second cerveau ; le reste → noté ;
 - à la voix : une autre demande → la 💡 habituelle (Claude propose, tu cliques).
@@ -24,6 +25,8 @@ SOUVENIR = re.compile(
     r"|\bdans ma mémoire\b|\brappelle[- ]moi (ce que|ce qu'|quand j|où j|ou j|comment j)"
     r"|\bqu'est[- ]ce que (j'ai|j'avais) (noté|dit)\b", re.I)
 RAPPEL = re.compile(r"\b(rappelle|rappelez)[- ]moi\b|^\W*pense à\b|\bpense à me\b|\bn'oublie pas (de|d')", re.I)
+COACH = re.compile(r"\binterroge[- ]moi\b|\bfais[- ]moi réviser\b|\bmes questions du jour\b|\b(lance|ouvre) le coach\b"
+                   r"|^\W*coach\W*$", re.I)
 NOTE = re.compile(r"^\W*(note|notes|noter|retiens|retenir|mémorise|souviens-toi|garde en mémoire)\b"
                   r"(\s+(bien|que|qu'|ça|ceci|cela))*[\s:,]*", re.I)
 QUESTION = re.compile(r"\?\s*$|^\W*(comment|pourquoi|combien|quel|quelle|quels|quelles|qui|où|quand|est-ce|"
@@ -44,12 +47,14 @@ def _texte(t: str) -> str:
 
 
 def classer(texte: str) -> str:
-    """« rappel », « souvenir » (question à ta mémoire), « note », « question » ou « autre »."""
+    """« rappel », « souvenir » (question à ta mémoire), « coach », « note », « question » ou « autre »."""
     t = _texte(texte)
     if SOUVENIR.search(t):
         return "souvenir"
     if RAPPEL.search(t):
         return "rappel"
+    if COACH.search(t):
+        return "coach"
     if NOTE.match(t) and NOTE.sub("", t, count=1).strip():
         return "note"
     if QUESTION.search(t):

@@ -58,7 +58,7 @@ class Ecoute(Assistance):
         if d.type == "mot_appel":
             demande = retirer_mot_appel(texte, p.reglage("mot_appel", "assistant"))
             genre = consignes.classer(demande)
-            if genre in ("rappel", "note", "souvenir"):
+            if genre in ("rappel", "note", "souvenir", "coach"):
                 self.consigne(genre, demande)
                 return
             if not self.test:
@@ -74,7 +74,8 @@ class Ecoute(Assistance):
     def consigne(self, genre: str, demande: str) -> None:
         if self.test:
             self.afficher({"rappel": "   ⏰ demande de rappel", "note": "   📝 demande de note",
-                           "souvenir": "   🧠 question à ta mémoire"}[genre])
+                           "souvenir": "   🧠 question à ta mémoire",
+                           "coach": "   🎓 demande au coach → tes questions du jour seraient préparées"}[genre])
             if genre == "note":
                 self.afficher(f"   → serait noté dans ta mémoire : « {consignes.contenu_note(demande)} »")
             elif genre == "souvenir":
@@ -95,6 +96,14 @@ class Ecoute(Assistance):
         try:
             if genre == "note":
                 consignes.noter(demande, "oreilles")
+            elif genre == "coach":
+                from modules.coach import seance
+
+                seance.preparer()
+                n = seance.etat_du_jour()["a_repondre"]
+                notifier("Assistant", f"🎓 Tes {n} question(s) du jour t'attendent : icône en haut à droite → « 🎓 Coach »"
+                         if n else "🎓 Tu as déjà répondu à tes questions du jour : icône → « 🎓 Coach » pour la correction",
+                         module="coach", urgent=True)
             elif genre == "rappel":
                 if consignes.rappeler(demande, "oreilles", module="oreilles") is None:
                     memoire.noter("parole", demande, "oreilles")  # pas un rappel, finalement : la 💡 habituelle

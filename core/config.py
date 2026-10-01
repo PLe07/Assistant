@@ -60,6 +60,12 @@ DEFAUTS = {
             "applis_exclues": [],  # en plus de la liste de base (mots de passe, messageries…)
             "titres_exclus": [],  # en plus de la liste de base (banques, impots.gouv, ameli…)
         },
+        "coach": {
+            "actif": False,
+            "heure": "18:30",
+            "questions": 3,
+            "matieres_sans_support": ["Certification AMF"],  # interrogé sur le programme général si pas de cours
+        },
     },
 }
 

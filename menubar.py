@@ -32,6 +32,7 @@ RALLUMER_ECRAN = "👁  Rallumer l'écran (coupé)"
 AIDE_ECRAN = "👁  M'aider avec cet écran"
 NOTER = "✍️  Noter ou demander…"
 CHERCHER = "🔎  Chercher dans ma mémoire…"
+COACH = "🎓  Coach"
 SYMBOLES_AIDE = {"proposee": "💡", "demandee": "⏳", "a_capturer": "⏳", "prete": "✅"}
 
 
@@ -71,15 +72,15 @@ def _fenetre(*args, **kwargs) -> int:
     return _modale(lambda: rumps.alert(*args, **kwargs))
 
 
-def _saisie(titre: str, message: str, ok: str) -> str:
-    """Une fenêtre avec une zone de texte. Renvoie le texte tapé ("" si « Annuler »)."""
-    fenetre = rumps.Window(message=message, title=titre, default_text="", ok=ok, cancel="Annuler", dimensions=(380, 60))
+def _saisie(titre: str, message: str, ok: str, annuler: str = "Annuler", hauteur: int = 60) -> str | None:
+    """Une fenêtre avec une zone de texte. Renvoie le texte tapé (None si tu cliques « Annuler »)."""
+    fenetre = rumps.Window(message=message, title=titre, default_text="", ok=ok, cancel=annuler, dimensions=(380, hauteur))
     try:  # le curseur directement dans la zone de texte : tu tapes sans cliquer
         fenetre._alert.window().setInitialFirstResponder_(fenetre._textfield)
     except AttributeError:
         pass
     reponse = _modale(fenetre.run)
-    return " ".join(str(reponse.text or "").split()) if reponse.clicked == 1 else ""
+    return " ".join(str(reponse.text or "").split()) if reponse.clicked == 1 else None
 
 
 class Icone(rumps.App):
@@ -99,6 +100,9 @@ class Icone(rumps.App):
         self.derniere_erreur = ""
         self.titre_note = ("", 0.0)  # ce que l'icône affiche, noté dans l'état (pour « etat » et l'essai)
         self.attendues: set[int] = set()  # aides demandées depuis l'icône, en cours de rédaction
+        self.bouton_coach = rumps.MenuItem(COACH, callback=self.coach)
+        self.coach_occupe = False  # le coach prépare tes questions (ou les corrige)
+        self.coach_pret = False  # questions prêtes : elles s'ouvrent au prochain rafraîchissement
         self.menu = [
             self.ligne_etat,
             self.ligne_jour,
@@ -110,6 +114,7 @@ class Icone(rumps.App):
             rumps.MenuItem(AIDE_ECRAN, callback=self.aide_ecran),
             rumps.MenuItem(NOTER, callback=self.noter),
             rumps.MenuItem(CHERCHER, callback=self.chercher),
+            self.bouton_coach,
             self.aides,
             self.sous_menu,
             rumps.MenuItem("Notification de test", callback=self.test_notif),
@@ -172,7 +177,12 @@ class Icone(rumps.App):
             texte = f"{m['nom']} : {m['statut']}" + (f" ({m['detail'][:60]})" if m.get("detail") else "")
             self.sous_menu.add(rumps.MenuItem(texte))
 
+        self.bouton_coach.title = self._titre_coach()
+
         # En dernier : la fenêtre d'une aide attend que tu la fermes, le menu doit être à jour avant.
+        if self.coach_pret:
+            self.coach_pret = False
+            self._coach_questions()
         for a in etat.aides_recentes(time.time() - 2 * 3600):  # une aide demandée vient d'être rédigée ?
             if a["id"] in self.attendues and a["statut"] in ("prete", "echec", "expiree"):
                 self.attendues.discard(a["id"])
@@ -241,6 +251,9 @@ class Icone(rumps.App):
         if not texte:
             return
         genre = consignes.classer(texte)
+        if genre == "coach":
+            self.coach(None)
+            return
         if genre in ("souvenir", "question"):  # la réponse s'ouvrira toute seule dans une fenêtre
             id_aide = etat.proposer_aide("memoire", f"🧠 {texte[:70]}")
             etat.demander_aide(id_aide)
@@ -288,6 +301,91 @@ class Icone(rumps.App):
         if _fenetre(title=f"🔎 « {requete} » : {len(trouves)} souvenir(s)", message="\n\n".join(lignes),
                     ok="Fermer", cancel="Copier") == 0:
             subprocess.run(["pbcopy"], input="\n\n".join(lignes), text=True)
+
+    # --- Coach (phase 5) --------------------------------------------------------------------------
+
+    def _titre_coach(self) -> str:
+        from modules.coach import seance
+
+        if self.coach_occupe:
+            return "⏳  Coach : je prépare…"
+        e = seance.etat_du_jour()
+        if e["a_repondre"]:
+            return f"{COACH} : {e['a_repondre']} question(s) du jour"
+        if e["total"]:
+            return f"{COACH} ✅ fait aujourd'hui (revoir la correction)"
+        return f"{COACH} : mes questions du jour"
+
+    def coach(self, _) -> None:
+        from modules.coach import seance
+
+        if self.coach_occupe:
+            return
+        e = seance.etat_du_jour()
+        if not e["total"]:
+            log.info("Coach : questions demandées depuis l'icône")
+            self._coach_fond(self._coach_preparer)
+        elif e["a_repondre"]:
+            self._coach_questions()
+        elif e["a_corriger"]:
+            self._coach_corriger()
+        else:
+            texte = seance.texte_correction(seance.serie())
+            if _fenetre(title="🎓 Correction du jour", message=texte, ok="Fermer", cancel="Copier") == 0:
+                subprocess.run(["pbcopy"], input=texte, text=True)
+
+    def _coach_fond(self, travail) -> None:
+        self.coach_occupe = True
+        self.bouton_coach.title = "⏳  Coach : je prépare…"
+        threading.Thread(target=travail, daemon=True).start()
+
+    def _coach_preparer(self) -> None:
+        from modules.coach import seance
+
+        try:
+            seance.preparer()
+            self.coach_pret = True
+        except Exception as e:  # Claude indisponible, pas de cours… : dit clairement, rien n'est perdu
+            log.info("Coach : questions pas prêtes (%s)", e)
+            from core.notifications import notifier
+
+            notifier("Assistant", f"🎓 Coach : {e}", module="coach", urgent=True)
+        finally:
+            self.coach_occupe = False
+
+    def _coach_questions(self) -> None:
+        """Une fenêtre par question. « Plus tard » : tes réponses déjà données sont gardées."""
+        from modules.coach import seance
+
+        s_liste = seance.serie()
+        for s in [x for x in s_liste if x["statut"] == "posee"]:
+            reponse = _saisie(f"🎓 Question {s['ordre']}/{len(s_liste)} · {s['matiere']}", seance.texte_question(s),
+                              ok="Valider", annuler="Plus tard", hauteur=24 if s["type"] == "qcm" else 110)
+            if reponse is None:
+                break
+            seance.repondre(s["seance"], reponse)
+        else:
+            self._coach_corriger()
+        self.bouton_coach.title = self._titre_coach()  # le menu dit tout de suite ce qui reste
+
+    def _coach_corriger(self) -> None:
+        """La correction se fait en fond ; sa fenêtre s'ouvre toute seule (comme une aide 💡)."""
+        from modules.coach import seance
+
+        id_aide = etat.proposer_aide("coach", "🎓 Correction du jour")
+        etat.demander_aide(id_aide)
+        self.attendues.add(id_aide)
+
+        def corriger():
+            try:
+                etat.finir_aide(id_aide, seance.texte_correction(seance.corriger()), "prete")
+            except Exception as e:
+                log.info("Coach : correction impossible (%s)", e)
+                etat.finir_aide(id_aide, f"Correction impossible pour l'instant : {e}\nTes réponses sont gardées : "
+                                         "reclique sur « 🎓 Coach » plus tard.", "echec")
+
+        threading.Thread(target=corriger, daemon=True).start()
+        self.rafraichir()
 
     def effacer_aides(self, _) -> None:
         for a in etat.aides_recentes(time.time() - 2 * 3600):

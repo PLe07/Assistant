@@ -21,6 +21,11 @@ Mémoire, rappels, second cerveau (phase 4) :
     python assistant.py rappels [test|reel]  les derniers rappels ; passe en mode test ou réel
     python assistant.py habitudes         ce que l'Assistant a appris de tes habitudes (aucun contenu)
     python assistant.py essai-memoire     essai guidé, en vrai (--etape N pour une seule étape)
+
+Coach DCG/AMF (phase 5) :
+    python assistant.py coach             tes questions du jour, ici, puis la correction
+    python assistant.py coach cours       les cours trouvés (dossier donnees/coach/cours)
+    python assistant.py coach bilan       tes progrès et tes points faibles
 """
 
 import argparse
@@ -97,6 +102,16 @@ def afficher_etat() -> int:
               + ("réel" if rp["mode"] == "reel" else "test (rien n'est créé)") + f", liste « {rp['liste']} »")
     except Exception as e:  # la mémoire ne doit jamais empêcher « etat » de répondre
         print(f"   🧠 Mémoire illisible : {e}")
+    try:
+        from modules.coach import parametres as coach_p
+        from modules.coach import seance
+
+        c = seance.etat_du_jour()
+        if c["total"] or config.charger()["modules"].get("coach", {}).get("actif"):
+            print("   🎓 Coach : " + (f"{c['total'] - c['a_repondre']}/{c['total']} réponse(s) aujourd'hui" if c["total"]
+                                     else "pas encore de questions aujourd'hui") + f" · questions à {coach_p.heure()}")
+    except Exception as e:
+        print(f"   🎓 Coach illisible : {e}")
     if r["modules"]:
         print("\nModules")
         for m in r["modules"]:
@@ -274,6 +289,8 @@ def noter(texte: str | None) -> int:
         print('Utilise :  python assistant.py noter "le code du portail est 1234"')
         return 2
     genre = consignes.classer(texte)
+    if genre == "coach":
+        return coach(None)
     if genre in ("souvenir", "question"):
         return demander_memoire(texte)
     if genre == "rappel":
@@ -413,6 +430,16 @@ def habitudes() -> int:
     return 0
 
 
+def coach(quoi: str | None) -> int:
+    from modules.coach import terminal
+
+    actions = {None: terminal.seance_terminal, "cours": terminal.afficher_cours, "bilan": terminal.afficher_bilan}
+    if quoi not in actions:
+        print("Utilise :  python assistant.py coach   (tes questions)  ·  coach cours  ·  coach bilan")
+        return 2
+    return actions[quoi]()
+
+
 def essai_memoire(etape: int | None) -> int:
     from core.essai_memoire import essai
 
@@ -426,7 +453,7 @@ def main() -> int:
         "renouveler-jeton": renouveler_jeton,
     }
     avec_texte = {"noter": noter, "demander": demander_memoire, "memoire": afficher_memoire, "oublier": oublier,
-                  "rappels": rappels, "micro": micro, "ecran": ecran}
+                  "rappels": rappels, "micro": micro, "ecran": ecran, "coach": coach}
     parser = argparse.ArgumentParser(description="Commandes de l'assistant")
     parser.add_argument("action", choices=[*actions, *avec_texte, "activer", "desactiver", "habitudes", "essai-memoire"])
     parser.add_argument("suite", nargs="*", help="activer / desactiver : le module ; micro, ecran : on ou off ; "
