@@ -100,7 +100,9 @@ class Ecoute:
         id_aide = etat.proposer_aide("oreilles", decision.titre)
         with self.verrou:
             self.extraits[id_aide] = (extrait, time.time())
-        notifier("Assistant", f"💡 {decision.titre} — clique sur 💡 en haut de l'écran", module="oreilles")
+        # « Assistant, … » : tu l'as demandé, la réponse passe même en heures silencieuses (jamais pendant la pause).
+        notifier("Assistant", f"💡 {decision.titre} — clique sur 💡 en haut de l'écran", module="oreilles",
+                 urgent=type_ == "mot_appel")
 
     # --- les aides demandées depuis l'icône ------------------------------------------------
 
