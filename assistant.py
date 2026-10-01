@@ -94,8 +94,17 @@ def test_notif() -> int:
     from core.notifications import notifier
 
     affichee, raison = notifier("Assistant", "Notification de test ✅ : le socle fonctionne.", test=True)
-    print("✅ Notification affichée." if affichee else f"⛔ Notification non affichée : {raison}")
-    return 0 if affichee else 1
+    if not affichee:
+        print(f"⛔ Notification non envoyée : {raison}")
+        return 1
+    print("📨 Notification envoyée à macOS : elle doit apparaître en haut à droite d'ici 2 secondes.")
+    print("   Rien ne s'affiche ? macOS la bloque (c'est « Éditeur de script » qui l'affiche pour l'Assistant) :")
+    print("   1. Réglages Système → Notifications → « Éditeur de script » → active « Autoriser les notifications »")
+    print("      et choisis le style « Bannières » (ou « Alertes »).")
+    print("   2. Pas d'« Éditeur de script » dans la liste ? Ouvre l'app Éditeur de script (Applications → Utilitaires),")
+    print("      tape  display notification \"test\"  puis clique ▶ : accepte la demande de macOS.")
+    print("   3. Vérifie que « Ne pas déranger » (Centre de contrôle → Concentration) est désactivé.")
+    return 0
 
 
 def test_claude() -> int:

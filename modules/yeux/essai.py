@@ -10,6 +10,7 @@
 Les deux textes d'essai sont des fichiers temporaires, effacés à la fin. Rien d'autre n'est créé.
 """
 
+import os
 import re
 import subprocess
 import sys
@@ -19,7 +20,6 @@ from pathlib import Path
 
 from core import config, etat
 from core.journal import FICHIER as JOURNAL
-from core.notifications import notifier
 from modules.yeux import parametres as p
 
 EXERCICE = """Exercice (essai de l'Assistant)
@@ -40,6 +40,18 @@ def _ouvrir(texte: str, nom: str) -> Path:
     chemin.write_text(texte, encoding="utf-8")
     subprocess.run(["open", "-a", "TextEdit", str(chemin)], check=False)
     return chemin
+
+
+def _appeler() -> None:
+    """Un petit son, et le Terminal revient devant toi : impossible de rater le moment
+    (même si macOS n'affiche pas les notifications)."""
+    try:
+        subprocess.run(["afplay", "/System/Library/Sounds/Glass.aiff"], check=False, timeout=5)
+    except Exception:
+        pass
+    appli = {"Apple_Terminal": "Terminal", "iTerm.app": "iTerm"}.get(os.environ.get("TERM_PROGRAM", ""))
+    if appli:
+        subprocess.run(["open", "-a", appli], check=False)
 
 
 def _attendre(condition, secondes: float, pas: float = 2):
@@ -147,10 +159,8 @@ def _declencheur(resultats: list) -> None:
     _pret_a(["Appuie sur Entrée : TextEdit affiche une fausse erreur Python.",
              "Laisse cette fenêtre devant toi environ 4 minutes. Ne change pas de fenêtre ;\n"
              "     bouge juste la souris de temps en temps (sinon il te croit absent).",
-             "Au bout de 3 à 4 min, l'icône en haut à droite affiche 💡 (une notification aussi). Alors :\n"
-             "     clique sur l'icône, puis passe la souris sur « 💡 Aides » : une petite liste s'ouvre\n"
-             "     à côté. Clique sur la ligne « 💡 … » de cette liste : l'aide de Claude s'ouvre.",
-             "Une notification « Essai : l'étape 2 est finie » te dira de revenir ici."])
+             "Au bout de 3 à 4 min, un petit son retentit et ce Terminal revient devant toi :\n"
+             "     il te dira alors exactement où cliquer pour lire l'aide de Claude."])
     debut, position = time.time(), _taille_journal()
     _ouvrir(ERREUR, "assistant-essai-erreur.txt")
     print(f"   J'attends le déclencheur ({DELAIS['declencheur'] // 60} min au plus)…")
@@ -163,7 +173,7 @@ def _declencheur(resultats: list) -> None:
         return (m.group(1), int(m.group(2))) if m else None
 
     _resultat_declencheur(_attendre(vu, DELAIS["declencheur"], 5), debut, resultats)
-    notifier("Assistant", "Essai : l'étape 2 est finie, reviens sur le Terminal.", module="essai", test=True)
+    _appeler()  # fin de l'étape : retour au Terminal, même sans notification
 
 
 def _resultat_declencheur(r, debut: float, resultats: list) -> None:
@@ -184,9 +194,12 @@ def _resultat_declencheur(r, debut: float, resultats: list) -> None:
                                 and x["statut"] != "a_capturer"), None), 30, 1)
     titre = a["titre"] if a else "?"
     print(f"   ✅ Déclencheur vu, Claude propose une aide (confiance {r[1]}) : « {titre} »")
-    print("   → Icône 🎙👁 → passe la souris sur « 💡 Aides » → clique la ligne 💡 : Claude rédige l'aide (10 à 30 s).")
-    notifier("Assistant", "Essai : ta 💡 est prête. Icône en haut à droite → passe sur « 💡 Aides » → clique la ligne 💡.",
-             module="essai", test=True)
+    _appeler()
+    print("\n   🔔 Ta 💡 est prête ! L'icône tout en haut à droite affiche maintenant 💡. Alors :")
+    print("      1. clique sur l'icône ;")
+    print("      2. passe la souris (sans cliquer) sur « 💡 Aides (… à lire) » : une petite liste s'ouvre à côté ;")
+    print(f"      3. clique sur la ligne « 💡 {titre} ».")
+    print(f"   Claude rédige alors l'aide et sa fenêtre s'ouvre (10 à 30 s). J'attends ({DELAIS['redaction'] // 60} min au plus)…")
     fini = a and _attendre(lambda: next((x for x in etat.aides_recentes(debut) if x["id"] == a["id"]
                                          and x["statut"] in ("prete", "echec", "expiree")), None), DELAIS["redaction"])
     if fini and fini["statut"] == "prete":
@@ -238,6 +251,7 @@ def essai(etape: int | None = None) -> int:
             (Path(tempfile.gettempdir()) / nom).unlink(missing_ok=True)
     print("\n━━━━━━━━ RÉSULTAT DE L'ESSAI ━━━━━━━━")
     print("\n".join(resultats) or "(aucune étape terminée)")
-    print("Les textes d'essai sont effacés : ferme les fenêtres TextEdit sans enregistrer.")
+    print("👉 Ferme maintenant les fenêtres TextEdit de l'essai (Cmd + W, puis « Ne pas enregistrer ») :")
+    print("   sinon les yeux continuent de voir la fausse erreur. Les textes d'essai sont déjà effacés.")
     print("Colle ce résultat à Claude.")
     return 0 if resultats and all(r.startswith("✅") for r in resultats) else 1
