@@ -1,9 +1,9 @@
 """Tri des mails : programme principal.
 
-Pour l'instant : MODE TEST uniquement, en lecture seule.
-    python trier.py --test 20
+    python trier.py --test 20            classe les 20 derniers mails, SANS rien modifier
+    python trier.py --creer-etiquettes   crée les 5 étiquettes dans Gmail (aucun mail touché)
 
-Le mode réel (pose des étiquettes) sera ajouté à l'étape 7, après ta validation.
+Le mode réel (pose des étiquettes sur les mails) sera ajouté à l'étape 7, après ta validation.
 """
 
 import argparse
@@ -17,6 +17,8 @@ from classificateur import classer
 from gmail_client import (
     ConnexionImpossible,
     MauvaiseBoite,
+    creer_etiquette,
+    etiquettes_existantes,
     lire_mail,
     lister_boite,
     service_gmail,
@@ -80,13 +82,39 @@ def mode_test(nombre: int) -> int:
     return 0 if not res.erreurs else 1
 
 
+def mode_creer_etiquettes() -> int:
+    """Crée les étiquettes manquantes. Ne touche à aucun mail. Peut être relancé sans risque."""
+    try:
+        service = service_gmail(interactif=True)
+        verifier_boite(service, config.GMAIL_ATTENDU)
+        existantes = etiquettes_existantes(service)
+        for bac in config.BACS.values():
+            if bac.etiquette in existantes:
+                print(f"  = {bac.etiquette} : existe déjà")
+            else:
+                creer_etiquette(service, bac.etiquette, bac.fond, bac.texte)
+                print(f"  + {bac.etiquette} : créée")
+    except (ConnexionImpossible, MauvaiseBoite) as e:
+        print(f"⛔ {e}")
+        return 1
+    except HttpError as e:
+        print(f"⛔ Gmail a refusé ({e.status_code}) : {e.reason}")
+        return 1
+    except OSError as e:
+        print(f"⛔ Problème réseau : {e}")
+        return 1
+    print("\n✅ Étiquettes prêtes. Aucun mail n'a été modifié.")
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Tri automatique des mails")
-    parser.add_argument("--test", type=int, metavar="N", help="classe les N derniers mails, sans rien modifier")
+    modes = parser.add_mutually_exclusive_group(required=True)
+    modes.add_argument("--test", type=int, metavar="N", help="classe les N derniers mails, sans rien modifier")
+    modes.add_argument("--creer-etiquettes", action="store_true", help="crée les 5 étiquettes dans Gmail")
     args = parser.parse_args()
-    if args.test is None:
-        print("Pour l'instant, seul le mode test existe : python trier.py --test 20")
-        return 2
+    if args.creer_etiquettes:
+        return mode_creer_etiquettes()
     return mode_test(max(1, min(args.test, 50)))
 
 

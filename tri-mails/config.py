@@ -17,16 +17,18 @@ class Bac:
     code: str  # code renvoyé par Claude
     etiquette: str  # nom de l'étiquette dans Gmail
     archiver: bool  # True = sortir de la boîte de réception (jamais supprimer)
+    fond: str  # couleur de l'étiquette (palette imposée par Gmail)
+    texte: str
 
 
 BACS = {
     b.code: b
     for b in (
-        Bac("important_repondre", "🔴 Important-Répondre", archiver=False),
-        Bac("action_deadline", "⏰ Action-Deadline", archiver=False),
-        Bac("a_lire", "🟡 À-lire", archiver=False),
-        Bac("info_auto", "🟢 Info-Auto", archiver=True),
-        Bac("poubelle", "⚫ Poubelle", archiver=True),
+        Bac("important_repondre", "🔴 Important-Répondre", False, "#fb4c2f", "#ffffff"),
+        Bac("action_deadline", "⏰ Action-Deadline", False, "#ffad47", "#000000"),
+        Bac("a_lire", "🟡 À-lire", False, "#fad165", "#000000"),
+        Bac("info_auto", "🟢 Info-Auto", True, "#16a766", "#ffffff"),
+        Bac("poubelle", "⚫ Poubelle", True, "#434343", "#ffffff"),
     )
 }
 

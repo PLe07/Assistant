@@ -19,6 +19,7 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
 
 DOSSIER = Path(__file__).resolve().parent
 CREDENTIALS = DOSSIER / "credentials.json"  # carte d'identité de l'appli (Google Cloud)
@@ -318,3 +319,28 @@ def nettoyer(texte: str, longueur: int = 1500) -> str:
     if len(texte) > longueur:
         texte = texte[:longueur].rstrip() + " […]"
     return texte
+
+
+# --- Étiquettes (création uniquement : aucun mail n'est touché ici) -------------
+
+
+def etiquettes_existantes(service) -> dict:
+    """Nom de l'étiquette → identifiant Gmail."""
+    rep = service.users().labels().list(userId="me").execute()
+    return {l["name"]: l["id"] for l in rep.get("labels", [])}
+
+
+def creer_etiquette(service, nom: str, fond: str, texte: str) -> str:
+    corps = {
+        "name": nom,
+        "labelListVisibility": "labelShow",
+        "messageListVisibility": "show",
+        "color": {"backgroundColor": fond, "textColor": texte},
+    }
+    try:
+        return service.users().labels().create(userId="me", body=corps).execute()["id"]
+    except HttpError as e:
+        if e.status_code != 400:
+            raise
+        corps.pop("color")  # couleur refusée par Gmail : on crée quand même, sans couleur
+        return service.users().labels().create(userId="me", body=corps).execute()["id"]
