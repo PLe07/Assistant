@@ -9,6 +9,7 @@
     python assistant.py test-plantage   fait planter le module « battement » une fois (test de relance)
     python assistant.py renouveler-jeton  nouveau jeton Claude (il dure 1 an), enregistré sans l'afficher
     python assistant.py micro off         COUPE le micro tout de suite (micro on pour le rallumer)
+    python assistant.py ecran off         COUPE l'écran tout de suite (ecran on pour le rallumer)
     python assistant.py activer mails     active un module (il démarre dans les 2 secondes)
     python assistant.py desactiver mails  désactive un module (il s'arrête dans les 2 secondes)
 """
@@ -35,18 +36,50 @@ def reprendre() -> int:
     return 0
 
 
+MICRO_MUET = {  # pourquoi le micro ne transmet rien, d'après ce que macOS dit au module
+    "refusee": "\n      → macOS REFUSE le micro à Python : Réglages Système → Confidentialité et sécurité → Micro",
+    "restreinte": "\n      → macOS REFUSE le micro à Python : Réglages Système → Confidentialité et sécurité → Micro",
+    "jamais_demandee": "\n      → Python n'a pas l'autorisation du micro : Réglages Système → Confidentialité et sécurité → Micro",
+    "accordee": "\n      → macOS l'autorise : vérifie Réglages Système → Son → Entrée (le niveau doit bouger quand tu parles)",
+    "inconnue": " (autorisation macOS ? micro changé ?)",
+}
+
+
 def afficher_etat() -> int:
     r = etat.resume()
     print(f"{r['icone']}  Superviseur : {'actif' if r['superviseur_actif'] else 'ARRÊTÉ (python superviseur.py)'}"
           + ("  ·  EN PAUSE (python assistant.py reprendre)" if r["pause"] else ""))
     print(f"   Proactivité : {r['proactivite']} ({config.NIVEAUX_PROACTIVITE[r['proactivite']]})")
-    son = r["micro_son"]
-    detail = ("" if not r["micro_actif"] else " · démarrage…" if son is None
+    son, muet = r["micro_son"], r["micro_muet"]
+    duree = "" if son is None else f"{int(son)} s" if son < 120 else f"{int(son // 60)} min"
+    detail = ("" if not r["micro_actif"]
+              else f" · ⚠️ AUCUN son reçu depuis {duree}" + MICRO_MUET.get(muet, MICRO_MUET["inconnue"]) if muet
+              else " · démarrage…" if son is None
               else f" · son reçu il y a {int(son)} s" if son < 30
-              else f" · ⚠️ AUCUN son reçu depuis {int(son // 60)} min (autorisation macOS ?)")
-    print("   🎙 Micro : " + ("ouvert (écoute en cours)" if r["micro_actif"] else "coupé" if r["pause_micro"] else "fermé") + detail)
+              else f" · ⚠️ AUCUN son reçu depuis {duree} (autorisation macOS ?)")
+    ouvert = "ouvert" + (f" ({r['micro_nom']})" if r["micro_nom"] else " (écoute en cours)")
+    print("   🎙 Micro : " + (ouvert if r["micro_actif"] else "coupé" if r["pause_micro"] else "fermé") + detail)
+    vu, alerte = r["ecran_regard"], r["ecran_alerte"]
+    detail = ("" if not r["ecran_actif"] else f" · mode {r['mode_yeux']}" + (
+        " · ⚠️ PAS D'AUTORISATION macOS pour Python (Enregistrement de l'écran)" if alerte == "autorisation"
+        else " · ⚠️ capture impossible (voir : python assistant.py journal)" if alerte == "capture"
+        else " · aucun coup d'œil encore" if vu is None
+        else f" · dernier coup d'œil il y a {int(vu)} s" if vu < 120
+        else " · en veille (absent, écran verrouillé ou appli exclue)"))
+    print("   👁 Écran : " + ("observé" if r["ecran_actif"] else "coupé" if r["pause_ecran"] else "non observé") + detail)
     if r["aides"]:
         print(f"   💡 {len(r['aides'])} aide(s) t'attendent dans le menu de l'icône")
+    vue = r["icone_vue"]
+    if vue is not None and vue[0] <= 60:
+        print(f"   Icône : affiche « {vue[1]} » (vérifié il y a {int(vue[0])} s)")
+    elif vue is None and r["icone_fenetre"] is None:  # juste après « service.py installer » : elle démarre
+        print("   Icône : pas encore de nouvelles (elle démarre ; si ça dure plus d'une minute : python service.py installer)")
+    elif r["icone_fenetre"] is not None:
+        print("   ⚠️  L'icône est figée : une fenêtre de l'Assistant est restée ouverte (peut-être cachée derrière"
+              "\n       tes autres fenêtres). Trouve-la et clique « Fermer » : l'icône repart aussitôt.")
+    else:
+        print("   ⚠️  L'icône du haut de l'écran ne se met plus à jour" + (f" (depuis {int(vue[0] // 60)} min)" if vue else "")
+              + " : python service.py installer")
     if r["modules"]:
         print("\nModules")
         for m in r["modules"]:
@@ -72,8 +105,17 @@ def test_notif() -> int:
     from core.notifications import notifier
 
     affichee, raison = notifier("Assistant", "Notification de test ✅ : le socle fonctionne.", test=True)
-    print("✅ Notification affichée." if affichee else f"⛔ Notification non affichée : {raison}")
-    return 0 if affichee else 1
+    if not affichee:
+        print(f"⛔ Notification non envoyée : {raison}")
+        return 1
+    print("📨 Notification envoyée à macOS : elle doit apparaître en haut à droite d'ici 2 secondes.")
+    print("   Rien ne s'affiche ? macOS la bloque (c'est « Éditeur de script » qui l'affiche pour l'Assistant) :")
+    print("   1. Réglages Système → Notifications → « Éditeur de script » → active « Autoriser les notifications »")
+    print("      et choisis le style « Bannières » (ou « Alertes »).")
+    print("   2. Pas d'« Éditeur de script » dans la liste ? Ouvre l'app Éditeur de script (Applications → Utilitaires),")
+    print("      tape  display notification \"test\"  puis clique ▶ : accepte la demande de macOS.")
+    print("   3. Vérifie que « Ne pas déranger » (Centre de contrôle → Concentration) est désactivé.")
+    return 0
 
 
 def test_claude() -> int:
@@ -151,6 +193,16 @@ def renouveler_jeton() -> int:
     return 0
 
 
+def ecran(valeur: str | None) -> int:
+    if valeur not in ("on", "off"):
+        print("Utilise :  python assistant.py ecran off  (couper)  ou  ecran on  (rallumer)")
+        return 2
+    config.mettre_capteur_en_pause("ecran", valeur == "off")
+    print("👁  Écran coupé : plus aucun coup d'œil dans les 2 secondes." if valeur == "off"
+          else "👁  Écran rallumé : l'observation reprend dans les 2 secondes (si le module yeux est activé).")
+    return 0
+
+
 def micro(valeur: str | None) -> int:
     if valeur not in ("on", "off"):
         print("Utilise :  python assistant.py micro off  (couper)  ou  micro on  (rallumer)")
@@ -186,11 +238,13 @@ def main() -> int:
         "renouveler-jeton": renouveler_jeton,
     }
     parser = argparse.ArgumentParser(description="Commandes de l'assistant")
-    parser.add_argument("action", choices=[*actions, "activer", "desactiver", "micro"])
-    parser.add_argument("module", nargs="?", help="activer / desactiver : le module ; micro : on ou off")
+    parser.add_argument("action", choices=[*actions, "activer", "desactiver", "micro", "ecran"])
+    parser.add_argument("module", nargs="?", help="activer / desactiver : le module ; micro, ecran : on ou off")
     args = parser.parse_args()
     if args.action == "micro":
         return micro(args.module)
+    if args.action == "ecran":
+        return ecran(args.module)
     if args.action in ("activer", "desactiver"):
         return changer_module(args.module, args.action == "activer")
     return actions[args.action]()

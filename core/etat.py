@@ -107,7 +107,8 @@ def noter_notification(module, titre, message, empreinte, envoyee: bool, raison:
 def notifications_envoyees_depuis(instant: float) -> int:
     with connexion() as db:
         return db.execute(
-            "SELECT COUNT(*) FROM notifications WHERE envoyee = 1 AND quand >= ?", (instant,)
+            "SELECT COUNT(*) FROM notifications WHERE envoyee = 1 AND COALESCE(raison, '') != 'test' AND quand >= ?",
+            (instant,)
         ).fetchone()[0]
 
 
@@ -199,7 +200,29 @@ def expirer_aides(module: str, texte: str) -> None:
     """Les aides pas encore rédigées de ce module ne pourront plus l'être (extraits oubliés)."""
     with connexion() as db:
         db.execute("UPDATE aides SET texte = ?, statut = 'expiree', maj = ? "
-                   "WHERE module = ? AND statut IN ('proposee', 'demandee')", (texte, time.time(), module))
+                   "WHERE module = ? AND statut IN ('proposee', 'demandee', 'a_capturer')", (texte, time.time(), module))
+
+
+# « M'aider avec cet écran » : l'icône pose la demande, le module « yeux » capture et la passe en « demandee ».
+
+def demander_capture(module: str = "yeux") -> int:
+    with connexion() as db:
+        return db.execute(
+            "INSERT INTO aides (quand, module, titre, statut, texte, maj) VALUES (?, ?, ?, 'a_capturer', '', ?)",
+            (time.time(), module, "Aide sur ton écran", time.time()),
+        ).lastrowid
+
+
+def aides_a_capturer(module: str) -> list[dict]:
+    with connexion() as db:
+        lignes = db.execute("SELECT id, titre FROM aides WHERE module = ? AND statut = 'a_capturer'", (module,)).fetchall()
+    return [{"id": i, "titre": t} for i, t in lignes]
+
+
+def preparer_aide(id_aide: int, titre: str) -> None:
+    with connexion() as db:
+        db.execute("UPDATE aides SET titre = ?, statut = 'demandee', maj = ? WHERE id = ? AND statut = 'a_capturer'",
+                   (titre, time.time(), id_aide))
 
 
 def marquer_vue(id_aide: int) -> None:
@@ -235,20 +258,43 @@ def resume() -> dict:
                    or (test is not None and time.time() - float(test) < 5))
     son = lire("oreilles_son")  # dernier instant où le micro a transmis du son (jamais le son lui-même)
     micro_son = time.time() - float(son) if micro_actif and son is not None else None
-    aides = [a for a in aides_recentes(time.time() - 2 * 3600) if not a["vue"] and a["statut"] in ("proposee", "demandee", "prete")]
+    micro_muet = lire("oreilles_muet") if micro_actif else None  # aucun son : l'autorisation macOS, si connue
+    micro_nom = lire("oreilles_micro") if micro_actif else None
+    test = lire("ecran_test")  # idem pour l'écran (python -m modules.yeux --test)
+    ecran_actif = (any(m["statut"] == "actif" and config.CAPTEURS.get(m["nom"]) == "ecran" for m in mods)
+                   or (test is not None and time.time() - float(test) < 5))
+    regard = lire("yeux_regard")  # dernier coup d'œil (jamais ce qui a été vu)
+    ecran_regard = time.time() - float(regard) if ecran_actif and regard is not None else None
+    ecran_alerte = lire("yeux_alerte") if ecran_actif else None  # « autorisation » ou « capture »
+    aides = [a for a in aides_recentes(time.time() - 2 * 3600)
+             if not a["vue"] and a["statut"] in ("proposee", "demandee", "prete", "a_capturer")]
+    capteurs = ("🎙" if micro_actif else "") + ("👁" if ecran_actif else "")
+    note = (lire("icone_titre") or "").split("|", 1)  # ce que l'icône affiche vraiment, et depuis quand
+    icone_vue = (time.time() - float(note[0]), note[1]) if len(note) == 2 and note[0].isdigit() else None
+    fenetre = lire("icone_fenetre")  # une fenêtre de l'icône est ouverte : l'icône est figée tant qu'elle l'est
+    icone_fenetre = time.time() - float(fenetre) if fenetre is not None else None
     if reglages["pause_globale"]:
         icone = "⏸"
     elif not superviseur_actif:
-        icone = "🎙" if micro_actif else "⚪"
+        icone = capteurs or "⚪"
     else:
-        # 🎙 reste toujours visible quand le micro est ouvert, même s'il y a une aide ou une erreur.
-        icone = ("🎙" if micro_actif else "") + ("⚠️" if en_erreur else "") + ("💡" if aides else "") or "🟢"
+        # 🎙 et 👁 restent toujours visibles quand le micro ou l'écran sont actifs, même avec une aide ou une erreur.
+        icone = capteurs + ("⚠️" if en_erreur or ecran_alerte or micro_muet else "") + ("💡" if aides else "") or "🟢"
     return {
         "icone": icone,
         "pause": reglages["pause_globale"],
         "pause_micro": reglages["pause_micro"],
         "micro_actif": micro_actif,
         "micro_son": micro_son,
+        "micro_muet": micro_muet,
+        "micro_nom": micro_nom,
+        "icone_vue": icone_vue,
+        "icone_fenetre": icone_fenetre,
+        "pause_ecran": reglages["pause_ecran"],
+        "ecran_actif": ecran_actif,
+        "ecran_regard": ecran_regard,
+        "ecran_alerte": ecran_alerte,
+        "mode_yeux": "reel" if reglages["modules"].get("yeux", {}).get("mode") == "reel" else "journal",
         "aides": aides,
         "superviseur_actif": superviseur_actif,
         "modules": mods,

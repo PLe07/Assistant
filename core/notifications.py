@@ -76,18 +76,20 @@ def notifier(titre: str, message: str, module: str = "assistant", urgent: bool =
             raison = f"limite de {limite}/h (niveau {reglages['niveau_proactivite']})"
 
     # Pas de bruit : un doublon n'est pas noté, et une même notification retenue
-    # (nuit, limite, pause) n'est notée qu'une fois par heure. Elle s'affichera dès que permis.
+    # (nuit, limite, pause) n'est notée qu'une fois par heure. Elle n'est pas affichée plus tard :
+    # ce qui doit passer quand même (une alerte, ta demande) est envoyé en « urgent ».
     if raison == "doublon" or (raison and etat.deja_retenue(empreinte, maintenant - 3600)):
         return False, raison
 
     affichee = not raison and _afficher(titre, message)
     if not raison and not affichee:
         raison = "échec de l'affichage"
-    etat.noter_notification(module, titre, message, empreinte, affichee, raison)
+    # Une notification d'essai (test-notif, essai guidé) ne consomme pas ta limite par heure.
+    etat.noter_notification(module, titre, message, empreinte, affichee, raison or ("test" if test else ""))
     if affichee:
         log.info("Notification [%s] %s · %s", module, titre, message)
     elif raison == "échec de l'affichage":
         log.warning("Notification non affichée par macOS [%s] %s", module, titre)
     else:
-        log.info("Notification retenue (%s) [%s] %s : elle s'affichera dès que permis", raison, module, titre)
+        log.info("Notification retenue (%s) [%s] %s : non affichée", raison, module, titre)
     return affichee, raison

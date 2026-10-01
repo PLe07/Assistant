@@ -50,7 +50,14 @@ DEFAUTS = {
             "uniquement_sur_secteur": False,
             "micro": None,
         },
-        "yeux": {"actif": False, "applis_exclues": ["Banque", "1Password", "Messages", "WhatsApp"]},
+        "yeux": {
+            "actif": False,
+            "mode": "journal",
+            "toutes_les_secondes": 30,
+            "uniquement_sur_secteur": False,
+            "applis_exclues": [],  # en plus de la liste de base (mots de passe, messageries…)
+            "titres_exclus": [],  # en plus de la liste de base (banques, impots.gouv, ameli…)
+        },
     },
 }
 
