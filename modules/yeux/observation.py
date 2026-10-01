@@ -11,7 +11,7 @@ La mécanique des 💡 (Claude, limites, mémoire vive) est dans core/aides.py.
 
 import time
 
-from core import etat
+from core import etat, memoire
 from core.aides import Assistance
 from modules.yeux import aide
 from modules.yeux import parametres as p
@@ -107,3 +107,5 @@ class Observation(Assistance):
             self.garder_extrait(a["id"], f"Demande d'aide sur l'écran\n{extrait(f, lignes, None, p.EXTRAIT_MAX)}")
             etat.preparer_aide(a["id"], f"Aide sur : {f['appli']}")
             self.log.info("Aide demandée sur l'écran (%s)", f["appli"])
+            if not self.test:
+                memoire.noter_intention("yeux", "bouton", f["appli"], "demandee", None, a["id"])

@@ -14,6 +14,7 @@ Un assistant personnel qui tourne en arrière-plan sur le Mac : un système nerv
 | `modules/mails/` | Phase 1 · le tri automatique des mails (voir `modules/mails/README.md`) |
 | `modules/oreilles/` | Phase 2 · l'écoute locale du micro (voir `modules/oreilles/README.md`) |
 | `modules/yeux/` | Phase 3 · la conscience de l'écran (voir `modules/yeux/README.md`) |
+| `core/memoire.py`, `core/rappels.py`, `core/consignes.py` | Phase 4 · mémoire, rappels Apple, second cerveau (voir `MEMOIRE.md`) |
 | `tri-mails/` | Ancienne version du tri, gardée en sauvegarde |
 
 Restent **sur le Mac uniquement** (exclus de GitHub) : `.env`, `reglages.json`, `donnees/`, `logs/`.

@@ -9,6 +9,9 @@
 Ce que TU demandes (« Assistant, … », bouton de l'icône) passe toujours, sauf la pause.
 Ce qui vient de lui suit le niveau de proactivité : seuil de confiance et nombre de
 vérifications par heure.
+
+Une 💡 peut aussi proposer une ACTION (« Créer le rappel … ? ») : ton clic l'exécute.
+Chaque déclencheur est noté dans tes habitudes (core/memoire.py), sans aucun contenu.
 """
 
 import threading
@@ -17,7 +20,7 @@ from collections import deque
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 
-from core import config, etat
+from core import config, etat, memoire
 from core.cerveau import ClaudeIndisponible, demander
 from core.notifications import notifier
 
@@ -71,6 +74,7 @@ class Assistance:
     def __init__(self, module: str, log, test: bool = False, avec_claude: bool = False, afficher=print):
         self.module, self.log, self.test, self.avec_claude, self.afficher = module, log, test, avec_claude, afficher
         self.extraits: dict[int, tuple[str, float]] = {}  # id d'aide → (extrait, instant) : MÉMOIRE VIVE
+        self.actions: dict[int, tuple[object, float]] = {}  # id d'aide → (action à exécuter au clic, instant)
         self.verrou = threading.Lock()
         self.verifications: deque = deque()
         self.claude = ThreadPoolExecutor(max_workers=1)  # Claude réfléchit pendant que le module continue
@@ -93,18 +97,23 @@ class Assistance:
                 self.afficher("   … Claude réfléchit")
                 self._decider(extrait, type_, demande, lieu)
             return
+        if demande or self.spontane_permis(type_, lieu):
+            self.claude.submit(self._decider, extrait, type_, demande, lieu)
+
+    def spontane_permis(self, type_: str, lieu: str = "") -> bool:
+        """Une initiative de sa part (pas une demande de toi) : niveau de proactivité et limite par heure."""
         n = niveau()
-        if not demande:
-            if n == 0:
-                return  # proactivité « muet » : il ne prend aucune initiative, Claude n'est pas appelé
-            maintenant = time.time()
-            while self.verifications and maintenant - self.verifications[0] > 3600:
-                self.verifications.popleft()
-            if len(self.verifications) >= VERIFICATIONS_PAR_HEURE[n]:
-                self.log.info("Déclencheur « %s » ignoré : limite de vérifications par heure atteinte", type_)
-                return
-            self.verifications.append(maintenant)
-        self.claude.submit(self._decider, extrait, type_, demande, lieu)
+        if n == 0:
+            return False  # proactivité « muet » : il ne prend aucune initiative, Claude n'est pas appelé
+        maintenant = time.time()
+        while self.verifications and maintenant - self.verifications[0] > 3600:
+            self.verifications.popleft()
+        if len(self.verifications) >= VERIFICATIONS_PAR_HEURE[n]:
+            self.log.info("Déclencheur « %s » ignoré : limite de vérifications par heure atteinte", type_)
+            memoire.noter_intention(self.module, type_, lieu, "limite")
+            return False
+        self.verifications.append(maintenant)
+        return True
 
     def _decider(self, extrait: str, type_: str, demande: bool, lieu: str) -> None:
         try:
@@ -126,14 +135,27 @@ class Assistance:
         # Le journal dit ce qui s'est passé, jamais ce que tu as dit ou ce qui était affiché.
         self.log.info("Déclencheur « %s »%s → Claude : %s (confiance %d)", type_, f" ({lieu})" if lieu else "",
                       "aide proposée" if retenue else "pas d'aide utile", decision.confiance)
-        if not retenue or self.fini:
-            return
-        id_aide = etat.proposer_aide(self.module, decision.titre)
+        id_aide = None
+        if retenue and not self.fini:
+            id_aide = etat.proposer_aide(self.module, decision.titre)
+            with self.verrou:
+                self.extraits[id_aide] = (extrait, time.time())
+            # Ce que tu as demandé passe même en heures silencieuses (jamais pendant la pause).
+            notifier("Assistant", f"💡 {decision.titre} — pour la lire : icône en haut à droite → « 💡 Aides »",
+                     module=self.module, urgent=demande)
+        memoire.noter_intention(self.module, type_, lieu, "proposee" if id_aide else "rien", decision.confiance, id_aide)
+
+    def proposer_action(self, titre: str, action, type_: str, confiance: int, lieu: str = "") -> int | None:
+        """Une 💡 qui propose de FAIRE quelque chose : action() est exécutée à ton clic, et renvoie
+        le texte de la fenêtre (ex. « ✅ Rappel créé … »)."""
+        if self.fini:
+            return None
+        id_aide = etat.proposer_aide(self.module, titre)
         with self.verrou:
-            self.extraits[id_aide] = (extrait, time.time())
-        # Ce que tu as demandé passe même en heures silencieuses (jamais pendant la pause).
-        notifier("Assistant", f"💡 {decision.titre} — pour la lire : icône en haut à droite → « 💡 Aides »", module=self.module,
-                 urgent=demande)
+            self.actions[id_aide] = (action, time.time())
+        notifier("Assistant", f"💡 {titre} — icône en haut à droite → « 💡 Aides »", module=self.module, prive=True)
+        memoire.noter_intention(self.module, type_, lieu, "proposee", confiance, id_aide)
+        return id_aide
 
     # --- les aides demandées depuis l'icône ------------------------------------------------
 
@@ -146,7 +168,12 @@ class Assistance:
             if a["id"] in self.demandes_en_cours:
                 continue
             with self.verrou:
+                action = self.actions.pop(a["id"], None)
                 extrait = self.extraits.get(a["id"])
+            if action is not None:
+                self.demandes_en_cours.add(a["id"])
+                self.claude.submit(self._agir, a["id"], action[0])
+                continue
             if extrait is None:
                 etat.finir_aide(a["id"], "Cette aide a expiré (module coupé entre-temps, ou elle date de plus de 30 min).",
                                 "expiree")
@@ -154,9 +181,20 @@ class Assistance:
             self.demandes_en_cours.add(a["id"])
             self.claude.submit(self._rediger, a["id"], extrait[0], a["titre"])
 
+    def _agir(self, id_aide: int, action) -> None:
+        try:
+            etat.finir_aide(id_aide, action(), "prete")
+            memoire.intention_ouverte(id_aide)
+        except Exception as e:  # le message de l'erreur dit quoi faire (ex. autorisation macOS)
+            self.log.error("Action impossible (%s)", type(e).__name__)
+            etat.finir_aide(id_aide, f"⛔ Pas fait : {e}", "echec")
+        finally:
+            self.demandes_en_cours.discard(id_aide)
+
     def _rediger(self, id_aide: int, extrait: str, titre: str) -> None:
         try:
             etat.finir_aide(id_aide, self.rediger(extrait, titre), "prete")
+            memoire.intention_ouverte(id_aide)
             self.log.info("Aide rédigée à ta demande")
         except ClaudeIndisponible as e:
             etat.finir_aide(id_aide, f"Aide indisponible pour l'instant : {e}", "echec")
@@ -173,6 +211,9 @@ class Assistance:
             for id_aide, (_, quand) in list(self.extraits.items()):
                 if tout or maintenant - quand > DUREE_VIE_EXTRAIT:
                     del self.extraits[id_aide]
+            for id_aide, (_, quand) in list(self.actions.items()):
+                if tout or maintenant - quand > DUREE_VIE_EXTRAIT:
+                    del self.actions[id_aide]
         if not self.test:
             etat.purger_aides(maintenant - DUREE_VIE_AIDE)
 

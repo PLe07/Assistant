@@ -10,11 +10,13 @@ n'arrête PAS l'assistant : pour ça, utilise « Tout mettre en pause ».
 """
 
 import subprocess
+import threading
 import time
+from datetime import datetime
 
 import rumps
 
-from core import config, etat
+from core import config, consignes, etat, memoire
 from core.journal import FICHIER as JOURNAL
 from core.journal import journal
 
@@ -27,6 +29,8 @@ RALLUMER_MICRO = "🎙  Rallumer le micro (coupé)"
 COUPER_ECRAN = "👁  Couper l'écran"
 RALLUMER_ECRAN = "👁  Rallumer l'écran (coupé)"
 AIDE_ECRAN = "👁  M'aider avec cet écran"
+NOTER = "✍️  Noter ou demander…"
+CHERCHER = "🔎  Chercher dans ma mémoire…"
 SYMBOLES_AIDE = {"proposee": "💡", "demandee": "⏳", "a_capturer": "⏳", "prete": "✅"}
 
 
@@ -51,15 +55,30 @@ def _au_premier_plan() -> None:
         pass
 
 
-def _fenetre(*args, **kwargs) -> int:
+def _modale(ouvrir):
     """Ouvre une fenêtre devant toi. Tant qu'elle est ouverte, l'icône est figée (macOS) :
     c'est noté dans l'état, pour que « etat » et l'essai puissent te le dire."""
     _au_premier_plan()
     etat.ecrire("icone_fenetre", f"{time.time():.0f}")
     try:
-        return rumps.alert(*args, **kwargs)
+        return ouvrir()
     finally:
         etat.effacer("icone_fenetre")
+
+
+def _fenetre(*args, **kwargs) -> int:
+    return _modale(lambda: rumps.alert(*args, **kwargs))
+
+
+def _saisie(titre: str, message: str, ok: str) -> str:
+    """Une fenêtre avec une zone de texte. Renvoie le texte tapé ("" si « Annuler »)."""
+    fenetre = rumps.Window(message=message, title=titre, default_text="", ok=ok, cancel="Annuler", dimensions=(380, 60))
+    try:  # le curseur directement dans la zone de texte : tu tapes sans cliquer
+        fenetre._alert.window().setInitialFirstResponder_(fenetre._textfield)
+    except AttributeError:
+        pass
+    reponse = _modale(fenetre.run)
+    return " ".join(str(reponse.text or "").split()) if reponse.clicked == 1 else ""
 
 
 class Icone(rumps.App):
@@ -88,6 +107,8 @@ class Icone(rumps.App):
             self.bouton_ecran,
             None,
             rumps.MenuItem(AIDE_ECRAN, callback=self.aide_ecran),
+            rumps.MenuItem(NOTER, callback=self.noter),
+            rumps.MenuItem(CHERCHER, callback=self.chercher),
             self.aides,
             self.sous_menu,
             rumps.MenuItem("Notification de test", callback=self.test_notif),
@@ -199,10 +220,73 @@ class Icone(rumps.App):
             item.title = f"⏳ {a['titre']} (je prépare l'aide…)"
 
     def afficher_aide(self, a: dict) -> None:
+        if a.get("statut") == "prete" and not a.get("vue") and a.get("module") != "memoire":
+            try:  # une aide que tu ouvres entre dans ta mémoire (les réponses du second cerveau y sont déjà)
+                memoire.noter("aide", a["titre"], a["module"], detail=a["texte"])
+            except Exception:
+                log.exception("Mémoire : aide pas enregistrée")
         etat.marquer_vue(a["id"])
         texte = a["texte"] or "(aucun texte)"
         if _fenetre(title=f"💡 {a['titre']}", message=texte, ok="Fermer", cancel="Copier") == 0:
             subprocess.run(["pbcopy"], input=texte, text=True)
+
+    # --- Mémoire, rappels, second cerveau -----------------------------------------------------
+
+    def noter(self, _) -> None:
+        texte = _saisie("✍️ Noter ou demander",
+                        "Une note (« le code du portail est… »), un rappel (« rappelle-moi demain à 9 h d'appeler "
+                        "la banque ») ou une question à ta mémoire (« qu'est-ce que j'avais noté sur… ? »).",
+                        ok="Envoyer")
+        if not texte:
+            return
+        genre = consignes.classer(texte)
+        if genre in ("souvenir", "question"):  # la réponse s'ouvrira toute seule dans une fenêtre
+            id_aide = etat.proposer_aide("memoire", f"🧠 {texte[:70]}")
+            etat.demander_aide(id_aide)
+            self.attendues.add(id_aide)
+            log.info("Question au second cerveau depuis l'icône")
+            threading.Thread(target=self._repondre, args=(id_aide, texte), daemon=True).start()
+        elif genre == "rappel":  # Claude comprend quoi et quand : une notification confirme
+            log.info("Rappel demandé depuis l'icône")
+            threading.Thread(target=self._rappeler, args=(texte,), daemon=True).start()
+        else:
+            consignes.noter(texte, "icone")
+        self.rafraichir()
+
+    def _repondre(self, id_aide: int, question: str) -> None:
+        try:
+            etat.finir_aide(id_aide, consignes.repondre(question, "icone"), "prete")
+        except Exception as e:
+            log.exception("Second cerveau : réponse impossible")
+            etat.finir_aide(id_aide, f"Réponse impossible : {type(e).__name__} (voir le journal).", "echec")
+
+    def _rappeler(self, texte: str) -> None:
+        try:
+            if consignes.rappeler(texte, "icone") is None:  # finalement pas un rappel : gardé comme note
+                consignes.noter(texte, "icone")
+        except Exception:
+            log.exception("Rappel impossible")
+
+    def chercher(self, _) -> None:
+        requete = _saisie("🔎 Chercher dans ma mémoire", "Un ou plusieurs mots (« dentiste », « banque rendez-vous »).",
+                          ok="Chercher")
+        if not requete:
+            return
+        trouves = memoire.chercher(requete, 8)
+        log.info("Recherche dans la mémoire depuis l'icône (%d résultat(s))", len(trouves))
+        if not trouves:
+            _fenetre(title=f"🔎 « {requete} »", message="Rien trouvé dans ta mémoire.", ok="Fermer")
+            return
+        lignes = []
+        for x in trouves:
+            ligne = (f"{memoire.GENRES.get(x['genre'], '·')} {datetime.fromtimestamp(x['quand']):%d/%m %H:%M} "
+                     f"(n° {x['id']}) · {x['texte'][:200]}")
+            if x["detail"]:
+                ligne += f"\n      {x['detail'][:300]}"
+            lignes.append(ligne)
+        if _fenetre(title=f"🔎 « {requete} » : {len(trouves)} souvenir(s)", message="\n\n".join(lignes),
+                    ok="Fermer", cancel="Copier") == 0:
+            subprocess.run(["pbcopy"], input="\n\n".join(lignes), text=True)
 
     def effacer_aides(self, _) -> None:
         for a in etat.aides_recentes(time.time() - 2 * 3600):
