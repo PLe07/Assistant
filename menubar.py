@@ -33,6 +33,8 @@ AIDE_ECRAN = "👁  M'aider avec cet écran"
 NOTER = "✍️  Noter ou demander…"
 CHERCHER = "🔎  Chercher dans ma mémoire…"
 COACH = "🎓  Coach"
+VEILLE = "📰  Veille"
+QUOI_DE_NEUF = "📰  Quoi de neuf ?"
 SYMBOLES_AIDE = {"proposee": "💡", "demandee": "⏳", "a_capturer": "⏳", "prete": "✅"}
 
 
@@ -103,6 +105,8 @@ class Icone(rumps.App):
         self.bouton_coach = self._menu_coach()
         self.coach_occupe = False  # le coach prépare tes questions
         self.coach_pret = None  # la séance prête : ses questions s'ouvrent au prochain rafraîchissement
+        self.bouton_veille = self._menu_veille()
+        self.veille_occupee = False  # la veille lit les sites et trie
         self.menu = [
             self.ligne_etat,
             self.ligne_jour,
@@ -115,6 +119,7 @@ class Icone(rumps.App):
             rumps.MenuItem(NOTER, callback=self.noter),
             rumps.MenuItem(CHERCHER, callback=self.chercher),
             self.bouton_coach,
+            self.bouton_veille,
             self.aides,
             self.sous_menu,
             rumps.MenuItem("Notification de test", callback=self.test_notif),
@@ -178,6 +183,7 @@ class Icone(rumps.App):
             self.sous_menu.add(rumps.MenuItem(texte))
 
         self._titres_coach()
+        self.bouton_veille.title = "⏳  Veille : je lis les sites…" if self.veille_occupee else VEILLE
 
         # En dernier : la fenêtre d'une aide attend que tu la fermes, le menu doit être à jour avant.
         if self.coach_pret:
@@ -231,14 +237,18 @@ class Icone(rumps.App):
             item.title = f"⏳ {a['titre']} (je prépare l'aide…)"
 
     def afficher_aide(self, a: dict) -> None:
-        if a.get("statut") == "prete" and not a.get("vue") and a.get("module") != "memoire":
+        # Le second cerveau et la veille écrivent eux-mêmes dans ta mémoire.
+        if a.get("statut") == "prete" and not a.get("vue") and a.get("module") not in ("memoire", "veille"):
             try:  # une aide que tu ouvres entre dans ta mémoire (les réponses du second cerveau y sont déjà)
                 memoire.noter("aide", a["titre"], a["module"], detail=a["texte"])
             except Exception:
                 log.exception("Mémoire : aide pas enregistrée")
         etat.marquer_vue(a["id"])
         texte = texte_simple(a["texte"]) or "(aucun texte)"
-        if _fenetre(title=f"💡 {a['titre']}", message=texte, ok="Fermer", cancel="Copier") == 0:
+        if a.get("module") == "veille":  # le bouton ouvre la page avec les liens
+            if _fenetre(title=a["titre"], message=texte, ok="Fermer", cancel="Ouvrir les liens") == 0:
+                self.veille_page(None)
+        elif _fenetre(title=f"💡 {a['titre']}", message=texte, ok="Fermer", cancel="Copier") == 0:
             subprocess.run(["pbcopy"], input=texte, text=True)
 
     # --- Mémoire, rappels, second cerveau -----------------------------------------------------
@@ -414,6 +424,46 @@ class Icone(rumps.App):
 
         cours.creer_dossiers()
         subprocess.run(["open", str(cp.COURS)], check=False)
+
+    # --- Veille (phase 5) : seulement quand tu la demandes ----------------------------------------------
+
+    def _menu_veille(self) -> rumps.MenuItem:
+        menu = rumps.MenuItem(VEILLE)
+        menu.add(rumps.MenuItem(QUOI_DE_NEUF, callback=self.veille))
+        menu.add(rumps.MenuItem("📄  Ouvrir la page de ma dernière veille", callback=self.veille_page))
+        return menu
+
+    def veille(self, _) -> None:
+        """Lit les sites et trie en fond ; le résultat s'ouvre tout seul (comme une aide 💡)."""
+        if self.veille_occupee:
+            return
+        self.veille_occupee = True
+        id_aide = etat.proposer_aide("veille", "📰 Veille")
+        etat.demander_aide(id_aide)
+        self.attendues.add(id_aide)
+        log.info("Veille demandée depuis l'icône")
+
+        def lire():
+            from modules.veille import revue
+
+            try:
+                etat.finir_aide(id_aide, revue.texte_revue(revue.lancer()), "prete")
+            except Exception as e:  # jamais en silence : la fenêtre dit pourquoi
+                log.exception("Veille impossible")
+                etat.finir_aide(id_aide, f"Veille impossible : {e}", "echec")
+            finally:
+                self.veille_occupee = False
+
+        threading.Thread(target=lire, daemon=True).start()
+        self.rafraichir()
+
+    def veille_page(self, _) -> None:
+        from modules.veille import parametres as vp
+
+        if vp.PAGE.exists():
+            subprocess.run(["open", str(vp.PAGE)], check=False)
+        else:
+            _fenetre(title="📰 Pas encore de veille", message="Lance d'abord : 📰 Veille → Quoi de neuf ?", ok="Fermer")
 
     def effacer_aides(self, _) -> None:
         for a in etat.aides_recentes(time.time() - 2 * 3600):

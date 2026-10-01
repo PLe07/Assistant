@@ -26,6 +26,11 @@ Coach DCG (phase 5), seulement quand tu le demandes :
     python assistant.py coach             choisis une UE et 3 à 10 questions, réponds ici, puis la correction
     python assistant.py coach cours       les cours trouvés, UE par UE (dossier donnees/coach/cours)
     python assistant.py coach bilan       tes progrès et tes points faibles
+
+Veille patrimoine + DCG (phase 5), seulement quand tu la demandes :
+    python assistant.py veille            lit les sites officiels, Claude choisit ce qui compte pour toi
+    python assistant.py veille sources    vérifie que chaque site se lit bien (sans Claude, rien n'est gardé)
+    python assistant.py veille page       ouvre la page de ta dernière veille (avec les liens)
 """
 
 import argparse
@@ -109,6 +114,14 @@ def afficher_etat() -> int:
             print(f"   🎓 Coach : dernière séance le {seance.derniere()[:10]} · {seance.a_revoir()} question(s) à revoir")
     except Exception as e:
         print(f"   🎓 Coach illisible : {e}")
+    try:
+        from modules.veille import revue
+
+        ligne = revue.resume_etat()
+        if ligne:
+            print(f"   📰 Veille : {ligne}")
+    except Exception as e:
+        print(f"   📰 Veille illisible : {e}")
     if r["modules"]:
         print("\nModules")
         for m in r["modules"]:
@@ -439,6 +452,16 @@ def coach(quoi: str | None) -> int:
     return actions[quoi]()
 
 
+def veille(quoi: str | None) -> int:
+    from modules.veille import terminal
+
+    actions = {None: terminal.lancer, "sources": terminal.sources, "page": terminal.page}
+    if quoi not in actions:
+        print("Utilise :  python assistant.py veille   (quoi de neuf ?)  ·  veille sources  ·  veille page")
+        return 2
+    return actions[quoi]()
+
+
 def essai_memoire(etape: int | None) -> int:
     from core.essai_memoire import essai
 
@@ -452,7 +475,7 @@ def main() -> int:
         "renouveler-jeton": renouveler_jeton,
     }
     avec_texte = {"noter": noter, "demander": demander_memoire, "memoire": afficher_memoire, "oublier": oublier,
-                  "rappels": rappels, "micro": micro, "ecran": ecran, "coach": coach}
+                  "rappels": rappels, "micro": micro, "ecran": ecran, "coach": coach, "veille": veille}
     parser = argparse.ArgumentParser(description="Commandes de l'assistant")
     parser.add_argument("action", choices=[*actions, *avec_texte, "activer", "desactiver", "habitudes", "essai-memoire"])
     parser.add_argument("suite", nargs="*", help="activer / desactiver : le module ; micro, ecran : on ou off ; "

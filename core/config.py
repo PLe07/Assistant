@@ -34,6 +34,15 @@ DEFAUTS = {
     "claude": {"modele_rapide": "haiku", "modele_fort": "sonnet", "appels_max_par_jour": 60},
     # Rappels Apple : « test » = rien n'est créé, une notification dit ce qui l'aurait été.
     "rappels": {"mode": "test", "liste": "Assistant"},
+    # La veille (icône → 📰 Veille) : les flux RSS lus. Tu peux en ajouter : {"nom": "…", "adresse": "https://…"}.
+    "veille": {
+        "sources": [
+            {"nom": "Impôts (BOFiP)", "adresse": "https://bofip.impots.gouv.fr/bofip/ext/rss.xml?actualites=1&publications=1"},
+            {"nom": "Service-public · particuliers",
+             "adresse": "https://www.service-public.fr/abonnements/rss/actu-actualites-particuliers.rss"},
+            {"nom": "Service-public · professionnels", "adresse": "https://www.service-public.fr/abonnements/rss/actu-actu-pro.rss"},
+        ],
+    },
     "modules": {
         "battement": {"actif": True, "toutes_les_secondes": 60},
         "mails": {
@@ -120,6 +129,20 @@ def _nettoyer(r: dict, erreurs: list) -> dict:
             rp["mode"] = remettre("rappels.mode", rp.get("mode"), "test", "« test » ou « reel » attendu")
         if not isinstance(rp.get("liste"), str) or not rp["liste"].strip():
             rp["liste"] = remettre("rappels.liste", rp.get("liste"), "Assistant", "nom de liste attendu")
+
+    ve = r["veille"]
+    if not isinstance(ve, dict) or not isinstance(ve.get("sources"), list):
+        r["veille"] = remettre("veille", ve, DEFAUTS["veille"], "objet avec une liste « sources » attendu")
+    else:
+        valides = []
+        for i, src in enumerate(ve["sources"]):
+            if (isinstance(src, dict) and isinstance(src.get("nom"), str) and src["nom"].strip()
+                    and isinstance(src.get("adresse"), str) and src["adresse"].strip().startswith(("https://", "http://"))):
+                valides.append({"nom": src["nom"].strip(), "adresse": src["adresse"].strip()})
+            else:
+                erreurs.append(f"veille.sources[{i}] : {{\"nom\": …, \"adresse\": \"https://…\"}} attendu "
+                               f"(valeur lue : {src!r}), source ignorée")
+        ve["sources"] = valides
 
     if not isinstance(r["modules"], dict):
         r["modules"] = remettre("modules", r["modules"], DEFAUTS["modules"], "objet attendu")
