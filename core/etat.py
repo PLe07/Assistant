@@ -257,6 +257,8 @@ def resume() -> dict:
                    or (test is not None and time.time() - float(test) < 5))
     son = lire("oreilles_son")  # dernier instant où le micro a transmis du son (jamais le son lui-même)
     micro_son = time.time() - float(son) if micro_actif and son is not None else None
+    micro_muet = lire("oreilles_muet") if micro_actif else None  # aucun son : l'autorisation macOS, si connue
+    micro_nom = lire("oreilles_micro") if micro_actif else None
     test = lire("ecran_test")  # idem pour l'écran (python -m modules.yeux --test)
     ecran_actif = (any(m["statut"] == "actif" and config.CAPTEURS.get(m["nom"]) == "ecran" for m in mods)
                    or (test is not None and time.time() - float(test) < 5))
@@ -272,13 +274,15 @@ def resume() -> dict:
         icone = capteurs or "⚪"
     else:
         # 🎙 et 👁 restent toujours visibles quand le micro ou l'écran sont actifs, même avec une aide ou une erreur.
-        icone = capteurs + ("⚠️" if en_erreur or ecran_alerte else "") + ("💡" if aides else "") or "🟢"
+        icone = capteurs + ("⚠️" if en_erreur or ecran_alerte or micro_muet else "") + ("💡" if aides else "") or "🟢"
     return {
         "icone": icone,
         "pause": reglages["pause_globale"],
         "pause_micro": reglages["pause_micro"],
         "micro_actif": micro_actif,
         "micro_son": micro_son,
+        "micro_muet": micro_muet,
+        "micro_nom": micro_nom,
         "pause_ecran": reglages["pause_ecran"],
         "ecran_actif": ecran_actif,
         "ecran_regard": ecran_regard,

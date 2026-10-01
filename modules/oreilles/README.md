@@ -47,7 +47,7 @@ Toujours d'abord : `cd ~/Assistant && source .venv/bin/activate`
 | `mode` | `"passif"` (défaut) ou `"mot_appel"` | `mot_appel` : seul « Assistant, … » déclenche |
 | `mot_appel` | `"assistant"` | Le mot qui t'adresse à lui |
 | `uniquement_sur_secteur` | `false` / `true` | `true` : pas d'écoute sur batterie |
-| `micro` | `null` ou un numéro | Le micro à utiliser (voir `--micros`) |
+| `micro` | `null` ou un nom (ex. `"MacBook"`) | `null` : celui choisi par macOS, et le micro du Mac s'il reste muet. Un nom : toujours ce micro (voir `--micros`) |
 | `modele_transcription` | `"small"` | `"base"` : plus léger, moins précis |
 
 `niveau_proactivite` (en haut du fichier) règle l'exigence : 0 = aucune initiative (seul
@@ -62,5 +62,6 @@ Tes propres déclencheurs : une phrase par ligne dans `donnees/oreilles/declench
 | Symptôme | Solution |
 |---|---|
 | Notification « Le micro semble bloqué par macOS » | Réglages Système → Confidentialité et sécurité → Micro : autorise Python, puis `micro off` et `micro on` |
+| `etat` affiche « ⚠️ AUCUN son reçu » | La ligne suivante dit pourquoi : macOS refuse le micro à Python, ou le micro choisi ne transmet rien (Réglages Système → Son → Entrée). Il essaie tout seul de le rouvrir, puis passe sur le micro du Mac |
 | Trop de 💡 | Baisse `niveau_proactivite`, ou passe `mode` à `"mot_appel"` |
 | Il ne réagit jamais | `python -m modules.oreilles --test` : regarde ce qu'il entend |

@@ -84,7 +84,10 @@ class Icone(rumps.App):
             self.ligne_etat.title = "Superviseur arrêté"
         else:
             actifs = sum(1 for m in r["modules"] if m["statut"] == "actif")
-            self.ligne_etat.title = f"Actif · {actifs} module(s) en marche"
+            alertes = (["micro muet"] if r["micro_muet"] else []) + (
+                ["écran non autorisé" if r["ecran_alerte"] == "autorisation" else "capture impossible"]
+                if r["ecran_alerte"] else [])  # le pourquoi du ⚠️ (détail : python assistant.py etat)
+            self.ligne_etat.title = f"Actif · {actifs} module(s) en marche" + (f" · ⚠️ {', '.join(alertes)}" if alertes else "")
         envoyees, _ = r["notifications"]
         appels, plafond, _, _ = r["claude"]
         self.ligne_jour.title = f"Aujourd'hui : {envoyees} notif · Claude {appels}/{plafond}"

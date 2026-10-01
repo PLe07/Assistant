@@ -36,16 +36,29 @@ def reprendre() -> int:
     return 0
 
 
+MICRO_MUET = {  # pourquoi le micro ne transmet rien, d'après ce que macOS dit au module
+    "refusee": "\n      → macOS REFUSE le micro à Python : Réglages Système → Confidentialité et sécurité → Micro",
+    "restreinte": "\n      → macOS REFUSE le micro à Python : Réglages Système → Confidentialité et sécurité → Micro",
+    "jamais_demandee": "\n      → Python n'a pas l'autorisation du micro : Réglages Système → Confidentialité et sécurité → Micro",
+    "accordee": "\n      → macOS l'autorise : vérifie Réglages Système → Son → Entrée (le niveau doit bouger quand tu parles)",
+    "inconnue": " (autorisation macOS ? micro changé ?)",
+}
+
+
 def afficher_etat() -> int:
     r = etat.resume()
     print(f"{r['icone']}  Superviseur : {'actif' if r['superviseur_actif'] else 'ARRÊTÉ (python superviseur.py)'}"
           + ("  ·  EN PAUSE (python assistant.py reprendre)" if r["pause"] else ""))
     print(f"   Proactivité : {r['proactivite']} ({config.NIVEAUX_PROACTIVITE[r['proactivite']]})")
-    son = r["micro_son"]
-    detail = ("" if not r["micro_actif"] else " · démarrage…" if son is None
+    son, muet = r["micro_son"], r["micro_muet"]
+    duree = "" if son is None else f"{int(son)} s" if son < 120 else f"{int(son // 60)} min"
+    detail = ("" if not r["micro_actif"]
+              else f" · ⚠️ AUCUN son reçu depuis {duree}" + MICRO_MUET.get(muet, MICRO_MUET["inconnue"]) if muet
+              else " · démarrage…" if son is None
               else f" · son reçu il y a {int(son)} s" if son < 30
-              else f" · ⚠️ AUCUN son reçu depuis {int(son // 60)} min (autorisation macOS ?)")
-    print("   🎙 Micro : " + ("ouvert (écoute en cours)" if r["micro_actif"] else "coupé" if r["pause_micro"] else "fermé") + detail)
+              else f" · ⚠️ AUCUN son reçu depuis {duree} (autorisation macOS ?)")
+    ouvert = "ouvert" + (f" ({r['micro_nom']})" if r["micro_nom"] else " (écoute en cours)")
+    print("   🎙 Micro : " + (ouvert if r["micro_actif"] else "coupé" if r["pause_micro"] else "fermé") + detail)
     vu, alerte = r["ecran_regard"], r["ecran_alerte"]
     detail = ("" if not r["ecran_actif"] else f" · mode {r['mode_yeux']}" + (
         " · ⚠️ PAS D'AUTORISATION macOS pour Python (Enregistrement de l'écran)" if alerte == "autorisation"
