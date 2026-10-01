@@ -92,9 +92,43 @@ def _cite_dans_regles_perso(mail: Mail, regles: str) -> bool:
     texte = regles.lower()
     if re.search(rf"(?<![\w.+-]){re.escape(adresse)}(?![\w-])", texte):
         return True
+    return any(re.search(rf"(?<![\w@.-]){re.escape(d)}(?![\w-])", texte) for d in _domaines(adresse))
+
+
+def _domaines(adresse: str) -> list[str]:
+    """« a@moodle.u-bordeaux.fr » → ["moodle.u-bordeaux.fr", "u-bordeaux.fr"] (jamais « fr » seul)."""
     morceaux = adresse.partition("@")[2].split(".")
-    domaines = [".".join(morceaux[i:]) for i in range(len(morceaux) - 1)]  # jamais « fr » seul
-    return any(re.search(rf"(?<![\w@.-]){re.escape(d)}(?![\w-])", texte) for d in domaines if d)
+    return [".".join(morceaux[i:]) for i in range(len(morceaux) - 1) if morceaux[i]]
+
+
+# --- Expéditeurs jamais archivés (garantie écrite dans le code) ------------------
+
+BAC_PLANCHER = "a_lire"  # le bac le plus bas qui reste dans la boîte de réception
+
+
+def _liste_jamais_archiver() -> set[str]:
+    """Domaines et adresses de jamais_archiver.txt (une entrée par ligne, # = commentaire)."""
+    if not config.FICHIER_JAMAIS_ARCHIVER.exists():
+        return set()
+    entrees = set()
+    for ligne in config.FICHIER_JAMAIS_ARCHIVER.read_text(encoding="utf-8").splitlines():
+        ligne = ligne.split("#")[0].strip().lower().lstrip("@")
+        if ligne:
+            entrees.add(ligne)
+    return entrees
+
+
+def jamais_archiver(mail: Mail, liste: set[str]) -> bool:
+    adresse = mail.expediteur_adresse
+    return bool(adresse) and (adresse in liste or any(d in liste for d in _domaines(adresse)))
+
+
+def _appliquer_plancher(c: Classement) -> Classement:
+    """Un bac qui archive (🟢, ⚫) est remonté à 🟡 À-lire : le mail reste dans la boîte."""
+    if not config.BACS[c.bac].archiver:
+        return c
+    raison = f"{c.raison} (expéditeur jamais archivé)"
+    return Classement(c.mail_id, BAC_PLANCHER, raison, c.vaut_mon_temps, f"{c.source}+plancher")
 
 
 def pre_trier(mail: Mail, regles: str = "") -> Classement | None:
@@ -249,9 +283,11 @@ def classer(mails: list[Mail], au_fil=None) -> Resultat:
     """Classe une liste de mails. Ceux qui échouent restent non classés (retentés plus tard)."""
     res = Resultat()
     regles = _regles_perso()
+    liste = _liste_jamais_archiver()
+    proteges = {m.id for m in mails if jamais_archiver(m, liste)}
     pour_claude = []
     for mail in mails:
-        c = pre_trier(mail, regles)
+        c = None if mail.id in proteges else pre_trier(mail, regles)  # protégé : Claude décide
         if c:
             res.classements[mail.id] = c
         else:
@@ -281,5 +317,5 @@ def classer(mails: list[Mail], au_fil=None) -> Resultat:
         )
         res.tokens_sortie += int(usage.get("output_tokens") or 0)
         for c in classements:
-            res.classements[c.mail_id] = c
+            res.classements[c.mail_id] = _appliquer_plancher(c) if c.mail_id in proteges else c
     return res

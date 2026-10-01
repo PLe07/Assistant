@@ -22,3 +22,6 @@ __pycache__/
 
 # --- Verrou du tri (un seul passage à la fois) ---
 .verrou
+
+# --- Expéditeurs jamais archivés (local, peut contenir des noms) ---
+jamais_archiver.txt

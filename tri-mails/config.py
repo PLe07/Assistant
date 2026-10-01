@@ -46,6 +46,7 @@ DELAI_CLAUDE_SECONDES = 180
 
 FICHIER_PROMPT = DOSSIER / "prompt_classification.md"
 FICHIER_REGLES_PERSO = DOSSIER / "regles_perso.txt"  # local, jamais sur GitHub
+FICHIER_JAMAIS_ARCHIVER = DOSSIER / "jamais_archiver.txt"  # local : expéditeurs jamais archivés
 
 # --- Mode réel ----------------------------------------------------------------
 

@@ -44,6 +44,7 @@ cd ~/Assistant/tri-mails && source .venv/bin/activate
 |---|---|
 | Corriger **un** mail mal classé | Dans Gmail : retire l'étiquette ou remets-le dans la boîte. Le tri n'y retouchera plus. |
 | Une règle sur un expéditeur, une école, une personne | `open -e regles_perso.txt` (reste sur ton Mac, pris en compte au passage suivant) |
+| Qu'un expéditeur ne soit **jamais archivé** (écoles…) | `open -e jamais_archiver.txt` : un domaine ou une adresse par ligne. Ses mails restent toujours dans la boîte (🟡 au minimum). |
 | Changer la définition d'un bac | `prompt_classification.md` |
 | Couper une règle gratuite | `config.py` : `REGLE_R1_PROMOTIONS = False` (ou R2) |
 | Changer de modèle | `.env` : `MODELE=opus` ou `MODELE=sonnet` |
@@ -75,6 +76,6 @@ Le journal détaillé est dans `logs/tri.log`. Les plantages inattendus vont dan
 
 ## Sécurité
 
-- `.env`, `credentials.json`, `token.json`, `memoire.db`, `logs/` et `regles_perso.txt` restent
-  **sur ton Mac** : ils sont exclus de GitHub. Ne les partage jamais.
+- `.env`, `credentials.json`, `token.json`, `memoire.db`, `logs/`, `regles_perso.txt` et
+  `jamais_archiver.txt` restent **sur ton Mac** : ils sont exclus de GitHub. Ne les partage jamais.
 - Le dépôt GitHub est **public** : n'y mets jamais de nom, d'adresse ni de secret.

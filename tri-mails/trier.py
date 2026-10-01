@@ -53,7 +53,7 @@ def afficher(mails, res) -> None:
         print()
 
     compte = Counter(c.bac for c in res.classements.values())
-    sources = Counter("IA" if c.source == "IA" else "règle" for c in res.classements.values())
+    sources = Counter("IA" if c.source.startswith("IA") else "règle" for c in res.classements.values())
     resume = " · ".join(f"{b.etiquette} {compte.get(code, 0)}" for code, b in config.BACS.items())
     print(f"Résumé : {resume}")
     print(f"Décidés par une règle gratuite : {sources.get('règle', 0)} · par Claude : {sources.get('IA', 0)}")
