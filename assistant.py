@@ -35,6 +35,17 @@ Veille patrimoine + DCG (phase 5), seulement quand tu la demandes :
 Recherche sourcée (phase 5) :
     python assistant.py recherche "…"     Claude cherche sur le web : réponse en 5 lignes + sources vérifiées
     python assistant.py recherche page    la page de tes 20 dernières recherches (liens cliquables)
+
+Rédacteur dans ta voix (phase 5) :
+    python assistant.py rediger style     fait ta fiche de style (tes mails envoyés) + un échantillon
+    python assistant.py rediger profil    ton profil pour les lettres de motivation (s'ouvre dans TextEdit)
+    python assistant.py rediger "…"       un brouillon dans ton style (mail, lettre de motivation, post)
+
+Dépenses (phase 5) :
+    python assistant.py depenses          le total du mois, par catégorie (depenses 2026-09 : un autre mois)
+    python assistant.py depenses ajouter photo.jpg   ajoute un reçu (photo ou PDF)
+    python assistant.py depenses test     mode test : rien n'est écrit (depenses reel : pour de vrai)
+    python assistant.py depenses tableur  ouvre le tableur · depenses dossier : ouvre le dossier Reçus surveillé
 """
 
 import argparse
@@ -126,6 +137,18 @@ def afficher_etat() -> int:
             print(f"   📰 Veille : {ligne}")
     except Exception as e:
         print(f"   📰 Veille illisible : {e}")
+    try:
+        from modules.redacteur import style
+
+        print(f"   ✒️ Rédacteur : {style.resume_etat()}")
+    except Exception as e:
+        print(f"   ✒️ Rédacteur illisible : {e}")
+    try:
+        from modules.depenses import recu
+
+        print(f"   🧾 Dépenses : {recu.resume_etat()}")
+    except Exception as e:
+        print(f"   🧾 Dépenses illisibles : {e}")
     try:
         from modules.recherche import recherche as rech
 
@@ -317,6 +340,8 @@ def noter(texte: str | None) -> int:
     genre = consignes.classer(texte)
     if genre == "recherche":
         return recherche(texte)
+    if genre == "redaction":
+        return rediger(texte)
     if genre in ("souvenir", "question"):
         return demander_memoire(texte)
     if genre == "rappel":
@@ -485,6 +510,36 @@ def recherche(question: str | None) -> int:
     return terminal.page() if question == "page" else terminal.lancer(question)
 
 
+def rediger(quoi: str | None) -> int:
+    from modules.redacteur import terminal
+
+    if not quoi:
+        print('Utilise :  python assistant.py rediger style  ·  rediger profil  ·  rediger "mail à mon prof pour…"')
+        return 2
+    return {"style": terminal.faire_style, "profil": terminal.ouvrir_profil}.get(quoi, lambda: terminal.lancer(quoi))()
+
+
+def depenses(suite: str | None) -> int:
+    import re
+
+    from modules.depenses import terminal
+
+    mots = (suite or "").split(maxsplit=1)
+    if not mots:
+        return terminal.bilan()
+    if mots[0] in ("test", "reel"):
+        return terminal.changer_mode(mots[0])
+    if mots[0] in ("tableur", "dossier"):
+        return terminal.ouvrir(mots[0])
+    if mots[0] == "ajouter" and len(mots) == 2:
+        return terminal.ajouter([mots[1]])
+    if re.fullmatch(r"\d{4}-\d{2}", mots[0]):
+        return terminal.bilan(mots[0])
+    print("Utilise :  python assistant.py depenses  ·  depenses ajouter <photo>  ·  depenses test|reel  ·  "
+          "depenses tableur|dossier  ·  depenses 2026-09")
+    return 2
+
+
 def essai_memoire(etape: int | None) -> int:
     from core.essai_memoire import essai
 
@@ -499,11 +554,11 @@ def main() -> int:
     }
     avec_texte = {"noter": noter, "demander": demander_memoire, "memoire": afficher_memoire, "oublier": oublier,
                   "rappels": rappels, "micro": micro, "ecran": ecran, "coach": coach, "veille": veille,
-                  "recherche": recherche}
+                  "recherche": recherche, "rediger": rediger, "depenses": depenses}
     parser = argparse.ArgumentParser(description="Commandes de l'assistant")
     parser.add_argument("action", choices=[*actions, *avec_texte, "activer", "desactiver", "habitudes", "essai-memoire"])
     parser.add_argument("suite", nargs="*", help="activer / desactiver : le module ; micro, ecran : on ou off ; "
-                                                 "noter, demander, memoire, recherche : ton texte")
+                                                 "noter, demander, memoire, recherche, rediger : ton texte")
     parser.add_argument("--etape", type=int, choices=[1, 2, 3, 4, 5], help="essai-memoire : une seule étape")
     args = parser.parse_args()
     suite = " ".join(args.suite).strip() or None

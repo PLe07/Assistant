@@ -58,7 +58,7 @@ class Ecoute(Assistance):
         if d.type == "mot_appel":
             demande = retirer_mot_appel(texte, p.reglage("mot_appel", "assistant"))
             genre = consignes.classer(demande)
-            if genre in ("rappel", "note", "souvenir", "recherche"):
+            if genre in ("rappel", "note", "souvenir", "recherche", "redaction"):
                 self.consigne(genre, demande)
                 return
             if not self.test:
@@ -74,7 +74,8 @@ class Ecoute(Assistance):
     def consigne(self, genre: str, demande: str) -> None:
         if self.test:
             self.afficher({"rappel": "   ⏰ demande de rappel", "note": "   📝 demande de note",
-                           "souvenir": "   🧠 question à ta mémoire", "recherche": "   🌐 recherche sur le web"}[genre])
+                           "souvenir": "   🧠 question à ta mémoire", "recherche": "   🌐 recherche sur le web",
+                           "redaction": "   ✒️ brouillon dans ton style"}[genre])
             if genre == "note":
                 self.afficher(f"   → serait noté dans ta mémoire : « {consignes.contenu_note(demande)} »")
             elif genre == "souvenir":
@@ -91,6 +92,8 @@ class Ecoute(Assistance):
                 self.afficher("   → Claude comprendrait quoi et quand (avec --avec-claude : le rappel compris)")
             elif genre == "recherche":
                 self.afficher("   → Claude chercherait sur le web (avec --avec-claude : la réponse et ses sources)")
+            elif genre == "redaction":
+                self.afficher("   → Claude écrirait le brouillon dans ton style (il t'attendrait dans 💡 Aides)")
             return
         memoire.noter_intention("oreilles", genre, "", "demande")
         self.claude.submit(self._consigne, genre, demande)
@@ -105,6 +108,8 @@ class Ecoute(Assistance):
                     self._decider(demande, "mot_appel", True, "")
             elif genre == "recherche":
                 self._recherche(demande)
+            elif genre == "redaction":
+                self._redaction(demande)
             else:
                 reponse = consignes.repondre(demande, "oreilles", module="oreilles")
                 id_aide = etat.proposer_aide("memoire", f"🧠 {demande[:70]}")
@@ -127,6 +132,20 @@ class Ecoute(Assistance):
             etat.finir_aide(id_aide, f"Recherche impossible : {e}", "echec")
             message = "🌐 Recherche impossible : icône en haut à droite → « 💡 Aides » pour savoir pourquoi"
         notifier("Assistant", message, module="recherche", urgent=True)
+
+    def _redaction(self, demande: str) -> None:
+        """Le brouillon t'attend dans « 💡 Aides » (une notification te prévient), même en cas d'échec."""
+        from modules.redacteur import redaction
+
+        id_aide = etat.proposer_aide("redacteur", f"✒️ {demande[:70]}")
+        try:
+            r = redaction.rediger(demande, "oreilles", module="oreilles")
+            etat.finir_aide(id_aide, redaction.texte_brouillon(r), "prete")
+            message = "✒️ Ton brouillon est prêt : icône en haut à droite → « 💡 Aides »"
+        except (ClaudeIndisponible, redaction.PasDeFiche) as e:
+            etat.finir_aide(id_aide, f"Brouillon impossible : {e}", "echec")
+            message = "✒️ Brouillon impossible : icône en haut à droite → « 💡 Aides » pour savoir pourquoi"
+        notifier("Assistant", message, module="redacteur", urgent=True)
 
     def _essai_recherche(self, demande: str) -> None:
         from modules.recherche import recherche

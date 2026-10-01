@@ -18,6 +18,8 @@ Un assistant personnel qui tourne en arrière-plan sur le Mac : un système nerv
 | `modules/coach/` | Phase 5 · le coach DCG, à la demande (voir `modules/coach/README.md`) |
 | `modules/veille/` | Phase 5 · la veille patrimoine + DCG, à la demande (voir `modules/veille/README.md`) |
 | `modules/recherche/` | Phase 5 · la recherche sourcée sur le web (voir `modules/recherche/README.md`) |
+| `modules/redacteur/` | Phase 5 · le rédacteur dans ta voix (voir `modules/redacteur/README.md`) |
+| `modules/depenses/` | Phase 5 · le traqueur de dépenses (voir `modules/depenses/README.md`) |
 | `tri-mails/` | Ancienne version du tri, gardée en sauvegarde |
 
 Restent **sur le Mac uniquement** (exclus de GitHub) : `.env`, `reglages.json`, `donnees/`, `logs/`.

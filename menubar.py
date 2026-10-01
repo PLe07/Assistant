@@ -36,6 +36,10 @@ RECHERCHER = "🌐  Rechercher sur le web…"
 COACH = "🎓  Coach"
 VEILLE = "📰  Veille"
 QUOI_DE_NEUF = "📰  Quoi de neuf ?"
+REDACTEUR = "✒️  Rédacteur"
+DEPENSES = "🧾  Dépenses"
+# Ces modules écrivent eux-mêmes dans ta mémoire (ou n'y mettent rien), et leurs titres ont déjà leur symbole.
+MODULES_AUTONOMES = ("memoire", "veille", "recherche", "redacteur", "depenses")
 SYMBOLES_AIDE = {"proposee": "💡", "demandee": "⏳", "a_capturer": "⏳", "prete": "✅"}
 
 
@@ -75,6 +79,20 @@ def _fenetre(*args, **kwargs) -> int:
     return _modale(lambda: rumps.alert(*args, **kwargs))
 
 
+def _choisir_fichiers(message: str, extensions: list[str]) -> list[str]:
+    """La fenêtre « Ouvrir » de macOS (plusieurs fichiers possibles). Renvoie les chemins choisis."""
+    from AppKit import NSOpenPanel
+
+    panneau = NSOpenPanel.openPanel()
+    panneau.setMessage_(message)
+    panneau.setAllowsMultipleSelection_(True)
+    panneau.setCanChooseDirectories_(False)
+    panneau.setAllowedFileTypes_(extensions)
+    if _modale(panneau.runModal) != 1:
+        return []
+    return [str(u.path()) for u in panneau.URLs()]
+
+
 def _saisie(titre: str, message: str, ok: str, annuler: str = "Annuler", hauteur: int = 60, defaut: str = "") -> str | None:
     """Une fenêtre avec une zone de texte. Renvoie le texte tapé (None si tu cliques « Annuler »)."""
     fenetre = rumps.Window(message=message, title=titre, default_text=defaut, ok=ok, cancel=annuler, dimensions=(380, hauteur))
@@ -107,6 +125,8 @@ class Icone(rumps.App):
         self.coach_occupe = False  # le coach prépare tes questions
         self.coach_pret = None  # la séance prête : ses questions s'ouvrent au prochain rafraîchissement
         self.bouton_veille = self._menu_veille()
+        self.bouton_redacteur = self._menu_redacteur()
+        self.bouton_depenses = self._menu_depenses()
         self.veille_occupee = False  # la veille lit les sites et trie
         self.menu = [
             self.ligne_etat,
@@ -122,6 +142,8 @@ class Icone(rumps.App):
             rumps.MenuItem(RECHERCHER, callback=self.rechercher),
             self.bouton_coach,
             self.bouton_veille,
+            self.bouton_redacteur,
+            self.bouton_depenses,
             self.aides,
             self.sous_menu,
             rumps.MenuItem("Notification de test", callback=self.test_notif),
@@ -239,8 +261,7 @@ class Icone(rumps.App):
             item.title = f"⏳ {a['titre']} (je prépare l'aide…)"
 
     def afficher_aide(self, a: dict) -> None:
-        # Le second cerveau, la veille et la recherche écrivent eux-mêmes dans ta mémoire.
-        if a.get("statut") == "prete" and not a.get("vue") and a.get("module") not in ("memoire", "veille", "recherche"):
+        if a.get("statut") == "prete" and not a.get("vue") and a.get("module") not in MODULES_AUTONOMES:
             try:  # une aide que tu ouvres entre dans ta mémoire (les réponses du second cerveau y sont déjà)
                 memoire.noter("aide", a["titre"], a["module"], detail=a["texte"])
             except Exception:
@@ -252,8 +273,10 @@ class Icone(rumps.App):
             libelle, ouvrir = liens[a["module"]]
             if _fenetre(title=a["titre"], message=texte, ok="Fermer", cancel=libelle) == 0:
                 ouvrir(None)
-        elif _fenetre(title=f"💡 {a['titre']}", message=texte, ok="Fermer", cancel="Copier") == 0:
-            subprocess.run(["pbcopy"], input=texte, text=True)
+        else:
+            titre = a["titre"] if a.get("module") in ("redacteur", "depenses") else f"💡 {a['titre']}"
+            if _fenetre(title=titre, message=texte, ok="Fermer", cancel="Copier") == 0:
+                subprocess.run(["pbcopy"], input=texte, text=True)
 
     # --- Mémoire, rappels, second cerveau -----------------------------------------------------
 
@@ -268,6 +291,8 @@ class Icone(rumps.App):
         genre = consignes.classer(texte)
         if genre == "recherche":
             self._rechercher(texte)
+        elif genre == "redaction":
+            self._rediger(texte)
         elif genre in ("souvenir", "question"):  # la réponse s'ouvrira toute seule dans une fenêtre
             id_aide = etat.proposer_aide("memoire", f"🧠 {texte[:70]}")
             etat.demander_aide(id_aide)
@@ -350,6 +375,111 @@ class Icone(rumps.App):
             subprocess.run(["open", str(rp.PAGE)], check=False)
         else:
             _fenetre(title="🌐 Pas encore de recherche", message="Lance d'abord : 🌐 Rechercher sur le web…", ok="Fermer")
+
+    # --- Rédacteur dans ta voix (phase 5) ---------------------------------------------------------
+
+    def _menu_redacteur(self) -> rumps.MenuItem:
+        menu = rumps.MenuItem(REDACTEUR)
+        menu.add(rumps.MenuItem("✒️  Rédiger dans mon style…", callback=self.rediger))
+        menu.add(None)
+        menu.add(rumps.MenuItem("🎨  Faire ma fiche de style", callback=self.faire_style))
+        menu.add(rumps.MenuItem("👤  Mon profil (lettres de motivation)", callback=self.ouvrir_profil))
+        return menu
+
+    def _en_fond(self, module: str, titre: str, travail) -> None:
+        """Claude travaille en fond ; le résultat s'ouvre tout seul (comme une aide 💡), même un échec."""
+        id_aide = etat.proposer_aide(module, titre)
+        etat.demander_aide(id_aide)
+        self.attendues.add(id_aide)
+
+        def faire():
+            try:
+                etat.finir_aide(id_aide, travail(), "prete")
+            except Exception as e:  # jamais en silence : la fenêtre dit pourquoi
+                log.info("%s impossible (%s)", module, type(e).__name__)
+                etat.finir_aide(id_aide, f"Impossible pour l'instant : {e}", "echec")
+
+        threading.Thread(target=faire, daemon=True).start()
+        self.rafraichir()
+
+    def rediger(self, _) -> None:
+        demande = _saisie("✒️ Rédiger dans mon style",
+                          "Quoi écrire ? « mail à mon prof pour demander un délai d'une semaine », « lettre de "
+                          "motivation pour l'alternance chargé de clientèle chez … » (colle l'annonce), « post "
+                          "LinkedIn : j'ai validé l'UE11 ».", ok="Rédiger", hauteur=110)
+        if demande:
+            self._rediger(demande)
+
+    def _rediger(self, demande: str) -> None:
+        from modules.redacteur import redaction
+
+        log.info("Brouillon demandé depuis l'icône")
+        self._en_fond("redacteur", f"✒️ {demande[:70]}",
+                      lambda: redaction.texte_brouillon(redaction.rediger(demande, "icone")))
+
+    def faire_style(self, _) -> None:
+        from modules.redacteur import parametres as rp
+        from modules.redacteur import style
+
+        if _fenetre(title="🎨 Ma fiche de style", message="Ton Mac lit tes 25 derniers mails envoyés (seulement ton texte) "
+                    f"et les textes déposés dans {rp.MES_TEXTES}. Environ 6 000 caractères partent UNE fois à Claude, "
+                    "qui décrit ta manière d'écrire et te montre un échantillon (20 à 40 s).",
+                    ok="C'est parti", cancel="Annuler") != 1:
+            return
+        log.info("Fiche de style demandée depuis l'icône")
+        self._en_fond("redacteur", "🎨 Ma fiche de style", lambda: style.texte_fiche(style.creer_fiche()))
+
+    def ouvrir_profil(self, _) -> None:
+        from modules.redacteur import parametres as rp
+        from modules.redacteur import style
+
+        style.creer_profil()
+        subprocess.run(["open", "-e", str(rp.PROFIL)], check=False)
+
+    # --- Dépenses (phase 5) -----------------------------------------------------------------------
+
+    def _menu_depenses(self) -> rumps.MenuItem:
+        menu = rumps.MenuItem(DEPENSES)
+        menu.add(rumps.MenuItem("🧾  Ajouter un reçu…", callback=self.ajouter_recu))
+        menu.add(rumps.MenuItem("📊  Mes dépenses du mois", callback=self.bilan_depenses))
+        menu.add(None)
+        menu.add(rumps.MenuItem("📂  Ouvrir le tableur", callback=self.ouvrir_tableur))
+        menu.add(rumps.MenuItem("📁  Ouvrir le dossier Reçus", callback=self.ouvrir_recus))
+        return menu
+
+    def ajouter_recu(self, _) -> None:
+        from modules.depenses import parametres as dp
+        from modules.depenses import recu
+
+        chemins = _choisir_fichiers("Choisis la photo (ou le PDF) de ton reçu", sorted(e[1:] for e in dp.EXTENSIONS))
+        if not chemins:
+            return
+        log.info("Reçu(s) ajouté(s) depuis l'icône (%d)", len(chemins))
+        self._en_fond("depenses", "🧾 Reçu" + (f"s ({len(chemins)})" if len(chemins) > 1 else ""),
+                      lambda: "\n".join(recu.traiter(c, "icone")["message"] for c in chemins)
+                      + ("\n\n(Mode test : rien n'est écrit. Pour de vrai :  python assistant.py depenses reel)"
+                         if dp.mode() != "reel" else ""))
+
+    def bilan_depenses(self, _) -> None:
+        from modules.depenses import recu, tableur
+
+        _fenetre(title="📊 Mes dépenses du mois", message=f"{tableur.texte_bilan(tableur.bilan())}\n\n{recu.resume_etat()}",
+                 ok="Fermer")
+
+    def ouvrir_tableur(self, _) -> None:
+        from modules.depenses import parametres as dp
+
+        if dp.TABLEUR.exists():
+            subprocess.run(["open", str(dp.TABLEUR)], check=False)
+        else:
+            _fenetre(title="📂 Pas encore de tableur", message="Il est créé au premier reçu ajouté en mode réel "
+                     "(python assistant.py depenses reel).", ok="Fermer")
+
+    def ouvrir_recus(self, _) -> None:
+        from modules.depenses import parametres as dp
+
+        dp.dossier_recus().mkdir(parents=True, exist_ok=True)
+        subprocess.run(["open", str(dp.dossier_recus())], check=False)
 
     # --- Coach (phase 5) : seulement quand tu le demandes ---------------------------------------------
 

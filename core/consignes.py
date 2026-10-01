@@ -4,6 +4,7 @@ Le tri est 100 % local (aucun appel à Claude pour trier) :
 - « rappelle-moi… », « pense à… », « n'oublie pas de… »      → un rappel Apple (core/rappels.py) ;
 - « qu'est-ce que je t'avais dit sur… », « tu te souviens… » → ton second cerveau : ta mémoire + Claude ;
 - « note que… », « retiens que… »                           → noté dans ta mémoire ;
+- « rédige un mail… », « écris une lettre… »                 → le rédacteur dans ton style (modules/redacteur) ;
 - « cherche sur internet… », « fais une recherche… »         → la recherche sourcée (modules/recherche) ;
 - par écrit : une autre question → ton second cerveau ; le reste → noté ;
 - à la voix : une autre demande → la 💡 habituelle (Claude propose, tu cliques).
@@ -27,6 +28,9 @@ SOUVENIR = re.compile(
 RAPPEL = re.compile(r"\b(rappelle|rappelez)[- ]moi\b|^\W*pense à\b|\bpense à me\b|\bn'oublie pas (de|d')", re.I)
 NOTE = re.compile(r"^\W*(note|notes|noter|retiens|retenir|mémorise|souviens-toi|garde en mémoire)\b"
                   r"(\s+(bien|que|qu'|ça|ceci|cela))*[\s:,]*", re.I)
+REDACTION = re.compile(r"^\W*(rédige|redige|rédiger|écris|ecris|écrire|prépare|prepare)(-moi)?\s+"
+                       r"(un|une|le|la|mon|ma|ce|cette)\s+(\w+\s+)?(mail|e-mail|courriel|message|lettre|post|réponse|texte)\b"
+                       r"|\baide-moi à (rédiger|écrire)\b", re.I)
 RECHERCHE = re.compile(r"\b(sur|dans) (internet|le web|google)\b|\b(fais|lance)(-moi)? une recherche\b"
                        r"|\brecherche (web|internet)\b", re.I)
 QUESTION = re.compile(r"\?\s*$|^\W*(comment|pourquoi|combien|quel|quelle|quels|quelles|qui|où|quand|est-ce|"
@@ -47,7 +51,8 @@ def _texte(t: str) -> str:
 
 
 def classer(texte: str) -> str:
-    """« rappel », « souvenir » (question à ta mémoire), « note », « recherche » (sur le web), « question » ou « autre »."""
+    """« rappel », « souvenir » (question à ta mémoire), « note », « redaction », « recherche » (sur le web),
+    « question » ou « autre »."""
     t = _texte(texte)
     if SOUVENIR.search(t):
         return "souvenir"
@@ -55,6 +60,8 @@ def classer(texte: str) -> str:
         return "rappel"
     if NOTE.match(t) and NOTE.sub("", t, count=1).strip():
         return "note"
+    if REDACTION.search(t):
+        return "redaction"
     if RECHERCHE.search(t):
         return "recherche"
     if QUESTION.search(t):

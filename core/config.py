@@ -69,6 +69,8 @@ DEFAUTS = {
             "applis_exclues": [],  # en plus de la liste de base (mots de passe, messageries…)
             "titres_exclus": [],  # en plus de la liste de base (banques, impots.gouv, ameli…)
         },
+        # Le dossier « Reçus » surveillé. mode « test » : rien n'est écrit dans le tableur.
+        "depenses": {"actif": False, "mode": "test", "dossier": "~/Reçus", "toutes_les_secondes": 30},
     },
 }
 
@@ -225,6 +227,18 @@ def retirer_module(nom: str) -> None:
     def changement(perso: dict) -> None:
         if isinstance(perso.get("modules"), dict):
             perso["modules"].pop(nom, None)
+
+    _modifier(changement)
+
+
+def regler_module(nom: str, cle: str, valeur) -> None:
+    """Change un réglage d'un module (ex. le mode des dépenses) sans toucher au reste."""
+    def changement(perso: dict) -> None:
+        if not isinstance(perso.get("modules"), dict):
+            perso["modules"] = {}
+        if not isinstance(perso["modules"].get(nom), dict):
+            perso["modules"][nom] = {}
+        perso["modules"][nom][cle] = valeur
 
     _modifier(changement)
 
