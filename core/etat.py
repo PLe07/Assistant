@@ -262,6 +262,7 @@ def resume() -> dict:
                    or (test is not None and time.time() - float(test) < 5))
     regard = lire("yeux_regard")  # dernier coup d'œil (jamais ce qui a été vu)
     ecran_regard = time.time() - float(regard) if ecran_actif and regard is not None else None
+    ecran_alerte = lire("yeux_alerte") if ecran_actif else None  # « autorisation » ou « capture »
     aides = [a for a in aides_recentes(time.time() - 2 * 3600)
              if not a["vue"] and a["statut"] in ("proposee", "demandee", "prete", "a_capturer")]
     capteurs = ("🎙" if micro_actif else "") + ("👁" if ecran_actif else "")
@@ -271,7 +272,7 @@ def resume() -> dict:
         icone = capteurs or "⚪"
     else:
         # 🎙 et 👁 restent toujours visibles quand le micro ou l'écran sont actifs, même avec une aide ou une erreur.
-        icone = capteurs + ("⚠️" if en_erreur else "") + ("💡" if aides else "") or "🟢"
+        icone = capteurs + ("⚠️" if en_erreur or ecran_alerte else "") + ("💡" if aides else "") or "🟢"
     return {
         "icone": icone,
         "pause": reglages["pause_globale"],
@@ -281,6 +282,7 @@ def resume() -> dict:
         "pause_ecran": reglages["pause_ecran"],
         "ecran_actif": ecran_actif,
         "ecran_regard": ecran_regard,
+        "ecran_alerte": ecran_alerte,
         "mode_yeux": "reel" if reglages["modules"].get("yeux", {}).get("mode") == "reel" else "journal",
         "aides": aides,
         "superviseur_actif": superviseur_actif,

@@ -63,7 +63,7 @@ def ecouter(ctx_arret, log, ecoute, interactif: bool = False) -> None:
                         print("\n⛔ Micro bloqué par macOS : Réglages Système → Confidentialité et sécurité → Micro "
                               "→ coche « Terminal », puis relance le test.")
                     else:
-                        notifier("Assistant", ALERTE_MICRO, module="oreilles")
+                        notifier("Assistant", ALERTE_MICRO, module="oreilles", urgent=True)  # même la nuit
                     alerte = True
                 if bloc is not None:
                     phrase = decoupeur.ajouter(bloc)

@@ -68,23 +68,39 @@ def boucle(ctx) -> None:
 
     # Si l'observation précédente a été coupée net, ses aides en attente ne peuvent plus être rédigées.
     etat.expirer_aides("yeux", "Cette aide a expiré : l'observation a redémarré entre-temps.")
+    etat.effacer("yeux_regard")
     obs = Observation(ctx.log)
     try:
         if not obs.capteur.autorise():
             obs.capteur.demander_autorisation()
-            ctx.log.error("Enregistrement de l'écran non autorisé pour Python : rien n'est capturé")
-            notifier("Assistant", ALERTE_ECRAN, module="yeux")
+            etat.ecrire("yeux_alerte", "autorisation")
+            ctx.log.error("Enregistrement de l'écran non autorisé pour Python (%s) : rien n'est capturé", python_utilise())
+            notifier("Assistant", ALERTE_ECRAN, module="yeux", urgent=True)  # tu dois pouvoir agir, même la nuit
             while not obs.capteur.autorise():  # macOS ne le prend souvent en compte qu'au redémarrage
                 for a in etat.aides_a_capturer("yeux"):
                     etat.finir_aide(a["id"], ALERTE_ECRAN, "echec")
                 if ctx.arret.wait(30):
                     return
+            etat.effacer("yeux_alerte")
         ctx.log.info("Observation active (mode %s)", p.mode())
         observer(ctx.arret, ctx.log, obs)
     finally:
         obs.arreter()  # efface tout ce qui restait en mémoire
         etat.effacer("yeux_regard")
+        etat.effacer("yeux_alerte")
         ctx.log.info("Observation arrêtée")
+
+
+def python_utilise() -> str:
+    """Le programme que macOS doit autoriser (pour le bouton « + » des Réglages si besoin)."""
+    import os
+
+    reel = os.path.realpath(sys.executable)
+    if "Python.framework/Versions/" in reel:
+        base = reel.split("Python.framework/Versions/")[0] + "Python.framework/Versions/"
+        version = reel.split("Python.framework/Versions/")[1].split("/")[0]
+        return f"{base}{version}/Resources/Python.app"
+    return reel
 
 
 # --- commandes à la main ----------------------------------------------------------------
@@ -98,7 +114,9 @@ def diagnostic() -> int:
     from modules.yeux.filtres import exclue
 
     ok = capture.autorise()
-    print(("✅" if ok else "⛔") + " Autorisation « Enregistrement de l'écran » : " + ("accordée" if ok else "PAS ENCORE"))
+    print(("✅" if ok else "⛔") + " Autorisation « Enregistrement de l'écran » : " + ("accordée" if ok else "PAS ENCORE")
+          + " (pour le Terminal)")
+    print(f"   Pour l'observation en fond, c'est ce programme qui doit être autorisé : {python_utilise()}")
     if not ok:
         print("   macOS va te la demander. Accorde-la au Terminal, puis QUITTE le Terminal (Cmd + Q),")
         print("   rouvre-le et relance cette commande.")

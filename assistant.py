@@ -46,9 +46,12 @@ def afficher_etat() -> int:
               else f" · son reçu il y a {int(son)} s" if son < 30
               else f" · ⚠️ AUCUN son reçu depuis {int(son // 60)} min (autorisation macOS ?)")
     print("   🎙 Micro : " + ("ouvert (écoute en cours)" if r["micro_actif"] else "coupé" if r["pause_micro"] else "fermé") + detail)
-    vu = r["ecran_regard"]
+    vu, alerte = r["ecran_regard"], r["ecran_alerte"]
     detail = ("" if not r["ecran_actif"] else f" · mode {r['mode_yeux']}" + (
-        " · démarrage…" if vu is None else f" · dernier coup d'œil il y a {int(vu)} s" if vu < 120
+        " · ⚠️ PAS D'AUTORISATION macOS pour Python (Enregistrement de l'écran)" if alerte == "autorisation"
+        else " · ⚠️ capture impossible (voir : python assistant.py journal)" if alerte == "capture"
+        else " · aucun coup d'œil encore" if vu is None
+        else f" · dernier coup d'œil il y a {int(vu)} s" if vu < 120
         else " · en veille (absent, écran verrouillé ou appli exclue)"))
     print("   👁 Écran : " + ("observé" if r["ecran_actif"] else "coupé" if r["pause_ecran"] else "non observé") + detail)
     if r["aides"]:

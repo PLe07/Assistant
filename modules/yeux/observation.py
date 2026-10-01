@@ -47,6 +47,10 @@ class Observation(Assistance):
         lignes = self.capteur.lire(fenetre)
         if lignes is None and not self.capture_en_echec:
             self.log.warning("Capture de la fenêtre impossible (%s) : autorisation ou version de macOS ?", fenetre["appli"])
+            if not self.test:
+                etat.ecrire("yeux_alerte", "capture")
+        elif lignes is not None and self.capture_en_echec and not self.test:
+            etat.effacer("yeux_alerte")
         self.capture_en_echec = lignes is None
         return lignes
 
@@ -67,7 +71,8 @@ class Observation(Assistance):
         lignes = self._lire(f)
         if lignes is None:
             return
-        etat.ecrire("yeux_regard", time.time())  # pour « assistant.py etat » (jamais ce qui a été vu)
+        if not self.test:
+            etat.ecrire("yeux_regard", time.time())  # pour « assistant.py etat » (jamais ce qui a été vu)
         declenchements = self.detecteur.analyser(f"{f['appli']}|{f['titre']}", lignes, lire_perso(p.FICHIER_DECLENCHEURS))
         if self.test:
             attente = ", ".join(f"{t} dans {s} s" for t, s in self.detecteur.en_cours()) or "aucun signal"
