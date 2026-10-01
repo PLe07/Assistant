@@ -20,6 +20,7 @@ Un assistant personnel qui tourne en arrière-plan sur le Mac : un système nerv
 | `modules/recherche/` | Phase 5 · la recherche sourcée sur le web (voir `modules/recherche/README.md`) |
 | `modules/redacteur/` | Phase 5 · le rédacteur dans ta voix (voir `modules/redacteur/README.md`) |
 | `modules/depenses/` | Phase 5 · le traqueur de dépenses (voir `modules/depenses/README.md`) |
+| `modules/brief/` | Phase 5 · le brief du jour : agenda, mails à traiter, rappels (voir `modules/brief/README.md`) |
 | `tri-mails/` | Ancienne version du tri, gardée en sauvegarde |
 
 Restent **sur le Mac uniquement** (exclus de GitHub) : `.env`, `reglages.json`, `donnees/`, `logs/`.

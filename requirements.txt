@@ -11,3 +11,4 @@ numpy>=2,<3              # module oreilles : le son en mémoire
 pyobjc-framework-Quartz>=12,<13 ; sys_platform == "darwin"            # module yeux : fenêtres, capture (secours), inactivité
 pyobjc-framework-ScreenCaptureKit>=12,<13 ; sys_platform == "darwin"  # module yeux : capture d'UNE fenêtre, en mémoire
 pyobjc-framework-Vision>=12,<13 ; sys_platform == "darwin"            # module yeux : lecture du texte (OCR) sur le Mac
+pyobjc-framework-EventKit>=12,<13 ; sys_platform == "darwin"          # brief : l'agenda du jour (app Calendrier)

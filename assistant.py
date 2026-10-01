@@ -41,6 +41,9 @@ Rédacteur dans ta voix (phase 5) :
     python assistant.py rediger profil    ton profil pour les lettres de motivation (s'ouvre dans TextEdit)
     python assistant.py rediger "…"       un brouillon dans ton style (mail, lettre de motivation, post)
 
+Brief du jour (phase 5), sans Claude :
+    python assistant.py brief             ton agenda du jour, tes mails à traiter, tes rappels du jour
+
 Dépenses (phase 5) :
     python assistant.py depenses          le total du mois, par catégorie (depenses 2026-09 : un autre mois)
     python assistant.py depenses ajouter photo.jpg   ajoute un reçu (photo ou PDF)
@@ -540,6 +543,12 @@ def depenses(suite: str | None) -> int:
     return 2
 
 
+def brief() -> int:
+    from modules.brief import terminal
+
+    return terminal.lancer()
+
+
 def essai_memoire(etape: int | None) -> int:
     from core.essai_memoire import essai
 
@@ -550,7 +559,7 @@ def main() -> int:
     actions = {
         "pause": pause, "reprendre": reprendre, "etat": afficher_etat, "journal": journal,
         "test-notif": test_notif, "test-claude": test_claude, "test-plantage": test_plantage,
-        "renouveler-jeton": renouveler_jeton,
+        "renouveler-jeton": renouveler_jeton, "brief": brief,
     }
     avec_texte = {"noter": noter, "demander": demander_memoire, "memoire": afficher_memoire, "oublier": oublier,
                   "rappels": rappels, "micro": micro, "ecran": ecran, "coach": coach, "veille": veille,

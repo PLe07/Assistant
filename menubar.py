@@ -33,13 +33,14 @@ AIDE_ECRAN = "👁  M'aider avec cet écran"
 NOTER = "✍️  Noter ou demander…"
 CHERCHER = "🔎  Chercher dans ma mémoire…"
 RECHERCHER = "🌐  Rechercher sur le web…"
+BRIEF = "☀️  Mon brief"
 COACH = "🎓  Coach"
 VEILLE = "📰  Veille"
 QUOI_DE_NEUF = "📰  Quoi de neuf ?"
 REDACTEUR = "✒️  Rédacteur"
 DEPENSES = "🧾  Dépenses"
 # Ces modules écrivent eux-mêmes dans ta mémoire (ou n'y mettent rien), et leurs titres ont déjà leur symbole.
-MODULES_AUTONOMES = ("memoire", "veille", "recherche", "redacteur", "depenses")
+MODULES_AUTONOMES = ("memoire", "veille", "recherche", "redacteur", "depenses", "brief")
 SYMBOLES_AIDE = {"proposee": "💡", "demandee": "⏳", "a_capturer": "⏳", "prete": "✅"}
 
 
@@ -137,6 +138,7 @@ class Icone(rumps.App):
             self.bouton_ecran,
             None,
             rumps.MenuItem(AIDE_ECRAN, callback=self.aide_ecran),
+            rumps.MenuItem(BRIEF, callback=self.brief),
             rumps.MenuItem(NOTER, callback=self.noter),
             rumps.MenuItem(CHERCHER, callback=self.chercher),
             rumps.MenuItem(RECHERCHER, callback=self.rechercher),
@@ -274,7 +276,7 @@ class Icone(rumps.App):
             if _fenetre(title=a["titre"], message=texte, ok="Fermer", cancel=libelle) == 0:
                 ouvrir(None)
         else:
-            titre = a["titre"] if a.get("module") in ("redacteur", "depenses") else f"💡 {a['titre']}"
+            titre = a["titre"] if a.get("module") in ("redacteur", "depenses", "brief") else f"💡 {a['titre']}"
             if _fenetre(title=titre, message=texte, ok="Fermer", cancel="Copier") == 0:
                 subprocess.run(["pbcopy"], input=texte, text=True)
 
@@ -375,6 +377,14 @@ class Icone(rumps.App):
             subprocess.run(["open", str(rp.PAGE)], check=False)
         else:
             _fenetre(title="🌐 Pas encore de recherche", message="Lance d'abord : 🌐 Rechercher sur le web…", ok="Fermer")
+
+    # --- Brief (phase 5) : agenda, mails à traiter, rappels ; sur ton Mac, sans Claude -------------
+
+    def brief(self, _) -> None:
+        from modules.brief import brief
+
+        log.info("Brief demandé depuis l'icône")
+        self._en_fond("brief", "☀️ Mon brief", brief.composer)
 
     # --- Rédacteur dans ta voix (phase 5) ---------------------------------------------------------
 
