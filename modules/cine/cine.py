@@ -27,6 +27,7 @@ HISTORIQUE = DOSSIER / "historique.json"
 GARDER_JOURS = 30
 IDEES = 5  # demandées à Claude ; ton Mac en garde 3
 MARGE = 5  # minutes de tolérance sur ton temps (générique de fin…)
+PRESQUE = 20  # rien ne tient même après 2 appels : les idées qui dépassent de 20 min au plus, en le disant
 
 SCHEMA = {
     "type": "object",
@@ -120,38 +121,50 @@ def _demander(demande: str, temps: int | None, eviter: list[str], module: str, t
     return choix if isinstance(choix, list) else []
 
 
+def _idee(c: dict, titre: str, minutes: int | None) -> dict:
+    pourquoi = texte_simple(" ".join(str(c.get("pourquoi", "")).split()))[:300]
+    return {"titre": titre,
+            "annee": c.get("annee") if isinstance(c.get("annee"), int) else None,
+            "type": c.get("type") if c.get("type") in ("film", "série") else "film",
+            "duree": " ".join(str(c.get("duree", "")).split())[:40],
+            "minutes": minutes,
+            "genre": " ".join(str(c.get("genre", "")).split())[:40],
+            "pourquoi": pourquoi if len(pourquoi) >= 12 else ""}  # « x » ou presque rien : pas affiché
+
+
 def proposer(demande: str, source: str, module: str = "cine", garder: bool = True) -> dict:
     """{quand, demande, temps, choix: [{titre, annee, type, duree, minutes, genre, pourquoi}]}.
     1 appel à Claude (fort) ; un 2e seulement si moins de 3 idées tiennent dans ton temps."""
     verifier_actif("cine")  # désactivé dans tes réglages : ne fait rien
     demande = " ".join((demande or "").split())[:500] or "pas de précision : surprends-moi"
     temps, deja = temps_dispo(demande), deja_proposes()
-    vus, choix, trop_longs = {t.lower() for t in deja}, [], []
+    vus, choix, trop_longs, presque, repetes = {t.lower() for t in deja}, [], [], [], 0
     for essai in range(2):
         for c in _demander(demande, temps, deja + [c["titre"] for c in choix], module, trop_longs):
-            if not isinstance(c, dict) or not str(c.get("titre", "")).strip() or str(c["titre"]).strip().lower() in vus:
-                continue  # un titre vide, ou déjà proposé, est écarté
+            if not isinstance(c, dict) or not str(c.get("titre", "")).strip():
+                continue  # un titre vide est écarté
             titre = " ".join(str(c["titre"]).split())[:100]
+            if titre.lower() in vus:
+                repetes += 1  # déjà proposé : écarté
+                continue
             vus.add(titre.lower())
             minutes = c.get("minutes") if isinstance(c.get("minutes"), int) and c["minutes"] > 0 else None
             if temps and minutes and minutes > temps + MARGE:
                 trop_longs.append(titre)  # vérifié sur ton Mac : ne tient pas dans ton temps
+                if minutes <= temps + PRESQUE:
+                    presque.append(dict(_idee(c, titre, minutes), depasse=minutes - temps))
                 continue
             if len(choix) < 3:
-                choix.append({"titre": titre,
-                              "annee": c.get("annee") if isinstance(c.get("annee"), int) else None,
-                              "type": c.get("type") if c.get("type") in ("film", "série") else "film",
-                              "duree": " ".join(str(c.get("duree", "")).split())[:40],
-                              "minutes": minutes,
-                              "genre": " ".join(str(c.get("genre", "")).split())[:40],
-                              "pourquoi": texte_simple(" ".join(str(c.get("pourquoi", "")).split()))[:300]})
+                choix.append(_idee(c, titre, minutes))
         if len(choix) >= 3 or not trop_longs:  # on ne rappelle Claude que pour remplacer des idées trop longues
             break
+    log.info("Ciné : %d tiennent dans ton temps, %d trop longue(s), %d déjà proposée(s)", len(choix), len(trop_longs),
+             repetes)
+    if not choix and presque:  # mieux vaut 3 idées un peu longues, annoncées comme telles, que rien
+        choix = sorted(presque, key=lambda c: c["depasse"])[:3]
     if not choix:
         raise ClaudeIndisponible(f"aucune idée ne tenait dans {temps} min : redemande avec un peu plus de temps."
                                  if trop_longs else "Claude n'a rien proposé d'utilisable : réessaie dans un moment.")
-    if trop_longs:
-        log.info("Ciné : %d idée(s) trop longue(s) écartée(s)", len(trop_longs))
     proposition = {"quand": time.time(), "demande": demande, "temps": temps, "choix": choix}
     if garder:
         _garder(proposition)
@@ -163,7 +176,8 @@ def texte_proposition(p: dict) -> str:
     lignes = [f"🎬 Ce soir (« {p['demande']} ») :"]
     for i, c in enumerate(p["choix"], 1):
         details = " · ".join(x for x in (f"{c['type']} {c['annee'] or ''}".strip(), c["genre"], c["duree"]) if x)
-        lignes.append(f"\n{i}. {c['titre']}  ({details})\n   {c['pourquoi']}")
+        lignes.append(f"\n{i}. {c['titre']}  ({details})" + (f"\n   {c['pourquoi']}" if c.get("pourquoi") else "")
+                      + (f"\n   ⚠️ dépasse ton temps de {c['depasse']} min" if c.get("depasse") else ""))
     lignes.append("\nPas convaincu ? Redemande en précisant (« plutôt un thriller », « plus court »).")
     return "\n".join(lignes)
 

@@ -11,6 +11,7 @@ tes notes, tes réponses au coach, tes brouillons ni tes reçus.
 Chaque revue est gardée dans donnees/revue/ (un fichier par semaine) et dans ta mémoire.
 """
 
+import json
 import os
 import sqlite3
 import time
@@ -231,7 +232,8 @@ def _texte(d: dict) -> tuple[list[str], list[str]]:
         claude.append(f"Mails triés : {total}" + (f" ({', '.join(f'{b} {n}' for b, n in mails.items())})" if total else ""))
     nb, err = d["brouillons"]
     if not err and nb:
-        vu.append(f"   ✒️ {sum(nb.values())} brouillon(s) : " + ", ".join(f"{n} {g}" for g, n in nb.most_common()))
+        types = ", ".join(f"{n} {g}{'s' if n > 1 else ''}" for g, n in nb.most_common())  # « 2 mails, 1 lettre »
+        vu.append(f"   ✒️ {sum(nb.values())} brouillon(s) : {types}")
         claude.append(f"Brouillons écrits : {sum(nb.values())}")
     c, err = d["confie"]
     if not err and c:
@@ -311,13 +313,26 @@ def _texte(d: dict) -> tuple[list[str], list[str]]:
     return vu, claude
 
 
+def _phrases(valeur) -> str:
+    """Le texte de Claude, même s'il l'a rendu en liste (« ["…", "…"] ») au lieu d'un seul texte."""
+    if isinstance(valeur, str) and valeur.strip().startswith("["):
+        try:
+            valeur = json.loads(valeur)
+        except ValueError:
+            pass
+    if isinstance(valeur, list):
+        valeur = " ".join(str(v) for v in valeur)
+    return texte_simple(" ".join(str(valeur or "").split()))
+
+
 def mot_de_claude(resume: list[str]) -> dict:
     """{bref, conseils} : 1 appel à Claude (fort), seulement sur les chiffres et les titres."""
     r = demander("Les données de sa semaine :\n<<<\n" + "\n".join(resume) + "\n>>>", module="revue",
                  systeme=SYSTEME, schema=SCHEMA, modele="fort")
     d = r.donnees if isinstance(r.donnees, dict) else {}
-    bref = texte_simple(" ".join(str(d.get("bref", "")).split()))
-    conseils = [texte_simple(" ".join(str(c).split())) for c in d.get("conseils") or [] if str(c).strip()][:2]
+    bref = _phrases(d.get("bref"))
+    conseils = d.get("conseils") if isinstance(d.get("conseils"), list) else [d.get("conseils")]
+    conseils = [_phrases(c) for c in conseils if str(c or "").strip()][:2]
     if not bref:
         raise ClaudeIndisponible("le mot de Claude est vide : réessaie dans un moment.")
     return {"bref": bref, "conseils": conseils}
