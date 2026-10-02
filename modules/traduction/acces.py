@@ -3,10 +3,33 @@
 - Clavier : remarque chaque « . » tapé (écoute seule, rien n'est enregistré : autorisation « Surveillance de
   l'entrée »). Les champs de mot de passe sont invisibles : macOS les cache de lui-même.
 - Mac : lit la phrase dans le champ où tu écris et la remplace (autorisation « Accessibilité »).
+  Pour les applis qui cachent leur texte (Pages, Keynote) : « mode clavier », le texte est sélectionné et copié pour
+  être lu, puis l'anglais est collé à la place ; ton presse-papiers est remis comme avant.
 """
 
 import subprocess
+import time
 from dataclasses import dataclass
+
+MARQUE = 0x41535354  # posée sur les touches que l'Assistant envoie lui-même, pour ne pas les prendre pour les tiennes
+FLECHE_GAUCHE, FLECHE_DROITE, FLECHE_HAUT, TOUCHE_C, TOUCHE_V = 123, 124, 126, 8, 9  # codes des touches (Mac)
+TEXTE_BRUT = "public.utf8-plain-text"
+ESPACES = (" ", "\r", "\n", "\t", "\u00a0")
+
+
+class _Activite:
+    """Ce que le clavier retient de toi : l'heure de ta dernière touche et combien de phrases tu as finies
+    (un point suivi d'une espace ou d'un retour à la ligne). Jamais les touches elles-mêmes."""
+
+    def __init__(self):
+        self.derniere, self.fins, self.point_en_dernier = 0.0, 0, False
+        self.envoyees = {}  # touches que l'Assistant vient d'envoyer, au cas où macOS effacerait leur marque
+
+    def phrases_finies(self) -> int:
+        return self.fins + (1 if self.point_en_dernier else 0)
+
+
+ACTIVITE = _Activite()
 
 
 @dataclass
@@ -265,6 +288,94 @@ class Mac:
             lignes.append(f"⛔ {type(e).__name__} : {e}")
         return lignes
 
+    # --- le mode clavier (Pages, Keynote : leur texte est caché à macOS) ------------------------------
+
+    def activite(self) -> tuple[float, int]:
+        """(heure de ta dernière touche, nombre de phrases finies au clavier)."""
+        return ACTIVITE.derniere, ACTIVITE.phrases_finies()
+
+    def _touche(self, code: int, drapeaux: int = 0) -> None:
+        import Quartz
+
+        ACTIVITE.envoyees[code] = ACTIVITE.envoyees.get(code, 0) + 1
+        for appui in (True, False):
+            evenement = Quartz.CGEventCreateKeyboardEvent(None, code, appui)
+            Quartz.CGEventSetFlags(evenement, drapeaux)
+            Quartz.CGEventSetIntegerValueField(evenement, Quartz.kCGEventSourceUserData, MARQUE)
+            Quartz.CGEventPost(Quartz.kCGHIDEventTap, evenement)
+        time.sleep(0.003)
+
+    def _presse_papiers(self):
+        from AppKit import NSPasteboard
+
+        return NSPasteboard.generalPasteboard()
+
+    def _sauver(self, pb) -> list[dict]:
+        """Ton presse-papiers tel quel (texte, image…), en mémoire le temps de l'opération seulement."""
+        sauvegarde = []
+        for element in pb.pasteboardItems() or []:
+            donnees = {str(t): element.dataForType_(t) for t in element.types() or []}
+            sauvegarde.append({t: d for t, d in donnees.items() if d is not None})
+        return sauvegarde
+
+    def _remettre(self, pb, sauvegarde: list[dict]) -> None:
+        from AppKit import NSPasteboardItem
+
+        pb.clearContents()
+        elements = []
+        for donnees in sauvegarde:
+            element = NSPasteboardItem.alloc().init()
+            for t, d in donnees.items():
+                element.setData_forType_(d, t)
+            elements.append(element)
+        if elements:
+            pb.writeObjects_(elements)
+
+    def copier_avant(self) -> str | None:
+        """Le texte du début du paragraphe jusqu'au curseur : sélectionné (⌥⇧↑), copié (⌘C), puis la sélection est
+        repliée (→ : le curseur revient où il était) et ton presse-papiers remis. None si rien n'a été copié."""
+        import Quartz
+
+        ACTIVITE.envoyees.clear()  # une opération qui commence : rien d'ancien ne doit rester compté
+        pb = self._presse_papiers()
+        sauvegarde, avant = self._sauver(pb), pb.changeCount()
+        self._touche(FLECHE_HAUT, Quartz.kCGEventFlagMaskShift | Quartz.kCGEventFlagMaskAlternate)
+        self._touche(TOUCHE_C, Quartz.kCGEventFlagMaskCommand)
+        limite = time.time() + 1.5
+        while pb.changeCount() == avant and time.time() < limite:
+            time.sleep(0.02)
+        if pb.changeCount() == avant:  # rien de copié : rien n'était sélectionné, il n'y a rien à replier
+            return None
+        texte = pb.stringForType_(TEXTE_BRUT)
+        self._touche(FLECHE_DROITE)
+        self._remettre(pb, sauvegarde)
+        return str(texte) if texte is not None else None
+
+    def remplacer_au_clavier(self, combien: int, nouveau: str, depuis: float) -> bool:
+        """Sélectionne les « combien » derniers caractères avant le curseur (⇧←) et colle « nouveau » (⌘V), puis
+        remet ton presse-papiers. False, sans rien coller, si tu as tapé quelque chose depuis « depuis »."""
+        import Quartz
+
+        if ACTIVITE.derniere > depuis:
+            return False
+        pb = self._presse_papiers()
+        sauvegarde = self._sauver(pb)
+        pb.clearContents()
+        pb.setString_forType_(nouveau, TEXTE_BRUT)
+        pb.setString_forType_("", "org.nspasteboard.TransientType")  # les historiques de presse-papiers l'ignorent
+        compte = pb.changeCount()
+        for _ in range(combien):
+            self._touche(FLECHE_GAUCHE, Quartz.kCGEventFlagMaskShift)
+        if ACTIVITE.derniere > depuis:  # tu as repris la main pendant la sélection : on replie, rien n'est collé
+            self._touche(FLECHE_DROITE)
+            self._remettre(pb, sauvegarde)
+            return False
+        self._touche(TOUCHE_V, Quartz.kCGEventFlagMaskCommand)
+        time.sleep(0.6 + combien * 0.005)  # le temps que l'appli lise le presse-papiers
+        if pb.changeCount() == compte:  # personne ne l'a changé entre-temps
+            self._remettre(pb, sauvegarde)
+        return True
+
     # --- lire et remplacer --------------------------------------------------------------------------
 
     def lire(self, champ) -> Lu | None:
@@ -300,7 +411,7 @@ class Mac:
 
 class Clavier:
     """Écoute seule du clavier : appelle quand_point() à chaque « . » tapé (jamais pour un raccourci Cmd/Ctrl).
-    Ne garde aucune touche : seul le fait qu'un point vient d'être tapé est transmis."""
+    Ne garde aucune touche : seuls l'heure de la dernière et le nombre de phrases finies sont notés (ACTIVITE)."""
 
     def __init__(self, quand_point):
         self.quand_point = quand_point
@@ -310,11 +421,23 @@ class Clavier:
         import Quartz
 
         if type_ == Quartz.kCGEventKeyDown:
+            code = Quartz.CGEventGetIntegerValueField(event, Quartz.kCGKeyboardEventKeycode)
+            if ACTIVITE.envoyees.get(code):  # une touche envoyée par l'Assistant lui-même (mode clavier)
+                ACTIVITE.envoyees[code] -= 1
+                return event
+            if Quartz.CGEventGetIntegerValueField(event, Quartz.kCGEventSourceUserData) == MARQUE:
+                return event
+            ACTIVITE.derniere = time.time()
             drapeaux = Quartz.CGEventGetFlags(event)
-            if not drapeaux & (Quartz.kCGEventFlagMaskCommand | Quartz.kCGEventFlagMaskControl):
-                _, caractere = Quartz.CGEventKeyboardGetUnicodeString(event, 4, None, None)
-                if caractere == ".":
-                    self.quand_point()
+            if drapeaux & (Quartz.kCGEventFlagMaskCommand | Quartz.kCGEventFlagMaskControl):
+                ACTIVITE.point_en_dernier = False
+                return event
+            _, caractere = Quartz.CGEventKeyboardGetUnicodeString(event, 4, None, None)
+            if ACTIVITE.point_en_dernier and caractere in ESPACES:
+                ACTIVITE.fins += 1  # « . » puis espace : une phrase finie
+            ACTIVITE.point_en_dernier = caractere == "."
+            if caractere == ".":
+                self.quand_point()
         elif type_ in (Quartz.kCGEventTapDisabledByTimeout, Quartz.kCGEventTapDisabledByUserInput):
             if self.tap is not None:  # macOS coupe une écoute jugée trop lente : on la relance
                 Quartz.CGEventTapEnable(self.tap, True)

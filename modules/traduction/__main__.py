@@ -16,6 +16,7 @@ import queue
 import sys
 import threading
 import time
+import traceback
 
 from core import etat
 from core.module import executer
@@ -66,28 +67,46 @@ def _autoriser(ctx, mac) -> bool:
     return False
 
 
-def _travailler(arret, log, mac, traducteur, points) -> None:
-    """Chaque point tapé : lire, traduire, remplacer. Une erreur sur une phrase n'arrête jamais le module."""
+def _travailler(arret, log, mac, traducteur, points, rapporter=None) -> None:
+    """Chaque point tapé : lire, traduire, remplacer. Une erreur sur une phrase n'arrête jamais le module.
+    points : file de (heure, phrases finies au clavier à ce moment). rapporter(résultat, appli) : pour --test."""
     from modules.traduction.traitement import COPIEE, TRADUITE, traiter_point
 
     erreurs = set()
     while not arret.is_set():
         try:
-            points.get(timeout=0.5)
+            _, finies = points.get(timeout=0.5)
         except queue.Empty:
             continue
         time.sleep(p.ATTENTE)  # le temps que l'appli affiche le point
         while not points.empty():  # « ... » tapés d'affilée : un seul passage
             points.get_nowait()
         try:
-            resultat, appli = traiter_point(mac, traducteur)
+            resultat, appli = traiter_point(mac, traducteur, finies)
         except Exception as e:
+            resultat, appli = f"⛔ erreur : {type(e).__name__} : {e}", ""
             if str(e) not in erreurs:  # chaque erreur différente notée une fois, avec le détail (jamais le texte)
                 erreurs.add(str(e))
                 log.exception("Traduction : erreur sur une phrase (le module continue)")
-            continue
+        fini = time.time()
+        restants = []
+        while not points.empty():  # les points tapés pendant ce passage y ont été pris en compte
+            point = points.get_nowait()
+            if point[0] > fini:
+                restants.append(point)
+        for point in restants:
+            points.put(point)
+        if rapporter:
+            rapporter(resultat, appli)
         if resultat in (TRADUITE, COPIEE):
             log.info("Phrase %s (%s)", resultat, appli)  # jamais la phrase elle-même
+
+
+def _signaler(points):
+    """Ce que le clavier transmet à chaque point : l'heure et le nombre de phrases finies (jamais les touches)."""
+    from modules.traduction.acces import ACTIVITE
+
+    return lambda: points.put((time.time(), ACTIVITE.phrases_finies()))
 
 
 def boucle(ctx) -> None:
@@ -103,7 +122,7 @@ def boucle(ctx) -> None:
         points = queue.Queue()
         threading.Thread(target=_travailler, args=(ctx.arret, ctx.log, mac, traducteur, points), daemon=True).start()
         ctx.log.info("Traduction active : chaque phrase française finie par un point devient anglaise")
-        if not Clavier(lambda: points.put(time.time())).tourner(ctx.arret):
+        if not Clavier(_signaler(points)).tourner(ctx.arret):
             _alerter(ctx, "autorisation", ALERTE_AUTORISATIONS)
             ctx.arret.wait()  # rien à faire tant que macOS refuse : éteins et rallume après l'avoir autorisé
     finally:
@@ -169,6 +188,16 @@ def diagnostic() -> int:
 BLOCAGES = ("aucune appli", "pas de champ", "texte illisible", "⛔")
 
 
+class _JournalMuet:
+    """En test, tout s'affiche ici (avec le détail d'une erreur) : rien n'est écrit dans le journal."""
+
+    def info(self, *_):
+        pass
+
+    def exception(self, *_):
+        traceback.print_exc()
+
+
 class _Essai:
     """Le Mac pour de vrai en lecture, mais rien n'est remplacé ni copié : tout s'affiche ici."""
 
@@ -185,13 +214,16 @@ class _Essai:
     def copier(self, texte_: str) -> None:
         print(f"   📋 serait copiée : « {texte_} »")
 
+    def remplacer_au_clavier(self, combien, nouveau, depuis) -> bool:
+        print(f"   🇬🇧 serait remplacée (mode clavier, {combien} caractères) par : « {nouveau} »")
+        return True
+
 
 def test() -> int:
     if sys.platform != "darwin":
         print("⛔ Ce module ne fonctionne que sur un Mac.")
         return 1
     from modules.traduction.acces import Clavier, Mac
-    from modules.traduction.traitement import traiter_point
 
     try:
         traducteur = Traducteur()
@@ -203,17 +235,11 @@ def test() -> int:
         print("⛔ Autorisations manquantes pour le Terminal : python -m modules.traduction --diagnostic")
         return 1
     print("MODE TEST : rien n'est remplacé ni gardé. Ouvre Notes (par ex.), tape une phrase en français finie par")
-    print("un point, et regarde ici. Ctrl + C pour arrêter.\n")
-    arret = threading.Event()
+    print("un point, et regarde ici. Dans Pages et Keynote, ta phrase est sélectionnée un instant pour être lue")
+    print("(⌥⇧↑ puis ⌘C, presse-papiers remis) : c'est normal, rien n'est modifié. Ctrl + C pour arrêter.\n")
+    arret, points, deja = threading.Event(), queue.Queue(), set()
 
-    deja = set()
-
-    def point():
-        time.sleep(p.ATTENTE)
-        try:
-            resultat, appli = traiter_point(mac, traducteur)
-        except Exception as e:
-            resultat, appli = f"⛔ erreur : {type(e).__name__} : {e}", ""
+    def rapporter(resultat, appli):
         print(f"· {appli or '?'} : {resultat}")
         if resultat.startswith(BLOCAGES) and resultat not in deja:  # où ça bloque, étape par étape (une fois)
             deja.add(resultat)
@@ -221,7 +247,9 @@ def test() -> int:
                 print(f"     {ligne}")
 
     try:
-        Clavier(lambda: threading.Thread(target=point, daemon=True).start()).tourner(arret)
+        threading.Thread(target=_travailler, args=(arret, _JournalMuet(), mac, traducteur, points, rapporter),
+                         daemon=True).start()
+        Clavier(_signaler(points)).tourner(arret)
     except KeyboardInterrupt:
         print("\nArrêt du test.")
     finally:

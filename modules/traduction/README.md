@@ -23,6 +23,14 @@ navigation privée) + le Terminal. Ta liste en plus : `modules.traduction.applis
 **Si une appli ne laisse pas remplacer le texte** (Google Docs, certaines applis) : l'anglais est copié
 (Cmd + V pour le coller) et une notification te le dit.
 
+**Pages et Keynote cachent leur texte à macOS** : on y passe par le clavier. Dès que tu t'arrêtes de taper
+(⅓ de seconde), ton paragraphe est sélectionné et copié pour être lu (⌥⇧↑ puis ⌘C, tu le vois clignoter),
+puis tes phrases sont sélectionnées (⇧←) et l'anglais collé à la place (⌘V). **Ton presse-papiers est remis
+comme avant**, et si tu reprends la main pendant ce temps, rien n'est collé (l'anglais est copié, une
+notification le dit). De toi, le clavier ne retient que l'heure de ta dernière touche et le nombre de phrases
+finies, jamais les touches. Une autre appli dans ce cas : ajoute-la à `modules.traduction.applis_clavier`
+dans reglages.json (seulement si ⌥⇧↑ y sélectionne bien jusqu'au début du paragraphe).
+
 **Autorisations macOS** (demandées la première fois) : Réglages Système → Confidentialité et sécurité →
 « **Surveillance de l'entrée** » (voir le point tapé) et « **Accessibilité** » (lire et remplacer la phrase) →
 active « Python ». Puis éteins et rallume la traduction.
