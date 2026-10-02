@@ -50,12 +50,12 @@ SCHEMA = {
 }
 
 SYSTEME = """Tu es le concierge ciné d'un étudiant francophone. Il te dit son humeur et le temps qu'il a ce soir.
-Propose de 4 à 6 choix, du meilleur au moins bon, variés entre eux (pas tous du même genre), qui collent à son
+Propose de 3 à 6 choix, du meilleur au moins bon, variés entre eux (pas tous du même genre), qui collent à son
 humeur ET tiennent dans son temps : un film (durée réelle) ou une série (nombre d'épisodes et durée d'un épisode,
 ex. « 3 épisodes de 25 min »). minutes : la durée TOTALE à regarder (le film entier, ou épisodes × durée), qui ne
 dépasse JAMAIS son temps disponible quand il est indiqué. Pour un temps de 2 h ou moins, pense aussi aux séries
-(2 à 4 épisodes) et aux films courts. Ne complète jamais avec une idée trop longue : mieux vaut 4 bonnes idées que 6
-dont certaines dépassent. Privilégie des œuvres reconnues (bonnes critiques), françaises ou étrangères, récentes ou cultes.
+(2 à 4 épisodes) et aux films courts. Ne complète jamais avec une idée trop longue : propose-en moins plutôt
+(même 1 ou 2). Privilégie des œuvres reconnues (bonnes critiques), françaises ou étrangères, récentes ou cultes.
 Ne propose aucun titre de la liste « déjà proposés ». N'invente aucun titre : seulement des œuvres qui existent,
 avec leur vraie année et leur vraie durée. titre : le titre sous lequel il est connu en France. pourquoi : TOUJOURS une vraie
 phrase de 10 à 25 mots, concrète, qui relie l'œuvre à son humeur, sans divulgâcher (jamais vide, jamais une lettre
@@ -114,10 +114,12 @@ def _demander(demande: str, temps: int | None, eviter: list[str], module: str, t
     maintenant = datetime.now()
     message = (f"Nous sommes {JOURS[maintenant.weekday()]}, il est {maintenant:%H:%M}.\n"
                f"Sa demande (humeur, temps) :\n<<<\n{demande}\n>>>\n"
-               + (f"Son temps disponible : {temps} min au plus, tout compris. Aucun choix ne doit le dépasser.\n"
+               + (f"Son temps disponible : {temps} min au plus (jusqu'à {temps + MARGE} min accepté), tout compris. "
+                  f"Aucun choix ne doit dépasser {temps + MARGE} min.\n"
                   if temps else "")
                + (f"Ces idées dépassaient son temps, ne les repropose pas : {', '.join(trop_longs)}. Propose cette fois "
-                  f"seulement des œuvres d'au plus {temps} min au total : un film court, ou 1 à 3 épisodes d'une série.\n"
+                  f"seulement des œuvres d'au plus {temps + MARGE} min au total : un film court, ou 1 à 3 épisodes d'une "
+                  f"série.\n"
                   if trop_longs else "")
                + f"Déjà proposés ces {GARDER_JOURS} derniers jours (à éviter) : {', '.join(eviter[:60]) or 'aucun'}")
     r = demander(message, module=module, systeme=SYSTEME, schema=SCHEMA, modele="fort")
