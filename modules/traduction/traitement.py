@@ -45,7 +45,7 @@ def traiter_point(mac, traducteur) -> tuple[str, str]:
     raison = exclue(f, p.applis_exclues(), p.titres_exclus())
     if raison:
         return raison, appli
-    champ = mac.champ()
+    champ = mac.champ(f.get("pid"))
     if champ is None:
         return "pas de champ de texte", appli
     lu = mac.lire(champ)

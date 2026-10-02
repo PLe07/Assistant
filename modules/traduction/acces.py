@@ -16,6 +16,15 @@ class Lu:
     secret: bool = False  # champ de mot de passe : on n'y touche jamais
 
 
+# Les réponses de macOS quand il refuse (codes « AXError »), dites simplement.
+AX_ERREURS = {-25200: "échec", -25201: "demande refusée", -25202: "élément disparu", -25204: "l'appli ne répond pas",
+              -25205: "pas proposé par cette appli", -25211: "accessibilité non autorisée", -25212: "rien à lire"}
+
+
+def code(erreur: int) -> str:
+    return f"erreur {erreur} : {AX_ERREURS.get(erreur, 'inconnue')}"
+
+
 def _ax():
     import ApplicationServices
 
@@ -58,32 +67,127 @@ class Mac:
             return bool(AS.AXIsProcessTrustedWithOptions(options))
         return bool(AS.AXIsProcessTrusted())
 
-    # --- lire et remplacer --------------------------------------------------------------------------
+    # --- l'appli et le champ où tu écris ------------------------------------------------------------
+
+    def _lire(self, element, nom: str) -> tuple[int, object]:
+        """(réponse de macOS, valeur) : 0 = réussi, sinon un code d'erreur (voir code())."""
+        erreur, valeur = _ax().AXUIElementCopyAttributeValue(element, nom, None)
+        return int(erreur), (valeur if erreur == 0 else None)
 
     def _attribut(self, element, nom: str):
-        erreur, valeur = _ax().AXUIElementCopyAttributeValue(element, nom, None)
-        return valeur if erreur == 0 else None
+        return self._lire(element, nom)[1]
 
-    def appli_devant(self) -> dict | None:
-        """{appli, bundle, titre, pid} de l'appli où tu écris (le titre de sa fenêtre sert aux exclusions)."""
-        from AppKit import NSRunningApplication
-
+    def _pid_focus(self) -> int | None:
+        """L'appli qui a le clavier, d'après l'accessibilité (la réponse la plus sûre, quand macOS la donne)."""
         AS = _ax()
         focus = self._attribut(AS.AXUIElementCreateSystemWide(), "AXFocusedApplication")
         if focus is None:
             return None
         erreur, pid = AS.AXUIElementGetPid(focus, None)
-        appli = NSRunningApplication.runningApplicationWithProcessIdentifier_(pid) if erreur == 0 else None
+        return int(pid) if erreur == 0 and pid else None
+
+    def _fenetre_devant(self) -> dict | None:
+        try:
+            from modules.yeux.capture import fenetre_au_premier_plan
+
+            return fenetre_au_premier_plan()
+        except Exception:
+            return None
+
+    def _pids_devant(self) -> list[tuple[str, int]]:
+        """Les autres façons de demander à macOS quelle appli est devant : [(d'où vient l'info, pid)]."""
+        trouves = []
+        try:
+            from AppKit import NSWorkspace
+
+            appli = NSWorkspace.sharedWorkspace().frontmostApplication()
+            if appli is not None:
+                trouves.append(("applis ouvertes", int(appli.processIdentifier())))
+        except Exception:
+            pass
+        f = self._fenetre_devant()
+        if f and f.get("pid") and int(f["pid"]) not in [pid for _, pid in trouves]:
+            trouves.append(("fenêtre la plus en avant", int(f["pid"])))
+        return trouves
+
+    def _pid_devant(self) -> int | None:
+        pid = self._pid_focus()
+        if pid is not None:
+            return pid
+        AS = _ax()
+        for _, candidat in self._pids_devant():  # l'appli confirme qu'elle est devant : jamais une appli en arrière-plan
+            if self._attribut(AS.AXUIElementCreateApplication(candidat), "AXFrontmost"):
+                return candidat
+        return None
+
+    def appli_devant(self) -> dict | None:
+        """{appli, bundle, titre, pid} de l'appli où tu écris (le titre de sa fenêtre sert aux exclusions)."""
+        from AppKit import NSRunningApplication
+
+        pid = self._pid_devant()
+        appli = NSRunningApplication.runningApplicationWithProcessIdentifier_(pid) if pid else None
         if appli is None:
             return None
-        fenetre = self._attribut(focus, "AXFocusedWindow")
+        fenetre = self._attribut(_ax().AXUIElementCreateApplication(pid), "AXFocusedWindow")
         titre = self._attribut(fenetre, "AXTitle") if fenetre is not None else None
+        if not titre:  # en secours, le titre que voit l'écran (pour ne jamais rater un site exclu)
+            f = self._fenetre_devant()
+            titre = f.get("titre") if f and int(f.get("pid") or 0) == pid else ""
         return {"appli": str(appli.localizedName() or ""), "bundle": str(appli.bundleIdentifier() or ""),
                 "titre": str(titre or ""), "pid": pid}
 
-    def champ(self):
-        """Le champ de texte où tu écris, ou None."""
-        return self._attribut(_ax().AXUIElementCreateSystemWide(), "AXFocusedUIElement")
+    def champ(self, pid: int | None = None):
+        """Le champ de texte où tu écris, ou None : demandé au système, puis à l'appli elle-même."""
+        AS = _ax()
+        element = self._attribut(AS.AXUIElementCreateSystemWide(), "AXFocusedUIElement")
+        if element is None and pid:
+            element = self._attribut(AS.AXUIElementCreateApplication(pid), "AXFocusedUIElement")
+        return element
+
+    def sonder(self) -> list[str]:
+        """Chaque étape de la lecture, avec la réponse de macOS : pour voir où ça bloque. Jamais le texte lui-même."""
+        from AppKit import NSRunningApplication
+
+        AS = _ax()
+
+        def nom(pid):
+            appli = NSRunningApplication.runningApplicationWithProcessIdentifier_(pid) if pid else None
+            return f"{appli.localizedName()} (pid {pid})" if appli is not None else f"pid {pid}"
+
+        def reponse(erreur, ok):
+            return f"✅ {ok}" if erreur == 0 else f"⛔ {code(erreur)}"
+
+        lignes = []
+        try:
+            erreur, _ = self._lire(AS.AXUIElementCreateSystemWide(), "AXFocusedApplication")
+            pid = self._pid_focus()
+            lignes.append("appli active (accessibilité) : " + reponse(erreur, nom(pid)))
+            for source, candidat in self._pids_devant():
+                erreur, devant = self._lire(AS.AXUIElementCreateApplication(candidat), "AXFrontmost")
+                lignes.append(f"appli devant ({source}) : {nom(candidat)} · elle confirme être devant : "
+                              + reponse(erreur, "oui" if devant else "non"))
+            pid = self._pid_devant()
+            lignes.append("→ appli retenue : " + (nom(pid) if pid else "⛔ aucune"))
+            erreur, _ = self._lire(AS.AXUIElementCreateSystemWide(), "AXFocusedUIElement")
+            lignes.append("champ (système) : " + reponse(erreur, "trouvé"))
+            if pid:
+                erreur, _ = self._lire(AS.AXUIElementCreateApplication(pid), "AXFocusedUIElement")
+                lignes.append("champ (appli) : " + reponse(erreur, "trouvé"))
+            champ = self.champ(pid)
+            if champ is None:
+                return lignes
+            role = f"{self._attribut(champ, 'AXRole') or '?'}/{self._attribut(champ, 'AXSubrole') or '-'}"
+            erreur, texte = self._lire(champ, "AXValue")
+            lignes.append(f"champ {role} · texte : " + reponse(erreur, f"{len(str(texte or ''))} caractères"))
+            erreur, _ = self._lire(champ, "AXSelectedTextRange")
+            lignes.append("curseur : " + reponse(erreur, "lu"))
+            erreur, modifiable = AS.AXUIElementIsAttributeSettable(champ, "AXSelectedText", None)
+            lignes.append("remplaçable : " + reponse(erreur, "oui" if modifiable else "non (l'anglais sera copié)"))
+        except Exception as e:  # le diagnostic ne doit jamais planter
+            lignes.append(f"⛔ {type(e).__name__} : {e}")
+        return lignes
+
+    # --- lire et remplacer --------------------------------------------------------------------------
 
     def lire(self, champ) -> Lu | None:
         if "Secure" in str(self._attribut(champ, "AXSubrole") or "") + str(self._attribut(champ, "AXRole") or ""):

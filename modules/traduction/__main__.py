@@ -165,6 +165,10 @@ def diagnostic() -> int:
     return 0 if saisie and acces else 1
 
 
+# Ce qui empêche de lire la phrase (et pas une phrase qu'on choisit de ne pas traduire) : le test explique.
+BLOCAGES = ("aucune appli", "pas de champ", "texte illisible", "⛔")
+
+
 class _Essai:
     """Le Mac pour de vrai en lecture, mais rien n'est remplacé ni copié : tout s'affiche ici."""
 
@@ -202,10 +206,19 @@ def test() -> int:
     print("un point, et regarde ici. Ctrl + C pour arrêter.\n")
     arret = threading.Event()
 
+    deja = set()
+
     def point():
         time.sleep(p.ATTENTE)
-        resultat, appli = traiter_point(mac, traducteur)
+        try:
+            resultat, appli = traiter_point(mac, traducteur)
+        except Exception as e:
+            resultat, appli = f"⛔ erreur : {type(e).__name__} : {e}", ""
         print(f"· {appli or '?'} : {resultat}")
+        if resultat.startswith(BLOCAGES) and resultat not in deja:  # où ça bloque, étape par étape (une fois)
+            deja.add(resultat)
+            for ligne in mac.sonder():
+                print(f"     {ligne}")
 
     try:
         Clavier(lambda: threading.Thread(target=point, daemon=True).start()).tourner(arret)

@@ -7,7 +7,7 @@ Allumée, elle transforme **chaque phrase française que tu finis par un point**
 |---|---|
 | Allumer / éteindre | icône → « 🇬🇧 Traduire mes phrases en anglais », ou `python assistant.py traduction on` / `off` |
 | Première fois | `python -m modules.traduction --telecharger` (le modèle, ~100 Mo, une seule fois) |
-| Essayer sans rien remplacer | `python -m modules.traduction --test` (tape dans Notes, regarde le Terminal) |
+| Essayer sans rien remplacer | `python -m modules.traduction --test` (tape dans Notes, regarde le Terminal ; si ça bloque, il affiche chaque étape avec la réponse de macOS) |
 | Une phrase, ici | `python -m modules.traduction --texte "Je cherche une alternance en banque."` |
 | Ça ne marche pas ? | `python -m modules.traduction --diagnostic` |
 

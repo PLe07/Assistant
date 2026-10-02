@@ -62,6 +62,13 @@ def telecharger(afficher=print) -> Path:
     return p.MODELE
 
 
+def assembler(morceaux: list[str]) -> str:
+    """Les morceaux rendus par le modèle → une phrase. « ▁ » marque le début d'un mot : on le remplace par une
+    espace (comme Argos Translate), car le découpeur français ne connaît pas les mots anglais et les laisserait."""
+    texte = "".join(m for m in morceaux if m not in ("<unk>", "<s>", "</s>"))
+    return " ".join(texte.replace("▁", " ").split())
+
+
 class Traducteur:
     """Chargé une fois (2 à 3 s), puis chaque phrase se traduit en moins d'une seconde."""
 
@@ -80,4 +87,4 @@ class Traducteur:
     def traduire(self, texte: str) -> str:
         jetons = self.decoupeur.encode(texte, out_type=str)
         resultat = self.modele.translate_batch([jetons], beam_size=4, max_decoding_length=512)
-        return self.decoupeur.decode(resultat[0].hypotheses[0])
+        return assembler(resultat[0].hypotheses[0])
