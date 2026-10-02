@@ -47,6 +47,10 @@ Brief du jour (phase 5), sans Claude :
 Concierge ciné (phase 5) :
     python assistant.py cine "envie de rire, 1h30"   3 films ou séries pour ce soir
 
+Revue du dimanche (phase 5) :
+    python assistant.py revue             le bilan de ta semaine : fait, appris, dépensé, à venir (+ le mot de Claude)
+    python assistant.py revue derniere    relit la dernière revue (sans Claude)
+
 Dépenses (phase 5) :
     python assistant.py depenses          le total du mois, par catégorie (depenses 2026-09 : un autre mois)
     python assistant.py depenses ajouter photo.jpg   ajoute un reçu (photo ou PDF)
@@ -163,6 +167,14 @@ def afficher_etat() -> int:
             print(f"   🌐 Recherche : {ligne}")
     except Exception as e:
         print(f"   🌐 Recherche illisible : {e}")
+    try:
+        from modules.revue import revue as revue_semaine
+
+        ligne = revue_semaine.resume_etat()
+        if ligne:
+            print(f"   🗓 Revue : {ligne}")
+    except Exception as e:
+        print(f"   🗓 Revue illisible : {e}")
     if r["modules"]:
         print("\nModules")
         for m in r["modules"]:
@@ -560,6 +572,12 @@ def brief() -> int:
     return terminal.lancer()
 
 
+def revue(suite: str | None) -> int:
+    from modules.revue import terminal
+
+    return terminal.lancer((suite or "").split())
+
+
 def essai_memoire(etape: int | None) -> int:
     from core.essai_memoire import essai
 
@@ -575,7 +593,7 @@ def main() -> int:
     avec_texte = {"noter": noter, "demander": demander_memoire, "memoire": afficher_memoire, "oublier": oublier,
                   "rappels": rappels, "micro": micro, "ecran": ecran, "coach": coach, "veille": veille,
                   "recherche": recherche, "rediger": rediger, "depenses": depenses,
-                  "cine": cine}
+                  "cine": cine, "revue": revue}
     parser = argparse.ArgumentParser(description="Commandes de l'assistant")
     parser.add_argument("action", choices=[*actions, *avec_texte, "activer", "desactiver", "habitudes", "essai-memoire"])
     parser.add_argument("suite", nargs="*", help="activer / desactiver : le module ; micro, ecran : on ou off ; "

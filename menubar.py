@@ -35,13 +35,14 @@ CHERCHER = "🔎  Chercher dans ma mémoire…"
 RECHERCHER = "🌐  Rechercher sur le web…"
 BRIEF = "☀️  Mon brief"
 CINE = "🎬  Je regarde quoi ce soir ?"
+REVUE = "🗓  Ma revue de la semaine"
 COACH = "🎓  Coach"
 VEILLE = "📰  Veille"
 QUOI_DE_NEUF = "📰  Quoi de neuf ?"
 REDACTEUR = "✒️  Rédacteur"
 DEPENSES = "🧾  Dépenses"
 # Ces modules écrivent eux-mêmes dans ta mémoire (ou n'y mettent rien), et leurs titres ont déjà leur symbole.
-MODULES_AUTONOMES = ("memoire", "veille", "recherche", "redacteur", "depenses", "brief", "cine")
+MODULES_AUTONOMES = ("memoire", "veille", "recherche", "redacteur", "depenses", "brief", "cine", "revue")
 SYMBOLES_AIDE = {"proposee": "💡", "demandee": "⏳", "a_capturer": "⏳", "prete": "✅"}
 
 
@@ -141,6 +142,7 @@ class Icone(rumps.App):
             rumps.MenuItem(AIDE_ECRAN, callback=self.aide_ecran),
             rumps.MenuItem(BRIEF, callback=self.brief),
             rumps.MenuItem(CINE, callback=self.cine),
+            rumps.MenuItem(REVUE, callback=self.revue),
             rumps.MenuItem(NOTER, callback=self.noter),
             rumps.MenuItem(CHERCHER, callback=self.chercher),
             rumps.MenuItem(RECHERCHER, callback=self.rechercher),
@@ -278,7 +280,7 @@ class Icone(rumps.App):
             if _fenetre(title=a["titre"], message=texte, ok="Fermer", cancel=libelle) == 0:
                 ouvrir(None)
         else:
-            titre = a["titre"] if a.get("module") in ("redacteur", "depenses", "brief", "cine") else f"💡 {a['titre']}"
+            titre = a["titre"] if a.get("module") in ("redacteur", "depenses", "brief", "cine", "revue") else f"💡 {a['titre']}"
             if _fenetre(title=titre, message=texte, ok="Fermer", cancel="Copier") == 0:
                 subprocess.run(["pbcopy"], input=texte, text=True)
 
@@ -389,6 +391,14 @@ class Icone(rumps.App):
 
         log.info("Brief demandé depuis l'icône")
         self._en_fond("brief", "☀️ Mon brief", brief.composer)
+
+    # --- Revue du dimanche (phase 5) : ta semaine, rassemblée sur ton Mac + le mot de Claude ------------
+
+    def revue(self, _) -> None:
+        from modules.revue import revue
+
+        log.info("Revue de la semaine demandée depuis l'icône")
+        self._en_fond("revue", "🗓 Ta semaine", lambda: revue.texte_revue(revue.composer()))
 
     # --- Concierge ciné (phase 5) ---------------------------------------------------------------------
 

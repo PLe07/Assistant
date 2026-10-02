@@ -108,6 +108,14 @@ def derniers(n: int = 15) -> list[dict]:
             "SELECT id, quand, genre, source, texte, detail FROM souvenirs ORDER BY quand DESC, id DESC LIMIT ?", (n,))]
 
 
+def entre(debut: float, fin: float) -> list[dict]:
+    """Les souvenirs notés entre ces deux instants, du plus ancien au plus récent (pour la revue de la semaine)."""
+    with connexion() as db:
+        return [_ligne(l) for l in db.execute(
+            "SELECT id, quand, genre, source, texte, detail FROM souvenirs WHERE quand >= ? AND quand <= ? "
+            "ORDER BY quand, id", (debut, fin))]
+
+
 def compter() -> int:
     with connexion() as db:
         return db.execute("SELECT COUNT(*) FROM souvenirs").fetchone()[0]

@@ -35,9 +35,9 @@ class BlocIndisponible(Exception):
     """Le message dit pourquoi ce bloc manque, simplement."""
 
 
-def _jour(maintenant: datetime | None = None) -> tuple[datetime, datetime]:
+def _jour(maintenant: datetime | None = None, jours: int = 1) -> tuple[datetime, datetime]:
     debut = (maintenant or datetime.now()).replace(hour=0, minute=0, second=0, microsecond=0)
-    return debut, debut + timedelta(days=1)
+    return debut, debut + timedelta(days=jours)
 
 
 # --- 📅 L'agenda : EventKit, sinon AppleScript --------------------------------------------------------
@@ -72,7 +72,7 @@ def _acces_calendrier(EventKit, store) -> tuple[bool, str]:
     return False, f"{AUTORISATION_CALENDRIER} [{' / '.join(details)}]"
 
 
-def _agenda_eventkit(maintenant: datetime | None) -> list[dict]:
+def _agenda_eventkit(maintenant: datetime | None, jours: int = 1) -> list[dict]:
     """Par EventKit : voit aussi les événements qui se répètent. Lève BlocIndisponible sans accès."""
     try:
         import EventKit
@@ -83,7 +83,7 @@ def _agenda_eventkit(maintenant: datetime | None) -> list[dict]:
     accorde, detail = _acces_calendrier(EventKit, store)
     if not accorde:
         raise BlocIndisponible(detail)
-    debut, fin = _jour(maintenant)
+    debut, fin = _jour(maintenant, jours)
     predicat = store.predicateForEventsWithStartDate_endDate_calendars_(
         NSDate.dateWithTimeIntervalSince1970_(debut.timestamp()), NSDate.dateWithTimeIntervalSince1970_(fin.timestamp()),
         None)
@@ -105,7 +105,7 @@ set debut to current date
 set hours of debut to 0
 set minutes of debut to 0
 set seconds of debut to 0
-set fin to debut + 86400
+set fin to debut + SECONDES
 set sortie to ""
 tell application "Calendar"
 repeat with c in calendars
@@ -120,9 +120,12 @@ return sortie
 end run"""
 
 
-def _agenda_applescript() -> list[dict]:
+def _agenda_applescript(maintenant: datetime | None = None, jours: int = 1) -> list[dict]:
+    debut, fin = _jour(maintenant, jours)
     evenements = []
-    for ligne in _osascript(SCRIPT_AGENDA, "Calendrier").splitlines():
+    script = SCRIPT_AGENDA.replace("set debut to current date", f"set debut to (current date) + "
+                                   f"{round((debut - _jour()[0]).total_seconds())}")  # à partir du jour demandé
+    for ligne in _osascript(script.replace("SECONDES", str(jours * 86400)), "Calendrier").splitlines():
         morceaux = ligne.split("\t")
         if len(morceaux) != 5:
             continue
@@ -135,18 +138,19 @@ def _agenda_applescript() -> list[dict]:
     return evenements
 
 
-def agenda(maintenant: datetime | None = None) -> tuple[list[dict], str]:
-    """(événements du jour triés, remarque). EventKit d'abord ; sans son accès, AppleScript (comme Rappels)."""
+def agenda(maintenant: datetime | None = None, jours: int = 1) -> tuple[list[dict], str]:
+    """(événements du jour, ou des « jours » à partir de ce jour, triés ; remarque).
+    EventKit d'abord ; sans son accès, AppleScript (comme Rappels)."""
     try:
-        evenements, remarque = _agenda_eventkit(maintenant), ""
+        evenements, remarque = _agenda_eventkit(maintenant, jours), ""
     except BlocIndisponible as e:
         log.info("Brief : agenda par EventKit impossible, lecture par AppleScript")
         try:
-            evenements = _agenda_applescript()
+            evenements = _agenda_applescript(maintenant, jours)
         except BlocIndisponible as e2:
             raise BlocIndisponible(f"{e} · AppleScript : {e2}")
         remarque = ("lu par AppleScript : un cours qui se répète peut manquer. Pour tout voir : " + str(e))
-    return sorted(evenements, key=lambda x: (not x["journee"], x["debut"])), remarque
+    return sorted(evenements, key=lambda x: (x["debut"].date(), not x["journee"], x["debut"])), remarque
 
 
 # --- 📬 Les mails à traiter (Gmail, lecture seule) -------------------------------------------------
@@ -197,6 +201,7 @@ set fin to current date
 set hours of fin to 23
 set minutes of fin to 59
 set seconds of fin to 59
+set fin to fin + SECONDES
 set sortie to ""
 tell application "Reminders"
 repeat with l in lists
@@ -230,9 +235,10 @@ def _osascript(script: str, appli: str) -> str:
     return r.stdout
 
 
-def rappels_du_jour() -> list[dict]:
-    """[{quoi, quand, liste, en_retard}] : les rappels pas faits, prévus aujourd'hui ou avant."""
-    sortie = _osascript(SCRIPT_RAPPELS, "Rappels")
+def rappels_a_venir(jours: int = 0, n: int = RAPPELS_MAX) -> list[dict]:
+    """[{quoi, quand, liste, en_retard}] : les rappels pas faits, prévus d'ici la fin du jour
+    (+ « jours » jours), ou en retard."""
+    sortie = _osascript(SCRIPT_RAPPELS.replace("SECONDES", str(jours * 86400)), "Rappels")
     debut, _ = _jour()
     rappels = []
     for ligne in sortie.splitlines():
@@ -245,7 +251,12 @@ def rappels_du_jour() -> list[dict]:
             continue
         rappels.append({"quoi": morceaux[0].strip(), "quand": quand, "liste": morceaux[2].strip(),
                         "en_retard": quand < debut})
-    return sorted(rappels, key=lambda x: x["quand"])[:RAPPELS_MAX]
+    return sorted(rappels, key=lambda x: x["quand"])[:n]
+
+
+def rappels_du_jour() -> list[dict]:
+    """Les rappels pas faits, prévus aujourd'hui ou avant."""
+    return rappels_a_venir(0)
 
 
 # --- Le brief ----------------------------------------------------------------------------------------
