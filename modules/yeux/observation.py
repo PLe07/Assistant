@@ -44,7 +44,12 @@ class Observation(Assistance):
         return aide.rediger(extrait_, titre)
 
     def _lire(self, fenetre: dict) -> list[str] | None:
-        lignes = self.capteur.lire(fenetre)
+        try:
+            lignes = self.capteur.lire(fenetre)
+        except Exception as e:  # une erreur de macOS sur une fenêtre ne doit pas arrêter les yeux
+            if not self.capture_en_echec:
+                self.log.warning("Lecture de la fenêtre impossible (%s) : %s", fenetre["appli"], e)
+            lignes = None
         if lignes is None and not self.capture_en_echec:
             self.log.warning("Capture de la fenêtre impossible (%s) : autorisation ou version de macOS ?", fenetre["appli"])
             if not self.test:
@@ -88,24 +93,31 @@ class Observation(Assistance):
 
     def servir_captures(self) -> None:
         for a in etat.aides_a_capturer(self.module):
-            f = self.capteur.fenetre()
-            if f is None:
-                etat.finir_aide(a["id"], "Je n'ai trouvé aucune fenêtre à regarder.", "echec")
-                continue
-            raison = exclue(f, p.applis_exclues(), p.titres_exclus())
-            if raison:
-                etat.finir_aide(a["id"], f"Je n'ai rien capturé : {raison}. C'est voulu, pour ta vie privée.", "echec")
-                continue
-            raison = ignoree(f, p.APPLIS_IGNOREES)
-            if raison:
-                etat.finir_aide(a["id"], f"Je n'ai rien capturé : {raison}.", "echec")
-                continue
-            lignes = self._lire(f)
-            if not lignes:
-                etat.finir_aide(a["id"], "Je n'ai pas pu lire de texte dans cette fenêtre.", "echec")
-                continue
-            self.garder_extrait(a["id"], f"Demande d'aide sur l'écran\n{extrait(f, lignes, None, p.EXTRAIT_MAX)}")
-            etat.preparer_aide(a["id"], f"Aide sur : {f['appli']}")
-            self.log.info("Aide demandée sur l'écran (%s)", f["appli"])
-            if not self.test:
-                memoire.noter_intention("yeux", "bouton", f["appli"], "demandee", None, a["id"])
+            try:
+                self._capturer_pour(a)
+            except Exception as e:  # la demande reçoit une réponse, même si macOS a refusé
+                self.log.exception("Aide sur l'écran impossible")
+                etat.finir_aide(a["id"], f"Je n'ai pas pu lire cette fenêtre (erreur de macOS : {e}).", "echec")
+
+    def _capturer_pour(self, a: dict) -> None:
+        f = self.capteur.fenetre()
+        if f is None:
+            etat.finir_aide(a["id"], "Je n'ai trouvé aucune fenêtre à regarder.", "echec")
+            return
+        raison = exclue(f, p.applis_exclues(), p.titres_exclus())
+        if raison:
+            etat.finir_aide(a["id"], f"Je n'ai rien capturé : {raison}. C'est voulu, pour ta vie privée.", "echec")
+            return
+        raison = ignoree(f, p.APPLIS_IGNOREES)
+        if raison:
+            etat.finir_aide(a["id"], f"Je n'ai rien capturé : {raison}.", "echec")
+            return
+        lignes = self._lire(f)
+        if not lignes:
+            etat.finir_aide(a["id"], "Je n'ai pas pu lire de texte dans cette fenêtre.", "echec")
+            return
+        self.garder_extrait(a["id"], f"Demande d'aide sur l'écran\n{extrait(f, lignes, None, p.EXTRAIT_MAX)}")
+        etat.preparer_aide(a["id"], f"Aide sur : {f['appli']}")
+        self.log.info("Aide demandée sur l'écran (%s)", f["appli"])
+        if not self.test:
+            memoire.noter_intention("yeux", "bouton", f["appli"], "demandee", None, a["id"])

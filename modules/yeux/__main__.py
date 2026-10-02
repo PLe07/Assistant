@@ -37,28 +37,35 @@ def _ecran_interdit() -> bool:
 
 def observer(arret, log, obs, interactif: bool = False) -> None:
     """La boucle d'observation, commune au mode normal et au mode test."""
-    prochain = 0.0
+    prochain, erreurs = 0.0, set()
     while not arret.is_set():
         maintenant = time.time()
-        if maintenant >= prochain:
-            prochain = maintenant + (min(p.intervalle(), 10) if interactif else p.intervalle())
-            if p.reglage("uniquement_sur_secteur", False) and not sur_secteur():
-                obs.detecteur.oublier()
-            elif obs.capteur.absent(p.ABSENT_APRES):
-                obs.detecteur.oublier()  # tu n'es pas là (ou écran verrouillé) : on ne regarde pas
-                if interactif:
-                    obs.annoncer("💤 Tu sembles absent (ou l'écran est verrouillé) : rien n'est capturé")
-            else:
-                obs.regarder()
+        try:  # une erreur de macOS sur un coup d'œil ne doit jamais arrêter les yeux
+            if maintenant >= prochain:
+                prochain = maintenant + (min(p.intervalle(), 10) if interactif else p.intervalle())
+                if p.reglage("uniquement_sur_secteur", False) and not sur_secteur():
+                    obs.detecteur.oublier()
+                elif obs.capteur.absent(p.ABSENT_APRES):
+                    obs.detecteur.oublier()  # tu n'es pas là (ou écran verrouillé) : on ne regarde pas
+                    if interactif:
+                        obs.annoncer("💤 Tu sembles absent (ou l'écran est verrouillé) : rien n'est capturé")
+                else:
+                    obs.regarder()
+            if not interactif:
+                obs.servir_captures()
+                obs.servir_demandes()
+                obs.oublier()
+        except Exception as e:
+            if str(e) not in erreurs:  # chaque erreur différente est notée une fois (avec le détail)
+                erreurs.add(str(e))
+                log.exception("Coup d'œil en erreur (les yeux continuent)")
+            if interactif:
+                obs.annoncer(f"⚠️ Coup d'œil en erreur : {e}")
         if interactif:
             if _ecran_interdit():
                 print("\n⏸  Écran coupé (pause ou bouton de l'icône) : test arrêté.")
                 break
             etat.ecrire("ecran_test", time.time())  # 👁 sur l'icône pendant le test aussi
-        else:
-            obs.servir_captures()
-            obs.servir_demandes()
-            obs.oublier()
         arret.wait(1)
     if interactif:
         etat.effacer("ecran_test")

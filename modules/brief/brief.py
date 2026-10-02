@@ -25,6 +25,10 @@ MAILS_MAX = 5  # par étiquette
 RAPPELS_MAX = 12
 AUTORISATION_CALENDRIER = ("macOS n'autorise pas encore l'accès au Calendrier : Réglages Système → Confidentialité "
                            "et sécurité → Calendriers → autorise « Python » (et « Terminal »)")
+ECRITURE_SEULE = ("macOS n'a donné au Calendrier qu'un accès « Ajouter uniquement » (il ne peut pas lire ton agenda) : "
+                  "Réglages Système → Confidentialité et sécurité → Calendriers → à côté de « Python » (et « Terminal »), "
+                  "choisis « Accès complet »")
+RESTREINT = "l'accès au Calendrier est bloqué par une restriction du Mac (contrôle parental ou profil de gestion)"
 
 
 class BlocIndisponible(Exception):
@@ -45,7 +49,7 @@ def _acces_calendrier(EventKit, store) -> tuple[bool, str]:
     if statut == 3:  # accès complet
         return True, ""
     if statut != 0:  # 1 restreint, 2 refusé, 4 écriture seule
-        return False, f"statut macOS {statut}"
+        return False, {1: RESTREINT, 4: ECRITURE_SEULE}.get(statut, AUTORISATION_CALENDRIER)
     details = []
     # macOS 14 et plus : « accès complet » ; sinon (ou si le programme ne le déclare pas) : la demande d'avant.
     for methode in ("requestFullAccessToEventsWithCompletion_", "requestAccessToEntityType_completion_"):
@@ -65,7 +69,7 @@ def _acces_calendrier(EventKit, store) -> tuple[bool, str]:
         if reponse[0]:
             return True, ""
         details.append(reponse[1][:100] or "refusé")
-    return False, " / ".join(details)
+    return False, f"{AUTORISATION_CALENDRIER} [{' / '.join(details)}]"
 
 
 def _agenda_eventkit(maintenant: datetime | None) -> list[dict]:
@@ -78,7 +82,7 @@ def _agenda_eventkit(maintenant: datetime | None) -> list[dict]:
     store = EventKit.EKEventStore.alloc().init()
     accorde, detail = _acces_calendrier(EventKit, store)
     if not accorde:
-        raise BlocIndisponible(f"{AUTORISATION_CALENDRIER} [{detail}]")
+        raise BlocIndisponible(detail)
     debut, fin = _jour(maintenant)
     predicat = store.predicateForEventsWithStartDate_endDate_calendars_(
         NSDate.dateWithTimeIntervalSince1970_(debut.timestamp()), NSDate.dateWithTimeIntervalSince1970_(fin.timestamp()),

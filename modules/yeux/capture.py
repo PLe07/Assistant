@@ -160,6 +160,7 @@ def capturer(id_fenetre: int, methode: str | None = None):
 def lire_texte(image) -> list[str]:
     """Le texte de l'image, ligne par ligne, de haut en bas (Vision, sur ton Mac)."""
     import Vision
+    from Foundation import NSDictionary
 
     requete = Vision.VNRecognizeTextRequest.alloc().init()
     requete.setRecognitionLevel_(Vision.VNRequestTextRecognitionLevelAccurate)
@@ -168,7 +169,9 @@ def lire_texte(image) -> list[str]:
         requete.setRecognitionLanguages_(["fr-FR", "en-US"])
     except Exception:
         pass
-    gestion = Vision.VNImageRequestHandler.alloc().initWithCGImage_options_(image, {})
+    # Un vrai dictionnaire macOS, vide : un {} de Python fait planter Vision avec PyObjC 12.2
+    # (« NSInvalidArgumentException - key does not exist »).
+    gestion = Vision.VNImageRequestHandler.alloc().initWithCGImage_options_(image, NSDictionary.dictionary())
     ok, _ = gestion.performRequests_error_([requete], None)
     if not ok:
         return []
