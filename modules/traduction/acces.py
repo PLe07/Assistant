@@ -152,7 +152,15 @@ class Mac:
         return f"{self._attribut(element, 'AXRole') or '?'}/{self._attribut(element, 'AXSubrole') or '-'}"
 
     def _enfants(self, element) -> list:
-        return list(self._attribut(element, "AXChildren") or [])
+        """Ce qu'il contient, y compris le contenu que certaines applis (Pages…) ne listent qu'à part."""
+        enfants = []
+        for attribut in ("AXChildren", "AXContents", "AXChildrenInNavigationOrder"):
+            try:
+                trouves = list(self._attribut(element, attribut) or [])
+            except TypeError:  # un seul élément au lieu d'une liste
+                trouves = [self._attribut(element, attribut)]
+            enfants += [e for e in trouves if e not in enfants]
+        return enfants
 
     def _lisible(self, element) -> bool:
         """Un vrai champ de texte : macOS donne son texte et la position du curseur."""
