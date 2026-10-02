@@ -33,11 +33,14 @@ Ce que tu dois voir : `✅ superviseur : en marche` et `✅ icone : en marche`, 
 |---|---|---|---|
 | **Le micro** | « 🎙 Couper le micro » | `python assistant.py micro off` | le micro se ferme tout de suite ; 🎙 disparaît de l'icône |
 | **L'écran** | « 👁 Couper l'écran » | `python assistant.py ecran off` | plus aucune capture ; 👁 disparaît de l'icône |
-| **Tout** (interrupteur maître) | « ⏸ Tout mettre en pause » | `python assistant.py pause` | tout s'arrête : micro, écran, mails, aides ; l'icône affiche ⏸ |
+| **La traduction** 🇬🇧 | « 🇬🇧 Arrêter la traduction » | `python assistant.py traduction off` | plus rien n'est traduit ; 🇬🇧 disparaît de l'icône |
+| **Tout** (interrupteur maître) | « ⏸ Tout mettre en pause » | `python assistant.py pause` | tout s'arrête : micro, écran, traduction, mails, aides ; l'icône affiche ⏸ |
 
-Pour rallumer : le même bouton (« Rallumer… », « Reprendre »), ou `micro on`, `ecran on`, `python assistant.py reprendre`.
+Pour rallumer : le même bouton (« Rallumer… », « Reprendre », « 🇬🇧 Traduire mes phrases en anglais »), ou
+`micro on`, `ecran on`, `traduction on`, `python assistant.py reprendre`.
 
-> 🎙 et 👁 dans l'icône = le micro ou l'écran sont **en marche en ce moment**. Pas de symbole = rien n'écoute, rien ne regarde.
+> 🎙, 👁 et 🇬🇧 dans l'icône = le micro, l'écran ou la traduction sont **en marche en ce moment**.
+> Pas de symbole = rien n'écoute, rien ne regarde, rien n'est traduit.
 
 ---
 
@@ -73,7 +76,7 @@ Pour rallumer : le même bouton (« Rallumer… », « Reprendre »), ou `micro 
 | `yeux` · l'écran, quand tu bloques | `recherche` · 🌐 recherche sourcée |
 | `depenses` · surveille le dossier ~/Reçus | `redacteur` · ✒️ dans ton style |
 | `battement` · prouve que tout tourne | `brief` · ☀️ ton brief |
-| | `cine` · 🎬 je regarde quoi ce soir |
+| `traduction` · 🇬🇧 tes phrases en anglais (au point) | `cine` · 🎬 je regarde quoi ce soir |
 | | `revue` · 🗓 la revue de la semaine |
 
 Un module « au bouton » désactivé ne fait plus rien : son bouton, sa commande et la voix répondent

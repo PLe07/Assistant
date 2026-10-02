@@ -12,3 +12,7 @@ pyobjc-framework-Quartz>=12,<13 ; sys_platform == "darwin"            # module y
 pyobjc-framework-ScreenCaptureKit>=12,<13 ; sys_platform == "darwin"  # module yeux : capture d'UNE fenêtre, en mémoire
 pyobjc-framework-Vision>=12,<13 ; sys_platform == "darwin"            # module yeux : lecture du texte (OCR) sur le Mac
 pyobjc-framework-EventKit>=12,<13 ; sys_platform == "darwin"          # brief : l'agenda du jour (app Calendrier)
+ctranslate2>=4,<5           # traduction : le modèle français → anglais, sur le Mac (déjà utilisé par les oreilles)
+sentencepiece>=0.2,<0.3     # traduction : découpe les phrases pour le modèle
+pyobjc-framework-ApplicationServices>=12,<13 ; sys_platform == "darwin"  # traduction : lire et remplacer la phrase
+pyobjc-framework-NaturalLanguage>=12,<13 ; sys_platform == "darwin"      # traduction : reconnaître le français

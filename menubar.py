@@ -29,6 +29,8 @@ COUPER_MICRO = "🎙  Couper le micro"
 RALLUMER_MICRO = "🎙  Rallumer le micro (coupé)"
 COUPER_ECRAN = "👁  Couper l'écran"
 RALLUMER_ECRAN = "👁  Rallumer l'écran (coupé)"
+ALLUMER_TRADUCTION = "🇬🇧  Traduire mes phrases en anglais"
+ETEINDRE_TRADUCTION = "🇬🇧  Arrêter la traduction (allumée)"
 AIDE_ECRAN = "👁  M'aider avec cet écran"
 NOTER = "✍️  Noter ou demander…"
 CHERCHER = "🔎  Chercher dans ma mémoire…"
@@ -117,6 +119,7 @@ class Icone(rumps.App):
         self.bouton_pause = rumps.MenuItem(PAUSE, callback=self.basculer_pause)
         self.bouton_micro = rumps.MenuItem(COUPER_MICRO, callback=self.basculer_micro)
         self.bouton_ecran = rumps.MenuItem(COUPER_ECRAN, callback=self.basculer_ecran)
+        self.bouton_traduction = rumps.MenuItem(ALLUMER_TRADUCTION, callback=self.basculer_traduction)
         # rumps ne crée un sous-menu qu'au premier élément ajouté, et ne sait pas vider un sous-menu
         # qui n'existe pas encore : on en met un tout de suite (sinon « Aides » et « Modules » restent grisés).
         self.aides = rumps.MenuItem("💡 Aides")
@@ -145,6 +148,7 @@ class Icone(rumps.App):
             self.bouton_pause,
             self.bouton_micro,
             self.bouton_ecran,
+            self.bouton_traduction,
             None,
             rumps.MenuItem(AIDE_ECRAN, callback=self.aide_ecran),
             self.bouton_brief,
@@ -195,7 +199,9 @@ class Icone(rumps.App):
             actifs = sum(1 for m in r["modules"] if m["statut"] == "actif")
             alertes = (["micro muet"] if r["micro_muet"] else []) + (
                 ["écran non autorisé" if r["ecran_alerte"] == "autorisation" else "capture impossible"]
-                if r["ecran_alerte"] else [])  # le pourquoi du ⚠️ (détail : python assistant.py etat)
+                if r["ecran_alerte"] else []) + (
+                ["traduction : modèle à télécharger" if r["traduction_alerte"] == "modele"
+                 else "traduction non autorisée"] if r["traduction_alerte"] else [])  # le pourquoi du ⚠️ (détail : python assistant.py etat)
             self.ligne_etat.title = f"Actif · {actifs} module(s) en marche" + (f" · ⚠️ {', '.join(alertes)}" if alertes else "")
         envoyees, _ = r["notifications"]
         appels, plafond, _, _ = r["claude"]
@@ -203,6 +209,8 @@ class Icone(rumps.App):
         self.bouton_pause.title = REPRENDRE if r["pause"] else PAUSE
         self.bouton_micro.title = RALLUMER_MICRO if r["pause_micro"] else COUPER_MICRO
         self.bouton_ecran.title = RALLUMER_ECRAN if r["pause_ecran"] else COUPER_ECRAN
+        allumee = config.charger()["modules"].get("traduction", {}).get("actif", False)
+        self.bouton_traduction.title = ETEINDRE_TRADUCTION if allumee else ALLUMER_TRADUCTION
 
         self.aides.title = f"💡 Aides ({len(r['aides'])} à lire)" if r["aides"] else "💡 Aides"
         self.aides.clear()
@@ -285,6 +293,20 @@ class Icone(rumps.App):
         coupe = not config.charger()["pause_micro"]
         config.mettre_capteur_en_pause("micro", coupe)
         log.info("Micro %s depuis l'icône", "coupé" if coupe else "rallumé")
+        self.rafraichir()
+
+    def basculer_traduction(self, _) -> None:
+        """🇬🇧 : allume ou éteint la traduction (le superviseur la lance ou l'arrête dans les 2 secondes)."""
+        from modules.traduction import moteur
+
+        allumer = not config.charger()["modules"].get("traduction", {}).get("actif", False)
+        if allumer and not moteur.present():
+            _fenetre(title="🇬🇧 Traduction : une étape avant", message="Le modèle de traduction (~100 Mo, sur ton Mac) "
+                     "n'est pas encore téléchargé. Dans le Terminal :\n\npython -m modules.traduction --telecharger"
+                     "\n\npuis reclique ici.", ok="Fermer")
+            return
+        config.activer_module("traduction", allumer)
+        log.info("Traduction %s depuis l'icône", "allumée" if allumer else "éteinte")
         self.rafraichir()
 
     def basculer_ecran(self, _) -> None:

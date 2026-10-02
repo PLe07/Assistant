@@ -268,7 +268,9 @@ def resume() -> dict:
     ecran_alerte = lire("yeux_alerte") if ecran_actif else None  # « autorisation » ou « capture »
     aides = [a for a in aides_recentes(time.time() - 2 * 3600)
              if not a["vue"] and a["statut"] in ("proposee", "demandee", "prete", "a_capturer")]
-    capteurs = ("🎙" if micro_actif else "") + ("👁" if ecran_actif else "")
+    traduction_actif = any(m["statut"] == "actif" and m["nom"] == "traduction" for m in mods)
+    traduction_alerte = lire("traduction_alerte") if traduction_actif else None  # « modele » ou « autorisation »
+    capteurs = ("🎙" if micro_actif else "") + ("👁" if ecran_actif else "") + ("🇬🇧" if traduction_actif else "")
     note = (lire("icone_titre") or "").split("|", 1)  # ce que l'icône affiche vraiment, et depuis quand
     icone_vue = (time.time() - float(note[0]), note[1]) if len(note) == 2 and note[0].isdigit() else None
     fenetre = lire("icone_fenetre")  # une fenêtre de l'icône est ouverte : l'icône est figée tant qu'elle l'est
@@ -279,7 +281,8 @@ def resume() -> dict:
         icone = capteurs or "⚪"
     else:
         # 🎙 et 👁 restent toujours visibles quand le micro ou l'écran sont actifs, même avec une aide ou une erreur.
-        icone = capteurs + ("⚠️" if en_erreur or ecran_alerte or micro_muet else "") + ("💡" if aides else "") or "🟢"
+        icone = capteurs + ("⚠️" if en_erreur or ecran_alerte or micro_muet or traduction_alerte else "") + (
+            "💡" if aides else "") or "🟢"
     return {
         "icone": icone,
         "pause": reglages["pause_globale"],
@@ -294,6 +297,8 @@ def resume() -> dict:
         "ecran_actif": ecran_actif,
         "ecran_regard": ecran_regard,
         "ecran_alerte": ecran_alerte,
+        "traduction_actif": traduction_actif,
+        "traduction_alerte": traduction_alerte,
         "mode_yeux": "reel" if reglages["modules"].get("yeux", {}).get("mode") == "reel" else "journal",
         "aides": aides,
         "superviseur_actif": superviseur_actif,

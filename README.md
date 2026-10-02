@@ -25,6 +25,7 @@ activer un module, régler la proactivité, ajouter un module, tout arrêter).
 | `modules/depenses/` | Phase 5 · le traqueur de dépenses (voir `modules/depenses/README.md`) |
 | `modules/cine/` | Phase 5 · le concierge ciné : « je regarde quoi ce soir ? » (voir `modules/cine/README.md`) |
 | `modules/revue/` | Phase 5 · la revue du dimanche : le bilan de ta semaine (voir `modules/revue/README.md`) |
+| `modules/traduction/` | 🇬🇧 la traduction au point : tes phrases françaises deviennent anglaises, sur le Mac (voir `modules/traduction/README.md`) |
 | `modules/brief/` | Phase 5 · le brief du jour : agenda, mails à traiter, rappels (voir `modules/brief/README.md`) |
 | `tri-mails/` | Ancienne version du tri, gardée en sauvegarde |
 

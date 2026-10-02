@@ -10,6 +10,7 @@
     python assistant.py renouveler-jeton  nouveau jeton Claude (il dure 1 an), enregistré sans l'afficher
     python assistant.py micro off         COUPE le micro tout de suite (micro on pour le rallumer)
     python assistant.py ecran off         COUPE l'écran tout de suite (ecran on pour le rallumer)
+    python assistant.py traduction on     🇬🇧 chaque phrase française finie par un point devient anglaise (off : arrêter)
     python assistant.py activer mails     active un module (il démarre dans les 2 secondes)
     python assistant.py desactiver mails  désactive un module (il s'arrête dans les 2 secondes)
                                           (au bouton aussi : desactiver cine → son bouton ne fait plus rien)
@@ -113,6 +114,18 @@ def afficher_etat() -> int:
         else f" · dernier coup d'œil il y a {int(vu)} s" if vu < 120
         else " · en veille (absent, écran verrouillé ou appli exclue)"))
     print("   👁 Écran : " + ("observé" if r["ecran_actif"] else "coupé" if r["pause_ecran"] else "non observé") + detail)
+    allumee = config.charger()["modules"].get("traduction", {}).get("actif", False)
+    if allumee or r["traduction_actif"]:
+        from modules.traduction.traitement import compter
+
+        alerte = r["traduction_alerte"]
+        print("   🇬🇧 Traduction : " + (
+            "⚠️ modèle à télécharger (python -m modules.traduction --telecharger)" if alerte == "modele"
+            else "⚠️ autorisations macOS manquantes (python -m modules.traduction --diagnostic)" if alerte
+            else f"allumée · {compter()} phrase(s) traduite(s) aujourd'hui" if r["traduction_actif"]
+            else "allumée, démarrage…"))
+    else:
+        print("   🇬🇧 Traduction : éteinte (python assistant.py traduction on)")
     if r["aides"]:
         print(f"   💡 {len(r['aides'])} aide(s) t'attendent dans le menu de l'icône")
     vue = r["icone_vue"]
@@ -299,6 +312,21 @@ def ecran(valeur: str | None) -> int:
     config.mettre_capteur_en_pause("ecran", valeur == "off")
     print("👁  Écran coupé : plus aucun coup d'œil dans les 2 secondes." if valeur == "off"
           else "👁  Écran rallumé : l'observation reprend dans les 2 secondes (si le module yeux est activé).")
+    return 0
+
+
+def traduction(valeur: str | None) -> int:
+    from modules.traduction import moteur
+
+    if valeur not in ("on", "off"):
+        print("Utilise :  python assistant.py traduction on  (allumer)  ou  traduction off  (éteindre)")
+        return 2
+    if valeur == "on" and not moteur.present():
+        print("⛔ Le modèle de traduction n'est pas encore là (~100 Mo, une fois) :  python -m modules.traduction --telecharger")
+        return 1
+    config.activer_module("traduction", valeur == "on")
+    print("🇬🇧 Traduction allumée (dans les 2 secondes) : finis une phrase française par un point, elle devient anglaise."
+          if valeur == "on" else "🇬🇧 Traduction éteinte : plus rien n'est traduit.")
     return 0
 
 
@@ -634,8 +662,8 @@ def main() -> int:
         "renouveler-jeton": renouveler_jeton, "brief": brief,
     }
     avec_texte = {"noter": noter, "demander": demander_memoire, "memoire": afficher_memoire, "oublier": oublier,
-                  "rappels": rappels, "micro": micro, "ecran": ecran, "coach": coach, "veille": veille,
-                  "recherche": recherche, "rediger": rediger, "depenses": depenses,
+                  "rappels": rappels, "micro": micro, "ecran": ecran, "traduction": traduction, "coach": coach,
+                  "veille": veille, "recherche": recherche, "rediger": rediger, "depenses": depenses,
                   "cine": cine, "revue": revue, "proactivite": proactivite}
     parser = argparse.ArgumentParser(description="Commandes de l'assistant")
     parser.add_argument("action", choices=[*actions, *avec_texte, "activer", "desactiver", "habitudes", "essai-memoire"])

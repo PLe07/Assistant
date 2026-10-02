@@ -76,6 +76,8 @@ DEFAUTS = {
         },
         # Le dossier « Reçus » surveillé. mode « test » : rien n'est écrit dans le tableur.
         "depenses": {"actif": False, "mode": "test", "dossier": "~/Reçus", "toutes_les_secondes": 30},
+        # 🇬🇧 Allumée (icône), chaque phrase française finie par un point devient anglaise (traduite sur le Mac).
+        "traduction": {"actif": False, "mots_min": 3, "applis_exclues": [], "titres_exclus": []},
         # Au bouton (voir AU_BOUTON) : « actif »: false les rend muets.
         **{nom: {"actif": True} for nom in AU_BOUTON},
     },
