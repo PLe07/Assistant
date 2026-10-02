@@ -5,7 +5,7 @@ from modules.cine import cine
 
 
 def lancer(demande: str | None) -> int:
-    print("🎬 Claude cherche 3 idées pour ce soir (10 à 20 s)…\n")
+    print("🎬 Claude cherche 3 idées pour ce soir (20 à 40 s)…\n")
     try:
         print(cine.texte_proposition(cine.proposer(demande or "", "terminal")))
     except ClaudeIndisponible as e:

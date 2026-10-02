@@ -50,12 +50,12 @@ SCHEMA = {
 }
 
 SYSTEME = """Tu es le concierge ciné d'un étudiant francophone. Il te dit son humeur et le temps qu'il a ce soir.
-Propose de 4 à 6 choix, du meilleur au moins bon, variés entre eux (pas tous du même genre), qui collent à son
+Propose de 3 à 6 choix, du meilleur au moins bon, variés entre eux (pas tous du même genre), qui collent à son
 humeur ET tiennent dans son temps : un film (durée réelle) ou une série (nombre d'épisodes et durée d'un épisode,
 ex. « 3 épisodes de 25 min »). minutes : la durée TOTALE à regarder (le film entier, ou épisodes × durée), qui ne
 dépasse JAMAIS son temps disponible quand il est indiqué. Pour un temps de 2 h ou moins, pense aussi aux séries
-(2 à 4 épisodes) et aux films courts. Ne complète jamais avec une idée trop longue : mieux vaut 4 bonnes idées que 6
-dont certaines dépassent. Privilégie des œuvres reconnues (bonnes critiques), françaises ou étrangères, récentes ou cultes.
+(2 à 4 épisodes) et aux films courts. Ne complète jamais avec une idée trop longue : propose-en moins plutôt
+(même 1 ou 2). Privilégie des œuvres reconnues (bonnes critiques), françaises ou étrangères, récentes ou cultes.
 Ne propose aucun titre de la liste « déjà proposés ». N'invente aucun titre : seulement des œuvres qui existent,
 avec leur vraie année et leur vraie durée. titre : le titre sous lequel il est connu en France. pourquoi : TOUJOURS une vraie
 phrase de 10 à 25 mots, concrète, qui relie l'œuvre à son humeur, sans divulgâcher (jamais vide, jamais une lettre
@@ -114,13 +114,16 @@ def _demander(demande: str, temps: int | None, eviter: list[str], module: str, t
     maintenant = datetime.now()
     message = (f"Nous sommes {JOURS[maintenant.weekday()]}, il est {maintenant:%H:%M}.\n"
                f"Sa demande (humeur, temps) :\n<<<\n{demande}\n>>>\n"
-               + (f"Son temps disponible : {temps} min au plus, tout compris. Aucun choix ne doit le dépasser.\n"
+               + (f"Son temps disponible : {temps} min au plus (jusqu'à {temps + MARGE} min accepté), tout compris. "
+                  f"Aucun choix ne doit dépasser {temps + MARGE} min.\n"
                   if temps else "")
                + (f"Ces idées dépassaient son temps, ne les repropose pas : {', '.join(trop_longs)}. Propose cette fois "
-                  f"seulement des œuvres d'au plus {temps} min au total : un film court, ou 1 à 3 épisodes d'une série.\n"
+                  f"seulement des œuvres d'au plus {temps + MARGE} min au total : un film court, ou 1 à 3 épisodes d'une "
+                  f"série.\n"
                   if trop_longs else "")
                + f"Déjà proposés ces {GARDER_JOURS} derniers jours (à éviter) : {', '.join(eviter[:60]) or 'aucun'}")
-    r = demander(message, module=module, systeme=SYSTEME, schema=SCHEMA, modele="fort")
+    # effort « medium » : en « low », Claude bâcle cette tâche à contraintes (1 idée, durée fausse, « x » pour explication)
+    r = demander(message, module=module, systeme=SYSTEME, schema=SCHEMA, modele="fort", effort="medium")
     choix = r.donnees.get("choix") if isinstance(r.donnees, dict) else None
     return choix if isinstance(choix, list) else []
 
@@ -143,13 +146,17 @@ def proposer(demande: str, source: str, module: str = "cine", garder: bool = Tru
     demande = " ".join((demande or "").split())[:500] or "pas de précision : surprends-moi"
     temps, deja = temps_dispo(demande), deja_proposes()
     deja_vus = {t.lower() for t in deja}
-    vus, choix, trop_longs, presque, revus, repetes = set(deja_vus), [], [], [], [], 0
+    vus, choix, trop_longs, presque, revus, repetes, baclees = set(deja_vus), [], [], [], [], 0, 0
     for essai in range(2):
         for c in _demander(demande, temps, deja + [c["titre"] for c in choix], module, trop_longs):
             if not isinstance(c, dict) or not str(c.get("titre", "")).strip():
                 continue  # un titre vide est écarté
             titre = " ".join(str(c["titre"]).split())[:100]
             minutes = c.get("minutes") if isinstance(c.get("minutes"), int) and c["minutes"] > 0 else None
+            annee = c.get("annee")
+            if not isinstance(annee, int) or not 1890 <= annee <= datetime.now().year + 1 or (temps and minutes is None):
+                baclees += 1  # sans vraie année ou sans durée (quand ton temps compte) : idée bâclée, écartée
+                continue
             if titre.lower() in vus:
                 repetes += 1  # déjà proposé : gardé de côté, seulement s'il manque des idées (et s'il tient)
                 if titre.lower() in deja_vus and not (temps and minutes and minutes > temps + MARGE) \
@@ -166,15 +173,15 @@ def proposer(demande: str, source: str, module: str = "cine", garder: bool = Tru
                 choix.append(_idee(c, titre, minutes))
         if len(choix) >= 3 or not trop_longs:  # on ne rappelle Claude que pour remplacer des idées trop longues
             break
-    log.info("Ciné : %d tiennent dans ton temps, %d trop longue(s), %d déjà proposée(s)", len(choix), len(trop_longs),
-             repetes)
+    log.info("Ciné : %d tiennent dans ton temps, %d trop longue(s), %d déjà proposée(s), %d bâclée(s)", len(choix),
+             len(trop_longs), repetes, baclees)
     # Il manque des idées : d'abord celles qui dépassent un peu, puis celles déjà proposées (en le disant).
     choix += (sorted(presque, key=lambda c: c["depasse"]) + revus)[:max(0, 3 - len(choix))]
     if not choix:
         raise ClaudeIndisponible(f"aucune idée ne tenait dans {temps} min : redemande avec un peu plus de temps."
                                  if trop_longs else "Claude n'a rien proposé d'utilisable : réessaie dans un moment.")
     proposition = {"quand": time.time(), "demande": demande, "temps": temps, "choix": choix,
-                   "ecartees": {"trop_longues": len(trop_longs), "deja": repetes}}
+                   "ecartees": {"trop_longues": len(trop_longs), "deja": repetes, "baclees": baclees}}
     if garder:
         _garder(proposition)
     log.info("Ciné : %d proposition(s) (%s)", len(choix), source)
@@ -191,7 +198,8 @@ def texte_proposition(p: dict) -> str:
     ecartees = p.get("ecartees") or {}
     if len(p["choix"]) < 3 or any(c.get("depasse") or c.get("revu") for c in p["choix"]):
         lignes.append(f"\n(Pas plus d'idées neuves qui tiennent dans ton temps : {ecartees.get('trop_longues', 0)} "
-                      f"trop longue(s) et {ecartees.get('deja', 0)} déjà proposée(s) écartées.)")
+                      f"trop longue(s) et {ecartees.get('deja', 0)} déjà proposée(s) écartées"
+                      + (f", {ecartees['baclees']} incomplète(s) ignorée(s)" if ecartees.get("baclees") else "") + ".)")
     lignes.append("\nPas convaincu ? Redemande en précisant (« plutôt un thriller », « plus court »).")
     return "\n".join(lignes)
 
