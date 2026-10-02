@@ -58,7 +58,8 @@ class Detecteur:
 
         trouve = None
         appel = re.match(rf"^\W*(?:hey |ok |dis |eh )?{re.escape(normaliser(mot_appel))}\b[\s,!.?:]*(.*)$", norm) if mot_appel else None
-        if appel and len(appel.group(1).split()) >= 2:
+        # « Assistant, … » : au moins 2 mots, ou une demande d'un seul mot comme « interroge-moi »
+        if appel and (len(appel.group(1).split()) >= 2 or re.search(r"\w-moi\b", appel.group(1))):
             trouve = Declenchement("mot_appel", phrase)
         elif mode == "passif" and len(norm.split()) >= 4:
             for type_, motif in _MOTIFS:

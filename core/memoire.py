@@ -4,7 +4,8 @@ Ce qui y entre (seulement ce que TU adresses à l'Assistant) :
 - ce que tu lui dis avec le mot d'appel (« Assistant, … ») ;
 - ce que tu tapes (« ✍️ Noter ou demander… » dans l'icône, ou python assistant.py noter "…") ;
 - les aides 💡 que tu as ouvertes (titre + réponse de Claude) ;
-- les rappels compris, et les réponses de ton second cerveau.
+- les rappels compris, et les réponses de ton second cerveau ;
+- les points retenus par tes veilles (📰 : des articles publics).
 Ce qui n'y entre JAMAIS : les conversations entendues autour de toi, le texte de ton écran, le son.
 
 Gardée sur ton Mac jusqu'à ce que tu l'effaces (python assistant.py oublier …). La recherche
@@ -105,6 +106,14 @@ def derniers(n: int = 15) -> list[dict]:
     with connexion() as db:
         return [_ligne(l) for l in db.execute(
             "SELECT id, quand, genre, source, texte, detail FROM souvenirs ORDER BY quand DESC, id DESC LIMIT ?", (n,))]
+
+
+def entre(debut: float, fin: float) -> list[dict]:
+    """Les souvenirs notés entre ces deux instants, du plus ancien au plus récent (pour la revue de la semaine)."""
+    with connexion() as db:
+        return [_ligne(l) for l in db.execute(
+            "SELECT id, quand, genre, source, texte, detail FROM souvenirs WHERE quand >= ? AND quand <= ? "
+            "ORDER BY quand, id", (debut, fin))]
 
 
 def compter() -> int:

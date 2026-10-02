@@ -7,7 +7,9 @@ import time
 from collections import Counter
 from datetime import datetime
 
+from google.auth.exceptions import TransportError
 from googleapiclient.errors import HttpError
+from httplib2 import HttpLib2Error
 
 from core import config as config_coeur
 from core import etat
@@ -276,7 +278,7 @@ def un_passage(log: logging.Logger, interactif: bool, rattrapage_heures: float |
             return _echec(memoire, log, logging.ERROR, str(e))
         except HttpError as e:
             return _echec(memoire, log, logging.ERROR, f"Gmail a répondu une erreur ({e.status_code}) : {e.reason}")
-        except OSError as e:
+        except (OSError, TransportError, HttpLib2Error) as e:  # pas de connexion (Mac en veille, Wi-Fi coupé…)
             return _echec(memoire, log, logging.WARNING, f"Problème réseau, nouvel essai au prochain passage : {e}")
         finally:
             memoire.fermer()

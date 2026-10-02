@@ -32,6 +32,19 @@ RALLUMER_ECRAN = "👁  Rallumer l'écran (coupé)"
 AIDE_ECRAN = "👁  M'aider avec cet écran"
 NOTER = "✍️  Noter ou demander…"
 CHERCHER = "🔎  Chercher dans ma mémoire…"
+RECHERCHER = "🌐  Rechercher sur le web…"
+BRIEF = "☀️  Mon brief"
+CINE = "🎬  Je regarde quoi ce soir ?"
+REVUE = "🗓  Ma revue de la semaine"
+PROACTIVITE = "🔔  Proactivité"
+DESACTIVE = "  (désactivé)"
+COACH = "🎓  Coach"
+VEILLE = "📰  Veille"
+QUOI_DE_NEUF = "📰  Quoi de neuf ?"
+REDACTEUR = "✒️  Rédacteur"
+DEPENSES = "🧾  Dépenses"
+# Ces modules écrivent eux-mêmes dans ta mémoire (ou n'y mettent rien), et leurs titres ont déjà leur symbole.
+MODULES_AUTONOMES = ("memoire", "veille", "recherche", "redacteur", "depenses", "brief", "cine", "revue")
 SYMBOLES_AIDE = {"proposee": "💡", "demandee": "⏳", "a_capturer": "⏳", "prete": "✅"}
 
 
@@ -71,15 +84,29 @@ def _fenetre(*args, **kwargs) -> int:
     return _modale(lambda: rumps.alert(*args, **kwargs))
 
 
-def _saisie(titre: str, message: str, ok: str) -> str:
-    """Une fenêtre avec une zone de texte. Renvoie le texte tapé ("" si « Annuler »)."""
-    fenetre = rumps.Window(message=message, title=titre, default_text="", ok=ok, cancel="Annuler", dimensions=(380, 60))
+def _choisir_fichiers(message: str, extensions: list[str]) -> list[str]:
+    """La fenêtre « Ouvrir » de macOS (plusieurs fichiers possibles). Renvoie les chemins choisis."""
+    from AppKit import NSOpenPanel
+
+    panneau = NSOpenPanel.openPanel()
+    panneau.setMessage_(message)
+    panneau.setAllowsMultipleSelection_(True)
+    panneau.setCanChooseDirectories_(False)
+    panneau.setAllowedFileTypes_(extensions)
+    if _modale(panneau.runModal) != 1:
+        return []
+    return [str(u.path()) for u in panneau.URLs()]
+
+
+def _saisie(titre: str, message: str, ok: str, annuler: str = "Annuler", hauteur: int = 60, defaut: str = "") -> str | None:
+    """Une fenêtre avec une zone de texte. Renvoie le texte tapé (None si tu cliques « Annuler »)."""
+    fenetre = rumps.Window(message=message, title=titre, default_text=defaut, ok=ok, cancel=annuler, dimensions=(380, hauteur))
     try:  # le curseur directement dans la zone de texte : tu tapes sans cliquer
         fenetre._alert.window().setInitialFirstResponder_(fenetre._textfield)
     except AttributeError:
         pass
     reponse = _modale(fenetre.run)
-    return " ".join(str(reponse.text or "").split()) if reponse.clicked == 1 else ""
+    return " ".join(str(reponse.text or "").split()) if reponse.clicked == 1 else None
 
 
 class Icone(rumps.App):
@@ -99,6 +126,18 @@ class Icone(rumps.App):
         self.derniere_erreur = ""
         self.titre_note = ("", 0.0)  # ce que l'icône affiche, noté dans l'état (pour « etat » et l'essai)
         self.attendues: set[int] = set()  # aides demandées depuis l'icône, en cours de rédaction
+        self.bouton_proactivite = self._menu_proactivite()
+        self.bouton_coach = self._menu_coach()
+        self.coach_occupe = False  # le coach prépare tes questions
+        self.coach_pret = None  # la séance prête : ses questions s'ouvrent au prochain rafraîchissement
+        self.bouton_veille = self._menu_veille()
+        self.bouton_redacteur = self._menu_redacteur()
+        self.bouton_brief = rumps.MenuItem(BRIEF, callback=self.brief)
+        self.bouton_cine = rumps.MenuItem(CINE, callback=self.cine)
+        self.bouton_revue = rumps.MenuItem(REVUE, callback=self.revue)
+        self.bouton_rechercher = rumps.MenuItem(RECHERCHER, callback=self.rechercher)
+        self.bouton_depenses = self._menu_depenses()
+        self.veille_occupee = False  # la veille lit les sites et trie
         self.menu = [
             self.ligne_etat,
             self.ligne_jour,
@@ -108,10 +147,19 @@ class Icone(rumps.App):
             self.bouton_ecran,
             None,
             rumps.MenuItem(AIDE_ECRAN, callback=self.aide_ecran),
+            self.bouton_brief,
+            self.bouton_cine,
+            self.bouton_revue,
             rumps.MenuItem(NOTER, callback=self.noter),
             rumps.MenuItem(CHERCHER, callback=self.chercher),
+            self.bouton_rechercher,
+            self.bouton_coach,
+            self.bouton_veille,
+            self.bouton_redacteur,
+            self.bouton_depenses,
             self.aides,
             self.sous_menu,
+            self.bouton_proactivite,
             rumps.MenuItem("Notification de test", callback=self.test_notif),
             rumps.MenuItem("Ouvrir le journal", callback=self.ouvrir_journal),
             None,
@@ -172,11 +220,60 @@ class Icone(rumps.App):
             texte = f"{m['nom']} : {m['statut']}" + (f" ({m['detail'][:60]})" if m.get("detail") else "")
             self.sous_menu.add(rumps.MenuItem(texte))
 
+        self._titres_coach()
+        self.bouton_veille.title = "⏳  Veille : je lis les sites…" if self.veille_occupee else VEILLE
+        self._titres_reglages()
+
         # En dernier : la fenêtre d'une aide attend que tu la fermes, le menu doit être à jour avant.
+        if self.coach_pret:
+            cle, self.coach_pret = self.coach_pret, None
+            self._coach_questions(cle)
         for a in etat.aides_recentes(time.time() - 2 * 3600):  # une aide demandée vient d'être rédigée ?
             if a["id"] in self.attendues and a["statut"] in ("prete", "echec", "expiree"):
                 self.attendues.discard(a["id"])
                 self.afficher_aide(a)
+
+    # --- Phase 6 : modules au bouton désactivables, proactivité réglable --------------------------------
+
+    def _titres_reglages(self) -> None:
+        """« (désactivé) » à côté des modules au bouton coupés dans reglages.json ; la proactivité cochée."""
+        reglages = config.charger()
+        for bouton, titre, nom in ((self.bouton_brief, BRIEF, "brief"), (self.bouton_cine, CINE, "cine"),
+                                   (self.bouton_revue, REVUE, "revue"), (self.bouton_rechercher, RECHERCHER, "recherche"),
+                                   (self.bouton_coach, self.bouton_coach.title, "coach"),
+                                   (self.bouton_veille, self.bouton_veille.title, "veille"),
+                                   (self.bouton_redacteur, REDACTEUR, "redacteur")):
+            actif = reglages["modules"].get(nom, {}).get("actif", True)
+            bouton.title = titre.replace(DESACTIVE, "") + ("" if actif else DESACTIVE)
+        niveau = reglages["niveau_proactivite"]
+        self.bouton_proactivite.title = f"{PROACTIVITE} : {config.NIVEAUX_PROACTIVITE[niveau]}"
+        for item in self.items_proactivite:
+            item.state = 1 if item.niveau == niveau else 0  # coché : le niveau actuel
+
+    def _ferme(self, nom: str) -> bool:
+        """True (et une fenêtre dit comment le réactiver) si ce module au bouton est désactivé."""
+        try:
+            config.verifier_actif(nom)
+            return False
+        except Exception as e:
+            _fenetre(title="Module désactivé", message=f"{str(e)[0].upper()}{str(e)[1:]}", ok="Fermer")
+            return True
+
+    def _menu_proactivite(self) -> rumps.MenuItem:
+        menu = rumps.MenuItem(PROACTIVITE)
+        self.items_proactivite = []
+        details = {0: "aucune initiative", 1: "rarement", 2: "de temps en temps", 3: "plus souvent"}
+        for niveau, nom in config.NIVEAUX_PROACTIVITE.items():
+            item = rumps.MenuItem(f"{niveau} · {nom} ({details[niveau]})", callback=self.regler_proactivite)
+            item.niveau = niveau
+            menu.add(item)
+            self.items_proactivite.append(item)
+        return menu
+
+    def regler_proactivite(self, item) -> None:
+        config.regler_proactivite(item.niveau)
+        log.info("Proactivité réglée sur %d depuis l'icône", item.niveau)
+        self.rafraichir()
 
     def basculer_pause(self, _) -> None:
         pause = not config.charger()["pause_globale"]
@@ -221,27 +318,41 @@ class Icone(rumps.App):
             item.title = f"⏳ {a['titre']} (je prépare l'aide…)"
 
     def afficher_aide(self, a: dict) -> None:
-        if a.get("statut") == "prete" and not a.get("vue") and a.get("module") != "memoire":
+        if a.get("statut") == "prete" and not a.get("vue") and a.get("module") not in MODULES_AUTONOMES:
             try:  # une aide que tu ouvres entre dans ta mémoire (les réponses du second cerveau y sont déjà)
                 memoire.noter("aide", a["titre"], a["module"], detail=a["texte"])
             except Exception:
                 log.exception("Mémoire : aide pas enregistrée")
         etat.marquer_vue(a["id"])
         texte = texte_simple(a["texte"]) or "(aucun texte)"
-        if _fenetre(title=f"💡 {a['titre']}", message=texte, ok="Fermer", cancel="Copier") == 0:
-            subprocess.run(["pbcopy"], input=texte, text=True)
+        liens = {"veille": ("Ouvrir les liens", self.veille_page), "recherche": ("Ouvrir les sources", self.recherche_page)}
+        if a.get("module") in liens:  # le 2e bouton ouvre la page avec les liens cliquables
+            libelle, ouvrir = liens[a["module"]]
+            if _fenetre(title=a["titre"], message=texte, ok="Fermer", cancel=libelle) == 0:
+                ouvrir(None)
+        else:
+            titre = a["titre"] if a.get("module") in ("redacteur", "depenses", "brief", "cine", "revue") else f"💡 {a['titre']}"
+            if _fenetre(title=titre, message=texte, ok="Fermer", cancel="Copier") == 0:
+                subprocess.run(["pbcopy"], input=texte, text=True)
 
     # --- Mémoire, rappels, second cerveau -----------------------------------------------------
 
     def noter(self, _) -> None:
         texte = _saisie("✍️ Noter ou demander",
                         "Une note (« le code du portail est… »), un rappel (« rappelle-moi demain à 9 h d'appeler "
-                        "la banque ») ou une question à ta mémoire (« qu'est-ce que j'avais noté sur… ? »).",
+                        "la banque »), une question à ta mémoire (« qu'est-ce que j'avais noté sur… ? ») ou une "
+                        "recherche (« cherche sur internet le plafond du PEA »).",
                         ok="Envoyer")
         if not texte:
             return
         genre = consignes.classer(texte)
-        if genre in ("souvenir", "question"):  # la réponse s'ouvrira toute seule dans une fenêtre
+        if genre == "recherche":
+            self._rechercher(texte)
+        elif genre == "redaction":
+            self._rediger(texte)
+        elif genre == "cine":
+            self._cine(texte)
+        elif genre in ("souvenir", "question"):  # la réponse s'ouvrira toute seule dans une fenêtre
             id_aide = etat.proposer_aide("memoire", f"🧠 {texte[:70]}")
             etat.demander_aide(id_aide)
             self.attendues.add(id_aide)
@@ -288,6 +399,346 @@ class Icone(rumps.App):
         if _fenetre(title=f"🔎 « {requete} » : {len(trouves)} souvenir(s)", message="\n\n".join(lignes),
                     ok="Fermer", cancel="Copier") == 0:
             subprocess.run(["pbcopy"], input="\n\n".join(lignes), text=True)
+
+    # --- Recherche sourcée (phase 5) ----------------------------------------------------------------
+
+    def rechercher(self, _) -> None:
+        if self._ferme("recherche"):
+            return
+        question = _saisie("🌐 Rechercher sur le web", "Ta question (« quel est le plafond du PEA en 2026 ? »). Claude "
+                           "cherche sur le web et te répond en 5 lignes, avec ses sources (20 à 90 s).", ok="Rechercher")
+        if question:
+            self._rechercher(question)
+
+    def _rechercher(self, question: str) -> None:
+        """Claude cherche en fond ; la réponse s'ouvre toute seule (comme une aide 💡)."""
+        id_aide = etat.proposer_aide("recherche", f"🌐 {question[:70]}")
+        etat.demander_aide(id_aide)
+        self.attendues.add(id_aide)
+        log.info("Recherche sur le web demandée depuis l'icône")
+
+        def chercher():
+            from modules.recherche import recherche
+
+            try:
+                etat.finir_aide(id_aide, recherche.texte_resultat(recherche.chercher(question, "icone")), "prete")
+            except Exception as e:  # jamais en silence : la fenêtre dit pourquoi
+                log.info("Recherche impossible (%s)", type(e).__name__)
+                etat.finir_aide(id_aide, f"Recherche impossible : {e}", "echec")
+
+        threading.Thread(target=chercher, daemon=True).start()
+        self.rafraichir()
+
+    def recherche_page(self, _) -> None:
+        from modules.recherche import parametres as rp
+
+        if rp.PAGE.exists():
+            subprocess.run(["open", str(rp.PAGE)], check=False)
+        else:
+            _fenetre(title="🌐 Pas encore de recherche", message="Lance d'abord : 🌐 Rechercher sur le web…", ok="Fermer")
+
+    # --- Brief (phase 5) : agenda, mails à traiter, rappels ; sur ton Mac, sans Claude -------------
+
+    def brief(self, _) -> None:
+        from modules.brief import brief
+
+        if self._ferme("brief"):
+            return
+
+        log.info("Brief demandé depuis l'icône")
+        self._en_fond("brief", "☀️ Mon brief", brief.composer)
+
+    # --- Revue du dimanche (phase 5) : ta semaine, rassemblée sur ton Mac + le mot de Claude ------------
+
+    def revue(self, _) -> None:
+        from modules.revue import revue
+
+        if self._ferme("revue"):
+            return
+
+        log.info("Revue de la semaine demandée depuis l'icône")
+        self._en_fond("revue", "🗓 Ta semaine", lambda: revue.texte_revue(revue.composer()))
+
+    # --- Concierge ciné (phase 5) ---------------------------------------------------------------------
+
+    def cine(self, _) -> None:
+        if self._ferme("cine"):
+            return
+        demande = _saisie("🎬 Je regarde quoi ce soir ?", "Ton humeur et ton temps ? (« envie de rire, 1h30 », « une série "
+                          "prenante, 2 épisodes »). Laisse vide : il te surprend.", ok="Proposer", hauteur=24)
+        if demande is not None:
+            self._cine(demande)
+
+    def _cine(self, demande: str) -> None:
+        from modules.cine import cine
+
+        log.info("Ciné demandé depuis l'icône")
+        self._en_fond("cine", "🎬 Ce soir", lambda: cine.texte_proposition(cine.proposer(demande, "icone")))
+
+    # --- Rédacteur dans ta voix (phase 5) ---------------------------------------------------------
+
+    def _menu_redacteur(self) -> rumps.MenuItem:
+        menu = rumps.MenuItem(REDACTEUR)
+        menu.add(rumps.MenuItem("✒️  Rédiger dans mon style…", callback=self.rediger))
+        menu.add(None)
+        menu.add(rumps.MenuItem("🎨  Faire ma fiche de style", callback=self.faire_style))
+        menu.add(rumps.MenuItem("👤  Mon profil (lettres de motivation)", callback=self.ouvrir_profil))
+        return menu
+
+    def _en_fond(self, module: str, titre: str, travail) -> None:
+        """Claude travaille en fond ; le résultat s'ouvre tout seul (comme une aide 💡), même un échec."""
+        id_aide = etat.proposer_aide(module, titre)
+        etat.demander_aide(id_aide)
+        self.attendues.add(id_aide)
+
+        def faire():
+            try:
+                etat.finir_aide(id_aide, travail(), "prete")
+            except Exception as e:  # jamais en silence : la fenêtre dit pourquoi
+                log.info("%s impossible (%s)", module, type(e).__name__)
+                etat.finir_aide(id_aide, f"Impossible pour l'instant : {e}", "echec")
+
+        threading.Thread(target=faire, daemon=True).start()
+        self.rafraichir()
+
+    def rediger(self, _) -> None:
+        if self._ferme("redacteur"):
+            return
+        demande = _saisie("✒️ Rédiger dans mon style",
+                          "Quoi écrire ? « mail à mon prof pour demander un délai d'une semaine », « lettre de "
+                          "motivation pour l'alternance chargé de clientèle chez … » (colle l'annonce), « post "
+                          "LinkedIn : j'ai validé l'UE11 ».", ok="Rédiger", hauteur=110)
+        if demande:
+            self._rediger(demande)
+
+    def _rediger(self, demande: str) -> None:
+        from modules.redacteur import redaction
+
+        log.info("Brouillon demandé depuis l'icône")
+        self._en_fond("redacteur", f"✒️ {demande[:70]}",
+                      lambda: redaction.texte_brouillon(redaction.rediger(demande, "icone")))
+
+    def faire_style(self, _) -> None:
+        from modules.redacteur import parametres as rp
+        from modules.redacteur import style
+
+        if self._ferme("redacteur"):
+            return
+        if _fenetre(title="🎨 Ma fiche de style", message="Ton Mac lit tes 25 derniers mails envoyés (seulement ton texte) "
+                    f"et les textes déposés dans {rp.MES_TEXTES}. Environ 6 000 caractères partent UNE fois à Claude, "
+                    "qui décrit ta manière d'écrire et te montre un échantillon (20 à 40 s).",
+                    ok="C'est parti", cancel="Annuler") != 1:
+            return
+        log.info("Fiche de style demandée depuis l'icône")
+        self._en_fond("redacteur", "🎨 Ma fiche de style", lambda: style.texte_fiche(style.creer_fiche()))
+
+    def ouvrir_profil(self, _) -> None:
+        from modules.redacteur import parametres as rp
+        from modules.redacteur import style
+
+        style.creer_profil()
+        subprocess.run(["open", "-e", str(rp.PROFIL)], check=False)
+
+    # --- Dépenses (phase 5) -----------------------------------------------------------------------
+
+    def _menu_depenses(self) -> rumps.MenuItem:
+        menu = rumps.MenuItem(DEPENSES)
+        menu.add(rumps.MenuItem("🧾  Ajouter un reçu…", callback=self.ajouter_recu))
+        menu.add(rumps.MenuItem("📊  Mes dépenses du mois", callback=self.bilan_depenses))
+        menu.add(None)
+        menu.add(rumps.MenuItem("📂  Ouvrir le tableur", callback=self.ouvrir_tableur))
+        menu.add(rumps.MenuItem("📁  Ouvrir le dossier Reçus", callback=self.ouvrir_recus))
+        return menu
+
+    def ajouter_recu(self, _) -> None:
+        from modules.depenses import parametres as dp
+        from modules.depenses import recu
+
+        chemins = _choisir_fichiers("Choisis la photo (ou le PDF) de ton reçu", sorted(e[1:] for e in dp.EXTENSIONS))
+        if not chemins:
+            return
+        log.info("Reçu(s) ajouté(s) depuis l'icône (%d)", len(chemins))
+        self._en_fond("depenses", "🧾 Reçu" + (f"s ({len(chemins)})" if len(chemins) > 1 else ""),
+                      lambda: "\n".join(recu.traiter(c, "icone")["message"] for c in chemins)
+                      + ("\n\n(Mode test : rien n'est écrit. Pour de vrai :  python assistant.py depenses reel)"
+                         if dp.mode() != "reel" else ""))
+
+    def bilan_depenses(self, _) -> None:
+        from modules.depenses import recu, tableur
+
+        _fenetre(title="📊 Mes dépenses du mois", message=f"{tableur.texte_bilan(tableur.bilan())}\n\n{recu.resume_etat()}",
+                 ok="Fermer")
+
+    def ouvrir_tableur(self, _) -> None:
+        from modules.depenses import parametres as dp
+
+        if dp.TABLEUR.exists():
+            subprocess.run(["open", str(dp.TABLEUR)], check=False)
+        else:
+            _fenetre(title="📂 Pas encore de tableur", message="Il est créé au premier reçu ajouté en mode réel "
+                     "(python assistant.py depenses reel).", ok="Fermer")
+
+    def ouvrir_recus(self, _) -> None:
+        from modules.depenses import parametres as dp
+
+        dp.dossier_recus().mkdir(parents=True, exist_ok=True)
+        subprocess.run(["open", str(dp.dossier_recus())], check=False)
+
+    # --- Coach (phase 5) : seulement quand tu le demandes ---------------------------------------------
+
+    def _menu_coach(self) -> rumps.MenuItem:
+        """« 🎓 Coach » → les 13 UE du DCG, ton bilan, ta dernière correction, le dossier de tes cours."""
+        from modules.coach import parametres as cp
+
+        menu = rumps.MenuItem(COACH)
+        self.items_ue = []
+        for ue in cp.UE:
+            item = rumps.MenuItem(ue, callback=self.coach_ue)
+            item.ue = ue
+            menu.add(item)
+            self.items_ue.append(item)
+        menu.add(None)
+        menu.add(rumps.MenuItem("📊  Mon bilan", callback=self.coach_bilan))
+        menu.add(rumps.MenuItem("📄  Revoir ma dernière correction", callback=self.coach_derniere))
+        menu.add(rumps.MenuItem("📚  Ouvrir le dossier de mes cours", callback=self.coach_dossier))
+        return menu
+
+    def _titres_coach(self) -> None:
+        from modules.coach import seance
+
+        self.bouton_coach.title = "⏳  Coach : je prépare tes questions…" if self.coach_occupe else COACH
+        etats = seance.etat_ue()
+        for item in self.items_ue:
+            revoir, pas_finie = etats.get(item.ue, (0, False))
+            item.title = item.ue + (" · ⏸ séance pas finie" if pas_finie else f" · {revoir} à revoir" if revoir else "")
+
+    def coach_ue(self, item) -> None:
+        """Une UE choisie : la séance pas finie reprend, sinon « combien de questions ? » puis Claude prépare."""
+        from modules.coach import parametres as cp
+        from modules.coach import seance
+
+        if self.coach_occupe or self._ferme("coach"):
+            return
+        cle = seance.en_cours(item.ue)
+        if cle:
+            self._coach_questions(cle)
+            return
+        reponse = _saisie(f"🎓 {item.ue}", f"Combien de questions ? (de {cp.MIN_QUESTIONS} à {cp.MAX_QUESTIONS})",
+                          ok="C'est parti", hauteur=24, defaut=str(cp.PAR_DEFAUT))
+        if reponse is None:
+            return
+        n = cp.nombre(reponse)
+        log.info("Coach : séance demandée depuis l'icône (%d question(s))", n)
+        self.coach_occupe = True
+        self.bouton_coach.title = "⏳  Coach : je prépare tes questions…"
+        threading.Thread(target=self._coach_preparer, args=(item.ue, n), daemon=True).start()
+
+    def _coach_preparer(self, ue: str, n: int) -> None:
+        from modules.coach import seance
+
+        try:
+            self.coach_pret = seance.preparer(ue, n)  # la clé de la séance : elle s'ouvre au rafraîchissement
+        except Exception as e:  # Claude indisponible… : dit clairement, rien n'est perdu
+            log.info("Coach : questions pas prêtes (%s)", e)
+            from core.notifications import notifier
+
+            notifier("Assistant", f"🎓 Coach : questions pas prêtes ({e})", module="coach", urgent=True)
+        finally:
+            self.coach_occupe = False
+
+    def _coach_questions(self, cle: str) -> None:
+        """Une fenêtre par question. « Plus tard » : tes réponses déjà données sont gardées."""
+        from modules.coach import seance
+
+        s_liste = seance.seance(cle)
+        for s in [x for x in s_liste if x["statut"] == "posee"]:
+            reponse = _saisie(f"🎓 Question {s['ordre']}/{len(s_liste)} · {s['matiere']}", seance.texte_question(s),
+                              ok="Valider", annuler="Plus tard", hauteur=24 if s["type"] == "qcm" else 110)
+            if reponse is None:
+                break
+            seance.repondre(s["seance"], reponse)
+        else:
+            self._coach_corriger(cle)
+        self._titres_coach()  # le menu dit tout de suite ce qui reste
+
+    def _coach_corriger(self, cle: str) -> None:
+        """La correction se fait en fond ; sa fenêtre s'ouvre toute seule (comme une aide 💡)."""
+        from modules.coach import seance
+
+        id_aide = etat.proposer_aide("coach", "🎓 Correction")
+        etat.demander_aide(id_aide)
+        self.attendues.add(id_aide)
+
+        def corriger():
+            try:
+                etat.finir_aide(id_aide, seance.texte_correction(seance.corriger(cle)), "prete")
+            except Exception as e:
+                log.info("Coach : correction impossible (%s)", e)
+                etat.finir_aide(id_aide, f"Correction impossible pour l'instant : {e}\nTes réponses sont gardées : "
+                                         "reclique sur la même UE plus tard.", "echec")
+
+        threading.Thread(target=corriger, daemon=True).start()
+        self.rafraichir()
+
+    def coach_bilan(self, _) -> None:
+        from modules.coach import seance
+
+        _fenetre(title="📊 Mon bilan (coach DCG)", message=seance.texte_bilan(), ok="Fermer")
+
+    def coach_derniere(self, _) -> None:
+        from modules.coach import seance
+
+        cle = seance.derniere()
+        texte = seance.texte_correction(seance.seance(cle)) if cle else "Pas encore de séance."
+        if _fenetre(title="📄 Ma dernière correction", message=texte, ok="Fermer", cancel="Copier") == 0:
+            subprocess.run(["pbcopy"], input=texte, text=True)
+
+    def coach_dossier(self, _) -> None:
+        from modules.coach import cours
+        from modules.coach import parametres as cp
+
+        cours.creer_dossiers()
+        subprocess.run(["open", str(cp.COURS)], check=False)
+
+    # --- Veille (phase 5) : seulement quand tu la demandes ----------------------------------------------
+
+    def _menu_veille(self) -> rumps.MenuItem:
+        menu = rumps.MenuItem(VEILLE)
+        menu.add(rumps.MenuItem(QUOI_DE_NEUF, callback=self.veille))
+        menu.add(rumps.MenuItem("📄  Ouvrir la page de ma dernière veille", callback=self.veille_page))
+        return menu
+
+    def veille(self, _) -> None:
+        """Lit les sites et trie en fond ; le résultat s'ouvre tout seul (comme une aide 💡)."""
+        if self.veille_occupee or self._ferme("veille"):
+            return
+        self.veille_occupee = True
+        id_aide = etat.proposer_aide("veille", "📰 Veille")
+        etat.demander_aide(id_aide)
+        self.attendues.add(id_aide)
+        log.info("Veille demandée depuis l'icône")
+
+        def lire():
+            from modules.veille import revue
+
+            try:
+                etat.finir_aide(id_aide, revue.texte_revue(revue.lancer()), "prete")
+            except Exception as e:  # jamais en silence : la fenêtre dit pourquoi
+                log.exception("Veille impossible")
+                etat.finir_aide(id_aide, f"Veille impossible : {e}", "echec")
+            finally:
+                self.veille_occupee = False
+
+        threading.Thread(target=lire, daemon=True).start()
+        self.rafraichir()
+
+    def veille_page(self, _) -> None:
+        from modules.veille import parametres as vp
+
+        if vp.PAGE.exists():
+            subprocess.run(["open", str(vp.PAGE)], check=False)
+        else:
+            _fenetre(title="📰 Pas encore de veille", message="Lance d'abord : 📰 Veille → Quoi de neuf ?", ok="Fermer")
 
     def effacer_aides(self, _) -> None:
         for a in etat.aides_recentes(time.time() - 2 * 3600):

@@ -4,7 +4,8 @@ Garde-fous intégrés :
 - plafond d'appels par jour (reglages.json → claude.appels_max_par_jour) ;
 - pause de 15 min après une panne ou un quota atteint (on ne s'acharne pas) ;
 - un nouvel essai automatique après une erreur passagère ;
-- notre prompt court remplace celui de Claude Code, aucun outil sauf demande explicite.
+- notre prompt court remplace celui de Claude Code, aucun outil sauf demande explicite
+  (la recherche web : WebSearch et WebFetch, autorisés pour cet appel seulement, nombre de tours limité).
 """
 
 import json
@@ -32,6 +33,11 @@ class ClaudeIndisponible(Exception):
     """Panne passagère, jeton refusé ou quota : on réessaiera plus tard."""
 
 
+class ModuleDesactive(ClaudeIndisponible):
+    """Un module au bouton désactivé dans reglages.json : le message dit comment le réactiver.
+    (Une sorte d'indisponibilité : chaque bouton, commande ou phrase l'affiche simplement.)"""
+
+
 class PlafondAtteint(ClaudeIndisponible):
     """Le plafond d'appels du jour (reglages.json) est atteint."""
 
@@ -56,6 +62,8 @@ def _expliquer(texte: str) -> tuple[str, bool]:
     bas = texte.lower()
     if "401" in bas or "authenticat" in bas or "bearer" in bas:
         return "Jeton Claude refusé (expiré ou révoqué) : lance  python assistant.py renouveler-jeton", True
+    if "max_turns" in bas or "max turns" in bas:
+        return "Claude a atteint le nombre maximal d'étapes sans finir : reformule plus précisément.", False
     if "limit" in bas or "quota" in bas or "429" in bas:
         return "Quota de l'abonnement atteint : nouvel essai dans 15 min.", True
     return f"Claude Code a renvoyé une erreur : {texte.strip()[:300]}", False
@@ -69,12 +77,13 @@ def _nom_modele(modele: str, reglages: dict) -> str:
     return modele
 
 
-def _un_appel(commande: list[str], message: str, env: dict) -> dict:
+def _un_appel(commande: list[str], message: str, env: dict, delai: int | None = None) -> dict:
+    delai = delai or DELAI_SECONDES  # lu à chaque appel (pas figé au démarrage)
     try:
         proc = subprocess.run(commande, input=message, capture_output=True, text=True,
-                              timeout=DELAI_SECONDES, env=env, cwd=config.DONNEES)
+                              timeout=delai, env=env, cwd=config.DONNEES)
     except subprocess.TimeoutExpired:
-        raise ClaudeIndisponible(f"Claude n'a pas répondu en {DELAI_SECONDES} s.")
+        raise ClaudeIndisponible(f"Claude n'a pas répondu en {delai} s.")
     except OSError as e:
         raise ClaudeIndisponible(f"Impossible de lancer Claude Code : {e}")
     try:
@@ -82,10 +91,11 @@ def _un_appel(commande: list[str], message: str, env: dict) -> dict:
     except json.JSONDecodeError:
         data = None
     if not isinstance(data, dict) or data.get("is_error") or proc.returncode != 0:
-        brut = str(data.get("result", "")) if isinstance(data, dict) else (proc.stderr or proc.stdout)
+        brut = str(data.get("result") or data.get("subtype") or "") if isinstance(data, dict) else (proc.stderr or proc.stdout)
         message_erreur, pause = _expliquer(brut or f"code {proc.returncode}")
         erreur = ClaudeIndisponible(message_erreur)
         erreur.pause = pause
+        erreur.definitif = "max_turns" in brut.lower()  # réessayer coûterait autant, pour rien
         raise erreur
     return data
 
@@ -113,8 +123,12 @@ def demander(
     modele: str = "fort",
     outils: list[str] | None = None,
     effort: str = "low",
+    tours: int | None = None,
+    delai: int | None = None,
 ) -> Reponse:
-    """Pose une question à Claude. modele = "rapide", "fort" ou un nom précis."""
+    """Pose une question à Claude. modele = "rapide", "fort" ou un nom précis.
+    outils : les seuls outils permis, autorisés sans question (ex. ["WebSearch", "WebFetch"]) ;
+    tours : nombre maximal d'allers-retours avec ces outils ; delai : en secondes (par défaut DELAI_SECONDES)."""
     reglages = config.charger()
     nom_modele = _nom_modele(modele, reglages)
 
@@ -137,16 +151,20 @@ def demander(
     commande += ["--system-prompt", systeme or SYSTEME_PAR_DEFAUT]
     if schema:
         commande += ["--json-schema", json.dumps(schema)]
+    if outils:  # sans cette autorisation, Claude Code refuserait l'outil (personne pour dire « oui »)
+        commande += ["--allowedTools", *outils]
+    if tours:
+        commande += ["--max-turns", str(tours)]
     commande += ["--tools", ",".join(outils or [])]  # en dernier : --tools accepte une liste
 
     config.DONNEES.mkdir(exist_ok=True)
     for essai in range(1, ESSAIS + 1):
         try:
-            data = _un_appel(commande, message, env)
+            data = _un_appel(commande, message, env, delai)
             break
         except ClaudeIndisponible as e:
             etat.noter_appel(module, nom_modele, False, erreur=str(e))
-            if getattr(e, "pause", False) or essai == ESSAIS:
+            if getattr(e, "pause", False) or getattr(e, "definitif", False) or essai == ESSAIS:
                 if getattr(e, "pause", False):
                     etat.ecrire("claude_pause_jusqua", time.time() + PAUSE_APRES_PANNE)
                 log.warning("[%s] %s", module, e)

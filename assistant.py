@@ -12,6 +12,8 @@
     python assistant.py ecran off         COUPE l'écran tout de suite (ecran on pour le rallumer)
     python assistant.py activer mails     active un module (il démarre dans les 2 secondes)
     python assistant.py desactiver mails  désactive un module (il s'arrête dans les 2 secondes)
+                                          (au bouton aussi : desactiver cine → son bouton ne fait plus rien)
+    python assistant.py proactivite 2     0 muet · 1 discret · 2 normal · 3 présent (sans chiffre : le détail)
 
 Mémoire, rappels, second cerveau (phase 4) :
     python assistant.py noter "…"         une note, un rappel (« rappelle-moi demain à 9 h de… ») ou une question
@@ -21,6 +23,41 @@ Mémoire, rappels, second cerveau (phase 4) :
     python assistant.py rappels [test|reel]  les derniers rappels ; passe en mode test ou réel
     python assistant.py habitudes         ce que l'Assistant a appris de tes habitudes (aucun contenu)
     python assistant.py essai-memoire     essai guidé, en vrai (--etape N pour une seule étape)
+
+Coach DCG (phase 5), seulement quand tu le demandes :
+    python assistant.py coach             choisis une UE et 3 à 10 questions, réponds ici, puis la correction
+    python assistant.py coach cours       les cours trouvés, UE par UE (dossier donnees/coach/cours)
+    python assistant.py coach bilan       tes progrès et tes points faibles
+
+Veille patrimoine + DCG (phase 5), seulement quand tu la demandes :
+    python assistant.py veille            lit les sites officiels, Claude choisit ce qui compte pour toi
+    python assistant.py veille sources    vérifie que chaque site se lit bien (sans Claude, rien n'est gardé)
+    python assistant.py veille page       ouvre la page de ta dernière veille (avec les liens)
+
+Recherche sourcée (phase 5) :
+    python assistant.py recherche "…"     Claude cherche sur le web : réponse en 5 lignes + sources vérifiées
+    python assistant.py recherche page    la page de tes 20 dernières recherches (liens cliquables)
+
+Rédacteur dans ta voix (phase 5) :
+    python assistant.py rediger style     fait ta fiche de style (tes mails envoyés) + un échantillon
+    python assistant.py rediger profil    ton profil pour les lettres de motivation (s'ouvre dans TextEdit)
+    python assistant.py rediger "…"       un brouillon dans ton style (mail, lettre de motivation, post)
+
+Brief du jour (phase 5), sans Claude :
+    python assistant.py brief             ton agenda du jour, tes mails à traiter, tes rappels du jour
+
+Concierge ciné (phase 5) :
+    python assistant.py cine "envie de rire, 1h30"   3 films ou séries pour ce soir
+
+Revue du dimanche (phase 5) :
+    python assistant.py revue             le bilan de ta semaine : fait, appris, dépensé, à venir (+ le mot de Claude)
+    python assistant.py revue derniere    relit la dernière revue (sans Claude)
+
+Dépenses (phase 5) :
+    python assistant.py depenses          le total du mois, par catégorie (depenses 2026-09 : un autre mois)
+    python assistant.py depenses ajouter photo.jpg   ajoute un reçu (photo ou PDF)
+    python assistant.py depenses test     mode test : rien n'est écrit (depenses reel : pour de vrai)
+    python assistant.py depenses tableur  ouvre le tableur · depenses dossier : ouvre le dossier Reçus surveillé
 """
 
 import argparse
@@ -97,11 +134,56 @@ def afficher_etat() -> int:
               + ("réel" if rp["mode"] == "reel" else "test (rien n'est créé)") + f", liste « {rp['liste']} »")
     except Exception as e:  # la mémoire ne doit jamais empêcher « etat » de répondre
         print(f"   🧠 Mémoire illisible : {e}")
+    try:
+        from modules.coach import seance
+
+        if seance.derniere():
+            print(f"   🎓 Coach : dernière séance le {seance.derniere()[:10]} · {seance.a_revoir()} question(s) à revoir")
+    except Exception as e:
+        print(f"   🎓 Coach illisible : {e}")
+    try:
+        from modules.veille import revue
+
+        ligne = revue.resume_etat()
+        if ligne:
+            print(f"   📰 Veille : {ligne}")
+    except Exception as e:
+        print(f"   📰 Veille illisible : {e}")
+    try:
+        from modules.redacteur import style
+
+        print(f"   ✒️ Rédacteur : {style.resume_etat()}")
+    except Exception as e:
+        print(f"   ✒️ Rédacteur illisible : {e}")
+    try:
+        from modules.depenses import recu
+
+        print(f"   🧾 Dépenses : {recu.resume_etat()}")
+    except Exception as e:
+        print(f"   🧾 Dépenses illisibles : {e}")
+    try:
+        from modules.recherche import recherche as rech
+
+        ligne = rech.resume_etat()
+        if ligne:
+            print(f"   🌐 Recherche : {ligne}")
+    except Exception as e:
+        print(f"   🌐 Recherche illisible : {e}")
+    try:
+        from modules.revue import revue as revue_semaine
+
+        ligne = revue_semaine.resume_etat()
+        if ligne:
+            print(f"   🗓 Revue : {ligne}")
+    except Exception as e:
+        print(f"   🗓 Revue illisible : {e}")
     if r["modules"]:
         print("\nModules")
         for m in r["modules"]:
             detail = f" · {m['detail']}" if m["detail"] else ""
             print(f"   {STATUTS.get(m['statut'], '?')} {m['nom']} : {m['statut']}{detail}")
+    print("\nAu bouton (seulement quand tu les demandes)\n   " + " · ".join(
+        f"{'✅' if config.module_actif(nom) else '⚫'} {nom}" for nom in config.AU_BOUTON))
     envoyees, bloquees = r["notifications"]
     appels, plafond, entree, sortie = r["claude"]
     print("\nAujourd'hui")
@@ -239,9 +321,18 @@ def changer_module(nom: str | None, actif: bool) -> int:
     if not nom:
         print("Précise le module, par exemple :  python assistant.py activer mails")
         return 2
+    if nom in config.AU_BOUTON:  # ne tourne jamais en fond : son bouton, sa commande et la voix suivent ce réglage
+        config.activer_module(nom, actif)
+        print(f"✅ « {nom} » ({config.AU_BOUTON[nom]}) {'activé' if actif else 'désactivé'} : son bouton, sa commande "
+              f"et la voix {'marchent' if actif else 'ne font plus rien'}, tout de suite.")
+        return 0
     if actif and not _module_existe(nom):
         print(f"⛔ Module « {nom} » introuvable dans modules/.")
         return 1
+    if not actif and not _module_existe(nom):  # un ancien module (ex. le coach, devenu un simple bouton)
+        config.retirer_module(nom)
+        print(f"✅ « {nom} » retiré des réglages : ce n'est plus un module qui tourne en fond.")
+        return 0
     config.activer_module(nom, actif)
     print(f"✅ Module « {nom} » {'activé : il démarre' if actif else 'désactivé : il s’arrête'} dans les 2 secondes"
           + (" (sauf pause globale)." if actif else "."))
@@ -274,6 +365,12 @@ def noter(texte: str | None) -> int:
         print('Utilise :  python assistant.py noter "le code du portail est 1234"')
         return 2
     genre = consignes.classer(texte)
+    if genre == "recherche":
+        return recherche(texte)
+    if genre == "redaction":
+        return rediger(texte)
+    if genre == "cine":
+        return cine(texte)
     if genre in ("souvenir", "question"):
         return demander_memoire(texte)
     if genre == "rappel":
@@ -413,6 +510,117 @@ def habitudes() -> int:
     return 0
 
 
+def coach(quoi: str | None) -> int:
+    from modules.coach import terminal
+
+    actions = {None: terminal.seance_terminal, "cours": terminal.afficher_cours, "bilan": terminal.afficher_bilan}
+    if quoi not in actions:
+        print("Utilise :  python assistant.py coach   (tes questions)  ·  coach cours  ·  coach bilan")
+        return 2
+    return actions[quoi]()
+
+
+def veille(quoi: str | None) -> int:
+    from modules.veille import terminal
+
+    actions = {None: terminal.lancer, "sources": terminal.sources, "page": terminal.page}
+    if quoi not in actions:
+        print("Utilise :  python assistant.py veille   (quoi de neuf ?)  ·  veille sources  ·  veille page")
+        return 2
+    return actions[quoi]()
+
+
+def recherche(question: str | None) -> int:
+    from modules.recherche import terminal
+
+    if not question:
+        print('Utilise :  python assistant.py recherche "quel est le plafond du PEA ?"  ·  recherche page')
+        return 2
+    return terminal.page() if question == "page" else terminal.lancer(question)
+
+
+def rediger(quoi: str | None) -> int:
+    from modules.redacteur import terminal
+
+    if not quoi:
+        print('Utilise :  python assistant.py rediger style  ·  rediger profil  ·  rediger "mail à mon prof pour…"')
+        return 2
+    return {"style": terminal.faire_style, "profil": terminal.ouvrir_profil}.get(quoi, lambda: terminal.lancer(quoi))()
+
+
+def depenses(suite: str | None) -> int:
+    import re
+
+    from modules.depenses import terminal
+
+    mots = (suite or "").split(maxsplit=1)
+    if not mots:
+        return terminal.bilan()
+    if mots[0] in ("test", "reel"):
+        return terminal.changer_mode(mots[0])
+    if mots[0] in ("tableur", "dossier"):
+        return terminal.ouvrir(mots[0])
+    if mots[0] == "ajouter" and len(mots) == 2:
+        return terminal.ajouter([mots[1]])
+    if re.fullmatch(r"\d{4}-\d{2}", mots[0]):
+        return terminal.bilan(mots[0])
+    print("Utilise :  python assistant.py depenses  ·  depenses ajouter <photo>  ·  depenses test|reel  ·  "
+          "depenses tableur|dossier  ·  depenses 2026-09")
+    return 2
+
+
+def cine(demande: str | None) -> int:
+    from modules.cine import terminal
+
+    return terminal.lancer(demande)
+
+
+def brief() -> int:
+    from modules.brief import terminal
+
+    return terminal.lancer()
+
+
+def revue(suite: str | None) -> int:
+    from modules.revue import terminal
+
+    return terminal.lancer((suite or "").split())
+
+
+def proactivite(niveau: str | None) -> int:
+    from core.aides import SEUIL_CONFIANCE
+    from core.notifications import LIMITE_PAR_HEURE
+
+    if niveau is None:
+        actuel = config.charger()["niveau_proactivite"]
+        print("🔔 Proactivité : ce que l'Assistant ose faire de lui-même (quand TU demandes, il répond toujours).\n")
+        for n, nom in config.NIVEAUX_PROACTIVITE.items():
+            aide = f"te propose une 💡 si Claude est sûr à {SEUIL_CONFIANCE[n]} %" if SEUIL_CONFIANCE[n] else "aucune initiative"
+            print(f"   {'→' if n == actuel else ' '} {n} · {nom:8} {aide} · {LIMITE_PAR_HEURE[n]} notification(s)/h au plus")
+        print("\nPour changer :  python assistant.py proactivite 1   (ou icône → 🔔 Proactivité)")
+        return 0
+    if niveau not in ("0", "1", "2", "3"):
+        print("⛔ Niveau 0, 1, 2 ou 3 attendu (0 muet · 1 discret · 2 normal · 3 présent).")
+        return 2
+    config.regler_proactivite(int(niveau))
+    print(f"🔔 Proactivité : {niveau} ({config.NIVEAUX_PROACTIVITE[int(niveau)]}), pris en compte tout de suite.")
+    return 0
+
+
+# Les commandes des modules au bouton : désactivées dans reglages.json, elles le disent et s'arrêtent là.
+AU_BOUTON_COMMANDES = {"coach": "coach", "veille": "veille", "recherche": "recherche", "rediger": "redacteur",
+                       "brief": "brief", "cine": "cine", "revue": "revue"}
+
+
+def _module_coupe(action: str) -> bool:
+    nom = AU_BOUTON_COMMANDES.get(action)
+    if nom and not config.module_actif(nom):
+        print(f"⛔ Le module « {nom} » ({config.AU_BOUTON[nom]}) est désactivé dans tes réglages."
+              f"\n   Pour le réactiver :  python assistant.py activer {nom}")
+        return True
+    return False
+
+
 def essai_memoire(etape: int | None) -> int:
     from core.essai_memoire import essai
 
@@ -423,17 +631,21 @@ def main() -> int:
     actions = {
         "pause": pause, "reprendre": reprendre, "etat": afficher_etat, "journal": journal,
         "test-notif": test_notif, "test-claude": test_claude, "test-plantage": test_plantage,
-        "renouveler-jeton": renouveler_jeton,
+        "renouveler-jeton": renouveler_jeton, "brief": brief,
     }
     avec_texte = {"noter": noter, "demander": demander_memoire, "memoire": afficher_memoire, "oublier": oublier,
-                  "rappels": rappels, "micro": micro, "ecran": ecran}
+                  "rappels": rappels, "micro": micro, "ecran": ecran, "coach": coach, "veille": veille,
+                  "recherche": recherche, "rediger": rediger, "depenses": depenses,
+                  "cine": cine, "revue": revue, "proactivite": proactivite}
     parser = argparse.ArgumentParser(description="Commandes de l'assistant")
     parser.add_argument("action", choices=[*actions, *avec_texte, "activer", "desactiver", "habitudes", "essai-memoire"])
     parser.add_argument("suite", nargs="*", help="activer / desactiver : le module ; micro, ecran : on ou off ; "
-                                                 "noter, demander, memoire : ton texte")
+                                                 "noter, demander, memoire, recherche, rediger : ton texte")
     parser.add_argument("--etape", type=int, choices=[1, 2, 3, 4, 5], help="essai-memoire : une seule étape")
     args = parser.parse_args()
     suite = " ".join(args.suite).strip() or None
+    if _module_coupe(args.action):
+        return 1
     if args.action in avec_texte:
         return avec_texte[args.action](suite)
     if args.action in ("activer", "desactiver"):

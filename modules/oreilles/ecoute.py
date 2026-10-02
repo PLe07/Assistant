@@ -58,7 +58,7 @@ class Ecoute(Assistance):
         if d.type == "mot_appel":
             demande = retirer_mot_appel(texte, p.reglage("mot_appel", "assistant"))
             genre = consignes.classer(demande)
-            if genre in ("rappel", "note", "souvenir"):
+            if genre in ("rappel", "note", "souvenir", "recherche", "redaction", "cine"):
                 self.consigne(genre, demande)
                 return
             if not self.test:
@@ -69,12 +69,13 @@ class Ecoute(Assistance):
         else:
             self.soumettre(extrait, d.type)
 
-    # --- « Assistant, rappelle-moi… / note que… / qu'est-ce que je t'avais dit… » -----------------
+    # --- « Assistant, rappelle-moi… / note que… / qu'est-ce que je t'avais dit… / cherche sur internet… » -
 
     def consigne(self, genre: str, demande: str) -> None:
         if self.test:
             self.afficher({"rappel": "   ⏰ demande de rappel", "note": "   📝 demande de note",
-                           "souvenir": "   🧠 question à ta mémoire"}[genre])
+                           "souvenir": "   🧠 question à ta mémoire", "recherche": "   🌐 recherche sur le web",
+                           "redaction": "   ✒️ brouillon dans ton style", "cine": "   🎬 idées pour ce soir"}[genre])
             if genre == "note":
                 self.afficher(f"   → serait noté dans ta mémoire : « {consignes.contenu_note(demande)} »")
             elif genre == "souvenir":
@@ -85,8 +86,16 @@ class Ecoute(Assistance):
             elif self.avec_claude and genre == "souvenir":
                 self.afficher("   … Claude réfléchit")
                 self.afficher(f"   🧠 {consignes.repondre(demande, 'essai', module='oreilles', garder=False)}")
+            elif self.avec_claude and genre == "recherche":
+                self._essai_recherche(demande)
             elif genre == "rappel":
                 self.afficher("   → Claude comprendrait quoi et quand (avec --avec-claude : le rappel compris)")
+            elif genre == "recherche":
+                self.afficher("   → Claude chercherait sur le web (avec --avec-claude : la réponse et ses sources)")
+            elif genre == "redaction":
+                self.afficher("   → Claude écrirait le brouillon dans ton style (il t'attendrait dans 💡 Aides)")
+            elif genre == "cine":
+                self.afficher("   → Claude proposerait 3 films ou séries (ils t'attendraient dans 💡 Aides)")
             return
         memoire.noter_intention("oreilles", genre, "", "demande")
         self.claude.submit(self._consigne, genre, demande)
@@ -99,6 +108,12 @@ class Ecoute(Assistance):
                 if consignes.rappeler(demande, "oreilles", module="oreilles") is None:
                     memoire.noter("parole", demande, "oreilles")  # pas un rappel, finalement : la 💡 habituelle
                     self._decider(demande, "mot_appel", True, "")
+            elif genre == "recherche":
+                self._recherche(demande)
+            elif genre == "redaction":
+                self._redaction(demande)
+            elif genre == "cine":
+                self._cine(demande)
             else:
                 reponse = consignes.repondre(demande, "oreilles", module="oreilles")
                 id_aide = etat.proposer_aide("memoire", f"🧠 {demande[:70]}")
@@ -107,6 +122,58 @@ class Ecoute(Assistance):
                          module="memoire", urgent=True)
         except Exception as e:  # jamais le contenu dans le journal : seulement le type d'erreur
             self.log.error("Demande « %s » impossible (%s)", genre, type(e).__name__)
+
+    def _recherche(self, demande: str) -> None:
+        """La réponse t'attend dans « 💡 Aides » (une notification te prévient), même en cas d'échec."""
+        from modules.recherche import recherche
+
+        id_aide = etat.proposer_aide("recherche", f"🌐 {demande[:70]}")
+        try:
+            etat.finir_aide(id_aide, recherche.texte_resultat(recherche.chercher(demande, "oreilles", module="oreilles")),
+                            "prete")
+            message = "🌐 Ta recherche est prête : icône en haut à droite → « 💡 Aides »"
+        except ClaudeIndisponible as e:
+            etat.finir_aide(id_aide, f"Recherche impossible : {e}", "echec")
+            message = "🌐 Recherche impossible : icône en haut à droite → « 💡 Aides » pour savoir pourquoi"
+        notifier("Assistant", message, module="recherche", urgent=True)
+
+    def _redaction(self, demande: str) -> None:
+        """Le brouillon t'attend dans « 💡 Aides » (une notification te prévient), même en cas d'échec."""
+        from modules.redacteur import redaction
+
+        id_aide = etat.proposer_aide("redacteur", f"✒️ {demande[:70]}")
+        try:
+            r = redaction.rediger(demande, "oreilles", module="oreilles")
+            etat.finir_aide(id_aide, redaction.texte_brouillon(r), "prete")
+            message = "✒️ Ton brouillon est prêt : icône en haut à droite → « 💡 Aides »"
+        except (ClaudeIndisponible, redaction.PasDeFiche) as e:
+            etat.finir_aide(id_aide, f"Brouillon impossible : {e}", "echec")
+            message = "✒️ Brouillon impossible : icône en haut à droite → « 💡 Aides » pour savoir pourquoi"
+        notifier("Assistant", message, module="redacteur", urgent=True)
+
+    def _cine(self, demande: str) -> None:
+        """Les 3 idées t'attendent dans « 💡 Aides » (une notification te prévient), même en cas d'échec."""
+        from modules.cine import cine
+
+        id_aide = etat.proposer_aide("cine", "🎬 Ce soir")
+        try:
+            etat.finir_aide(id_aide, cine.texte_proposition(cine.proposer(demande, "oreilles", module="oreilles")), "prete")
+            message = "🎬 Tes idées pour ce soir sont prêtes : icône en haut à droite → « 💡 Aides »"
+        except ClaudeIndisponible as e:
+            etat.finir_aide(id_aide, f"Pas d'idée pour l'instant : {e}", "echec")
+            message = "🎬 Pas d'idée pour l'instant : icône en haut à droite → « 💡 Aides » pour savoir pourquoi"
+        notifier("Assistant", message, module="cine", urgent=True)
+
+    def _essai_recherche(self, demande: str) -> None:
+        from modules.recherche import recherche
+
+        self.afficher("   … Claude cherche sur le web (20 à 90 s)")
+        try:
+            r = recherche.chercher(demande, "essai", module="oreilles", garder=False)
+        except ClaudeIndisponible as e:
+            self.afficher(f"   ⛔ {e}")
+            return
+        self.afficher("   " + recherche.texte_resultat(r, avec_liens=True).replace("\n", "\n   "))
 
     # --- « pense à… » entendu sans le mot d'appel : une 💡 propose de créer le rappel --------------
 

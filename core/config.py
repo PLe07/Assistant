@@ -24,6 +24,11 @@ load_dotenv(RACINE / ".env")
 
 NIVEAUX_PROACTIVITE = {0: "muet", 1: "discret", 2: "normal", 3: "présent"}
 CAPTEURS = {"oreilles": "micro", "yeux": "ecran"}  # modules coupés par « pause micro » / « pause écran »
+# Les modules « au bouton » : jamais lancés en fond, seulement quand tu les demandes (icône, voix, Terminal).
+# Désactivés dans reglages.json, leur bouton, leur commande et la voix répondent « désactivé ».
+AU_BOUTON = {"coach": "🎓 coach DCG", "veille": "📰 veille", "recherche": "🌐 recherche sourcée",
+             "redacteur": "✒️ rédacteur", "brief": "☀️ brief", "cine": "🎬 concierge ciné",
+             "revue": "🗓 revue de la semaine"}
 
 DEFAUTS = {
     "pause_globale": False,
@@ -34,6 +39,15 @@ DEFAUTS = {
     "claude": {"modele_rapide": "haiku", "modele_fort": "sonnet", "appels_max_par_jour": 60},
     # Rappels Apple : « test » = rien n'est créé, une notification dit ce qui l'aurait été.
     "rappels": {"mode": "test", "liste": "Assistant"},
+    # La veille (icône → 📰 Veille) : les flux RSS lus. Tu peux en ajouter : {"nom": "…", "adresse": "https://…"}.
+    "veille": {
+        "sources": [
+            {"nom": "Impôts (BOFiP)", "adresse": "https://bofip.impots.gouv.fr/bofip/ext/rss.xml?actualites=1&publications=1"},
+            {"nom": "Service-public · particuliers",
+             "adresse": "https://www.service-public.fr/abonnements/rss/actu-actualites-particuliers.rss"},
+            {"nom": "Service-public · professionnels", "adresse": "https://www.service-public.fr/abonnements/rss/actu-actu-pro.rss"},
+        ],
+    },
     "modules": {
         "battement": {"actif": True, "toutes_les_secondes": 60},
         "mails": {
@@ -60,6 +74,10 @@ DEFAUTS = {
             "applis_exclues": [],  # en plus de la liste de base (mots de passe, messageries…)
             "titres_exclus": [],  # en plus de la liste de base (banques, impots.gouv, ameli…)
         },
+        # Le dossier « Reçus » surveillé. mode « test » : rien n'est écrit dans le tableur.
+        "depenses": {"actif": False, "mode": "test", "dossier": "~/Reçus", "toutes_les_secondes": 30},
+        # Au bouton (voir AU_BOUTON) : « actif »: false les rend muets.
+        **{nom: {"actif": True} for nom in AU_BOUTON},
     },
 }
 
@@ -120,6 +138,20 @@ def _nettoyer(r: dict, erreurs: list) -> dict:
             rp["mode"] = remettre("rappels.mode", rp.get("mode"), "test", "« test » ou « reel » attendu")
         if not isinstance(rp.get("liste"), str) or not rp["liste"].strip():
             rp["liste"] = remettre("rappels.liste", rp.get("liste"), "Assistant", "nom de liste attendu")
+
+    ve = r["veille"]
+    if not isinstance(ve, dict) or not isinstance(ve.get("sources"), list):
+        r["veille"] = remettre("veille", ve, DEFAUTS["veille"], "objet avec une liste « sources » attendu")
+    else:
+        valides = []
+        for i, src in enumerate(ve["sources"]):
+            if (isinstance(src, dict) and isinstance(src.get("nom"), str) and src["nom"].strip()
+                    and isinstance(src.get("adresse"), str) and src["adresse"].strip().startswith(("https://", "http://"))):
+                valides.append({"nom": src["nom"].strip(), "adresse": src["adresse"].strip()})
+            else:
+                erreurs.append(f"veille.sources[{i}] : {{\"nom\": …, \"adresse\": \"https://…\"}} attendu "
+                               f"(valeur lue : {src!r}), source ignorée")
+        ve["sources"] = valides
 
     if not isinstance(r["modules"], dict):
         r["modules"] = remettre("modules", r["modules"], DEFAUTS["modules"], "objet attendu")
@@ -195,6 +227,46 @@ def changer_mode_rappels(mode: str) -> None:
         perso["rappels"]["mode"] = mode
 
     _modifier(changement)
+
+
+def retirer_module(nom: str) -> None:
+    """Retire de reglages.json un module qui n'existe plus (ses autres réglages ne servent plus à rien)."""
+    def changement(perso: dict) -> None:
+        if isinstance(perso.get("modules"), dict):
+            perso["modules"].pop(nom, None)
+
+    _modifier(changement)
+
+
+def regler_module(nom: str, cle: str, valeur) -> None:
+    """Change un réglage d'un module (ex. le mode des dépenses) sans toucher au reste."""
+    def changement(perso: dict) -> None:
+        if not isinstance(perso.get("modules"), dict):
+            perso["modules"] = {}
+        if not isinstance(perso["modules"].get(nom), dict):
+            perso["modules"][nom] = {}
+        perso["modules"][nom][cle] = valeur
+
+    _modifier(changement)
+
+
+def module_actif(nom: str) -> bool:
+    return bool(charger()["modules"].get(nom, {}).get("actif", nom in AU_BOUTON))
+
+
+def verifier_actif(nom: str) -> None:
+    """Lève ModuleDesactive si ce module au bouton est désactivé dans reglages.json."""
+    if nom in AU_BOUTON and not module_actif(nom):
+        from core.cerveau import ModuleDesactive
+
+        raise ModuleDesactive(f"le module « {nom} » ({AU_BOUTON[nom]}) est désactivé dans tes réglages. "
+                              f"Pour le réactiver :  python assistant.py activer {nom}")
+
+
+def regler_proactivite(niveau: int) -> None:
+    if niveau not in NIVEAUX_PROACTIVITE:
+        raise ValueError("niveau 0, 1, 2 ou 3 attendu")
+    _modifier(lambda perso: perso.__setitem__("niveau_proactivite", niveau))
 
 
 def activer_module(nom: str, actif: bool) -> None:
