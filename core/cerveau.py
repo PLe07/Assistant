@@ -33,6 +33,11 @@ class ClaudeIndisponible(Exception):
     """Panne passagère, jeton refusé ou quota : on réessaiera plus tard."""
 
 
+class ModuleDesactive(ClaudeIndisponible):
+    """Un module au bouton désactivé dans reglages.json : le message dit comment le réactiver.
+    (Une sorte d'indisponibilité : chaque bouton, commande ou phrase l'affiche simplement.)"""
+
+
 class PlafondAtteint(ClaudeIndisponible):
     """Le plafond d'appels du jour (reglages.json) est atteint."""
 

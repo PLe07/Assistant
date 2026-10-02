@@ -191,8 +191,9 @@ def main() -> int:
             log.info("⏸  PAUSE GLOBALE : tout est arrêté" if pause else "▶️  Actif")
             pause_vue = pause
 
-        voulus = {n for n in reglages["modules"] if _voulu(n, reglages)}
-        for nom in reglages["modules"]:
+        en_fond = [n for n in reglages["modules"] if n not in config.AU_BOUTON]  # les autres : au bouton
+        voulus = {n for n in en_fond if _voulu(n, reglages)}
+        for nom in en_fond:
             suivis.setdefault(nom, Suivi(nom))
 
         for s in suivis.values():

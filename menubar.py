@@ -36,6 +36,8 @@ RECHERCHER = "🌐  Rechercher sur le web…"
 BRIEF = "☀️  Mon brief"
 CINE = "🎬  Je regarde quoi ce soir ?"
 REVUE = "🗓  Ma revue de la semaine"
+PROACTIVITE = "🔔  Proactivité"
+DESACTIVE = "  (désactivé)"
 COACH = "🎓  Coach"
 VEILLE = "📰  Veille"
 QUOI_DE_NEUF = "📰  Quoi de neuf ?"
@@ -124,11 +126,16 @@ class Icone(rumps.App):
         self.derniere_erreur = ""
         self.titre_note = ("", 0.0)  # ce que l'icône affiche, noté dans l'état (pour « etat » et l'essai)
         self.attendues: set[int] = set()  # aides demandées depuis l'icône, en cours de rédaction
+        self.bouton_proactivite = self._menu_proactivite()
         self.bouton_coach = self._menu_coach()
         self.coach_occupe = False  # le coach prépare tes questions
         self.coach_pret = None  # la séance prête : ses questions s'ouvrent au prochain rafraîchissement
         self.bouton_veille = self._menu_veille()
         self.bouton_redacteur = self._menu_redacteur()
+        self.bouton_brief = rumps.MenuItem(BRIEF, callback=self.brief)
+        self.bouton_cine = rumps.MenuItem(CINE, callback=self.cine)
+        self.bouton_revue = rumps.MenuItem(REVUE, callback=self.revue)
+        self.bouton_rechercher = rumps.MenuItem(RECHERCHER, callback=self.rechercher)
         self.bouton_depenses = self._menu_depenses()
         self.veille_occupee = False  # la veille lit les sites et trie
         self.menu = [
@@ -140,18 +147,19 @@ class Icone(rumps.App):
             self.bouton_ecran,
             None,
             rumps.MenuItem(AIDE_ECRAN, callback=self.aide_ecran),
-            rumps.MenuItem(BRIEF, callback=self.brief),
-            rumps.MenuItem(CINE, callback=self.cine),
-            rumps.MenuItem(REVUE, callback=self.revue),
+            self.bouton_brief,
+            self.bouton_cine,
+            self.bouton_revue,
             rumps.MenuItem(NOTER, callback=self.noter),
             rumps.MenuItem(CHERCHER, callback=self.chercher),
-            rumps.MenuItem(RECHERCHER, callback=self.rechercher),
+            self.bouton_rechercher,
             self.bouton_coach,
             self.bouton_veille,
             self.bouton_redacteur,
             self.bouton_depenses,
             self.aides,
             self.sous_menu,
+            self.bouton_proactivite,
             rumps.MenuItem("Notification de test", callback=self.test_notif),
             rumps.MenuItem("Ouvrir le journal", callback=self.ouvrir_journal),
             None,
@@ -214,6 +222,7 @@ class Icone(rumps.App):
 
         self._titres_coach()
         self.bouton_veille.title = "⏳  Veille : je lis les sites…" if self.veille_occupee else VEILLE
+        self._titres_reglages()
 
         # En dernier : la fenêtre d'une aide attend que tu la fermes, le menu doit être à jour avant.
         if self.coach_pret:
@@ -223,6 +232,48 @@ class Icone(rumps.App):
             if a["id"] in self.attendues and a["statut"] in ("prete", "echec", "expiree"):
                 self.attendues.discard(a["id"])
                 self.afficher_aide(a)
+
+    # --- Phase 6 : modules au bouton désactivables, proactivité réglable --------------------------------
+
+    def _titres_reglages(self) -> None:
+        """« (désactivé) » à côté des modules au bouton coupés dans reglages.json ; la proactivité cochée."""
+        reglages = config.charger()
+        for bouton, titre, nom in ((self.bouton_brief, BRIEF, "brief"), (self.bouton_cine, CINE, "cine"),
+                                   (self.bouton_revue, REVUE, "revue"), (self.bouton_rechercher, RECHERCHER, "recherche"),
+                                   (self.bouton_coach, self.bouton_coach.title, "coach"),
+                                   (self.bouton_veille, self.bouton_veille.title, "veille"),
+                                   (self.bouton_redacteur, REDACTEUR, "redacteur")):
+            actif = reglages["modules"].get(nom, {}).get("actif", True)
+            bouton.title = titre.replace(DESACTIVE, "") + ("" if actif else DESACTIVE)
+        niveau = reglages["niveau_proactivite"]
+        self.bouton_proactivite.title = f"{PROACTIVITE} : {config.NIVEAUX_PROACTIVITE[niveau]}"
+        for item in self.items_proactivite:
+            item.state = 1 if item.niveau == niveau else 0  # coché : le niveau actuel
+
+    def _ferme(self, nom: str) -> bool:
+        """True (et une fenêtre dit comment le réactiver) si ce module au bouton est désactivé."""
+        try:
+            config.verifier_actif(nom)
+            return False
+        except Exception as e:
+            _fenetre(title="Module désactivé", message=f"{str(e)[0].upper()}{str(e)[1:]}", ok="Fermer")
+            return True
+
+    def _menu_proactivite(self) -> rumps.MenuItem:
+        menu = rumps.MenuItem(PROACTIVITE)
+        self.items_proactivite = []
+        details = {0: "aucune initiative", 1: "rarement", 2: "de temps en temps", 3: "plus souvent"}
+        for niveau, nom in config.NIVEAUX_PROACTIVITE.items():
+            item = rumps.MenuItem(f"{niveau} · {nom} ({details[niveau]})", callback=self.regler_proactivite)
+            item.niveau = niveau
+            menu.add(item)
+            self.items_proactivite.append(item)
+        return menu
+
+    def regler_proactivite(self, item) -> None:
+        config.regler_proactivite(item.niveau)
+        log.info("Proactivité réglée sur %d depuis l'icône", item.niveau)
+        self.rafraichir()
 
     def basculer_pause(self, _) -> None:
         pause = not config.charger()["pause_globale"]
@@ -352,6 +403,8 @@ class Icone(rumps.App):
     # --- Recherche sourcée (phase 5) ----------------------------------------------------------------
 
     def rechercher(self, _) -> None:
+        if self._ferme("recherche"):
+            return
         question = _saisie("🌐 Rechercher sur le web", "Ta question (« quel est le plafond du PEA en 2026 ? »). Claude "
                            "cherche sur le web et te répond en 5 lignes, avec ses sources (20 à 90 s).", ok="Rechercher")
         if question:
@@ -389,6 +442,9 @@ class Icone(rumps.App):
     def brief(self, _) -> None:
         from modules.brief import brief
 
+        if self._ferme("brief"):
+            return
+
         log.info("Brief demandé depuis l'icône")
         self._en_fond("brief", "☀️ Mon brief", brief.composer)
 
@@ -397,12 +453,17 @@ class Icone(rumps.App):
     def revue(self, _) -> None:
         from modules.revue import revue
 
+        if self._ferme("revue"):
+            return
+
         log.info("Revue de la semaine demandée depuis l'icône")
         self._en_fond("revue", "🗓 Ta semaine", lambda: revue.texte_revue(revue.composer()))
 
     # --- Concierge ciné (phase 5) ---------------------------------------------------------------------
 
     def cine(self, _) -> None:
+        if self._ferme("cine"):
+            return
         demande = _saisie("🎬 Je regarde quoi ce soir ?", "Ton humeur et ton temps ? (« envie de rire, 1h30 », « une série "
                           "prenante, 2 épisodes »). Laisse vide : il te surprend.", ok="Proposer", hauteur=24)
         if demande is not None:
@@ -441,6 +502,8 @@ class Icone(rumps.App):
         self.rafraichir()
 
     def rediger(self, _) -> None:
+        if self._ferme("redacteur"):
+            return
         demande = _saisie("✒️ Rédiger dans mon style",
                           "Quoi écrire ? « mail à mon prof pour demander un délai d'une semaine », « lettre de "
                           "motivation pour l'alternance chargé de clientèle chez … » (colle l'annonce), « post "
@@ -459,6 +522,8 @@ class Icone(rumps.App):
         from modules.redacteur import parametres as rp
         from modules.redacteur import style
 
+        if self._ferme("redacteur"):
+            return
         if _fenetre(title="🎨 Ma fiche de style", message="Ton Mac lit tes 25 derniers mails envoyés (seulement ton texte) "
                     f"et les textes déposés dans {rp.MES_TEXTES}. Environ 6 000 caractères partent UNE fois à Claude, "
                     "qui décrit ta manière d'écrire et te montre un échantillon (20 à 40 s).",
@@ -552,7 +617,7 @@ class Icone(rumps.App):
         from modules.coach import parametres as cp
         from modules.coach import seance
 
-        if self.coach_occupe:
+        if self.coach_occupe or self._ferme("coach"):
             return
         cle = seance.en_cours(item.ue)
         if cle:
@@ -645,7 +710,7 @@ class Icone(rumps.App):
 
     def veille(self, _) -> None:
         """Lit les sites et trie en fond ; le résultat s'ouvre tout seul (comme une aide 💡)."""
-        if self.veille_occupee:
+        if self.veille_occupee or self._ferme("veille"):
             return
         self.veille_occupee = True
         id_aide = etat.proposer_aide("veille", "📰 Veille")

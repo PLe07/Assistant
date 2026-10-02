@@ -16,7 +16,7 @@ from datetime import datetime
 
 from core.aides import texte_simple
 from core.cerveau import ClaudeIndisponible, demander
-from core.config import DONNEES
+from core.config import DONNEES, verifier_actif
 from core.journal import journal
 from core.rappels import JOURS
 
@@ -123,6 +123,7 @@ def _demander(demande: str, temps: int | None, eviter: list[str], module: str, t
 def proposer(demande: str, source: str, module: str = "cine", garder: bool = True) -> dict:
     """{quand, demande, temps, choix: [{titre, annee, type, duree, minutes, genre, pourquoi}]}.
     1 appel à Claude (fort) ; un 2e seulement si moins de 3 idées tiennent dans ton temps."""
+    verifier_actif("cine")  # désactivé dans tes réglages : ne fait rien
     demande = " ".join((demande or "").split())[:500] or "pas de précision : surprends-moi"
     temps, deja = temps_dispo(demande), deja_proposes()
     vus, choix, trop_longs = {t.lower() for t in deja}, [], []

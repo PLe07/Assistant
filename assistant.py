@@ -12,6 +12,8 @@
     python assistant.py ecran off         COUPE l'écran tout de suite (ecran on pour le rallumer)
     python assistant.py activer mails     active un module (il démarre dans les 2 secondes)
     python assistant.py desactiver mails  désactive un module (il s'arrête dans les 2 secondes)
+                                          (au bouton aussi : desactiver cine → son bouton ne fait plus rien)
+    python assistant.py proactivite 2     0 muet · 1 discret · 2 normal · 3 présent (sans chiffre : le détail)
 
 Mémoire, rappels, second cerveau (phase 4) :
     python assistant.py noter "…"         une note, un rappel (« rappelle-moi demain à 9 h de… ») ou une question
@@ -180,6 +182,8 @@ def afficher_etat() -> int:
         for m in r["modules"]:
             detail = f" · {m['detail']}" if m["detail"] else ""
             print(f"   {STATUTS.get(m['statut'], '?')} {m['nom']} : {m['statut']}{detail}")
+    print("\nAu bouton (seulement quand tu les demandes)\n   " + " · ".join(
+        f"{'✅' if config.module_actif(nom) else '⚫'} {nom}" for nom in config.AU_BOUTON))
     envoyees, bloquees = r["notifications"]
     appels, plafond, entree, sortie = r["claude"]
     print("\nAujourd'hui")
@@ -317,6 +321,11 @@ def changer_module(nom: str | None, actif: bool) -> int:
     if not nom:
         print("Précise le module, par exemple :  python assistant.py activer mails")
         return 2
+    if nom in config.AU_BOUTON:  # ne tourne jamais en fond : son bouton, sa commande et la voix suivent ce réglage
+        config.activer_module(nom, actif)
+        print(f"✅ « {nom} » ({config.AU_BOUTON[nom]}) {'activé' if actif else 'désactivé'} : son bouton, sa commande "
+              f"et la voix {'marchent' if actif else 'ne font plus rien'}, tout de suite.")
+        return 0
     if actif and not _module_existe(nom):
         print(f"⛔ Module « {nom} » introuvable dans modules/.")
         return 1
@@ -578,6 +587,40 @@ def revue(suite: str | None) -> int:
     return terminal.lancer((suite or "").split())
 
 
+def proactivite(niveau: str | None) -> int:
+    from core.aides import SEUIL_CONFIANCE
+    from core.notifications import LIMITE_PAR_HEURE
+
+    if niveau is None:
+        actuel = config.charger()["niveau_proactivite"]
+        print("🔔 Proactivité : ce que l'Assistant ose faire de lui-même (quand TU demandes, il répond toujours).\n")
+        for n, nom in config.NIVEAUX_PROACTIVITE.items():
+            aide = f"te propose une 💡 si Claude est sûr à {SEUIL_CONFIANCE[n]} %" if SEUIL_CONFIANCE[n] else "aucune initiative"
+            print(f"   {'→' if n == actuel else ' '} {n} · {nom:8} {aide} · {LIMITE_PAR_HEURE[n]} notification(s)/h au plus")
+        print("\nPour changer :  python assistant.py proactivite 1   (ou icône → 🔔 Proactivité)")
+        return 0
+    if niveau not in ("0", "1", "2", "3"):
+        print("⛔ Niveau 0, 1, 2 ou 3 attendu (0 muet · 1 discret · 2 normal · 3 présent).")
+        return 2
+    config.regler_proactivite(int(niveau))
+    print(f"🔔 Proactivité : {niveau} ({config.NIVEAUX_PROACTIVITE[int(niveau)]}), pris en compte tout de suite.")
+    return 0
+
+
+# Les commandes des modules au bouton : désactivées dans reglages.json, elles le disent et s'arrêtent là.
+AU_BOUTON_COMMANDES = {"coach": "coach", "veille": "veille", "recherche": "recherche", "rediger": "redacteur",
+                       "brief": "brief", "cine": "cine", "revue": "revue"}
+
+
+def _module_coupe(action: str) -> bool:
+    nom = AU_BOUTON_COMMANDES.get(action)
+    if nom and not config.module_actif(nom):
+        print(f"⛔ Le module « {nom} » ({config.AU_BOUTON[nom]}) est désactivé dans tes réglages."
+              f"\n   Pour le réactiver :  python assistant.py activer {nom}")
+        return True
+    return False
+
+
 def essai_memoire(etape: int | None) -> int:
     from core.essai_memoire import essai
 
@@ -593,7 +636,7 @@ def main() -> int:
     avec_texte = {"noter": noter, "demander": demander_memoire, "memoire": afficher_memoire, "oublier": oublier,
                   "rappels": rappels, "micro": micro, "ecran": ecran, "coach": coach, "veille": veille,
                   "recherche": recherche, "rediger": rediger, "depenses": depenses,
-                  "cine": cine, "revue": revue}
+                  "cine": cine, "revue": revue, "proactivite": proactivite}
     parser = argparse.ArgumentParser(description="Commandes de l'assistant")
     parser.add_argument("action", choices=[*actions, *avec_texte, "activer", "desactiver", "habitudes", "essai-memoire"])
     parser.add_argument("suite", nargs="*", help="activer / desactiver : le module ; micro, ecran : on ou off ; "
@@ -601,6 +644,8 @@ def main() -> int:
     parser.add_argument("--etape", type=int, choices=[1, 2, 3, 4, 5], help="essai-memoire : une seule étape")
     args = parser.parse_args()
     suite = " ".join(args.suite).strip() or None
+    if _module_coupe(args.action):
+        return 1
     if args.action in avec_texte:
         return avec_texte[args.action](suite)
     if args.action in ("activer", "desactiver"):

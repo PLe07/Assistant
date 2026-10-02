@@ -20,7 +20,7 @@ from datetime import datetime, timedelta
 from core import memoire
 from core.aides import texte_simple
 from core.cerveau import ClaudeIndisponible, demander
-from core.config import DONNEES
+from core.config import DONNEES, verifier_actif
 from core.journal import journal
 from core.rappels import JOURS, MOIS
 from modules.brief.brief import BlocIndisponible, _bloc, _osascript, agenda, rappels_a_venir
@@ -325,6 +325,7 @@ def mot_de_claude(resume: list[str]) -> dict:
 
 def composer(maintenant: datetime | None = None, avec_claude: bool = True, garder: bool = True) -> dict:
     """{texte, fichier} : la revue de la semaine. 0 ou 1 appel à Claude."""
+    verifier_actif("revue")  # désactivé dans tes réglages : ne fait rien
     maintenant = maintenant or datetime.now()
     debut_calcul = time.time()
     donnees = _rassembler(maintenant)

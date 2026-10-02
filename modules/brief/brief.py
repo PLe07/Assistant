@@ -15,6 +15,7 @@ import threading
 import time
 from datetime import datetime, timedelta
 
+from core.config import verifier_actif
 from core.journal import journal
 from core.rappels import JOURS, MOIS
 
@@ -273,6 +274,7 @@ def _bloc(lire):
 
 
 def composer(maintenant: datetime | None = None) -> str:
+    verifier_actif("brief")  # désactivé dans tes réglages : ne fait rien
     maintenant = maintenant or datetime.now()
     debut = time.time()
     lignes = [f"☀️ Brief du {JOURS[maintenant.weekday()]} {maintenant.day} {MOIS[maintenant.month - 1]}"]

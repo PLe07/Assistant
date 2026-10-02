@@ -15,6 +15,7 @@ from datetime import datetime
 
 from core.aides import texte_simple
 from core.cerveau import ClaudeIndisponible, demander
+from core.config import verifier_actif
 from core.journal import journal
 from modules.redacteur import parametres as p
 
@@ -112,6 +113,7 @@ def extrait(textes: list[str]) -> str:
 
 def creer_fiche(avec_gmail: bool = True) -> dict:
     """Fait (ou refait) ta fiche de style. 1 appel à Claude (fort). Renvoie {fiche, echantillon, origine}."""
+    verifier_actif("redacteur")  # désactivé dans tes réglages : ne fait rien
     textes, origine = rassembler(avec_gmail)
     r = demander(f"Ses textes :\n<<<\n{extrait(textes)}\n>>>", module="redacteur", systeme=SYSTEME, schema=SCHEMA,
                  modele="fort")

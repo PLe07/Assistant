@@ -20,6 +20,7 @@ from datetime import date, datetime
 
 from core.aides import texte_simple
 from core.cerveau import ClaudeIndisponible, demander
+from core.config import verifier_actif
 from modules.coach import base, cours
 from modules.coach import parametres as p
 
@@ -214,6 +215,7 @@ def derniere(ue: str | None = None) -> str | None:
 
 def preparer(ue: str, n: int) -> str:
     """Une nouvelle séance de n questions (3 à 10) sur cette UE. Renvoie sa clé."""
+    verifier_actif("coach")  # désactivé dans tes réglages : ne fait rien
     n = max(p.MIN_QUESTIONS, min(p.MAX_QUESTIONS, n))
     with _verrou():
         with base.connexion() as db:

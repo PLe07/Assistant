@@ -22,6 +22,7 @@ from urllib.parse import urlparse
 from core import memoire
 from core.aides import texte_simple
 from core.cerveau import ClaudeIndisponible, demander
+from core.config import verifier_actif
 from core.journal import journal
 from modules.recherche import parametres as p
 
@@ -128,6 +129,7 @@ def _sources(brutes) -> list[dict]:
 
 def chercher(question: str, source: str, module: str = "recherche", garder: bool = True) -> dict:
     """Claude cherche, ton Mac vérifie les liens. garder=False (essai) : rien n'est écrit nulle part."""
+    verifier_actif("recherche")  # désactivé dans tes réglages : ne fait rien
     question = _une_ligne(question, 500)
     if not question:
         raise ValueError("question vide")

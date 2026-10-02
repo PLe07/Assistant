@@ -13,6 +13,7 @@ from datetime import datetime
 from core import memoire
 from core.aides import texte_simple
 from core.cerveau import ClaudeIndisponible, demander
+from core.config import verifier_actif
 from core.journal import journal
 from modules.redacteur import parametres as p
 from modules.redacteur import style
@@ -65,6 +66,7 @@ def _profil() -> str:
 
 def rediger(demande: str, source: str, module: str = "redacteur", garder: bool = True) -> dict:
     """Le brouillon. 1 appel à Claude (fort). garder=False (essai) : rien n'est écrit nulle part."""
+    verifier_actif("redacteur")  # désactivé dans tes réglages : ne fait rien
     demande = " ".join((demande or "").split())[:3000]
     if not demande:
         raise ValueError("demande vide")

@@ -20,6 +20,7 @@ from datetime import datetime
 from core import memoire
 from core.aides import texte_simple
 from core.cerveau import ClaudeIndisponible, demander
+from core.config import verifier_actif
 from core.journal import journal
 from core.rappels import JOURS, MOIS
 from modules.coach.parametres import UE
@@ -162,6 +163,7 @@ def trier(articles: list[dict]) -> tuple[list[dict], str]:
 
 def lancer() -> dict:
     """Lit, trie, écrit la page. Renvoie la revue (voir revue())."""
+    verifier_actif("veille")  # désactivé dans tes réglages : ne fait rien
     with _verrou():
         sources, lus, hors_sujet = rassembler()
         with base.connexion() as db:

@@ -24,6 +24,11 @@ load_dotenv(RACINE / ".env")
 
 NIVEAUX_PROACTIVITE = {0: "muet", 1: "discret", 2: "normal", 3: "présent"}
 CAPTEURS = {"oreilles": "micro", "yeux": "ecran"}  # modules coupés par « pause micro » / « pause écran »
+# Les modules « au bouton » : jamais lancés en fond, seulement quand tu les demandes (icône, voix, Terminal).
+# Désactivés dans reglages.json, leur bouton, leur commande et la voix répondent « désactivé ».
+AU_BOUTON = {"coach": "🎓 coach DCG", "veille": "📰 veille", "recherche": "🌐 recherche sourcée",
+             "redacteur": "✒️ rédacteur", "brief": "☀️ brief", "cine": "🎬 concierge ciné",
+             "revue": "🗓 revue de la semaine"}
 
 DEFAUTS = {
     "pause_globale": False,
@@ -71,6 +76,8 @@ DEFAUTS = {
         },
         # Le dossier « Reçus » surveillé. mode « test » : rien n'est écrit dans le tableur.
         "depenses": {"actif": False, "mode": "test", "dossier": "~/Reçus", "toutes_les_secondes": 30},
+        # Au bouton (voir AU_BOUTON) : « actif »: false les rend muets.
+        **{nom: {"actif": True} for nom in AU_BOUTON},
     },
 }
 
@@ -241,6 +248,25 @@ def regler_module(nom: str, cle: str, valeur) -> None:
         perso["modules"][nom][cle] = valeur
 
     _modifier(changement)
+
+
+def module_actif(nom: str) -> bool:
+    return bool(charger()["modules"].get(nom, {}).get("actif", nom in AU_BOUTON))
+
+
+def verifier_actif(nom: str) -> None:
+    """Lève ModuleDesactive si ce module au bouton est désactivé dans reglages.json."""
+    if nom in AU_BOUTON and not module_actif(nom):
+        from core.cerveau import ModuleDesactive
+
+        raise ModuleDesactive(f"le module « {nom} » ({AU_BOUTON[nom]}) est désactivé dans tes réglages. "
+                              f"Pour le réactiver :  python assistant.py activer {nom}")
+
+
+def regler_proactivite(niveau: int) -> None:
+    if niveau not in NIVEAUX_PROACTIVITE:
+        raise ValueError("niveau 0, 1, 2 ou 3 attendu")
+    _modifier(lambda perso: perso.__setitem__("niveau_proactivite", niveau))
 
 
 def activer_module(nom: str, actif: bool) -> None:

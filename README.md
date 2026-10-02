@@ -3,13 +3,16 @@
 Un assistant personnel qui tourne en arrière-plan sur le Mac : un système nerveux **local**
 (léger, gratuit, privé) qui ne réveille le cerveau (Claude, via l'abonnement) qu'aux bons moments.
 
+👉 **Mode d'emploi en une page : [`FICHE.md`](FICHE.md)** (démarrer, mettre en pause, voir le journal,
+activer un module, régler la proactivité, ajouter un module, tout arrêter).
+
 | Dossier / fichier | Rôle |
 |---|---|
 | `core/` | Le cœur partagé : réglages, journal, état (SQLite), Claude, notifications |
-| `modules/` | Un fichier par module, activable dans `reglages.json` |
+| `modules/` | Un dossier par module ; chacun s'active ou se désactive dans `reglages.json` (`python assistant.py activer/desactiver <module>`) |
 | `superviseur.py` | Lance et surveille les modules activés, les relance s'ils tombent |
 | `menubar.py` | L'icône de contrôle dans la barre du haut (pause, micro et écran coupés en un clic, aides 💡) |
-| `assistant.py` | Les commandes : `pause`, `reprendre`, `etat`, `journal`, `micro off/on`, `ecran off/on`, `activer/desactiver <module>`… |
+| `assistant.py` | Les commandes : `pause`, `reprendre`, `etat`, `journal`, `micro off/on`, `ecran off/on`, `activer/desactiver <module>`, `proactivite 0-3`… |
 | `service.py` | Le démarrage automatique (launchd) |
 | `modules/mails/` | Phase 1 · le tri automatique des mails (voir `modules/mails/README.md`) |
 | `modules/oreilles/` | Phase 2 · l'écoute locale du micro (voir `modules/oreilles/README.md`) |
