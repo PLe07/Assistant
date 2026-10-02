@@ -122,7 +122,8 @@ def _demander(demande: str, temps: int | None, eviter: list[str], module: str, t
                   f"série.\n"
                   if trop_longs else "")
                + f"Déjà proposés ces {GARDER_JOURS} derniers jours (à éviter) : {', '.join(eviter[:60]) or 'aucun'}")
-    r = demander(message, module=module, systeme=SYSTEME, schema=SCHEMA, modele="fort")
+    # effort « medium » : en « low », Claude bâcle cette tâche à contraintes (1 idée, durée fausse, « x » pour explication)
+    r = demander(message, module=module, systeme=SYSTEME, schema=SCHEMA, modele="fort", effort="medium")
     choix = r.donnees.get("choix") if isinstance(r.donnees, dict) else None
     return choix if isinstance(choix, list) else []
 
@@ -145,13 +146,17 @@ def proposer(demande: str, source: str, module: str = "cine", garder: bool = Tru
     demande = " ".join((demande or "").split())[:500] or "pas de précision : surprends-moi"
     temps, deja = temps_dispo(demande), deja_proposes()
     deja_vus = {t.lower() for t in deja}
-    vus, choix, trop_longs, presque, revus, repetes = set(deja_vus), [], [], [], [], 0
+    vus, choix, trop_longs, presque, revus, repetes, baclees = set(deja_vus), [], [], [], [], 0, 0
     for essai in range(2):
         for c in _demander(demande, temps, deja + [c["titre"] for c in choix], module, trop_longs):
             if not isinstance(c, dict) or not str(c.get("titre", "")).strip():
                 continue  # un titre vide est écarté
             titre = " ".join(str(c["titre"]).split())[:100]
             minutes = c.get("minutes") if isinstance(c.get("minutes"), int) and c["minutes"] > 0 else None
+            annee = c.get("annee")
+            if not isinstance(annee, int) or not 1890 <= annee <= datetime.now().year + 1 or (temps and minutes is None):
+                baclees += 1  # sans vraie année ou sans durée (quand ton temps compte) : idée bâclée, écartée
+                continue
             if titre.lower() in vus:
                 repetes += 1  # déjà proposé : gardé de côté, seulement s'il manque des idées (et s'il tient)
                 if titre.lower() in deja_vus and not (temps and minutes and minutes > temps + MARGE) \
@@ -168,15 +173,15 @@ def proposer(demande: str, source: str, module: str = "cine", garder: bool = Tru
                 choix.append(_idee(c, titre, minutes))
         if len(choix) >= 3 or not trop_longs:  # on ne rappelle Claude que pour remplacer des idées trop longues
             break
-    log.info("Ciné : %d tiennent dans ton temps, %d trop longue(s), %d déjà proposée(s)", len(choix), len(trop_longs),
-             repetes)
+    log.info("Ciné : %d tiennent dans ton temps, %d trop longue(s), %d déjà proposée(s), %d bâclée(s)", len(choix),
+             len(trop_longs), repetes, baclees)
     # Il manque des idées : d'abord celles qui dépassent un peu, puis celles déjà proposées (en le disant).
     choix += (sorted(presque, key=lambda c: c["depasse"]) + revus)[:max(0, 3 - len(choix))]
     if not choix:
         raise ClaudeIndisponible(f"aucune idée ne tenait dans {temps} min : redemande avec un peu plus de temps."
                                  if trop_longs else "Claude n'a rien proposé d'utilisable : réessaie dans un moment.")
     proposition = {"quand": time.time(), "demande": demande, "temps": temps, "choix": choix,
-                   "ecartees": {"trop_longues": len(trop_longs), "deja": repetes}}
+                   "ecartees": {"trop_longues": len(trop_longs), "deja": repetes, "baclees": baclees}}
     if garder:
         _garder(proposition)
     log.info("Ciné : %d proposition(s) (%s)", len(choix), source)
@@ -193,7 +198,8 @@ def texte_proposition(p: dict) -> str:
     ecartees = p.get("ecartees") or {}
     if len(p["choix"]) < 3 or any(c.get("depasse") or c.get("revu") for c in p["choix"]):
         lignes.append(f"\n(Pas plus d'idées neuves qui tiennent dans ton temps : {ecartees.get('trop_longues', 0)} "
-                      f"trop longue(s) et {ecartees.get('deja', 0)} déjà proposée(s) écartées.)")
+                      f"trop longue(s) et {ecartees.get('deja', 0)} déjà proposée(s) écartées"
+                      + (f", {ecartees['baclees']} incomplète(s) ignorée(s)" if ecartees.get("baclees") else "") + ".)")
     lignes.append("\nPas convaincu ? Redemande en précisant (« plutôt un thriller », « plus court »).")
     return "\n".join(lignes)
 

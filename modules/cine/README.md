@@ -13,6 +13,6 @@ dépasse. S'il manque des idées, il complète en dernier avec celles qui dépas
 (« ⚠️ dépasse ton temps de N min »), puis avec celles déjà proposées ces 30 derniers jours (signalées), et il dit
 combien il en a écarté. La proposition du jour apparaît aussi dans ton **☀️ brief**.
 
-**Coût** : 1 appel au modèle fort par demande (2 si les premières idées étaient trop longues). Rien n'est vérifié
-sur les plateformes.
+**Coût** : 1 appel au modèle fort par demande (2 si les premières idées étaient trop longues), en effort moyen
+(20 à 40 s) : en effort faible, Claude bâclait cette tâche. Rien n'est vérifié sur les plateformes.
 Tes propositions restent sur ton Mac (`donnees/cine/`).
