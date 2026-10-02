@@ -322,7 +322,7 @@ def traduction(valeur: str | None) -> int:
         print("Utilise :  python assistant.py traduction on  (allumer)  ou  traduction off  (éteindre)")
         return 2
     if valeur == "on" and not moteur.present():
-        print("⛔ Le modèle de traduction n'est pas encore là (~100 Mo, une fois) :  python -m modules.traduction --telecharger")
+        print("⛔ Le modèle de traduction n'est pas encore là (~1,3 Go, une fois) :  python -m modules.traduction --telecharger")
         return 1
     config.activer_module("traduction", valeur == "on")
     print("🇬🇧 Traduction allumée (dans les 2 secondes) : finis une phrase française par un point, elle devient anglaise."

@@ -5,8 +5,14 @@ from modules.yeux import parametres as yeux
 from modules.yeux.capture import TERMINAUX
 
 DOSSIER = config.DONNEES / "traduction"
-MODELE = DOSSIER / "modele"  # le modèle de traduction français → anglais, téléchargé une fois (~100 Mo)
+MODELE = DOSSIER / "modele"  # le petit modèle (Argos Translate, ~100 Mo) : rapide, traduit presque mot à mot
 URL_MODELE = "https://argos-net.com/v1/translate-fr_en-1_9.argosmodel"  # Argos Translate (libre, hors ligne)
+NLLB = DOSSIER / "nllb"  # le grand modèle (NLLB de Meta, libre, ~1,3 Go) : comprend mieux le sens
+# Copies du grand modèle prêtes pour CTranslate2 (Hugging Face), essayées dans l'ordre : la première qui marche.
+NLLB_DEPOTS = ["JustFrederik/nllb-200-distilled-1.3B-ct2-int8", "JustFrederik/nllb-200-distilled-600M-ct2-int8",
+               "entai2965/nllb-200-distilled-600M-ctranslate2", "michaelfeil/ct2fast-nllb-200-distilled-1.3B"]
+NLLB_DECOUPEUR = ("facebook/nllb-200-distilled-600M", "sentencepiece.bpe.model")  # le même pour tous les NLLB
+MOTEURS = ("nllb", "argos")
 ATTENTE = 0.15  # secondes laissées à l'appli pour afficher le point avant de lire la phrase
 # Le mode clavier (applis qui cachent leur texte à macOS) : on attend que tu t'arrêtes de taper avant d'y toucher.
 PAUSE = 0.35  # secondes sans touche
@@ -21,6 +27,12 @@ def reglage(cle: str, defaut=None):
 def _liste(cle: str) -> list[str]:
     v = reglage(cle, [])
     return [str(x) for x in v if str(x).strip()] if isinstance(v, list) else []
+
+
+def moteur() -> str:
+    """Le modèle préféré : « nllb » (grand, par défaut) ou « argos » (petit, plus rapide)."""
+    v = reglage("moteur", "nllb")
+    return v if v in MOTEURS else "nllb"
 
 
 def mots_min() -> int:

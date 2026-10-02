@@ -14,5 +14,6 @@ pyobjc-framework-Vision>=12,<13 ; sys_platform == "darwin"            # module y
 pyobjc-framework-EventKit>=12,<13 ; sys_platform == "darwin"          # brief : l'agenda du jour (app Calendrier)
 ctranslate2>=4,<5           # traduction : le modèle français → anglais, sur le Mac (déjà utilisé par les oreilles)
 sentencepiece>=0.2,<0.3     # traduction : découpe les phrases pour le modèle
+huggingface-hub>=0.23,<2    # traduction : télécharge le grand modèle (déjà là avec les oreilles)
 pyobjc-framework-ApplicationServices>=12,<13 ; sys_platform == "darwin"  # traduction : lire et remplacer la phrase
 pyobjc-framework-NaturalLanguage>=12,<13 ; sys_platform == "darwin"      # traduction : reconnaître le français

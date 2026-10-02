@@ -6,14 +6,18 @@ Allumée, elle transforme **chaque phrase française que tu finis par un point**
 | Quoi | Comment |
 |---|---|
 | Allumer / éteindre | icône → « 🇬🇧 Traduire mes phrases en anglais », ou `python assistant.py traduction on` / `off` |
-| Première fois | `python -m modules.traduction --telecharger` (le modèle, ~100 Mo, une seule fois) |
+| Première fois | `python -m modules.traduction --telecharger` (le grand modèle, ~1,3 Go, une seule fois) |
+| Comparer les deux modèles | `python -m modules.traduction --comparer "La prof nous a rendu un contrôle."` |
 | Essayer sans rien remplacer | `python -m modules.traduction --test` (tape dans Notes, regarde le Terminal ; si ça bloque, il affiche chaque étape avec la réponse de macOS) |
 | Une phrase, ici | `python -m modules.traduction --texte "Je cherche une alternance en banque."` |
 | Ça ne marche pas ? | `python -m modules.traduction --diagnostic` |
 
-**Sur ton Mac, rien ne sort** : la traduction est faite par un modèle libre (Argos Translate) qui tourne sur le Mac,
-en moins d'une seconde. Aucun appel à Claude, rien n'est envoyé ni gardé (ni touche, ni phrase) : le journal note
-seulement « Phrase traduite (Mail) », et `etat` le nombre de phrases du jour.
+**Sur ton Mac, rien ne sort** : la traduction est faite par un modèle libre qui tourne sur le Mac. Le **grand**
+(NLLB de Meta, ~1,3 Go) comprend le sens, en ~1 seconde par phrase ; le **petit** (Argos Translate, ~100 Mo)
+répond en 0,1 s mais traduit presque mot à mot. Le grand sert s'il est là ; pour revenir au petit :
+`"moteur": "argos"` dans reglages.json (modules → traduction), puis éteins et rallume 🇬🇧.
+Aucun appel à Claude, rien n'est envoyé ni gardé (ni touche, ni phrase) : le journal note seulement
+« Phrase traduite (Mail) », et `etat` le nombre de phrases du jour.
 
 **Ce qui n'est jamais traduit** : les phrases de moins de 3 mots (`mots_min` dans reglages.json), celles qui ne sont
 pas en français, les nombres (« 3.5 »), les adresses (« www.site.fr »), les points de suspension, les champs de mot

@@ -4,8 +4,9 @@ devient anglaise, là où tu écris. Traduction SUR TON MAC (aucun appel à Clau
 Sous le superviseur (sans option) : écoute le point en fond. Rien n'est gardé, ni touche ni phrase.
 
 À la main, dans ~/Assistant avec .venv activé :
-    python -m modules.traduction --telecharger      télécharge le modèle de traduction (une fois, ~100 Mo)
+    python -m modules.traduction --telecharger      télécharge le grand modèle de traduction (une fois, ~1,3 Go)
     python -m modules.traduction --texte "…"        traduit une phrase ici (sans rien toucher ailleurs)
+    python -m modules.traduction --comparer "…"     la même phrase par le grand et le petit modèle, côte à côte
     python -m modules.traduction --diagnostic       modèle, autorisations macOS, détection du français
     python -m modules.traduction --test             EN DIRECT, SANS RIEN REMPLACER : tape des phrases dans
                                                     Notes (par ex.) et vois ici ce qui serait traduit
@@ -24,7 +25,7 @@ from core.notifications import notifier
 from modules.traduction import parametres as p
 from modules.traduction.moteur import ModeleAbsent, Traducteur
 
-ALERTE_MODELE = ("La traduction attend son modèle (une seule fois, ~100 Mo) : dans le Terminal, "
+ALERTE_MODELE = ("La traduction attend son modèle (une seule fois, ~1,3 Go) : dans le Terminal, "
                  "python -m modules.traduction --telecharger")
 ALERTE_AUTORISATIONS = ("La traduction a besoin de deux autorisations : Réglages Système → Confidentialité et "
                         "sécurité → « Surveillance de l'entrée » ET « Accessibilité » → active « Python » dans les deux, "
@@ -145,13 +146,40 @@ def texte(phrase: str) -> int:
         print(f"   · ne serait pas traduite : {raison}")
         return 0
     try:
+        traducteur = Traducteur()
         debut = time.time()
-        anglais = finir_comme(Traducteur().traduire(phrase))
+        anglais = finir_comme(traducteur.traduire(phrase))
     except ModeleAbsent as e:
         print(f"⛔ {e}")
         return 1
-    print(f"🇬🇧 « {anglais} »  ({time.time() - debut:.1f} s, sur ton Mac)")
+    print(f"🇬🇧 « {anglais} »  ({time.time() - debut:.1f} s, {NOMS[traducteur.nom]}, sur ton Mac)")
     return 0
+
+
+NOMS = {"nllb": "grand modèle", "argos": "petit modèle"}
+
+
+def comparer(phrase: str) -> int:
+    """La même phrase par les deux modèles (ceux qui sont téléchargés), pour juger sur pièce."""
+    from modules.traduction.phrase import finir_comme
+
+    phrase = " ".join(phrase.split())
+    print(f"📝 « {phrase} »")
+    vus = 0
+    for nom in ("nllb", "argos"):
+        try:
+            traducteur = Traducteur(moteur=nom)
+        except ModeleAbsent:
+            continue
+        if traducteur.nom != nom:  # ce modèle-là n'est pas téléchargé
+            continue
+        debut = time.time()
+        anglais = finir_comme(traducteur.traduire(phrase))
+        print(f"   {NOMS[nom]:<13} « {anglais} »  ({time.time() - debut:.1f} s)")
+        vus += 1
+    if vus < 2:
+        print("   (un seul modèle est là ; le grand : python -m modules.traduction --telecharger)")
+    return 0 if vus else 1
 
 
 def diagnostic() -> int:
@@ -159,9 +187,13 @@ def diagnostic() -> int:
     from modules.yeux.__main__ import python_utilise
 
     ok = moteur.present()
-    print(("✅" if ok else "⛔") + f" Modèle de traduction : {'prêt' if ok else 'absent'} ({p.MODELE})")
-    if not ok:
-        print("   → python -m modules.traduction --telecharger")
+    grand, petit = moteur._dossier_nllb() is not None, moteur._dossier_modele() is not None
+    print(("✅" if grand else "⚠️ ") + f" Grand modèle (NLLB) : {'prêt' if grand else 'absent'} ({p.NLLB})")
+    print(("✅" if petit else "· ") + f" Petit modèle (Argos) : {'prêt' if petit else 'absent'} ({p.MODELE})")
+    print(f"   utilisé : {NOMS[p.moteur()] if (grand if p.moteur() == 'nllb' else petit) else 'celui qui est là'}"
+          f" (réglage modules.traduction.moteur = « {p.moteur()} »)")
+    if not grand:
+        print("   → le grand modèle : python -m modules.traduction --telecharger")
     if sys.platform != "darwin":
         print("⛔ La lecture des phrases ne marche que sur un Mac.")
         return 1
@@ -263,22 +295,28 @@ def main(argv: list[str]) -> int:
         return 0
     parser = argparse.ArgumentParser(prog="python -m modules.traduction", description="Traduction des phrases")
     modes = parser.add_mutually_exclusive_group(required=True)
-    modes.add_argument("--telecharger", action="store_true", help="télécharge le modèle (une fois)")
+    modes.add_argument("--telecharger", action="store_true", help="télécharge le grand modèle (une fois, ~1,3 Go)")
+    modes.add_argument("--telecharger-petit", action="store_true", help="télécharge le petit modèle (~100 Mo)")
     modes.add_argument("--texte", help="traduit une phrase ici")
+    modes.add_argument("--comparer", help="la même phrase par les deux modèles")
     modes.add_argument("--diagnostic", action="store_true", help="modèle, autorisations, détection")
     modes.add_argument("--test", action="store_true", help="en direct, sans rien remplacer")
     args = parser.parse_args(argv)
-    if args.telecharger:
-        from modules.traduction.moteur import telecharger
+    if args.telecharger or args.telecharger_petit:
+        from modules.traduction.moteur import telecharger, telecharger_nllb
 
         try:
-            telecharger()
+            (telecharger_nllb if args.telecharger else telecharger)()
         except Exception as e:  # réseau coupé, site indisponible… : rien n'est installé à moitié
             print(f"⛔ Téléchargement impossible : {e}")
             return 1
+        if args.telecharger:
+            print("   Si la traduction est allumée : éteins-la et rallume-la (icône 🇬🇧) pour passer au grand modèle.")
         return 0
     if args.texte is not None:
         return texte(args.texte)
+    if args.comparer is not None:
+        return comparer(args.comparer)
     if args.diagnostic:
         return diagnostic()
     return test()

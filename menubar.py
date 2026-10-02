@@ -301,7 +301,7 @@ class Icone(rumps.App):
 
         allumer = not config.charger()["modules"].get("traduction", {}).get("actif", False)
         if allumer and not moteur.present():
-            _fenetre(title="🇬🇧 Traduction : une étape avant", message="Le modèle de traduction (~100 Mo, sur ton Mac) "
+            _fenetre(title="🇬🇧 Traduction : une étape avant", message="Le modèle de traduction (~1,3 Go, sur ton Mac) "
                      "n'est pas encore téléchargé. Dans le Terminal :\n\npython -m modules.traduction --telecharger"
                      "\n\npuis reclique ici.", ok="Fermer")
             return
