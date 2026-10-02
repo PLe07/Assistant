@@ -21,6 +21,10 @@ AX_ERREURS = {-25200: "échec", -25201: "demande refusée", -25202: "élément d
               -25205: "pas proposé par cette appli", -25211: "accessibilité non autorisée", -25212: "rien à lire"}
 
 
+CHERCHE_PROFONDEUR, CHERCHE_MAX = 5, 200  # recherche du texte dans un cadre : bornée, pour rester rapide
+ARBRE_MAX = 40  # lignes du diagnostic
+
+
 def code(erreur: int) -> str:
     return f"erreur {erreur} : {AX_ERREURS.get(erreur, 'inconnue')}"
 
@@ -136,13 +140,67 @@ class Mac:
         return {"appli": str(appli.localizedName() or ""), "bundle": str(appli.bundleIdentifier() or ""),
                 "titre": str(titre or ""), "pid": pid}
 
-    def champ(self, pid: int | None = None):
-        """Le champ de texte où tu écris, ou None : demandé au système, puis à l'appli elle-même."""
+    def _focus(self, pid: int | None):
+        """L'élément qui a le clavier : demandé au système, puis à l'appli elle-même."""
         AS = _ax()
         element = self._attribut(AS.AXUIElementCreateSystemWide(), "AXFocusedUIElement")
         if element is None and pid:
             element = self._attribut(AS.AXUIElementCreateApplication(pid), "AXFocusedUIElement")
         return element
+
+    def _role(self, element) -> str:
+        return f"{self._attribut(element, 'AXRole') or '?'}/{self._attribut(element, 'AXSubrole') or '-'}"
+
+    def _enfants(self, element) -> list:
+        return list(self._attribut(element, "AXChildren") or [])
+
+    def _lisible(self, element) -> bool:
+        """Un vrai champ de texte : macOS donne son texte et la position du curseur."""
+        return self._lire(element, "AXSelectedTextRange")[0] == 0 and isinstance(self._attribut(element, "AXValue"), str)
+
+    def _texte_dedans(self, cadre):
+        """Le texte où tu écris, à l'intérieur d'un cadre : celui qui a le focus, sinon le seul qui existe.
+        Plusieurs sans focus : aucun (on ne devine jamais lequel modifier)."""
+        file, vus, trouves = [(cadre, 0)], 0, []
+        while file and vus < CHERCHE_MAX:
+            element, niveau = file.pop(0)
+            vus += 1
+            if niveau and self._lisible(element):
+                if self._attribut(element, "AXFocused"):
+                    return element
+                trouves.append(element)
+                continue
+            if niveau < CHERCHE_PROFONDEUR:
+                file.extend((enfant, niveau + 1) for enfant in self._enfants(element))
+        return trouves[0] if len(trouves) == 1 else None
+
+    def champ(self, pid: int | None = None):
+        """Le champ de texte où tu écris, ou None. Certaines applis (Pages…) donnent le cadre autour du texte :
+        le texte est alors cherché dedans."""
+        element = self._focus(pid)
+        if element is None or self._lisible(element):
+            return element
+        return self._texte_dedans(element) or element
+
+    def _arbre(self, cadre) -> list[str]:
+        """Ce que contient un élément, en abrégé (les rôles, jamais le texte) : pour le diagnostic."""
+        lignes = []
+
+        def visiter(element, niveau):
+            for enfant in self._enfants(element):
+                if len(lignes) >= ARBRE_MAX:
+                    return
+                marques = ["texte"] if isinstance(self._attribut(enfant, "AXValue"), str) else []
+                marques += ["curseur"] if self._lire(enfant, "AXSelectedTextRange")[0] == 0 else []
+                marques += ["focus"] if self._attribut(enfant, "AXFocused") else []
+                lignes.append("  " * niveau + f"└ {self._role(enfant)}" + (f" ({', '.join(marques)})" if marques else ""))
+                if niveau + 1 < CHERCHE_PROFONDEUR:
+                    visiter(enfant, niveau + 1)
+
+        visiter(cadre, 0)
+        if len(lignes) >= ARBRE_MAX:
+            lignes.append("… (la suite est coupée)")
+        return lignes or ["(vide)"]
 
     def sonder(self) -> list[str]:
         """Chaque étape de la lecture, avec la réponse de macOS : pour voir où ça bloque. Jamais le texte lui-même."""
@@ -157,6 +215,9 @@ class Mac:
         def reponse(erreur, ok):
             return f"✅ {ok}" if erreur == 0 else f"⛔ {code(erreur)}"
 
+        def oui_non(erreur, valeur, non="non"):
+            return f"⛔ {code(erreur)}" if erreur else "✅ oui" if valeur else f"⚠️ {non}"
+
         lignes = []
         try:
             erreur, _ = self._lire(AS.AXUIElementCreateSystemWide(), "AXFocusedApplication")
@@ -165,7 +226,7 @@ class Mac:
             for source, candidat in self._pids_devant():
                 erreur, devant = self._lire(AS.AXUIElementCreateApplication(candidat), "AXFrontmost")
                 lignes.append(f"appli devant ({source}) : {nom(candidat)} · elle confirme être devant : "
-                              + reponse(erreur, "oui" if devant else "non"))
+                              + oui_non(erreur, devant))
             pid = self._pid_devant()
             lignes.append("→ appli retenue : " + (nom(pid) if pid else "⛔ aucune"))
             erreur, _ = self._lire(AS.AXUIElementCreateSystemWide(), "AXFocusedUIElement")
@@ -173,16 +234,25 @@ class Mac:
             if pid:
                 erreur, _ = self._lire(AS.AXUIElementCreateApplication(pid), "AXFocusedUIElement")
                 lignes.append("champ (appli) : " + reponse(erreur, "trouvé"))
-            champ = self.champ(pid)
+            champ = self._focus(pid)
             if champ is None:
                 return lignes
-            role = f"{self._attribut(champ, 'AXRole') or '?'}/{self._attribut(champ, 'AXSubrole') or '-'}"
+            if not self._lisible(champ):
+                erreur, noms = AS.AXUIElementCopyAttributeNames(champ, None)
+                lignes.append(f"champ donné : {self._role(champ)}, sans texte lisible · ce qu'il sait dire : "
+                              + (", ".join(str(n).removeprefix("AX") for n in noms or []) if erreur == 0 else code(erreur)))
+                lignes.append("ce qu'il contient :")
+                lignes.extend(f"   {ligne}" for ligne in self._arbre(champ))
+                dedans = self._texte_dedans(champ)
+                lignes.append("→ texte trouvé dedans : " + (f"✅ {self._role(dedans)}" if dedans is not None else "⛔ aucun"))
+                champ = dedans if dedans is not None else champ
+            role = self._role(champ)
             erreur, texte = self._lire(champ, "AXValue")
             lignes.append(f"champ {role} · texte : " + reponse(erreur, f"{len(str(texte or ''))} caractères"))
             erreur, _ = self._lire(champ, "AXSelectedTextRange")
             lignes.append("curseur : " + reponse(erreur, "lu"))
             erreur, modifiable = AS.AXUIElementIsAttributeSettable(champ, "AXSelectedText", None)
-            lignes.append("remplaçable : " + reponse(erreur, "oui" if modifiable else "non (l'anglais sera copié)"))
+            lignes.append("remplaçable : " + oui_non(erreur, modifiable, "non (l'anglais sera copié)"))
         except Exception as e:  # le diagnostic ne doit jamais planter
             lignes.append(f"⛔ {type(e).__name__} : {e}")
         return lignes
