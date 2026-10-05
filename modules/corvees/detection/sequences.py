@@ -9,12 +9,46 @@ maximales (une sous-séquence qui n'a pas plus de soutien que sa grande sœur di
 from __future__ import annotations
 
 import math
+from array import array
 from collections import defaultdict
-from typing import Any
+from collections.abc import Iterable, Iterator, Sequence
+from typing import Any, overload
 
 from modules.corvees.detection.flux import Candidat, Flux
 
 Occurrence = tuple[int, int, int, int]  # (session, début, fin, parasites utilisés)
+
+
+class Occurrences(Sequence[Occurrence]):
+    """Les occurrences d'un motif, rangées serrées (4 entiers de 8 octets chacune) : les centaines de milliers
+    d'occurrences d'un mois chargé tiennent en quelques mégaoctets au lieu d'une centaine."""
+
+    __slots__ = ("_a",)
+
+    def __init__(self, occurrences: Iterable[Occurrence]):
+        self._a = array("q", [x for o in occurrences for x in o])
+
+    def __len__(self) -> int:
+        return len(self._a) // 4
+
+    @overload
+    def __getitem__(self, i: int) -> Occurrence: ...
+
+    @overload
+    def __getitem__(self, i: slice) -> list[Occurrence]: ...
+
+    def __getitem__(self, i: int | slice) -> Occurrence | list[Occurrence]:
+        if isinstance(i, slice):
+            return [self[j] for j in range(*i.indices(len(self)))]
+        if i < 0:
+            i += len(self)
+        if not 0 <= i < len(self):
+            raise IndexError(i)
+        a, k = self._a, 4 * i
+        return (a[k], a[k + 1], a[k + 2], a[k + 3])
+
+    def __iter__(self) -> Iterator[Occurrence]:
+        return zip(*[iter(self._a)] * 4, strict=False)
 
 
 def motifs_frequents(
@@ -24,7 +58,7 @@ def motifs_frequents(
     jours_min: int,
     parasites_max: int,
     sessions: list[int] | None = None,
-) -> dict[tuple[int, ...], list[Occurrence]]:
+) -> dict[tuple[int, ...], Sequence[Occurrence]]:
     """Tous les motifs de longueur_min à longueur_max présents au moins jours_min jours distincts."""
     choisies = sessions if sessions is not None else range(len(flux.sessions))
     jours = [s.jour for s in flux.sessions]
@@ -35,26 +69,29 @@ def motifs_frequents(
             jours_par_token[t].add(s.jour)
     frequents = {t for t, j in jours_par_token.items() if len(j) >= jours_min}
 
-    niveau: dict[tuple[int, ...], list[Occurrence]] = defaultdict(list)
+    premiers: dict[tuple[int, ...], list[Occurrence]] = defaultdict(list)
     for si in choisies:
         for i, t in enumerate(flux.sessions[si].ids):
             if t in frequents:
-                niveau[(t,)].append((si, i, i, 0))
+                premiers[(t,)].append((si, i, i, 0))
+    niveau: dict[tuple[int, ...], Sequence[Occurrence]] = dict(premiers)
 
-    resultats: dict[tuple[int, ...], list[Occurrence]] = {}
+    resultats: dict[tuple[int, ...], Sequence[Occurrence]] = {}
     tous_ids = [s.ids for s in flux.sessions]
     for longueur in range(2, longueur_max + 1):
-        suivant: dict[tuple[int, ...], list[Occurrence]] = defaultdict(list)
         # Un motif n'est fréquent que si sa fin (le motif sans son premier élément) l'est aussi : on ne prolonge
         # un motif que par les éléments qui prolongent déjà sa fin (même résultat, beaucoup moins de calcul).
         prolongements: dict[tuple[int, ...], set[int]] = defaultdict(set)
         if longueur > 2:
             for motif in niveau:
                 prolongements[motif[:-1]].add(motif[-1])
+        suivant: dict[tuple[int, ...], Sequence[Occurrence]] = {}
         for motif, occs in niveau.items():
             permis = prolongements.get(motif[1:]) if longueur > 2 else frequents
             if not permis:
                 continue
+            # Les prolongements d'un seul motif à la fois : seuls les fréquents sont gardés (la mémoire reste petite)
+            par_element: dict[int, list[Occurrence]] = defaultdict(list)
             for si, debut, fin, parasites in occs:
                 ids = tous_ids[si]
                 k = fin + 1
@@ -62,17 +99,17 @@ def motifs_frequents(
                     continue
                 t = ids[k]
                 if t in permis and t not in motif:
-                    suivant[motif + (t,)].append((si, debut, k, parasites))
+                    par_element[t].append((si, debut, k, parasites))
                 if parasites < parasites_max and k + 1 < len(ids):
                     t = ids[k + 1]
                     if t in permis and t not in motif:
-                        suivant[motif + (t,)].append((si, debut, k + 1, parasites + 1))
-        niveau = {}
-        for motif, occs in suivant.items():
-            if len(occs) < jours_min or len({jours[o[0]] for o in occs}) < jours_min:
-                continue  # trop peu de jours : inutile de dédoublonner
-            uniques = {(si, debut): (si, debut, fin, p) for si, debut, fin, p in occs}
-            niveau[motif] = list(uniques.values())
+                        par_element[t].append((si, debut, k + 1, parasites + 1))
+            for t, prolonges in par_element.items():
+                if len(prolonges) < jours_min or len({jours[o[0]] for o in prolonges}) < jours_min:
+                    continue  # trop peu de jours : inutile de dédoublonner
+                uniques = {(si, debut): (si, debut, fin, p) for si, debut, fin, p in prolonges}
+                suivant[motif + (t,)] = Occurrences(uniques.values())
+        niveau = suivant
         if longueur >= longueur_min:
             resultats.update(niveau)
         if not niveau:
@@ -80,11 +117,11 @@ def motifs_frequents(
     return resultats
 
 
-def _jours(flux: Flux, occs: list[Occurrence]) -> int:
+def _jours(flux: Flux, occs: Sequence[Occurrence]) -> int:
     return len({flux.sessions[si].jour for si, *_ in occs})
 
 
-def maximaux(flux: Flux, motifs: dict[tuple[int, ...], list[Occurrence]], tolerance: float) -> set[tuple[int, ...]]:
+def maximaux(flux: Flux, motifs: dict[tuple[int, ...], Sequence[Occurrence]], tolerance: float) -> set[tuple[int, ...]]:
     """Les motifs qu'aucun motif plus long n'explique (même soutien, à la tolérance près)."""
     soutien = {m: _jours(flux, o) for m, o in motifs.items()}
     absorbes: set[tuple[int, ...]] = set()

@@ -8,9 +8,14 @@ suivant (branché, ou batterie au-dessus de 30 %). « corvees pause » coupe tou
 
 from __future__ import annotations
 
+import json
+import os
 import sqlite3
+import subprocess
+import sys
 import time
 from collections.abc import Callable
+from pathlib import Path
 from typing import Any
 
 from modules.corvees import config, privacy
@@ -23,7 +28,10 @@ from modules.corvees.normalize import debut_du_jour, instant_du_jour, veille
 PAS_S = 0.5  # la boucle
 BATTEMENT_S = 60
 RELANCE_MAX_S = 300  # un capteur qui plante attend au plus 5 minutes avant d'être relancé
+RACINE = Path(__file__).resolve().parents[2]  # le dossier de l'Assistant (pour lancer l'analyse à part)
+ANALYSE_MAX_S = 45 * 60  # Claude compris (3 essais, et l'attente d'une pause après un quota)
 A_EFFACER = [
+    "analyse.log",
     "corvees.db",
     "corvees.db-*",
     "corvees.db.corrompue-*",
@@ -38,6 +46,12 @@ A_EFFACER = [
 TAMPON_MAX = 20000  # au-delà (disque plein longtemps), les plus anciens événements en attente sont abandonnés
 
 
+def occupee(e: Exception) -> bool:
+    """La base est verrouillée par un autre programme (la commande) : passager, rien n'est abîmé."""
+    texte = str(e).lower()
+    return isinstance(e, sqlite3.OperationalError) and ("locked" in texte or "busy" in texte)
+
+
 class Demon:
     def __init__(
         self,
@@ -46,10 +60,12 @@ class Demon:
         journal: Callable[[str], None] | None = None,
         capteurs: list[Capteur] | None = None,
         apres_analyse: Callable[[Demon, list[dict[str, Any]], float], None] | None = None,
+        isolee: bool = False,
     ):
         self.reglages = reglages or config.charger()[0]
         self.dossier = config.dossier_donnees(self.reglages)
-        self.journal = journal or (lambda message: None)
+        brut = journal or (lambda message: None)
+        self.journal = lambda message: brut(privacy.caviarder(message))  # un message d'erreur peut citer un secret
         self.gardien = privacy.Gardien(self.reglages, privacy.sel(self.dossier))
         self.base = Base(self.dossier / "corvees.db", self.gardien, journal=self.journal)
         self.natif = natif
@@ -62,6 +78,9 @@ class Demon:
         self.relance: dict[str, float] = {}  # capteur → instant avant lequel on ne le relance pas
         self.apres_analyse = apres_analyse
         self.capteurs_construits = capteurs is None
+        self.isolee = isolee
+        self.analyse: subprocess.Popen[str] | None = None
+        self.analyse_debut = 0.0
         self.capteurs = (
             capteurs
             if capteurs is not None
@@ -96,12 +115,18 @@ class Demon:
         except DisquePlein as e:
             self._dire_une_fois("disque", f"Disque plein : {len(paquet)} événements abandonnés ({e})")
             return 0
-        except sqlite3.DatabaseError as e:  # la base s'est abîmée en cours de route : on la reconstruit
+        except sqlite3.DatabaseError as e:
+            if occupee(e):  # la commande écrit en même temps : rien n'est abîmé, le paquet attend le prochain essai
+                self.tampon = (paquet + self.tampon)[-TAMPON_MAX:]
+                self._dire_une_fois("occupee", f"Base occupée ({e}) : les événements attendent le prochain essai")
+                return 0
+            # la base s'est abîmée en cours de route : on la reconstruit
             self.journal(f"Base illisible en écrivant ({e}) : reconstruction")
             self.base.fermer()
             self.base = Base(self.dossier / "corvees.db", self.gardien, journal=self.journal)
             n = self.base.ajouter(paquet)
         self.deja_dit.discard("disque")
+        self.deja_dit.discard("occupee")
         self.base.ecrire("session", self.session)
         return n
 
@@ -117,7 +142,7 @@ class Demon:
             try:
                 c.demarrer()
             except Exception as e:
-                c.degrader(f"démarrage impossible ({e.__class__.__name__} : {e})")
+                c.degrader(privacy.caviarder(f"démarrage impossible ({e.__class__.__name__} : {e})"))
                 self.relance[c.nom] = 0.0
 
     def arreter_capteurs(self) -> None:
@@ -146,7 +171,8 @@ class Demon:
                 c.erreurs += 1
                 attente = min(RELANCE_MAX_S, 2**c.erreurs)
                 self.relance[c.nom] = maintenant + attente
-                c.degrader(f"a planté ({e.__class__.__name__} : {e}) ; nouvel essai dans {attente} s")
+                panne = f"{e.__class__.__name__} : {e}"
+                c.degrader(privacy.caviarder(f"a planté ({panne}) ; nouvel essai dans {attente} s"))
                 self.journal(f"Capteur {c.nom} : {e.__class__.__name__} : {e} (nouvel essai dans {attente} s)")
 
     # --- la pause -------------------------------------------------------------------------------------------
@@ -196,6 +222,9 @@ class Demon:
 
     def analyser(self, maintenant: float) -> list[dict[str, Any]]:
         self.vider(maintenant)
+        if self.isolee:
+            self.lancer_analyse(maintenant)
+            return []
         candidats = analyser_base(self.base, self.reglages, maintenant, self.journal)
         if self.apres_analyse:
             try:
@@ -205,6 +234,15 @@ class Demon:
         return candidats
 
     # --- un tour de boucle ----------------------------------------------------------------------------------
+
+    def tour_protege(self, maintenant: float) -> None:
+        """Un tour ; si la commande occupe la base à ce moment-là, on réessaie au tour suivant."""
+        try:
+            self.tour(maintenant)
+        except sqlite3.OperationalError as e:
+            if not occupee(e):
+                raise  # une autre panne : le superviseur relancera le module
+            self._dire_une_fois("occupee", f"Base occupée ({e}) : nouvel essai au tour suivant")
 
     def tour(self, maintenant: float) -> None:
         if self.pause_demandee(maintenant):
@@ -228,6 +266,7 @@ class Demon:
             self.entretenir(maintenant)
             self.prevenir(maintenant)
         self.traiter_demande(maintenant)
+        self.suivre_analyse()
         if self.doit_analyser(maintenant):
             self.analyser(maintenant)
 
@@ -278,7 +317,60 @@ class Demon:
         except Exception as e:
             self._dire_une_fois("notification", f"Notification : {e.__class__.__name__} : {e}")
 
+    # --- l'analyse dans un programme à part (sous le superviseur) ---------------------------------------------
+
+    def lancer_analyse(self, maintenant: float) -> None:
+        """L'analyse et sa suite tournent à part : la mémoire du démon reste petite, ses capteurs continuent."""
+        if self.analyse is not None and self.analyse.poll() is None:
+            self.journal("Analyse précédente encore en cours : celle-ci attendra demain")
+            return
+        self.base.ecrire("derniere_analyse", maintenant)
+        sortie = self.dossier / "analyse.log"
+        with open(os.open(sortie, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600), "w") as f:
+            self.analyse = subprocess.Popen(
+                [sys.executable, "-m", "modules.corvees.analyse", repr(maintenant)],
+                stdin=subprocess.PIPE,
+                stdout=f,
+                stderr=subprocess.STDOUT,
+                cwd=RACINE,
+                text=True,
+            )
+        assert self.analyse.stdin is not None
+        self.analyse.stdin.write(json.dumps(self.reglages))
+        self.analyse.stdin.close()
+        self.analyse_debut = time.monotonic()
+        self.journal(f"Analyse lancée à part (pid {self.analyse.pid})")
+
+    def suivre_analyse(self) -> None:
+        """L'analyse à part est-elle finie ? Ses messages rejoignent le journal du démon."""
+        if self.analyse is None:
+            return
+        code = self.analyse.poll()
+        if code is None:
+            if time.monotonic() - self.analyse_debut < ANALYSE_MAX_S:
+                return
+            self.analyse.kill()
+            code = self.analyse.wait()
+            self.journal(f"Analyse arrêtée : plus de {ANALYSE_MAX_S // 60} minutes")
+        sortie = self.dossier / "analyse.log"
+        try:
+            for ligne in sortie.read_text(encoding="utf-8", errors="replace").splitlines()[-40:]:
+                if ligne.strip():
+                    self.journal(ligne.strip())
+            sortie.unlink()
+        except OSError:
+            pass
+        if code != 0:
+            self.journal(f"Analyse : échec (code {code}), nouvel essai à la prochaine analyse")
+        self.analyse = None
+
     def fermer(self, maintenant: float | None = None) -> None:
+        if self.analyse is not None and self.analyse.poll() is None:
+            self.analyse.terminate()  # le module s'arrête : son analyse aussi
+            try:
+                self.analyse.wait(10)
+            except subprocess.TimeoutExpired:
+                self.analyse.kill()
         self.arreter_capteurs()
         self.vider(maintenant or time.time())
         self.base.fermer()
@@ -288,8 +380,10 @@ def analyser_base(
     base: Base, reglages: dict[str, Any], maintenant: float, journal: Callable[[str], None] | None = None
 ) -> list[dict[str, Any]]:
     """L'analyse des 30 derniers jours : les corvées repérées sont enregistrées dans la base et renvoyées."""
+    from modules.corvees.detection.moteur import ATTRIBUTS_UTILES
+
     depuis = maintenant - int(reglages["detection"]["fenetre_jours"]) * 86400
-    evenements = base.evenements(depuis)
+    evenements = base.evenements(depuis, attrs_pour=ATTRIBUTS_UTILES)
     candidats = analyser(evenements, reglages, base.decisions(), maintenant, fin=maintenant)
     base.enregistrer_candidats(candidats, maintenant)
     base.ecrire("derniere_analyse", maintenant)
@@ -336,12 +430,12 @@ def boucle(ctx: Any) -> None:
     reglages, erreurs = config.charger()
     for e in erreurs:
         ctx.log.warning(e)
-    demon = Demon(reglages, natif(), journal=ctx.log.info, apres_analyse=apres_analyse)
+    demon = Demon(reglages, natif(), journal=ctx.log.info, apres_analyse=apres_analyse, isolee=True)
     demon.demarrer_capteurs()
     ctx.log.info("Détecteur de corvées : %d capteurs", len(demon.capteurs))
     try:
         while not ctx.arret.is_set():
-            demon.tour(time.time())
+            demon.tour_protege(time.time())
             if demon.natif is not None:
                 demon.natif.pomper(PAS_S)  # laisse macOS tenir à jour l'appli au premier plan
             else:

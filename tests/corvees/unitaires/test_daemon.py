@@ -343,3 +343,154 @@ def test_une_notification_qui_plante_ne_fait_rien_tomber(demon):
         demon.tour(t)
         demon.tour(t + 61)
     assert sum("Notification : RuntimeError" in m for m in demon.messages) == 1
+
+
+# --- Revue hostile (P10) ------------------------------------------------------------------------------------------
+
+
+def test_base_occupee_par_la_commande_rien_ne_se_perd(demon):
+    """« database is locked » (la commande écrit en même temps) n'est pas une base abîmée : on garde le paquet."""
+    demon.recevoir(Evenement(1, "x", "app", "app:A"))
+    vraie = demon.base
+    with mock.patch.object(vraie, "ajouter", side_effect=sqlite3.OperationalError("database is locked")):
+        assert demon.vider(2) == 0
+        demon.recevoir(Evenement(3, "x", "app", "app:B"))
+        assert demon.vider(4) == 0
+    assert demon.base is vraie and [e.token for e in demon.tampon] == ["app:A", "app:B"]
+    assert sum("occupée" in m for m in demon.messages) == 1 and not any("reconstruction" in m for m in demon.messages)
+    assert demon.vider(5) == 2 and demon.tampon == []
+
+
+def test_un_tour_sur_base_occupee_ne_fait_pas_tomber_la_boucle(demon):
+    with mock.patch.object(demon.base, "lire", side_effect=sqlite3.OperationalError("database is locked")):
+        demon.tour_protege(ts(5, 10))
+        demon.tour_protege(ts(5, 10, 1))
+    assert sum("occupée" in m for m in demon.messages) == 1
+    with mock.patch.object(demon.base, "lire", side_effect=sqlite3.OperationalError("no such table: etat")):
+        with pytest.raises(sqlite3.OperationalError):
+            demon.tour_protege(ts(5, 10, 2))  # une autre panne : le superviseur relancera
+
+
+def test_le_journal_est_caviarde(tmp_path):
+    reglages, _ = config.charger({"dossier": str(tmp_path / "d")})
+    messages = []
+    d = daemon.Demon(reglages, natif=None, journal=messages.append, capteurs=[])
+    bavard = Bavard(reglages, d.recevoir, d.base)
+    bavard.relever = mock.Mock(side_effect=OSError("échec avec le jeton sk-ant-api03-abcdefghijklmnopqrstu"))
+    d.capteurs = [bavard]
+    d.relever(ts(5, 10))
+    assert messages and all("sk-ant" not in m for m in messages) and "[secret]" in messages[0]
+    assert "sk-ant" not in bavard.detail  # l'état de santé (doctor) aussi
+    d.base.fermer()
+
+
+# --- L'analyse du soir dans un programme à part (la mémoire du démon reste petite) -----------------------------
+
+
+@pytest.fixture
+def isole(tmp_path):
+    reglages, _ = config.charger(
+        {"dossier": str(tmp_path / "d"), "ia": {"actif": False}, "notifications": {"vers_journal": True}}
+    )
+    messages = []
+    d = daemon.Demon(reglages, natif=None, journal=messages.append, capteurs=[], isolee=True)
+    d.messages = messages
+    yield d
+    d.fermer(ts(5, 22))
+
+
+def attendre_la_fin(d, secondes=60):
+    import time as horloge
+
+    fin = horloge.monotonic() + secondes
+    while d.analyse is not None and horloge.monotonic() < fin:
+        horloge.sleep(0.2)
+        d.suivre_analyse()
+    assert d.analyse is None, "l'analyse à part n'a pas fini"
+
+
+def test_l_analyse_du_soir_tourne_a_part(isole):
+    for jour in range(1, 6):
+        isole.base.ajouter(
+            [
+                Evenement(
+                    ts(jour, 15),
+                    "fichiers",
+                    "fmove",
+                    "fmove:Downloads→Documents/Factures [pdf, Facture_*]",
+                    {"fichier": f"f{jour}"},
+                    jour,
+                )
+            ]
+        )
+    isole.tour(ts(5, 21, 5))
+    assert isole.analyse is not None and isole.base.lire("derniere_analyse") == ts(5, 21, 5)
+    attendre_la_fin(isole)
+    assert len(isole.base.candidats()) == 1
+    assert (isole.dossier / "rapport.html").exists() and not (isole.dossier / "analyse.log").exists()
+    assert any("1 corvées repérées" in m for m in isole.messages)  # le message de l'analyse, repris par le démon
+    assert (isole.dossier / "notifications.log").exists()  # la suite du soir a eu lieu, notification comprise
+
+
+def test_une_analyse_a_part_qui_echoue(isole, tmp_path):
+    faux = tmp_path / "faux_python"
+    faux.write_text("#!/bin/sh\necho 'Traceback : panne imitée'\nexit 3\n")
+    faux.chmod(0o755)
+    with mock.patch.object(daemon.sys, "executable", str(faux)):
+        isole.analyser(ts(5, 21, 5))
+    attendre_la_fin(isole)
+    assert any("panne imitée" in m for m in isole.messages)
+    assert any("échec (code 3)" in m for m in isole.messages)
+
+
+def test_une_analyse_a_part_trop_longue_est_arretee_et_une_seule_a_la_fois(isole, tmp_path):
+    faux = tmp_path / "faux_python"
+    faux.write_text("#!/bin/sh\nsleep 30\n")
+    faux.chmod(0o755)
+    with mock.patch.object(daemon.sys, "executable", str(faux)):
+        isole.analyser(ts(5, 21, 5))
+        premiere = isole.analyse
+        isole.analyser(ts(5, 21, 6))
+        assert isole.analyse is premiere and any("encore en cours" in m for m in isole.messages)
+    with mock.patch.object(daemon, "ANALYSE_MAX_S", 0):
+        isole.suivre_analyse()
+    assert isole.analyse is None and any("Analyse arrêtée" in m for m in isole.messages)
+
+
+def test_le_module_s_arrete_son_analyse_aussi(isole, tmp_path):
+    faux = tmp_path / "faux_python"
+    faux.write_text("#!/bin/sh\nsleep 30\n")
+    faux.chmod(0o755)
+    with mock.patch.object(daemon.sys, "executable", str(faux)):
+        isole.analyser(ts(5, 21, 5))
+    processus = isole.analyse
+    isole.fermer(ts(5, 21, 6))
+    assert processus.poll() is not None
+    isole.base = daemon.ouvrir(isole.reglages)  # pour la fixture
+    isole.analyse = None
+
+
+@pytest.mark.parametrize(("mois", "jour"), [(3, 29), (10, 25)])  # journées de 23 h et de 25 h
+def test_une_analyse_par_soir_a_21_h_meme_au_changement_d_heure(demon, mois, jour):
+    from modules.corvees.normalize import local
+
+    faites = []
+
+    def analyser(t):
+        faites.append(t)
+        demon.base.ecrire("derniere_analyse", t)
+        return []
+
+    demon.analyser = analyser
+    debut = datetime(2026, mois, jour - 1, 12, tzinfo=PARIS).timestamp()
+    demon.base.ecrire("derniere_analyse", debut)
+    t = debut
+    while t < debut + 3 * 86400:  # un tour toutes les 5 minutes pendant 3 jours
+        if demon.doit_analyser(t):
+            demon.analyser(t)
+        t += 300
+    assert [(local(a).day, local(a).hour, local(a).minute) for a in faites] == [
+        (jour - 1, 21, 0),
+        (jour, 21, 0),
+        (jour + 1, 21, 0),
+    ]

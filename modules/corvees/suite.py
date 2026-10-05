@@ -35,6 +35,9 @@ def traiter(
         descriptions = ia.decrire(
             base, candidats, reglages, maintenant, demander=demander, dormir=dormir, journal=journal
         )
+        if not base.toujours_la():  # tu as tout effacé pendant l'appel à Claude : on n'écrit plus rien
+            journal("Suite de l'analyse abandonnée : tes données ont été effacées entre-temps (purge)")
+            return {}
         for c in candidats:
             d = descriptions.get(c["signature"])
             if d is not None:

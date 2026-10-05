@@ -9,9 +9,11 @@ from __future__ import annotations
 
 import json
 import os
+import secrets
 import sqlite3
 import time
 from collections.abc import Iterable, Iterator
+from contextlib import closing
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -46,7 +48,7 @@ CREATE TABLE IF NOT EXISTS etat (cle TEXT PRIMARY KEY, valeur TEXT, maj REAL);
 """
 
 
-@dataclass
+@dataclass(slots=True)  # sans dictionnaire par objet : 30 jours d'événements tiennent en mémoire sans peine
 class Evenement:
     ts: float
     source: str  # le capteur : apps, fenetres, fichiers, shell, navigateur, pressepapiers, inactivite
@@ -54,6 +56,9 @@ class Evenement:
     token: str  # forme normalisée : « app:Numbers », « fmove:Downloads→Documents/Factures [pdf, Facture_*] »
     attrs: dict[str, Any] = field(default_factory=dict)
     session_id: int | None = None
+
+
+_VIDE: dict[str, Any] = {}  # les attributs vides des événements lus : partagés, donc jamais modifiés
 
 
 class DisquePlein(Exception):
@@ -74,6 +79,10 @@ class Base:
         self.journal = journal  # fonction(message) : où dire qu'une base a été reconstruite
         self.chemin.parent.mkdir(mode=0o700, parents=True, exist_ok=True)  # créé : lisible par toi seul
         self.db = self._connecter()
+        self.naissance = self.lire("naissance")
+        if not self.naissance:  # une marque unique : une base effacée puis recréée (purge) n'est plus la même
+            self.naissance = secrets.token_hex(8)
+            self.ecrire("naissance", self.naissance)
 
     # --- ouverture, réparation -------------------------------------------------------------------------------
 
@@ -110,6 +119,16 @@ class Base:
     def fermer(self) -> None:
         self.db.close()
 
+    def toujours_la(self) -> bool:
+        """Le fichier sur le disque est-il encore cette base-ci ? (une purge a pu l'effacer et la recréer)"""
+        try:
+            uri = self.chemin.resolve().as_uri() + "?mode=ro"
+            with closing(sqlite3.connect(uri, uri=True, timeout=5)) as autre:
+                ligne = autre.execute("SELECT valeur FROM etat WHERE cle = 'naissance'").fetchone()
+        except (sqlite3.Error, OSError):
+            return False
+        return ligne is not None and json.loads(ligne[0]) == self.naissance
+
     # --- événements --------------------------------------------------------------------------------------------
 
     def ajouter(self, evenements: Iterable[Evenement]) -> int:
@@ -145,17 +164,34 @@ class Base:
             raise
         return len(lignes)
 
-    def evenements(self, depuis: float, jusqua: float | None = None) -> list[Evenement]:
-        return list(self.iterer(depuis, jusqua))
+    def evenements(
+        self, depuis: float, jusqua: float | None = None, attrs_pour: tuple[str, ...] | None = None
+    ) -> list[Evenement]:
+        return list(self.iterer(depuis, jusqua, attrs_pour))
 
-    def iterer(self, depuis: float, jusqua: float | None = None) -> Iterator[Evenement]:
+    def iterer(
+        self, depuis: float, jusqua: float | None = None, attrs_pour: tuple[str, ...] | None = None
+    ) -> Iterator[Evenement]:
+        """Les événements dans l'ordre. attrs_pour : ne lire les attributs que de ces sortes d'événements (l'analyse
+        n'en a besoin que pour les fichiers : la mémoire reste petite)."""
         requete = "SELECT ts, source, kind, token, attrs, session_id FROM events WHERE ts >= ?"
         valeurs: list[Any] = [depuis]
         if jusqua is not None:
             requete += " AND ts < ?"
             valeurs.append(jusqua)
+        # Des centaines de milliers d'événements, quelques milliers de tokens différents : chaque texte n'est gardé
+        # qu'une fois en mémoire, et les attributs vides (la plupart) partagent le même dictionnaire, en lecture seule.
+        textes: dict[str, str] = {}
+        sessions: dict[int, int] = {}
         for ts, source, kind, token, attrs, session in self.db.execute(requete + " ORDER BY ts, id", valeurs):
-            yield Evenement(ts, source, kind, token, json.loads(attrs), session)
+            yield Evenement(
+                ts,
+                textes.setdefault(source, source),
+                textes.setdefault(kind, kind),
+                textes.setdefault(token, token),
+                _VIDE if attrs == "{}" or (attrs_pour is not None and kind not in attrs_pour) else json.loads(attrs),
+                session if session is None else sessions.setdefault(session, session),
+            )
 
     def compter(self) -> int:
         return int(self.db.execute("SELECT COUNT(*) FROM events").fetchone()[0])

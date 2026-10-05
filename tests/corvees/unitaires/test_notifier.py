@@ -123,3 +123,33 @@ def test_memoire_bornee(base, reglages):
             notifier.preparer(base, [candidat(jour)], {}, ts(jour, 21))
             notifier.tenter(base, reglages, ts(jour, 21), afficher=Affiche())
     assert base.lire("notifiees") == ["sig3", "sig4", "sig5"]
+
+
+def test_deux_fils_en_meme_temps_une_seule_notification(base, reglages, tmp_path):
+    """Le démon (au battement) et la suite du soir (après l'analyse) peuvent tenter en même temps."""
+    import threading
+    import time
+
+    from modules.corvees.db import Base
+
+    notifier.preparer(base, [candidat(1)], {}, ts(5, 21))
+    vues = []
+
+    def lente(titre, message):
+        time.sleep(0.2)
+        vues.append(titre)
+        return True
+
+    def tenter():  # chaque fil a sa propre connexion, comme le démon et la suite
+        b = Base(base.chemin, base.gardien)
+        try:
+            notifier.tenter(b, reglages, ts(5, 21), afficher=lente)
+        finally:
+            b.fermer()
+
+    fils = [threading.Thread(target=tenter) for _ in range(2)]
+    for f in fils:
+        f.start()
+    for f in fils:
+        f.join()
+    assert len(vues) == 1

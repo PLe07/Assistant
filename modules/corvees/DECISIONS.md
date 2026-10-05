@@ -346,3 +346,52 @@ Résultat : 5,4 à 6,7 s sur cette machine lente.
 `KeepAlive` et `ThrottleInterval` de 30 s) : 1 minute après une chute, puis 5, puis 15. C'est la règle de tous les
 modules de l'Assistant, gardée telle quelle plutôt qu'un second LaunchAgent (D-02). Le test de relance a été fait
 avec les délais d'essai de l'Assistant (`ASSISTANT_TEST_DELAIS=5,5,5`).
+
+## 2026-10-05 · P10 — Revue hostile
+
+Chaque défaut ci-dessous a d'abord été reproduit par un test qui échouait, puis corrigé.
+
+**D-47 · Base occupée ≠ base abîmée.** SQLite signale « database is locked » quand la commande écrit au même
+moment. Cette erreur est une sorte de « DatabaseError » : le démon la prenait pour une base abîmée, la rouvrait, et
+la boucle tombait avec ses événements en attente.
+- Désormais, le paquet attend le prochain essai, et on le dit une seule fois.
+- Un tour qui tombe sur une base occupée est simplement refait au tour suivant (`tour_protege`).
+- Toute autre panne reste fatale : le superviseur relance le module.
+
+**D-48 · Messages d'erreur caviardés.** Une exception peut citer un chemin ou un secret. Tout ce que le démon
+écrit dans le journal, et le détail d'état de santé affiché par `doctor`, passe par le caviardage.
+
+**D-49 · Une seule notification, même à deux fils.** Le démon (au battement) et la suite du soir peuvent tenter
+au même instant. Un verrou entoure désormais la vérification et l'envoi.
+
+**D-50 · Une purge pendant la suite du soir.** Chaque base reçoit une marque de naissance unique. Après l'appel
+à Claude, la suite vérifie que la base sur le disque est toujours la même, avec une connexion neuve en lecture
+seule (un numéro de fichier peut être réutilisé). Sinon, elle n'écrit plus rien : aucun fichier orphelin après
+une purge.
+
+**D-51 · Mémoire : l'analyse du soir dans un programme à part.** Mesure faite : l'analyse de 208 000 événements
+lus en base montait à 317 Mo, pour un budget de 120 Mo. Trois réductions, sans changer les résultats (comparés
+sur 6 cas) :
+- événements compacts (`slots`, textes partagés, attributs décodés seulement pour les fichiers) : 143 → 27 Mo ;
+- recherche de motifs qui ne garde que les prolongements fréquents d'un motif à la fois, en tableaux serrés.
+  Elle est aussi deux fois plus rapide ;
+- pic total : 124 Mo.
+
+Ce n'est pas assez sûr : sur le Mac, le démon charge aussi les bibliothèques d'Apple (pyobjc). L'analyse et sa
+suite (Claude, propositions, rapport, notification) tournent donc dans un programme à part, lancé par le démon
+(`python -m modules.corvees.analyse`).
+- Le démon reste à environ 30 Mo, et ses capteurs continuent pendant l'analyse.
+- Toute la mémoire de l'analyse est rendue au système dès qu'elle finit.
+- Les réglages passent par l'entrée standard. Les messages reviennent dans le journal du démon.
+- L'analyse est arrêtée au-delà de 45 minutes, et avec le module.
+- Le démon n'en lance jamais deux à la fois.
+
+**D-52 · Points vérifiés sans défaut.**
+- Copie des historiques de navigateur : dossier temporaire en 700, effacé ensuite.
+- File thread-safe entre watchdog et le démon.
+- Navigation privée : jamais écrite dans l'historique.
+- Titres de fenêtres : jamais dans les corvées (non-actions), donc jamais envoyés à Claude.
+- Jeton Claude sous launchd : lu dans le `.env` par l'Assistant lui-même ; le binaire `claude` est trouvé sans
+  le PATH du shell.
+- Mise en veille : session coupée, analyse au réveil, notification retenue la nuit.
+- Changement d'heure : une analyse par soir, à 21 h heure de Paris, les deux jours de changement (testé).

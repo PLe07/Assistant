@@ -14,6 +14,7 @@ from modules.corvees.detection.flux import Candidat, Flux, preparer
 from modules.corvees.normalize import local
 
 # Quand deux détecteurs voient la même corvée, le type le plus parlant l'emporte.
+ATTRIBUTS_UTILES = fichiers.SORTES  # les seuls événements dont l'analyse lit les attributs (les parcours de fichiers)
 PRIORITE = {"fichiers": 5, "shell": 4, "pont": 3, "routine": 2, "sequence": 1}
 JOURS_COURTS = ["lun.", "mar.", "mer.", "jeu.", "ven.", "sam.", "dim."]
 

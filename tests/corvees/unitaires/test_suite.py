@@ -67,3 +67,19 @@ def test_traiter_ecrit_le_rapport_et_prevoit_la_notification(reglages):
     base = ouvrir(reglages)
     assert base.lire("notification_en_attente") is None  # prevenir=False : rien de préparé
     base.fermer()
+
+
+def test_une_purge_pendant_la_suite_ne_laisse_rien_derriere(reglages):
+    """La suite du soir tourne dans un fil ; si tu purges pendant ce temps, elle n'écrit plus rien."""
+    from modules.corvees import daemon, propositions, rapport
+
+    journal = []
+
+    def decrire_puis_purge(base, candidats, *a, **k):
+        daemon.effacer_donnees(reglages)  # la purge arrive pendant l'appel à Claude
+        return {c["signature"]: {"titre_court": "x"} for c in candidats}
+
+    with mock.patch.object(suite.ia, "decrire", side_effect=decrire_puis_purge):
+        assert suite.traiter(reglages, [candidat(1)], SOIR, journal.append) == {}
+    assert not propositions.racine(reglages).exists() and not rapport.chemin(reglages).exists()
+    assert any("purge" in m for m in journal)

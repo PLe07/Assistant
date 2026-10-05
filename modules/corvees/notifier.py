@@ -8,6 +8,7 @@ mode test (réglage notifications.vers_journal), elle est écrite dans notificat
 
 from __future__ import annotations
 
+import threading
 import time
 from collections.abc import Callable
 from typing import Any
@@ -16,6 +17,7 @@ from modules.corvees import config
 from modules.corvees.normalize import debut_du_jour, local
 
 REESSAI_S = 15 * 60
+_VERROU = threading.Lock()
 MEMOIRE_MAX = 500  # signatures déjà annoncées, gardées pour ne pas répéter
 
 
@@ -87,6 +89,17 @@ def tenter(
     journal: Callable[[str], None] | None = None,
 ) -> bool:
     """Envoie la notification en attente si c'est permis. Renvoie True si elle est partie."""
+    with _VERROU:  # le démon (au battement) et la suite du soir peuvent tenter au même moment
+        return _tenter(base, reglages, maintenant, afficher, journal)
+
+
+def _tenter(
+    base: Any,
+    reglages: dict[str, Any],
+    maintenant: float,
+    afficher: Callable[[str, str], bool] | None,
+    journal: Callable[[str], None] | None,
+) -> bool:
     attente = base.lire("notification_en_attente")
     if not attente or en_silence(reglages, maintenant):
         return False

@@ -158,7 +158,7 @@ def refuser(ctx: Contexte, args: argparse.Namespace) -> int:
         return 1
     maintenant = ctx.maintenant
     depuis = maintenant - int(ctx.reglages["detection"]["fenetre_jours"]) * 86400
-    reference = frequence_actuelle(ctx.base.evenements(depuis), ctx.reglages, c["tokens"], maintenant)
+    reference = frequence_actuelle(ctx.base.evenements(depuis, attrs_pour=()), ctx.reglages, c["tokens"], maintenant)
     ctx.base.decider(c["signature"], c["id"], "reject", None, reference, c["tokens"])
     print("🗑 Refusée. Je ne te la reproposerai pas, sauf si elle devient 3 fois plus fréquente.")
     _rafraichir_rapport(ctx)
