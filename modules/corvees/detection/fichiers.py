@@ -14,7 +14,7 @@ from typing import Any
 from modules.corvees.detection.flux import Candidat, Flux
 from modules.corvees.normalize import jour_de
 
-SORTES = ("fcreate", "fmove", "fren", "fconv")
+SORTES = ("fcreate", "fmove", "fren", "fconv", "fdel")
 LIEN_MAX_S = 1800  # deux étapes d'une même chaîne : à moins de 30 min
 
 

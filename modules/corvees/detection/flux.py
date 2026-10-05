@@ -13,7 +13,7 @@ from modules.corvees.db import Evenement
 from modules.corvees.normalize import jour_de, jour_semaine
 
 # Ces événements ne sont pas des actions : ils ne font partie d'aucune corvée.
-NON_ACTIONS = ("inactif", "fen")
+NON_ACTIONS = ("inactif", "fen", "copie")
 
 
 @dataclass

@@ -210,6 +210,10 @@ def tok_conversion(dossier: str, source: str, cible: str, maison: str | None = N
     return f"fconv:{lieu(dossier, maison)} [{extension(source)}→{extension(cible)}, {motif_nom(cible)}]"
 
 
+def tok_suppression(dossier: str, nom: str, maison: str | None = None) -> str:
+    return f"fdel:{lieu(dossier, maison)} [{extension(nom)}, {motif_nom(nom)}]"
+
+
 def tok_commande(commande: str, maison: str | None = None) -> str:
     return f"cmd:{commande_normalisee(commande, maison)}"
 

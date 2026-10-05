@@ -98,6 +98,7 @@ DEFAUTS: dict[str, Any] = {
             "fren": 20,
             "fcreate": 5,
             "fconv": 40,
+            "fdel": 8,
             "clip": 12,
             "cmd": 8,  # par commande (une ligne « a && b » en compte deux)
         },

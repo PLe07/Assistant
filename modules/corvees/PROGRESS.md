@@ -9,6 +9,7 @@ Porte unique : `modules/corvees/check.sh` (dans le conteneur : `PYTHON=<venv>/bi
 | P1 Données, config, vie privée | ✅ | 112 tests, couverture 99 % |
 | P2 Normalisation + simulateur de vie | ✅ | 6 tests du simulateur |
 | P3 Détecteurs, score, mémoire | ✅ | 100 % / 100 % sur 5 graines × 2 jeux ; 208 k événements en ~6 s |
+| P4 Capteurs C1-C6 + inactivité | ✅ | 26 tests (vrais fichiers, vraies bases SQLite, vraie surveillance) |
 
 ## P0 — Reconnaissance (✅)
 
@@ -95,4 +96,20 @@ performance : 208 534 événements analysés en ~6 s (< 10 s)
 CHECK OK
 ```
 
-**Prochaine étape :** P4 — capteurs réels C1 à C6 derrière leurs interfaces (modes dégradés, fixtures).
+## P4 — Capteurs (✅)
+
+`capteurs/` : apps (C1), fenetres (C2), fichiers (C3), shell (C4), navigateur (C5), pressepapiers (C6),
+inactivite ; `natif.py` isole tout l'accès à macOS (hors couverture, remplacé par une imitation). Chaque capteur a
+un statut ok / dégradé / désactivé avec la raison. Testés pour de vrai ici : surveillance des dossiers (watchdog,
+inotify), mode dégradé sans watchdog (instantanés), historique zsh (format étendu, multi-lignes, octets « méta »,
+réécriture), bases Chrome et Safari construites dans le test (curseur, transitions ignorées, Safari sans accès).
+
+```
+$ modules/corvees/check.sh
+✅ ruff · ✅ format · ✅ mypy (27 fichiers)
+170 passed · Total coverage: 98.04%
+simulation 16 passed · performance 1 passed · CHECK OK
+```
+
+**Prochaine étape :** P5 — démon (superviseur de l'Assistant), écritures groupées, battement, pause, analyse à 21 h
+ou au réveil, purge, relance des capteurs, robustesse.

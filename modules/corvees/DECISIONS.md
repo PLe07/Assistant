@@ -150,3 +150,37 @@ et ensuite. Une variante proposée d'abord (6 fois par mois) faisait croire au r
 par 3 ne pourra jamais l'atteindre. Les fenêtres du calcul de hasard sont comptées une fois par longueur, et le
 créneau est cherché par fenêtre glissante incrémentale. Pour 208 000 événements, l'analyse passe de 73 s à
 environ 6 s.
+
+## 2026-10-05 · P4 — Capteurs
+
+**D-23 · C1, relevé toutes les 2 s plutôt qu'abonnement aux notifications.** On interroge NSWorkspace
+(`frontmostApplication`) toutes les 2 secondes, et la boucle principale du démon fait tourner la boucle
+d'événements de macOS, sans quoi la liste des applis ne se met pas à jour. Le résultat est le même qu'avec
+`didActivateApplicationNotification`, mais sans observateur à gérer, et c'est testable. En secours, on prend le
+propriétaire de la fenêtre la plus en avant (CGWindowList, sans autorisation).
+*Écarté :* `osascript` / System Events, qui déclenche une demande d'autorisation « Automatisation ».
+
+**D-24 · Premier passage : à partir de maintenant.** Les historiques zsh et des navigateurs ne sont pas lus dans
+le passé : le détecteur observe à partir de son installation. Les corvées apparaissent donc au bout de quelques
+jours, ce qui est le comportement attendu d'un observateur.
+
+**D-25 · zsh, détection d'une réécriture.** Le curseur garde aussi l'empreinte des 64 octets qui le précèdent.
+Linux et macOS peuvent redonner le même numéro de fichier (inode) à un historique réécrit, et le nouveau fichier
+peut être plus long que l'ancien : sans cette empreinte, la réécriture passait inaperçue (vu en test). Une ligne
+sans horodatage, relue après une réécriture, n'est jamais redonnée.
+
+**D-26 · Fichiers : appariement symétrique, suppressions, corbeille.**
+- Créations et suppressions attendent 2 s. « Supprimé ici, recréé là-bas sous le même nom » devient un
+  déplacement, dans un sens comme dans l'autre : entre deux dossiers surveillés séparément, le système peut
+  signaler les deux dans n'importe quel ordre (vu en test).
+- Une suppression seule devient `fdel`. Un déplacement vers la corbeille ressemble à une suppression, car
+  ~/.Trash exige l'Accès complet au disque. On ne prétend donc pas savoir que c'était la corbeille.
+- Les fichiers temporaires et cachés sont ignorés (sauf la corbeille comme destination), ainsi que tout ce qui
+  dépasse la profondeur réglée.
+- Une conversion : le même nom de fichier, avec une autre extension, juste à côté (des fichiers seulement, pas un
+  dossier homonyme).
+
+**D-27 · Presse-papiers.** Chaque copie donne un événement « copie », gardé mais ignoré par la détection. Le pont
+A → B est noté quand on change d'appli moins de 2 minutes après. Les types « secret », « éphémère » et
+« auto-généré » des gestionnaires de mots de passe sont ignorés entièrement. On ne garde jamais le contenu :
+seulement sa longueur et une empreinte HMAC.
