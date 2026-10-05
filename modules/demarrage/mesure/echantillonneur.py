@@ -16,6 +16,7 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Any
 
+from modules.demarrage.collecteurs import ouverture_session
 from modules.demarrage.collecteurs.launchd_etat import analyser_list
 from modules.demarrage.db import Base, DisquePlein
 from modules.demarrage.mesure import energie, session, veille
@@ -183,29 +184,37 @@ class Echantillonneur:
                 log.error("[demarrage] disque plein : les relevés ne sont plus enregistrés (le reste continue)")
             self.disque_plein = True
 
-    def suivre_session(self, boot: float, connexion: float) -> dict[str, Any]:
-        """Le mode « ouverture de session » : un relevé toutes les 5 s jusqu'à connexion + 5 min, puis le bilan."""
+    def suivre_session(
+        self, boot: float, connexion: float, arret: Callable[[], bool] = lambda: False
+    ) -> dict[str, Any]:
+        """Le mode « ouverture de session » : un relevé toutes les 5 s jusqu'à connexion + 5 min, puis le bilan.
+        On note aussi les apps lancées par launchd dans les 2 premières minutes (S5, déduction)."""
         e = self.reglages["echantillonnage"]
         fin = connexion + e["session_minutes"] * 60
         premier = True
+        lancements: dict[int, tuple[str, int, float]] = {}
         gc.disable()  # pas de ramasse-miettes au milieu d'une mesure courte et fréquente
         try:
-            while self.systeme.maintenant() < fin:
-                self.prendre("session", depuis=connexion if premier else None)
+            while self.systeme.maintenant() < fin and not arret():
+                releve = self.prendre("session", depuis=connexion if premier else None)
                 premier = False
+                for p in releve.procs if releve else []:
+                    apres = releve.ts - p.age_s - connexion if releve else 0.0
+                    if p.ppid == 1 and 0 <= apres <= ouverture_session.FENETRE_DEDUCTION_S:
+                        lancements.setdefault(p.pid, (p.comm, p.ppid, apres))
                 self.systeme.attendre(min(e["session_pas_s"], max(0.0, fin - self.systeme.maintenant())))
         finally:
             gc.enable()
-        return self.bilan_session(boot, connexion)
+        return self.bilan_session(boot, connexion, ouverture_session.deduire(list(lancements.values())))
 
-    def bilan_session(self, boot: float, connexion: float) -> dict[str, Any]:
+    def bilan_session(self, boot: float, connexion: float, apps_lancees: list[str] | None = None) -> dict[str, Any]:
         calme = self.reglages["calme"]
         releves = self.base.releves(connexion, connexion + 3600, modes=("session",))
         jusqua = session.temps_jusquau_calme(
             [(t, c) for t, c in releves if c is not None], connexion, calme["seuil_cpu_pct"], calme["duree_s"]
         )
         bilan = {"demarrage_s": round(connexion - boot, 1), "calme_s": None if jusqua is None else round(jusqua, 1),
-                 "releves": len(releves)}  # fmt: skip
+                 "releves": len(releves), "apps_lancees": apps_lancees or []}  # fmt: skip
         try:
             self.base.enregistrer_session(boot, connexion, None if jusqua is None else connexion + jusqua, bilan)
         except DisquePlein:

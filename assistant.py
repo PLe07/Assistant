@@ -66,6 +66,7 @@ Dépenses (phase 5) :
 import argparse
 import os
 import sys
+import time
 
 from core import config, etat
 from core.journal import dernieres_lignes
@@ -137,6 +138,15 @@ def afficher_etat() -> int:
                   + f" · {s['corvees']} repérée(s) (python assistant.py corvees rapport)")
         except Exception as e:
             print(f"   🔁 Corvées : ⚠️ {e}")
+    if config.module_actif("demarrage"):
+        try:
+            from modules.demarrage import module as demarrage
+
+            s = demarrage.status(time.time())
+            print("   🧹 Démarrage : " + ("surveille" if s["vivant"] else "démarrage…")
+                  + f" · {s['sessions']} ouverture(s) mesurée(s) (python assistant.py demarrage rapport)")
+        except Exception as e:
+            print(f"   🧹 Démarrage : ⚠️ {e}")
     if r["aides"]:
         print(f"   💡 {len(r['aides'])} aide(s) t'attendent dans le menu de l'icône")
     vue = r["icone_vue"]

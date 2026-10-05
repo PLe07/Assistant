@@ -64,6 +64,8 @@ def chronometrer(systeme: Systeme, essais: int = 5, delai: float = 20.0) -> Temp
         r = systeme.executer(["zsh", "-i", "-c", "exit"], delai=delai)
         if r.code == 124:
             return TempsZsh(None, durees, erreur=f"zsh ne s'ouvre pas en {delai:.0f} s")
+        if not r.ok:
+            return TempsZsh(None, durees, erreur=f"zsh a échoué (code {r.code}) : {r.erreur.strip()[:100]}")
         durees.append(r.duree_s * 1000)
     return TempsZsh(round(statistics.median(durees), 1), [round(d, 1) for d in durees])
 

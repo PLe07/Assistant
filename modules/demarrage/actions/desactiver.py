@@ -87,6 +87,44 @@ def etat_launchd(systeme: Systeme, label: str) -> dict[str, bool]:
     return {"charge": charge, "desactive": desactive}
 
 
+def _instructions(e: Element, uid: int) -> tuple[str, str]:
+    f = e.fiche
+    if f.source == "agent_global":
+        return instructions.agent_global(f.label, uid, f.chemin_plist)
+    if f.source == "assistant_privilegie":
+        return instructions.assistant_privilegie(f.programme or f.label, f.details.get("lance_par"))
+    if f.source == "extension":
+        return instructions.extension(e.nom)
+    if f.source == "cron":
+        return instructions.cron(str(f.details.get("horaire", "")))
+    return instructions.daemon(f.label, f.chemin_plist)  # daemons globaux ou embarqués
+
+
+def commandes_affichees(e: Element, uid: int) -> tuple[str, str]:
+    """(pour agir, pour annuler), prêtes à copier, sans rien lire ni lancer : pour le rapport et RAPPORT_FINAL."""
+    f, action = e.fiche, e.verdict.action
+    if e.verdict.code == "apple" or f.c_est_moi or action == "aucune":
+        return "", ""
+    if action == "verifier":
+        return instructions.verifier(
+            e.nom, e.editeur, f.chemin_plist, f.programme, e.premiere_vue, e.verdict.raison
+        ), ""
+    if action == "instructions":
+        return _instructions(e, uid)
+    agir, annuler = f"demarrage desactiver {f.id} --confirmer", f"demarrage restaurer {f.id} --confirmer"
+    if action == "reglages":
+        texte, a_la_main = instructions.ouverture(e.nom)
+        return f"{agir}\n(ou à la main : {texte})", f"{annuler}\n(ou à la main : {a_la_main})"
+    if action == "quarantaine":
+        return f"{agir}\n(son fichier part en quarantaine, rien n'est effacé)", annuler
+    cible = f"gui/{uid}/{f.label}"
+    faire = shlex.join(["launchctl", "bootout", cible]) + "\n" + shlex.join(["launchctl", "disable", cible])
+    defaire = [shlex.join(["launchctl", "enable", cible])]
+    if f.chemin_plist:
+        defaire.append(shlex.join(["launchctl", "bootstrap", f"gui/{uid}", f.chemin_plist]))
+    return f"{agir}\n(c'est-à-dire :\n{faire})", f"{annuler}\n(c'est-à-dire :\n" + "\n".join(defaire) + ")"
+
+
 def planifier(e: Element, systeme: Systeme) -> Plan:
     f = e.fiche
     plan = Plan(f.id, e.nom, f.label, "rien", "")
@@ -110,18 +148,7 @@ def planifier(e: Element, systeme: Systeme) -> Plan:
     if action == "instructions":
         plan.genre = "instructions"
         plan.message = "Je ne le fais pas à ta place (il concerne tout le Mac). Voici quoi taper toi-même :"
-        if f.source == "agent_global":
-            plan.texte, plan.annulation = instructions.agent_global(f.label, systeme.uid, f.chemin_plist)
-        elif f.source == "assistant_privilegie":
-            plan.texte, plan.annulation = instructions.assistant_privilegie(
-                f.programme or f.label, f.details.get("lance_par")
-            )
-        elif f.source == "extension":
-            plan.texte, plan.annulation = instructions.extension(e.nom)
-        elif f.source == "cron":
-            plan.texte, plan.annulation = instructions.cron(str(f.details.get("horaire", "")))
-        else:  # daemons globaux ou embarqués
-            plan.texte, plan.annulation = instructions.daemon(f.label, f.chemin_plist)
+        plan.texte, plan.annulation = _instructions(e, systeme.uid)
         return plan
     if action == "reglages":
         texte, annulation = instructions.ouverture(e.nom)

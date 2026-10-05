@@ -12,7 +12,7 @@ Porte unique : `modules/demarrage/check.sh` (dans le conteneur : `PYTHON=<venv>/
 | P4 Mesure (session, croisière, énergie, veille, zsh) | ✅ | secondes de processeur exactes sur le faux Mac ; 16 ms par relevé |
 | P5 Scores, verdicts, connaissances, gains | ✅ | faux Mac n° 1 : 100 % ; 2e faux Mac : 5/5 graines à 100 % |
 | P6 Actions réversibles + sécurité | ✅ | 12 tests d'actions, 18 tests de sécurité |
-| P7 Rapport HTML, CLI, notifications, surveillance | ⏳ | |
+| P7 Rapport HTML, CLI, notifications, surveillance | ✅ | 311 tests ; rapport vérifié en clair, sombre et sur mobile |
 | P8 Bout en bout, performance | ⏳ | |
 | P9 Installation | ⏳ | |
 | P10 Revue hostile | ⏳ | |
@@ -243,8 +243,36 @@ $ PYTHON=…/venv/bin/python modules/demarrage/check.sh
 CHECK OK
 ```
 
+## P7 — Rapport, CLI, notifications, surveillance (✅)
+
+- `rapport.py` : résumé (« N éléments se lancent tout seuls… te coûtent vraiment… »), gain si tu coupes 💤/👻,
+  courbe des ouvertures de session (D-32), classement en fiches (éditeur, type, rôle, mesures, dernière ouverture
+  de l'app, verdict, commandes pour agir et annuler), macOS replié, bonus zsh, état des collecteurs.
+  Démonstration : `modules/demarrage/demo/rapport_demo.html` (faux Mac n° 1).
+- `cli.py` : scan, mesurer, rapport, desactiver, restaurer, historique, surveiller, doctor ; identifiant complet,
+  début d'identifiant ou label.
+- `notifier.py` (D-34), `daemon.py` + `module.py` (D-35), `travail.py` (opérations partagées) ;
+  `python assistant.py etat` affiche la ligne 🧹.
+- Défauts trouvés en regardant le rendu, puis corrigés :
+  - la médiane des sessions comptait les sessions non observées (D-33) ;
+  - les graduations de la courbe étaient rognées et mélangeaient secondes et minutes ;
+  - un long chemin faisait déborder la page sur mobile ;
+  - une marge était écrasée dans les fiches ;
+  - zsh en erreur était chronométré comme un succès ;
+  - un test avait une assertion molle (`or True`) : elle est remplacée par une vraie vérification.
+- En mode dégradé (ce conteneur Linux : ni launchctl, ni sfltool…), scan, mesurer, rapport et doctor tournent
+  sans planter, et doctor dit ce qui manque.
+
+```
+$ PYTHON=…/venv/bin/python modules/demarrage/check.sh
+▶ ruff check ✅  ▶ ruff format ✅  ▶ mypy ✅
+▶ pytest + couverture ≥ 85 %   259 passed · Total coverage: 98.09%   ✅
+▶ faux Mac (+ 2e faux Mac, 5 graines)   30 passed   ✅   ▶ sécurité   18 passed   ✅   ▶ performance   2 passed   ✅
+CHECK OK
+```
+
 ## Prochaine étape
 
-P7 : rapport HTML (résumé, classement, fiches, courbe des sessions, bonus zsh, mode sombre), CLI complète
-(scan, mesurer, rapport, desactiver, restaurer, historique, surveiller, doctor), notifications (nouvel élément,
-récap hebdomadaire, 1 par jour, jamais 23 h-8 h), démon de surveillance.
+P8 : test de bout en bout sur le vrai Mac (`tests/demarrage/e2e_mac/`, agents de test com.assistant.nettoyeur.test.*,
+nettoyage en `finally`, recherche des traces), performance du scan (< 15 s, < 5 s avec le cache) et de
+l'échantillonneur réel 10 min (CPU < 0,3 %, RAM < 40 Mo).

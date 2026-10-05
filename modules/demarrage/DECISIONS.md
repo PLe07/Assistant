@@ -288,3 +288,44 @@ Au retour, deux refus possibles :
   lecture), et la phrase « Ne le supprime pas à l'aveugle ».
 - **Élément d'ouverture** : System Events retire l'élément (et `restaurer` le remet) si l'autorisation existe.
   Sinon, le chemin exact dans les Réglages, et rien n'est noté au journal.
+
+## 2026-10-05 · P7 — Rapport, CLI, notifications, surveillance
+
+**D-32 · Le rapport : un fichier local, sans rien d'Internet.**
+- **Fichier** : `donnees/demarrage/rapport.html` (600), ouvert par `open`. Aucun script ni police externe.
+- **Thème** : clair ou sombre selon le Mac, avec un bouton pour forcer l'un ou l'autre. Le choix est gardé dans
+  le navigateur ; si ce n'est pas possible, il est simplement oublié.
+- **Courbe** : deux séries dans la même unité (secondes), donc un seul axe, avec légende, valeur en bout de ligne,
+  info-bulle au survol et tableau « Voir les chiffres ». Les couleurs (bleu/orange) sont validées en clair et en
+  sombre par le script de la palette (daltonisme, contraste). Une session « pas calme en 5 min » coupe la ligne au
+  lieu d'inventer une valeur.
+- **Vérification visuelle** : chaque version est photographiée en clair, en sombre et à 390 px de large, sans
+  défilement horizontal. Les longs chemins se coupent.
+- **Commandes** : les fiches donnent `demarrage …` (l'alias à ajouter une fois, décrit dans ACTIONS_HUMAINES) et
+  la commande launchctl équivalente.
+
+**D-33 · Une session non observée ne compte pas.**
+La médiane du « processeur à l'ouverture » ne prend que les sessions vraiment mesurées (avec des relevés). Une
+session où la surveillance a démarré trop tard aurait fait croire à 0 s pour tout le monde. C'est le rapport de
+démonstration qui a montré le défaut : « 0,0 s de processeur en moins ».
+
+**D-34 · Notifications : une par jour, rien la nuit, rien de perdu.**
+- **Les règles** : au plus une notification par jour civil, jamais entre 23 h et 8 h (réglable).
+- **Ce qui attend** : une notification retenue attend le premier moment permis. Plusieurs nouveaux éléments
+  retenus sont regroupés en une seule notification, et ils passent avant le récap.
+- **Le premier scan** sert de référence : on n'annonce pas « nouveau » tout ce qui existait déjà.
+- **Ce qui n'est pas signalé** : un élément « chargé sans fichier » (S6), souvent passager ; un élément Apple ;
+  « c'est moi » ; un élément inactif.
+- **Le récap** (toutes les semaines) ne part que s'il y a un élément lourd 💤 ou 👻.
+- **L'envoi** passe par `core.notifications` de l'Assistant, qui garde sa propre pause globale.
+
+**D-35 · La surveillance.**
+- **Au lancement**, si la connexion date de moins de 5 min et que cette session n'est pas déjà suivie : le mode
+  « ouverture de session ». Il note aussi les apps lancées dans les 2 premières minutes, qui servent à S5 en
+  dernier recours.
+- **Sinon**, la session est notée « pas observée ».
+- **À chaque tour** : battement, scan (chaque jour, ou tout de suite si un des dossiers de démarrage a changé),
+  relevé (énergie toutes les 10 min), purge quotidienne, et zsh + récap chaque semaine.
+- **Un tour en panne** ne fait jamais tomber le module : une base devenue illisible est rouverte, c'est-à-dire
+  mise de côté et reconstruite.
+- **`module.py`** donne au superviseur la boucle, et à `python assistant.py etat` son état.

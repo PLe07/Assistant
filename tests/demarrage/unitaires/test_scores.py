@@ -28,7 +28,7 @@ def test_metriques_session_mediane_et_croisiere(base, reglages):
     # Deux sessions : 30 s puis 10 s pour « a » ; « b » n'apparaît qu'à la 2e (0 s à la 1re).
     for k, (cpu_a, cpu_b) in enumerate([(30.0, 0.0), (10.0, 4.0)]):
         connexion = t0 + k * JOUR
-        base.enregistrer_session(connexion - 60, connexion, None, {})
+        base.enregistrer_session(connexion - 60, connexion, None, {"releves": 60})
         base.enregistrer_releve(
             connexion + 5, "session", 50.0, {"a": m(cpu_s=cpu_a / 2), **({"b": m(cpu_s=cpu_b)} if cpu_b else {})}
         )

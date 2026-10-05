@@ -27,6 +27,8 @@ def test_chronometrer(mac):
     mac.repondre(["zsh", "-i", "-c", "exit"], lambda c, m: Resultat(0, "", "", next(durees)))
     t = zsh.chronometrer(mac)
     assert t.mediane_ms == 300.0 and t.essais_ms == [200.0, 500.0, 250.0, 300.0, 900.0]
+    mac.repondre(["zsh", "-i", "-c", "exit"], Resultat(2, "", "zsh: bad option", 0.1))
+    assert zsh.chronometrer(mac).erreur.startswith("zsh a échoué (code 2)")
     mac.repondre(["zsh", "-i", "-c", "exit"], Resultat(124, "", "pas de réponse", 20.0))
     assert zsh.chronometrer(mac).erreur.startswith("zsh ne s'ouvre pas")
     mac.commandes.discard("zsh")

@@ -2,6 +2,18 @@
 
 Tout le reste est automatique. Les commandes se tapent dans le Terminal, depuis `~/Assistant`.
 
+## 0. Facultatif mais pratique : le raccourci « demarrage »
+
+Le rapport et les messages écrivent `demarrage …`. Pour que ça marche tel quel, ajoute une fois ce raccourci
+(le Nettoyeur ne touche jamais à tes fichiers zsh) :
+
+```zsh
+echo 'alias demarrage="$HOME/Assistant/.venv/bin/python $HOME/Assistant/demarrage.py"' >> ~/.zshrc
+source ~/.zshrc
+```
+
+Sans lui : `cd ~/Assistant`, puis `.venv/bin/python demarrage.py …` (même suite).
+
 ## 1. Facultatif : capturer les vraies sorties de ton Mac pour les tests
 
 Lecture seule. Les sorties sont anonymisées (ton nom de compte, ton nom, le nom du Mac, les e-mails disparaissent)
@@ -16,7 +28,7 @@ git pull
 
 Résultat attendu : `✅ … sortie(s) anonymisée(s)`, puis `passed`.
 
-## 2. Facultatif : l'autorisation « Automatisation » pour System Events
+## 3. Facultatif : l'autorisation « Automatisation » pour System Events
 
 Sans les droits d'administrateur, macOS ne laisse pas lire la liste complète des éléments d'ouverture
 (`sfltool dumpbtm`). Le Nettoyeur lit alors la liste « Ouvrir à la connexion » par System Events. La première fois,

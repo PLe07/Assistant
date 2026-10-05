@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nettoyeur de démarrage</title>
+<style>
+:root{color-scheme:light;--fond:#f9f9f7;--surface:#fcfcfb;--encre:#0b0b0b;--encre-2:#52514e;--discret:#898781;
+--grille:#e1e0d9;--axe:#c3c2b7;--bord:rgba(11,11,11,.10);--s1:#2a78d6;--s2:#eb6834;--jauge:#cde2fb;--code:#f0efec}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--fond:#0d0d0d;
+--surface:#1a1a19;
+--encre:#fff;--encre-2:#c3c2b7;--grille:#2c2c2a;--axe:#383835;--bord:rgba(255,255,255,.10);--s1:#3987e5;
+--s2:#d95926;
+--jauge:#184f95;--code:#262624}}
+:root[data-theme="dark"]{color-scheme:dark;--fond:#0d0d0d;--surface:#1a1a19;--encre:#fff;--encre-2:#c3c2b7;
+--grille:#2c2c2a;--axe:#383835;--bord:rgba(255,255,255,.10);--s1:#3987e5;--s2:#d95926;--jauge:#184f95;
+--code:#262624}
+*{box-sizing:border-box}
+body{margin:0;background:var(--fond);color:var(--encre);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+.page{max-width:960px;margin:0 auto;padding:24px 16px 48px}
+.entete{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+h1{font-size:1.8rem;line-height:1.2;margin:.2rem 0 1rem}
+h2{font-size:1.25rem;margin:2.2rem 0 .8rem}
+h3{font-size:1.05rem;margin:0}
+h4{font-size:.9rem;margin:1rem 0 .3rem;color:var(--encre-2)}
+.surtitre,.discret,.qui{color:var(--encre-2);font-size:.9rem;margin:0}
+.theme{border:1px solid var(--bord);background:var(--surface);color:var(--encre);border-radius:8px;font-size:1.1rem;
+width:40px;height:40px;cursor:pointer;line-height:1}
+section{background:var(--surface);border:1px solid var(--bord);border-radius:12px;padding:16px 20px;margin-top:16px}
+section h2:first-child{margin-top:0}
+.resume .phrase{font-size:1.2rem;font-weight:600;margin:0 0 .6rem}
+.resume .gain{margin:0 0 .8rem}
+.puces{display:flex;flex-wrap:wrap;gap:8px}
+.puce,.drapeau{border:1px solid var(--bord);border-radius:999px;padding:2px 10px;font-size:.85rem;
+white-space:nowrap}
+code,.code{font:13px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--code);border-radius:6px}
+code{padding:1px 4px;overflow-wrap:anywhere}
+.code{padding:10px 12px;margin:.3rem 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.fiche{border-top:1px solid var(--bord);padding:16px 0}
+.fiche:first-child{border-top:0;padding-top:4px}
+.tete{display:flex;align-items:flex-start;gap:12px}
+.rang{font-variant-numeric:tabular-nums;color:var(--discret);min-width:1.6rem;font-weight:600}
+.titre{flex:1;min-width:0}
+.titre h3{overflow-wrap:anywhere}
+.verdict{white-space:nowrap;font-size:.9rem;font-weight:600}
+.impact{display:flex;align-items:center;gap:10px;margin:.6rem 0 0 2.4rem}
+.jauge{flex:0 1 220px;height:8px;background:var(--jauge);border-radius:4px;overflow:hidden}
+.jauge span{display:block;height:100%;background:var(--s1);border-radius:4px}
+.note{font-size:.85rem;color:var(--encre-2);white-space:nowrap}
+.role,.raison,.drapeaux,.mesures,.plus{margin-left:2.4rem}
+.role{margin-top:.5rem;margin-bottom:.2rem}
+.raison{margin-top:.2rem;margin-bottom:.2rem;color:var(--encre-2)}
+.drapeaux{display:flex;flex-wrap:wrap;gap:6px;margin-top:.4rem;margin-bottom:.4rem}
+.mesures,.details{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px 16px;
+margin-top:.6rem;margin-bottom:.4rem}
+.details{grid-template-columns:1fr}
+dl div{min-width:0} dt{font-size:.8rem;color:var(--encre-2)} dd{margin:0;overflow-wrap:anywhere}
+p,li,h1,h3{overflow-wrap:anywhere}
+.details div{display:grid;grid-template-columns:minmax(120px,190px) 1fr;gap:8px}
+summary{cursor:pointer;color:var(--encre-2);font-size:.9rem}
+.effet{font-size:.9rem;color:var(--encre-2)}
+.legende{display:flex;flex-wrap:wrap;gap:16px;font-size:.9rem;margin:.4rem 0}
+.cle{display:inline-flex;align-items:center;gap:6px}
+.trait{display:inline-block;width:16px;height:2px;border-radius:1px}
+.trait.s-demarrage{background:var(--s1)} .trait.s-calme{background:var(--s2)}
+.cadre-courbe{position:relative}
+.courbe{width:100%;height:auto;display:block}
+.grille{stroke:var(--grille);stroke-width:1}
+.axe{fill:var(--discret);font-size:11px;font-variant-numeric:tabular-nums}
+.valeur{fill:var(--encre);font-size:12px;font-weight:600}
+.serie{fill:none;stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.serie.s-demarrage{stroke:var(--s1)} .serie.s-calme{stroke:var(--s2)}
+.point{stroke:var(--surface);stroke-width:2}
+.point.s-demarrage{fill:var(--s1)} .point.s-calme{fill:var(--s2)}
+.zone{fill:transparent;outline:none}
+.repere{stroke:var(--axe);stroke-width:1}
+.bulle{position:absolute;top:0;transform:translateX(-50%);background:var(--surface);color:var(--encre);
+border:1px solid var(--bord);border-radius:8px;padding:6px 10px;font-size:.8rem;max-width:280px;pointer-events:none;
+box-shadow:0 4px 16px rgba(0,0,0,.15)}
+table{border-collapse:collapse;width:100%;font-size:.9rem;margin-top:.5rem}
+th,td{text-align:left;padding:4px 8px;border-bottom:1px solid var(--bord)} td{font-variant-numeric:tabular-nums}
+.apple{columns:2 260px;font-size:.9rem}
+.collecteurs{list-style:none;padding:0;margin:0} .collecteurs li{margin:.2rem 0}
+.vide{color:var(--encre-2)}
+footer{margin-top:24px;text-align:center}
+@media (max-width:560px){.verdict{white-space:normal;text-align:right;max-width:40%}
+.impact,.role,.raison,.drapeaux,.mesures,.plus{margin-left:0}.details div{grid-template-columns:1fr;gap:0}}</style>
+</head>
+<body>
+<main class="page">
+<header class="entete">
+  <div><p class="surtitre">Nettoyeur de démarrage · 5 octobre 2026 à 07:29</p>
+  <h1>Ce qui se lance tout seul sur ton Mac</h1></div>
+  <button type="button" class="theme" aria-label="Changer de thème" title="Clair / sombre">🌓</button>
+</header>
+<section class="resume">
+  <p class="phrase">21 éléments se lancent tout seuls (sans compter les 18 de macOS). 5 te coûtent vraiment : environ 2,4 Go de mémoire, 5,9 min de processeur à chaque ouverture de session et 1 programme empêche ton Mac de se mettre en veille.</p>
+  <p class="gain">Si tu coupes les 10 éléments 💤 et 👻 : environ 2,2 Go de mémoire libérée, 5,8 min de processeur en moins à chaque ouverture de session, et 1 mise en veille débloquée.</p>
+  <p class="puces"><span class="puce">💤 5 inutiles au démarrage</span><span class="puce">👻 5 orphelins</span><span class="puce">⚠️ 4 à vérifier</span><span class="puce">✅ 10 utiles</span><span class="puce">🍎 18 de macOS</span></p>
+  <p class="discret">Rien n'est désactivé sans ta commande, et tout se défait.
+  Les commandes « demarrage … » supposent l'alias <code>alias demarrage=&quot;~/Assistant/.venv/bin/python ~/Assistant/demarrage.py&quot;</code> (à ajouter une fois à ton ~/.zshrc).</p>
+</section>
+<section><h2>Ouverture de session</h2>
+  <p class="discret">« Calme » : le moment où le processeur reste sous 15 % pendant 30 secondes.
+  Regarde la courbe baisser après tes choix.</p>
+  <div class="legende"><span class="cle"><span class="trait s-demarrage"></span>Démarrage → connexion</span><span class="cle"><span class="trait s-calme"></span>Connexion → calme</span></div><div class="cadre-courbe"><svg viewBox="0 0 640 240" class="courbe" role="img" aria-label="Temps d'ouverture de session, session par session"><line class="grille" x1="58" x2="556" y1="210.0" y2="210.0"/><text class="axe" x="50" y="214.0" text-anchor="end">0</text><line class="grille" x1="58" x2="556" y1="144.7" y2="144.7"/><text class="axe" x="50" y="148.7" text-anchor="end">2 min</text><line class="grille" x1="58" x2="556" y1="79.3" y2="79.3"/><text class="axe" x="50" y="83.3" text-anchor="end">4 min</text><line class="grille" x1="58" x2="556" y1="14.0" y2="14.0"/><text class="axe" x="50" y="18.0" text-anchor="end">6 min</text><text class="axe" x="58.0" y="232" text-anchor="middle">sam 26/9</text><text class="axe" x="271.4" y="232" text-anchor="middle">mar 29/9</text><text class="axe" x="556.0" y="232" text-anchor="middle">lun 5/10</text><polyline class="serie s-demarrage" points="58.0,169.7 129.1,176.8 200.3,178.4 271.4,174.1 342.6,180.1 413.7,179.0 484.9,181.7 556.0,181.7"/><circle class="point s-demarrage" cx="58.0" cy="169.7" r="4"/><circle class="point s-demarrage" cx="129.1" cy="176.8" r="4"/><circle class="point s-demarrage" cx="200.3" cy="178.4" r="4"/><circle class="point s-demarrage" cx="271.4" cy="174.1" r="4"/><circle class="point s-demarrage" cx="342.6" cy="180.1" r="4"/><circle class="point s-demarrage" cx="413.7" cy="179.0" r="4"/><circle class="point s-demarrage" cx="484.9" cy="181.7" r="4"/><circle class="point s-demarrage" cx="556.0" cy="181.7" r="4"/><polyline class="serie s-calme" points="200.3,73.3 271.4,83.1 342.6,122.9 413.7,133.2 484.9,145.8 556.0,98.4"/><circle class="point s-calme" cx="58.0" cy="64.1" r="4"/><circle class="point s-calme" cx="200.3" cy="73.3" r="4"/><circle class="point s-calme" cx="271.4" cy="83.1" r="4"/><circle class="point s-calme" cx="342.6" cy="122.9" r="4"/><circle class="point s-calme" cx="413.7" cy="133.2" r="4"/><circle class="point s-calme" cx="484.9" cy="145.8" r="4"/><circle class="point s-calme" cx="556.0" cy="98.4" r="4"/><text class="valeur" x="566" y="102.4">3,4 min</text><text class="valeur" x="566" y="185.7">52 s</text><line class="repere" x1="0" x2="0" y1="14" y2="210" visibility="hidden"/><rect class="zone" x="22.4" y="14" width="71.1" height="196" data-x="58.0" data-bulle="26 septembre 2026 à 06:54 · démarrage → connexion : 74 s · connexion → calme : 4,5 min" tabindex="0"/><rect class="zone" x="93.6" y="14" width="71.1" height="196" data-x="129.1" data-bulle="27 septembre 2026 à 06:54 · démarrage → connexion : 61 s · connexion → calme : pas calme en 5 min" tabindex="0"/><rect class="zone" x="164.7" y="14" width="71.1" height="196" data-x="200.3" data-bulle="28 septembre 2026 à 06:54 · démarrage → connexion : 58 s · connexion → calme : 4,2 min" tabindex="0"/><rect class="zone" x="235.9" y="14" width="71.1" height="196" data-x="271.4" data-bulle="29 septembre 2026 à 06:54 · démarrage → connexion : 66 s · connexion → calme : 3,9 min" tabindex="0"/><rect class="zone" x="307.0" y="14" width="71.1" height="196" data-x="342.6" data-bulle="30 septembre 2026 à 06:54 · démarrage → connexion : 55 s · connexion → calme : 2,7 min" tabindex="0"/><rect class="zone" x="378.1" y="14" width="71.1" height="196" data-x="413.7" data-bulle="1 octobre 2026 à 06:54 · démarrage → connexion : 57 s · connexion → calme : 2,4 min" tabindex="0"/><rect class="zone" x="449.3" y="14" width="71.1" height="196" data-x="484.9" data-bulle="2 octobre 2026 à 06:54 · démarrage → connexion : 52 s · connexion → calme : 118 s" tabindex="0"/><rect class="zone" x="520.4" y="14" width="71.1" height="196" data-x="556.0" data-bulle="5 octobre 2026 à 06:54 · démarrage → connexion : 52 s · connexion → calme : 3,4 min" tabindex="0"/></svg><div class="bulle" hidden></div></div><details class="chiffres"><summary>Voir les chiffres</summary><table><thead><tr><th>Connexion</th><th>Démarrage → connexion</th><th>Connexion → calme</th></tr></thead><tbody><tr><td>26 septembre 2026 à 06:54</td><td>74 s</td><td>4,5 min</td></tr><tr><td>27 septembre 2026 à 06:54</td><td>61 s</td><td>pas calme en 5 min</td></tr><tr><td>28 septembre 2026 à 06:54</td><td>58 s</td><td>4,2 min</td></tr><tr><td>29 septembre 2026 à 06:54</td><td>66 s</td><td>3,9 min</td></tr><tr><td>30 septembre 2026 à 06:54</td><td>55 s</td><td>2,7 min</td></tr><tr><td>1 octobre 2026 à 06:54</td><td>57 s</td><td>2,4 min</td></tr><tr><td>2 octobre 2026 à 06:54</td><td>52 s</td><td>118 s</td></tr><tr><td>5 octobre 2026 à 06:54</td><td>52 s</td><td>3,4 min</td></tr></tbody></table></details>
+</section>
+<section><h2>Classement par impact</h2><article class="fiche v-inutile" id="f-0a02a719">
+  <div class="tete">
+    <span class="rang">1</span>
+    <div class="titre"><h3>Docker (réseau et socket)</h3><p class="qui">Docker Inc · Agent de ta session</p></div>
+    <span class="verdict">💤 Inutile au démarrage</span>
+  </div>
+  <div class="impact"><div class="jauge" role="meter" aria-valuemin="0" aria-valuemax="100"
+    aria-valuenow="97" aria-label="Impact"><span style="width:97%"></span></div>
+    <span class="note">Impact 97/100</span></div>
+  <p class="role">Donne à Docker Desktop l&#x27;accès réseau et le canal de commande dont il a besoin.</p>
+  <p class="raison"><strong>Pourquoi :</strong> il coûte (impact 97/100) et sert peu : app pas ouverte depuis 75 jours.</p>
+  
+  <dl class="mesures"><div><dt>Processeur à l&#x27;ouverture</dt><dd>48 s sur 5 minutes</dd></div><div><dt>Processeur moyen</dt><dd>6,0 % d&#x27;un cœur</dd></div><div><dt>Mémoire</dt><dd>1,6 Go</dd></div><div><dt>Énergie</dt><dd>8,0</dd></div><div><dt>Veille</dt><dd>ne l&#x27;empêche pas</dd></div><div><dt>Dernière ouverture de l&#x27;app</dt><dd>il y a 75 jours</dd></div></dl>
+  <details class="plus"><summary>Où il est, et comment agir</summary>
+    <dl class="details"><div><dt>Identifiant</dt><dd>0a02a719</dd></div><div><dt>Label</dt><dd>com.docker.socket</dd></div><div><dt>Fichier</dt><dd>/Users/utilisateur/Library/LaunchAgents/com.docker.socket.plist</dd></div><div><dt>Programme</dt><dd>/Applications/Docker.app/Contents/MacOS/com.docker.backend</dd></div><div><dt>Quand</dt><dd>à l&#x27;ouverture de session, relancé s&#x27;il s&#x27;arrête (sous conditions)</dd></div><div><dt>Emplacement</dt><dd>~/Library/LaunchAgents (à toi)</dd></div><div><dt>Lancements</dt><dd>1 (dernier code de sortie : 0)</dd></div><div><dt>Vu pour la première fois</dt><dd>5 octobre 2026 à 06:54</dd></div></dl><h4>Pour agir</h4><pre class="code">demarrage desactiver 0a02a719 --confirmer
+(c&#x27;est-à-dire :
+launchctl bootout gui/501/com.docker.socket
+launchctl disable gui/501/com.docker.socket)</pre><h4>Pour annuler</h4><pre class="code">demarrage restaurer 0a02a719 --confirmer
+(c&#x27;est-à-dire :
+launchctl enable gui/501/com.docker.socket
+launchctl bootstrap gui/501 /Users/utilisateur/Library/LaunchAgents/com.docker.socket.plist)</pre><p class="effet">Si tu le désactives : Docker Desktop les recrée à son prochain lancement.</p></details>
+</article><article class="fiche v-inutile" id="f-fa22feb0">
+  <div class="tete">
+    <span class="rang">2</span>
+    <div class="titre"><h3>Adobe Creative Cloud</h3><p class="qui">Adobe Inc. · Agent pour tous les comptes</p></div>
+    <span class="verdict">💤 Inutile au démarrage</span>
+  </div>
+  <div class="impact"><div class="jauge" role="meter" aria-valuemin="0" aria-valuemax="100"
+    aria-valuenow="86" aria-label="Impact"><span style="width:86%"></span></div>
+    <span class="note">Impact 86/100</span></div>
+  <p class="role">Le gestionnaire des apps Adobe (installation, mises à jour, synchronisation des polices et fichiers).</p>
+  <p class="raison"><strong>Pourquoi :</strong> il coûte (impact 86/100) et sert peu : app pas ouverte depuis 60 jours.</p>
+  
+  <dl class="mesures"><div><dt>Processeur à l&#x27;ouverture</dt><dd>4,6 min sur 5 minutes</dd></div><div><dt>Processeur moyen</dt><dd>2,0 % d&#x27;un cœur</dd></div><div><dt>Mémoire</dt><dd>440 Mo</dd></div><div><dt>Énergie</dt><dd>15,0</dd></div><div><dt>Veille</dt><dd>ne l&#x27;empêche pas</dd></div><div><dt>Dernière ouverture de l&#x27;app</dt><dd>il y a 60 jours</dd></div></dl>
+  <details class="plus"><summary>Où il est, et comment agir</summary>
+    <dl class="details"><div><dt>Identifiant</dt><dd>fa22feb0</dd></div><div><dt>Label</dt><dd>com.adobe.AdobeCreativeCloud</dd></div><div><dt>Fichier</dt><dd>/Library/LaunchAgents/com.adobe.AdobeCreativeCloud.plist</dd></div><div><dt>Programme</dt><dd>/Applications/Adobe Creative Cloud/Adobe Creative Cloud.app/Contents/MacOS/Creative Cloud</dd></div><div><dt>Quand</dt><dd>à l&#x27;ouverture de session</dd></div><div><dt>Emplacement</dt><dd>/Library/LaunchAgents (pour tous les comptes)</dd></div><div><dt>Vu pour la première fois</dt><dd>5 octobre 2026 à 06:54</dd></div></dl><h4>Pour agir</h4><pre class="code">launchctl bootout gui/501/com.adobe.AdobeCreativeCloud
+launchctl disable gui/501/com.adobe.AdobeCreativeCloud</pre><h4>Pour annuler</h4><pre class="code">launchctl enable gui/501/com.adobe.AdobeCreativeCloud
+launchctl bootstrap gui/501 /Library/LaunchAgents/com.adobe.AdobeCreativeCloud.plist</pre><p class="effet">Si tu le désactives : Creative Cloud s&#x27;ouvrira quand tu lances une app Adobe ; les polices synchronisées restent disponibles.</p></details>
+</article><article class="fiche v-inutile" id="f-ff35c90c">
+  <div class="tete">
+    <span class="rang">3</span>
+    <div class="titre"><h3>com.sauvegarde.express.agent</h3><p class="qui">Sauvegarde Express SARL · Agent de ta session</p></div>
+    <span class="verdict">💤 Inutile au démarrage</span>
+  </div>
+  <div class="impact"><div class="jauge" role="meter" aria-valuemin="0" aria-valuemax="100"
+    aria-valuenow="65" aria-label="Impact"><span style="width:65%"></span></div>
+    <span class="note">Impact 65/100</span></div>
+  <p class="role">Un élément de Sauvegarde Express SARL qui lance « agent » (à l&#x27;ouverture de session). Il n&#x27;est pas dans la base de connaissances : on ne devine pas son rôle.</p>
+  <p class="raison"><strong>Pourquoi :</strong> il coûte (impact 65/100) et sert peu : app pas ouverte depuis 50 jours.</p>
+  <p class="drapeaux"><span class="drapeau">empêche la veille</span></p>
+  <dl class="mesures"><div><dt>Processeur à l&#x27;ouverture</dt><dd>15 s sur 5 minutes</dd></div><div><dt>Processeur moyen</dt><dd>1,0 % d&#x27;un cœur</dd></div><div><dt>Mémoire</dt><dd>120 Mo</dd></div><div><dt>Énergie</dt><dd>3,0</dd></div><div><dt>Veille</dt><dd>l&#x27;empêche</dd></div><div><dt>Dernière ouverture de l&#x27;app</dt><dd>il y a 50 jours</dd></div></dl>
+  <details class="plus"><summary>Où il est, et comment agir</summary>
+    <dl class="details"><div><dt>Identifiant</dt><dd>ff35c90c</dd></div><div><dt>Label</dt><dd>com.sauvegarde.express.agent</dd></div><div><dt>Fichier</dt><dd>/Users/utilisateur/Library/LaunchAgents/com.sauvegarde.express.agent.plist</dd></div><div><dt>Programme</dt><dd>/Applications/Sauvegarde Express.app/Contents/MacOS/agent</dd></div><div><dt>Quand</dt><dd>à l&#x27;ouverture de session</dd></div><div><dt>Emplacement</dt><dd>~/Library/LaunchAgents (à toi)</dd></div><div><dt>Vu pour la première fois</dt><dd>5 octobre 2026 à 06:54</dd></div></dl><h4>Pour agir</h4><pre class="code">demarrage desactiver ff35c90c --confirmer
+(c&#x27;est-à-dire :
+launchctl bootout gui/501/com.sauvegarde.express.agent
+launchctl disable gui/501/com.sauvegarde.express.agent)</pre><h4>Pour annuler</h4><pre class="code">demarrage restaurer ff35c90c --confirmer
+(c&#x27;est-à-dire :
+launchctl enable gui/501/com.sauvegarde.express.agent
+launchctl bootstrap gui/501 /Users/utilisateur/Library/LaunchAgents/com.sauvegarde.express.agent.plist)</pre></details>
+</article><article class="fiche v-inutile" id="f-b65bb2b2">
+  <div class="tete">
+    <span class="rang">4</span>
+    <div class="titre"><h3>com.radioboucle.helper</h3><p class="qui">Radio Boucle Ltd · Agent de ta session</p></div>
+    <span class="verdict">💤 Inutile au démarrage</span>
+  </div>
+  <div class="impact"><div class="jauge" role="meter" aria-valuemin="0" aria-valuemax="100"
+    aria-valuenow="33" aria-label="Impact"><span style="width:33%"></span></div>
+    <span class="note">Impact 33/100</span></div>
+  <p class="role">Un élément de Radio Boucle Ltd qui lance « helper » (à l&#x27;ouverture de session, relancé s&#x27;il s&#x27;arrête). Il n&#x27;est pas dans la base de connaissances : on ne devine pas son rôle.</p>
+  <p class="raison"><strong>Pourquoi :</strong> il coûte (impact 33/100) et sert peu : app pas ouverte depuis 35 jours.</p>
+  <p class="drapeaux"><span class="drapeau">relancé en boucle (il plante)</span></p>
+  <dl class="mesures"><div><dt>Processeur à l&#x27;ouverture</dt><dd>8,8 s sur 5 minutes</dd></div><div><dt>Processeur moyen</dt><dd>0,5 % d&#x27;un cœur</dd></div><div><dt>Mémoire</dt><dd>30 Mo</dd></div><div><dt>Énergie</dt><dd>1,0</dd></div><div><dt>Veille</dt><dd>ne l&#x27;empêche pas</dd></div><div><dt>Dernière ouverture de l&#x27;app</dt><dd>il y a 35 jours</dd></div></dl>
+  <details class="plus"><summary>Où il est, et comment agir</summary>
+    <dl class="details"><div><dt>Identifiant</dt><dd>b65bb2b2</dd></div><div><dt>Label</dt><dd>com.radioboucle.helper</dd></div><div><dt>Fichier</dt><dd>/Users/utilisateur/Library/LaunchAgents/com.radioboucle.helper.plist</dd></div><div><dt>Programme</dt><dd>/Applications/Radio Boucle.app/Contents/MacOS/helper</dd></div><div><dt>Quand</dt><dd>à l&#x27;ouverture de session, relancé s&#x27;il s&#x27;arrête</dd></div><div><dt>Emplacement</dt><dd>~/Library/LaunchAgents (à toi)</dd></div><div><dt>Lancements</dt><dd>412 (dernier code de sortie : 1)</dd></div><div><dt>Vu pour la première fois</dt><dd>5 octobre 2026 à 06:54</dd></div></dl><h4>Pour agir</h4><pre class="code">demarrage desactiver b65bb2b2 --confirmer
+(c&#x27;est-à-dire :
+launchctl bootout gui/501/com.radioboucle.helper
+launchctl disable gui/501/com.radioboucle.helper)</pre><h4>Pour annuler</h4><pre class="code">demarrage restaurer b65bb2b2 --confirmer
+(c&#x27;est-à-dire :
+launchctl enable gui/501/com.radioboucle.helper
+launchctl bootstrap gui/501 /Users/utilisateur/Library/LaunchAgents/com.radioboucle.helper.plist)</pre></details>
+</article><article class="fiche v-utile" id="f-0faa25ac">
+  <div class="tete">
+    <span class="rang">5</span>
+    <div class="titre"><h3>Zoom</h3><p class="qui">Éditeur de zoom.us · Ouverture à la connexion</p></div>
+    <span class="verdict">✅ Utile, à garder</span>
+  </div>
+  <div class="impact"><div class="jauge" role="meter" aria-valuemin="0" aria-valuemax="100"
+    aria-valuenow="21" aria-label="Impact"><span style="width:21%"></span></div>
+    <span class="note">Impact 21/100</span></div>
+  <p class="role">Les visioconférences Zoom, ouvertes dès la connexion.</p>
+  <p class="raison"><strong>Pourquoi :</strong> utile : app ouverte il y a 12 jour(s).</p>
+  
+  <dl class="mesures"><div><dt>Processeur à l&#x27;ouverture</dt><dd>6,8 s sur 5 minutes</dd></div><div><dt>Processeur moyen</dt><dd>0,3 % d&#x27;un cœur</dd></div><div><dt>Mémoire</dt><dd>180 Mo</dd></div><div><dt>Énergie</dt><dd>1,5</dd></div><div><dt>Veille</dt><dd>ne l&#x27;empêche pas</dd></div><div><dt>Dernière ouverture de l&#x27;app</dt><dd>il y a 12 jours</dd></div></dl>
+  <details class="plus"><summary>Où il est, et comment agir</summary>
+    <dl class="details"><div><dt>Identifiant</dt><dd>0faa25ac</dd></div><div><dt>Label</dt><dd>us.zoom.xos</dd></div><div><dt>Fichier</dt><dd>—</dd></div><div><dt>Programme</dt><dd>/Applications/zoom.us.app/Contents/MacOS/zoom.us</dd></div><div><dt>Quand</dt><dd>à l&#x27;ouverture de session</dd></div><div><dt>Emplacement</dt><dd>Ouverture à la connexion (Réglages Système)</dd></div><div><dt>Vu pour la première fois</dt><dd>5 octobre 2026 à 06:54</dd></div></dl><h4>Pour agir</h4><pre class="code">demarrage desactiver 0faa25ac --confirmer
+(ou à la main : Réglages Système → Général → Ouverture et extensions (« Ouverture » sur les macOS plus anciens) → « Ouvrir à la connexion » : sélectionne « Zoom », puis « − ».)</pre><h4>Pour annuler</h4><pre class="code">demarrage restaurer 0faa25ac --confirmer
+(ou à la main : Même endroit : « + », puis choisis l&#x27;app « Zoom ».)</pre><p class="effet">Si tu le désactives : Zoom ne s&#x27;ouvre plus tout seul ; les liens de réunion l&#x27;ouvrent quand même.</p></details>
+</article><article class="fiche v-utile" id="f-4140b7b5">
+  <div class="tete">
+    <span class="rang">6</span>
+    <div class="titre"><h3>com.notesrapides.agent</h3><p class="qui">Notes Rapides SAS · Agent de ta session</p></div>
+    <span class="verdict">✅ Utile, à garder</span>
+  </div>
+  <div class="impact"><div class="jauge" role="meter" aria-valuemin="0" aria-valuemax="100"
+    aria-valuenow="5" aria-label="Impact"><span style="width:5%"></span></div>
+    <span class="note">Impact 5/100</span></div>
+  <p class="role">Un élément de Notes Rapides SAS qui lance « raccourcis » (à l&#x27;ouverture de session). Il n&#x27;est pas dans la base de connaissances : on ne devine pas son rôle.</p>
+  <p class="raison"><strong>Pourquoi :</strong> impact négligeable.</p>
+  
+  <dl class="mesures"><div><dt>Processeur à l&#x27;ouverture</dt><dd>1,2 s sur 5 minutes</dd></div><div><dt>Processeur moyen</dt><dd>0,4 % d&#x27;un cœur</dd></div><div><dt>Mémoire</dt><dd>35 Mo</dd></div><div><dt>Énergie</dt><dd>0,1</dd></div><div><dt>Veille</dt><dd>ne l&#x27;empêche pas</dd></div><div><dt>Dernière ouverture de l&#x27;app</dt><dd>hier</dd></div></dl>
+  <details class="plus"><summary>Où il est, et comment agir</summary>
+    <dl class="details"><div><dt>Identifiant</dt><dd>4140b7b5</dd></div><div><dt>Label</dt><dd>com.notesrapides.agent</dd></div><div><dt>Fichier</dt><dd>/Users/utilisateur/Library/LaunchAgents/com.notesrapides.agent.plist</dd></div><div><dt>Programme</dt><dd>/Applications/Notes Rapides.app/Contents/MacOS/raccourcis</dd></div><div><dt>Quand</dt><dd>à l&#x27;ouverture de session</dd></div><div><dt>Emplacement</dt><dd>~/Library/LaunchAgents (à toi)</dd></div><div><dt>Vu pour la première fois</dt><dd>5 octobre 2026 à 06:54</dd></div></dl><h4>Pour agir</h4><pre class="code">demarrage desactiver 4140b7b5 --confirmer
+(c&#x27;est-à-dire :
+launchctl bootout gui/501/com.notesrapides.agent
+launchctl disable gui/501/com.notesrapides.agent)</pre><h4>Pour annuler</h4><pre class="code">demarrage restaurer 4140b7b5 --confirmer
+(c&#x27;est-à-dire :
+launchctl enable gui/501/com.notesrapides.agent
+launchctl bootstrap gui/501 /Users/utilisateur/Library/LaunchAgents/com.notesrapides.agent.plist)</pre></details>
+</article><article class="fiche v-utile" id="f-d3f8c46b">
+  <div class="tete">
+    <span class="rang">7</span>
+    <div class="titre"><h3>L&#x27;Assistant (c&#x27;est moi)</h3><p class="qui">éditeur inconnu · Agent de ta session</p></div>
+    <span class="verdict">✅ Utile, à garder</span>
+  </div>
+  <div class="impact"><div class="jauge" role="meter" aria-valuemin="0" aria-valuemax="100"
+    aria-valuenow="3" aria-label="Impact"><span style="width:3%"></span></div>
+    <span class="note">Impact 3/100</span></div>
+  <p class="role">Fait tourner tes modules : tri des mails, corvées, Nettoyeur de démarrage et les autres.</p>
+  <p class="raison"><strong>Pourquoi :</strong> c&#x27;est moi : l&#x27;Assistant, qui fait tourner ce Nettoyeur.</p>
+  <p class="drapeaux"><span class="drapeau">c&#x27;est moi</span></p>
+  <dl class="mesures"><div><dt>Processeur à l&#x27;ouverture</dt><dd>0,6 s sur 5 minutes</dd></div><div><dt>Processeur moyen</dt><dd>0,2 % d&#x27;un cœur</dd></div><div><dt>Mémoire</dt><dd>25 Mo</dd></div><div><dt>Énergie</dt><dd>0,0</dd></div><div><dt>Veille</dt><dd>ne l&#x27;empêche pas</dd></div></dl>
+  <details class="plus"><summary>Où il est, et comment agir</summary>
+    <dl class="details"><div><dt>Identifiant</dt><dd>d3f8c46b</dd></div><div><dt>Label</dt><dd>com.assistant.superviseur</dd></div><div><dt>Fichier</dt><dd>/Users/utilisateur/Library/LaunchAgents/com.assistant.superviseur.plist</dd></div><div><dt>Programme</dt><dd>/Users/utilisateur/Assistant/superviseur.py</dd></div><div><dt>Quand</dt><dd>à l&#x27;ouverture de session, relancé s&#x27;il s&#x27;arrête</dd></div><div><dt>Emplacement</dt><dd>~/Library/LaunchAgents (à toi)</dd></div><div><dt>Lancements</dt><dd>1 (dernier code de sortie : 0)</dd></div><div><dt>Vu pour la première fois</dt><dd>5 octobre 2026 à 06:54</dd></div></dl><p>Rien à faire.</p></details>
+</article><article class="fiche v-inutile" id="f-ebf8a226">
+  <div class="tete">
+    <span class="rang">8</span>
+    <div class="titre"><h3>Google Updater (Keystone)</h3><p class="qui">Google LLC · Agent de ta session</p></div>
+    <span class="verdict">💤 Inutile au démarrage</span>
+  </div>
+  <div class="impact"><div class="jauge" role="meter" aria-valuemin="0" aria-valuemax="100"
+    aria-valuenow="2" aria-label="Impact"><span style="width:2%"></span></div>
+    <span class="note">Impact 2/100</span></div>
+  <p class="role">Met à jour Chrome et les autres logiciels Google en arrière-plan.</p>
+  <p class="raison"><strong>Pourquoi :</strong> simple outil de mise à jour : il peut tourner quand tu ouvres l&#x27;app.</p>
+  
+  <dl class="mesures"><div><dt>Processeur à l&#x27;ouverture</dt><dd>1,0 s sur 5 minutes</dd></div><div><dt>Processeur moyen</dt><dd>0,0 % d&#x27;un cœur</dd></div><div><dt>Mémoire</dt><dd>20 Mo</dd></div><div><dt>Énergie</dt><dd>0,0</dd></div><div><dt>Veille</dt><dd>ne l&#x27;empêche pas</dd></div></dl>
+  <details class="plus"><summary>Où il est, et comment agir</summary>
+    <dl class="details"><div><dt>Identifiant</dt><dd>ebf8a226</dd></div><div><dt>Label</dt><dd>com.google.keystone.agent</dd></div><div><dt>Fichier</dt><dd>/Users/utilisateur/Library/LaunchAgents/com.google.keystone.agent.plist</dd></div><div><dt>Programme</dt><dd>/Users/utilisateur/Library/Google/GoogleSoftwareUpdate/GoogleSoftwareUpdate.bundle/Contents/Resources/GoogleSoftwareUpdateAgent.app/Contents/MacOS/GoogleSoftwareUpdateAgent</dd></div><div><dt>Quand</dt><dd>à l&#x27;ouverture de session, toutes les 3523 s</dd></div><div><dt>Emplacement</dt><dd>~/Library/LaunchAgents (à toi)</dd></div><div><dt>Vu pour la première fois</dt><dd>5 octobre 2026 à 06:54</dd></div></dl><h4>Pour agir</h4><pre class="code">demarrage desactiver ebf8a226 --confirmer
+(c&#x27;est-à-dire :
+launchctl bootout gui/501/com.google.keystone.agent
+launchctl disable gui/501/com.google.keystone.agent)</pre><h4>Pour annuler</h4><pre class="code">demarrage restaurer ebf8a226 --confirmer
+(c&#x27;est-à-dire :
+launchctl enable gui/501/com.google.keystone.agent
+launchctl bootstrap gui/501 /Users/utilisateur/Library/LaunchAgents/com.google.keystone.agent.plist)</pre><p class="effet">Si tu le désactives : L&#x27;app se met encore à jour quand tu l&#x27;ouvres (ou depuis son menu « Rechercher des mises à jour »).</p></details>
+</article><article class="fiche v-orphelin" id="f-4be503c6">
+  <div class="tete">
+    <span class="rang">9</span>
+    <div class="titre"><h3>Spotify Web Helper</h3><p class="qui">Spotify AB · Agent de ta session</p></div>
+    <span class="verdict">👻 Orphelin (reste d&#x27;une app désinstallée)</span>
+  </div>
+  <div class="impact"><div class="jauge" role="meter" aria-valuemin="0" aria-valuemax="100"
+    aria-valuenow="2" aria-label="Impact"><span style="width:2%"></span></div>
+    <span class="note">Impact 2/100</span></div>
+  <p class="role">Un ancien composant de Spotify qui ouvrait l&#x27;app depuis le navigateur.</p>
+  <p class="raison"><strong>Pourquoi :</strong> l&#x27;app à laquelle il appartient a été désinstallée.</p>
+  
+  <dl class="mesures"><div><dt>Processeur à l&#x27;ouverture</dt><dd>0,6 s sur 5 minutes</dd></div><div><dt>Processeur moyen</dt><dd>0,2 % d&#x27;un cœur</dd></div><div><dt>Mémoire</dt><dd>15 Mo</dd></div><div><dt>Énergie</dt><dd>0,0</dd></div><div><dt>Veille</dt><dd>ne l&#x27;empêche pas</dd></div></dl>
+  <details class="plus"><summary>Où il est, et comment agir</summary>
+    <dl class="details"><div><dt>Identifiant</dt><dd>4be503c6</dd></div><div><dt>Label</dt><dd>com.spotify.webhelper</dd></div><div><dt>Fichier</dt><dd>/Users/utilisateur/Library/LaunchAgents/com.spotify.webhelper.plist</dd></div><div><dt>Programme</dt><dd>/Users/utilisateur/Library/Application Support/Spotify/SpotifyWebHelper</dd></div><div><dt>Quand</dt><dd>à l&#x27;ouverture de session</dd></div><div><dt>Emplacement</dt><dd>~/Library/LaunchAgents (à toi)</dd></div><div><dt>Vu pour la première fois</dt><dd>5 octobre 2026 à 06:54</dd></div></dl><h4>Pour agir</h4><pre class="code">demarrage desactiver 4be503c6 --confirmer
+(son fichier part en quarantaine, rien n&#x27;est effacé)</pre><h4>Pour annuler</h4><pre class="code">demarrage restaurer 4be503c6 --confirmer</pre><p class="effet">Si tu le désactives : Rien de visible : les versions récentes de Spotify ne l&#x27;utilisent plus.</p></details>
+</article><article class="fiche v-inconnu" id="f-ce066d3a">
+  <div class="tete">
+    <span class="rang">10</span>
+    <div class="titre"><h3>com.mystere.agent</h3><p class="qui">éditeur inconnu · Agent de ta session</p></div>
+    <span class="verdict">⚠️ Inconnu, à vérifier</span>
+  </div>
+  <div class="impact"><div class="jauge" role="meter" aria-valuemin="0" aria-valuemax="100"
+    aria-valuenow="1" aria-label="Impact"><span style="width:1%"></span></div>
+    <span class="note">Impact 1/100</span></div>
+  <p class="role">Un élément d&#x27;un éditeur inconnu qui lance « agent » (à l&#x27;ouverture de session, relancé s&#x27;il s&#x27;arrête). Il n&#x27;est pas dans la base de connaissances : on ne devine pas son rôle.</p>
+  <p class="raison"><strong>Pourquoi :</strong> programme non signé : éditeur inconnu.</p>
+  
+  <dl class="mesures"><div><dt>Processeur à l&#x27;ouverture</dt><dd>0,3 s sur 5 minutes</dd></div><div><dt>Processeur moyen</dt><dd>0,1 % d&#x27;un cœur</dd></div><div><dt>Mémoire</dt><dd>8 Mo</dd></div><div><dt>Énergie</dt><dd>0,0</dd></div><div><dt>Veille</dt><dd>ne l&#x27;empêche pas</dd></div></dl>
+  <details class="plus"><summary>Où il est, et comment agir</summary>
+    <dl class="details"><div><dt>Identifiant</dt><dd>ce066d3a</dd></div><div><dt>Label</dt><dd>com.mystere.agent</dd></div><div><dt>Fichier</dt><dd>/Users/utilisateur/Library/LaunchAgents/com.mystere.agent.plist</dd></div><div><dt>Programme</dt><dd>/Users/utilisateur/Library/Application Support/.mystere/agent</dd></div><div><dt>Quand</dt><dd>à l&#x27;ouverture de session, relancé s&#x27;il s&#x27;arrête</dd></div><div><dt>Emplacement</dt><dd>~/Library/LaunchAgents (à toi)</dd></div><div><dt>Lancements</dt><dd>1 (dernier code de sortie : 0)</dd></div><div><dt>Vu pour la première fois</dt><dd>5 octobre 2026 à 06:54</dd></div></dl><h4>Pour le vérifier</h4><pre class="code">⚠️ À vérifier : programme non signé : éditeur inconnu.
+   Éditeur : inconnu
+   Fichier de lancement : /Users/utilisateur/Library/LaunchAgents/com.mystere.agent.plist
+   Programme : /Users/utilisateur/Library/Application Support/.mystere/agent
+   Vu pour la première fois : 05/10/2026 à 06:54
+   Pour voir sa signature : codesign -dv --verbose=2 &#x27;/Users/utilisateur/Library/Application Support/.mystere/agent&#x27;
+   Si tu ne le reconnais pas, cherche son nom avant d&#x27;agir. Ne le supprime pas à l&#x27;aveugle.</pre></details>
+</article><article class="fiche v-inconnu" id="f-e0fce856">
+  <div class="tete">
+    <span class="rang">11</span>
+    <div class="titre"><h3>com.apple.mise-a-jour</h3><p class="qui">éditeur inconnu · Agent de ta session</p></div>
+    <span class="verdict">⚠️ Inconnu, à vérifier</span>
+  </div>
+  <div class="impact"><div class="jauge" role="meter" aria-valuemin="0" aria-valuemax="100"
+    aria-valuenow="1" aria-label="Impact"><span style="width:1%"></span></div>
+    <span class="note">Impact 1/100</span></div>
+  <p class="role">Un élément d&#x27;un éditeur inconnu qui lance « maj » (à l&#x27;ouverture de session). Il n&#x27;est pas dans la base de connaissances : on ne devine pas son rôle.</p>
+  <p class="raison"><strong>Pourquoi :</strong> porte un nom d&#x27;Apple (com.apple…) sans être signé par Apple.</p>
+  
+  <dl class="mesures"><div><dt>Processeur à l&#x27;ouverture</dt><dd>0,3 s sur 5 minutes</dd></div><div><dt>Processeur moyen</dt><dd>0,1 % d&#x27;un cœur</dd></div><div><dt>Mémoire</dt><dd>6 Mo</dd></div><div><dt>Énergie</dt><dd>0,0</dd></div><div><dt>Veille</dt><dd>ne l&#x27;empêche pas</dd></div></dl>
+  <details class="plus"><summary>Où il est, et comment agir</summary>
+    <dl class="details"><div><dt>Identifiant</dt><dd>e0fce856</dd></div><div><dt>Label</dt><dd>com.apple.mise-a-jour</dd></div><div><dt>Fichier</dt><dd>/Users/utilisateur/Library/LaunchAgents/com.apple.mise-a-jour.plist</dd></div><div><dt>Programme</dt><dd>/Users/utilisateur/.local/maj</dd></div><div><dt>Quand</dt><dd>à l&#x27;ouverture de session</dd></div><div><dt>Emplacement</dt><dd>~/Library/LaunchAgents (à toi)</dd></div><div><dt>Vu pour la première fois</dt><dd>5 octobre 2026 à 06:54</dd></div></dl><h4>Pour le vérifier</h4><pre class="code">⚠️ À vérifier : porte un nom d&#x27;Apple (com.apple…) sans être signé par Apple.
+   Éditeur : inconnu
+   Fichier de lancement : /Users/utilisateur/Library/LaunchAgents/com.apple.mise-a-jour.plist
+   Programme : /Users/utilisateur/.local/maj
+   Vu pour la première fois : 05/10/2026 à 06:54
+   Pour voir sa signature : codesign -dv --verbose=2 /Users/utilisateur/.local/maj
+   Si tu ne le reconnais pas, cherche son nom avant d&#x27;agir. Ne le supprime pas à l&#x27;aveugle.</pre></details>
+</article><article class="fiche v-orphelin" id="f-13e41f0d">
+  <div class="tete">
+    <span class="rang">12</span>
+    <div class="titre"><h3>Ancienne App</h3><p class="qui">éditeur inconnu · Ouverture à la connexion</p></div>
+    <span class="verdict">👻 Orphelin (reste d&#x27;une app désinstallée)</span>
+  </div>
+  <div class="impact"><div class="jauge" role="meter" aria-valuemin="0" aria-valuemax="100"
+    aria-valuenow="0" aria-label="Impact"><span style="width:0%"></span></div>
+    <span class="note">Impact 0/100</span></div>
+  <p class="role">Un élément d&#x27;un éditeur inconnu qui lance « Ancienne App.app » (à l&#x27;ouverture de session). Il n&#x27;est pas dans la base de connaissances : on ne devine pas son rôle.</p>
+  <p class="raison"><strong>Pourquoi :</strong> le programme /Applications/Ancienne App.app n&#x27;existe plus.</p>
+  
+  <dl class="mesures"><div><dt>Processeur à l&#x27;ouverture</dt><dd>—</dd></div><div><dt>Processeur moyen</dt><dd>—</dd></div><div><dt>Mémoire</dt><dd>—</dd></div><div><dt>Énergie</dt><dd>—</dd></div><div><dt>Veille</dt><dd>—</dd></div><div><dt>Dernière ouverture de l&#x27;app</dt><dd>jamais vue ou inconnue</dd></div></dl>
+  <details class="plus"><summary>Où il est, et comment agir</summary>
+    <dl class="details"><div><dt>Identifiant</dt><dd>13e41f0d</dd></div><div><dt>Label</dt><dd>Ancienne App</dd></div><div><dt>Fichier</dt><dd>—</dd></div><div><dt>Programme</dt><dd>/Applications/Ancienne App.app</dd></div><div><dt>Quand</dt><dd>à l&#x27;ouverture de session</dd></div><div><dt>Emplacement</dt><dd>Ouverture à la connexion (Réglages Système)</dd></div><div><dt>Vu pour la première fois</dt><dd>5 octobre 2026 à 06:54</dd></div></dl><h4>Pour agir</h4><pre class="code">demarrage desactiver 13e41f0d --confirmer
+(ou à la main : Réglages Système → Général → Ouverture et extensions (« Ouverture » sur les macOS plus anciens) → « Ouvrir à la connexion » : sélectionne « Ancienne App », puis « − ».)</pre><h4>Pour annuler</h4><pre class="code">demarrage restaurer 13e41f0d --confirmer
+(ou à la main : Même endroit : « + », puis choisis l&#x27;app « Ancienne App ».)</pre></details>
+</article><article class="fiche v-orphelin" id="f-7313d760">
+  <div class="tete">
+    <span class="rang">13</span>
+    <div class="titre"><h3>com.ancien.helper</h3><p class="qui">Ancien Éditeur · Assistant privilégié</p></div>
+    <span class="verdict">👻 Orphelin (reste d&#x27;une app désinstallée)</span>
+  </div>
+  <div class="impact"><div class="jauge" role="meter" aria-valuemin="0" aria-valuemax="100"
+    aria-valuenow="0" aria-label="Impact"><span style="width:0%"></span></div>
+    <span class="note">Impact 0/100</span></div>
+  <p class="role">Un élément de Ancien Éditeur qui lance « com.ancien.helper » (à la demande). Il n&#x27;est pas dans la base de connaissances : on ne devine pas son rôle.</p>
+  <p class="raison"><strong>Pourquoi :</strong> plus rien ne le lance : reste probable d&#x27;une app désinstallée.</p>
+  
+  <dl class="mesures"><div><dt>Processeur à l&#x27;ouverture</dt><dd>—</dd></div><div><dt>Processeur moyen</dt><dd>—</dd></div><div><dt>Mémoire</dt><dd>—</dd></div><div><dt>Énergie</dt><dd>—</dd></div><div><dt>Veille</dt><dd>—</dd></div></dl>
+  <details class="plus"><summary>Où il est, et comment agir</summary>
+    <dl class="details"><div><dt>Identifiant</dt><dd>7313d760</dd></div><div><dt>Label</dt><dd>com.ancien.helper</dd></div><div><dt>Fichier</dt><dd>—</dd></div><div><dt>Programme</dt><dd>/Library/PrivilegedHelperTools/com.ancien.helper</dd></div><div><dt>Quand</dt><dd>à la demande</dd></div><div><dt>Emplacement</dt><dd>/Library/PrivilegedHelperTools (administrateur)</dd></div><div><dt>Vu pour la première fois</dt><dd>5 octobre 2026 à 06:54</dd></div></dl><h4>Pour agir</h4><pre class="code">Plus rien ne le lance au démarrage. Pour le retirer (administrateur), il part dans ta corbeille :
+sudo mv /Library/PrivilegedHelperTools/com.ancien.helper ~/.Trash/</pre><h4>Pour annuler</h4><pre class="code">sudo mv ~/.Trash/com.ancien.helper /Library/PrivilegedHelperTools/com.ancien.helper</pre></details>
+</article><article class="fiche v-inconnu" id="f-ab63a4fa">
+  <div class="tete">
+    <span class="rang">14</span>
+    <div class="titre"><h3>com.exemple.casse</h3><p class="qui">éditeur inconnu · Agent de ta session</p></div>
+    <span class="verdict">⚠️ Inconnu, à vérifier</span>
+  </div>
+  <div class="impact"><div class="jauge" role="meter" aria-valuemin="0" aria-valuemax="100"
+    aria-valuenow="0" aria-label="Impact"><span style="width:0%"></span></div>
+    <span class="note">Impact 0/100</span></div>
+  <p class="role">Un élément d&#x27;un éditeur inconnu qui a un fichier de lancement illisible (plist corrompu (illisible par launchd aussi)) (à la demande). Il n&#x27;est pas dans la base de connaissances : on ne devine pas son rôle.</p>
+  <p class="raison"><strong>Pourquoi :</strong> fichier de lancement illisible : plist corrompu (illisible par launchd aussi).</p>
+  
+  <dl class="mesures"><div><dt>Processeur à l&#x27;ouverture</dt><dd>—</dd></div><div><dt>Processeur moyen</dt><dd>—</dd></div><div><dt>Mémoire</dt><dd>—</dd></div><div><dt>Énergie</dt><dd>—</dd></div><div><dt>Veille</dt><dd>—</dd></div></dl>
+  <details class="plus"><summary>Où il est, et comment agir</summary>
+    <dl class="details"><div><dt>Identifiant</dt><dd>ab63a4fa</dd></div><div><dt>Label</dt><dd>com.exemple.casse</dd></div><div><dt>Fichier</dt><dd>/Users/utilisateur/Library/LaunchAgents/com.exemple.casse.plist</dd></div><div><dt>Programme</dt><dd>—</dd></div><div><dt>Quand</dt><dd>à la demande</dd></div><div><dt>Emplacement</dt><dd>~/Library/LaunchAgents (à toi)</dd></div><div><dt>Vu pour la première fois</dt><dd>5 octobre 2026 à 06:54</dd></div></dl><h4>Pour le vérifier</h4><pre class="code">⚠️ À vérifier : fichier de lancement illisible : plist corrompu (illisible par launchd aussi).
+   Éditeur : inconnu
+   Fichier de lancement : /Users/utilisateur/Library/LaunchAgents/com.exemple.casse.plist
+   Programme : —
+   Vu pour la première fois : 05/10/2026 à 06:54
+   Si tu ne le reconnais pas, cherche son nom avant d&#x27;agir. Ne le supprime pas à l&#x27;aveugle.</pre></details>
+</article><article class="fiche v-orphelin" id="f-d57f6ba1">
+  <div class="tete">
+    <span class="rang">15</span>
+    <div class="titre"><h3>com.exemple.desinstalle.agent</h3><p class="qui">éditeur inconnu · Agent de ta session</p></div>
+    <span class="verdict">👻 Orphelin (reste d&#x27;une app désinstallée)</span>
+  </div>
+  <div class="impact"><div class="jauge" role="meter" aria-valuemin="0" aria-valuemax="100"
+    aria-valuenow="0" aria-label="Impact"><span style="width:0%"></span></div>
+    <span class="note">Impact 0/100</span></div>
+  <p class="role">Un élément d&#x27;un éditeur inconnu qui lance « agent » (à l&#x27;ouverture de session). Il n&#x27;est pas dans la base de connaissances : on ne devine pas son rôle.</p>
+  <p class="raison"><strong>Pourquoi :</strong> le programme /Applications/Désinstallé.app/Contents/MacOS/agent n&#x27;existe plus.</p>
+  
+  <dl class="mesures"><div><dt>Processeur à l&#x27;ouverture</dt><dd>—</dd></div><div><dt>Processeur moyen</dt><dd>—</dd></div><div><dt>Mémoire</dt><dd>—</dd></div><div><dt>Énergie</dt><dd>—</dd></div><div><dt>Veille</dt><dd>—</dd></div><div><dt>Dernière ouverture de l&#x27;app</dt><dd>jamais vue ou inconnue</dd></div></dl>
+  <details class="plus"><summary>Où il est, et comment agir</summary>
+    <dl class="details"><div><dt>Identifiant</dt><dd>d57f6ba1</dd></div><div><dt>Label</dt><dd>com.exemple.desinstalle.agent</dd></div><div><dt>Fichier</dt><dd>/Users/utilisateur/Library/LaunchAgents/com.exemple.desinstalle.agent.plist</dd></div><div><dt>Programme</dt><dd>/Applications/Désinstallé.app/Contents/MacOS/agent</dd></div><div><dt>Quand</dt><dd>à l&#x27;ouverture de session</dd></div><div><dt>Emplacement</dt><dd>~/Library/LaunchAgents (à toi)</dd></div><div><dt>Vu pour la première fois</dt><dd>5 octobre 2026 à 06:54</dd></div></dl><h4>Pour agir</h4><pre class="code">demarrage desactiver d57f6ba1 --confirmer
+(son fichier part en quarantaine, rien n&#x27;est effacé)</pre><h4>Pour annuler</h4><pre class="code">demarrage restaurer d57f6ba1 --confirmer</pre></details>
+</article><article class="fiche v-utile" id="f-82365614">
+  <div class="tete">
+    <span class="rang">16</span>
+    <div class="titre"><h3>com.exemple.doublon</h3><p class="qui">Notes Rapides SAS · Agent de ta session</p></div>
+    <span class="verdict">✅ Utile, à garder</span>
+  </div>
+  <div class="impact"><div class="jauge" role="meter" aria-valuemin="0" aria-valuemax="100"
+    aria-valuenow="0" aria-label="Impact"><span style="width:0%"></span></div>
+    <span class="note">Impact 0/100</span></div>
+  <p class="role">Un élément de Notes Rapides SAS qui lance « raccourcis » (à la demande). Il n&#x27;est pas dans la base de connaissances : on ne devine pas son rôle.</p>
+  <p class="raison"><strong>Pourquoi :</strong> impact négligeable.</p>
+  <p class="drapeaux"><span class="drapeau">label en double</span></p>
+  <dl class="mesures"><div><dt>Processeur à l&#x27;ouverture</dt><dd>—</dd></div><div><dt>Processeur moyen</dt><dd>—</dd></div><div><dt>Mémoire</dt><dd>—</dd></div><div><dt>Énergie</dt><dd>—</dd></div><div><dt>Veille</dt><dd>—</dd></div><div><dt>Dernière ouverture de l&#x27;app</dt><dd>hier</dd></div></dl>
+  <details class="plus"><summary>Où il est, et comment agir</summary>
+    <dl class="details"><div><dt>Identifiant</dt><dd>82365614</dd></div><div><dt>Label</dt><dd>com.exemple.doublon</dd></div><div><dt>Fichier</dt><dd>/Users/utilisateur/Library/LaunchAgents/com.exemple.doublon.plist</dd></div><div><dt>Programme</dt><dd>/Applications/Notes Rapides.app/Contents/MacOS/raccourcis</dd></div><div><dt>Quand</dt><dd>à la demande</dd></div><div><dt>Emplacement</dt><dd>~/Library/LaunchAgents (à toi)</dd></div><div><dt>Vu pour la première fois</dt><dd>5 octobre 2026 à 06:54</dd></div></dl><h4>Pour agir</h4><pre class="code">demarrage desactiver 82365614 --confirmer
+(c&#x27;est-à-dire :
+launchctl bootout gui/501/com.exemple.doublon
+launchctl disable gui/501/com.exemple.doublon)</pre><h4>Pour annuler</h4><pre class="code">demarrage restaurer 82365614 --confirmer
+(c&#x27;est-à-dire :
+launchctl enable gui/501/com.exemple.doublon
+launchctl bootstrap gui/501 /Users/utilisateur/Library/LaunchAgents/com.exemple.doublon.plist)</pre></details>
+</article><article class="fiche v-utile" id="f-54538dc8">
+  <div class="tete">
+    <span class="rang">17</span>
+    <div class="titre"><h3>com.exemple.doublon</h3><p class="qui">Notes Rapides SAS · Agent pour tous les comptes</p></div>
+    <span class="verdict">✅ Utile, à garder</span>
+  </div>
+  <div class="impact"><div class="jauge" role="meter" aria-valuemin="0" aria-valuemax="100"
+    aria-valuenow="0" aria-label="Impact"><span style="width:0%"></span></div>
+    <span class="note">Impact 0/100</span></div>
+  <p class="role">Un élément de Notes Rapides SAS qui lance « raccourcis » (à la demande). Il n&#x27;est pas dans la base de connaissances : on ne devine pas son rôle.</p>
+  <p class="raison"><strong>Pourquoi :</strong> impact négligeable.</p>
+  <p class="drapeaux"><span class="drapeau">label en double</span></p>
+  <dl class="mesures"><div><dt>Processeur à l&#x27;ouverture</dt><dd>—</dd></div><div><dt>Processeur moyen</dt><dd>—</dd></div><div><dt>Mémoire</dt><dd>—</dd></div><div><dt>Énergie</dt><dd>—</dd></div><div><dt>Veille</dt><dd>—</dd></div><div><dt>Dernière ouverture de l&#x27;app</dt><dd>hier</dd></div></dl>
+  <details class="plus"><summary>Où il est, et comment agir</summary>
+    <dl class="details"><div><dt>Identifiant</dt><dd>54538dc8</dd></div><div><dt>Label</dt><dd>com.exemple.doublon</dd></div><div><dt>Fichier</dt><dd>/Library/LaunchAgents/com.exemple.doublon.plist</dd></div><div><dt>Programme</dt><dd>/Applications/Notes Rapides.app/Contents/MacOS/raccourcis</dd></div><div><dt>Quand</dt><dd>à la demande</dd></div><div><dt>Emplacement</dt><dd>/Library/LaunchAgents (pour tous les comptes)</dd></div><div><dt>Vu pour la première fois</dt><dd>5 octobre 2026 à 06:54</dd></div></dl><h4>Pour agir</h4><pre class="code">launchctl bootout gui/501/com.exemple.doublon
+launchctl disable gui/501/com.exemple.doublon</pre><h4>Pour annuler</h4><pre class="code">launchctl enable gui/501/com.exemple.doublon
+launchctl bootstrap gui/501 /Library/LaunchAgents/com.exemple.doublon.plist</pre></details>
+</article><article class="fiche v-utile" id="f-d80c0dff">
+  <div class="tete">
+    <span class="rang">18</span>
+    <div class="titre"><h3>com.exemple.vpn.daemon</h3><p class="qui">Exemple VPN SAS · Service système (daemon)</p></div>
+    <span class="verdict">✅ Utile, à garder</span>
+  </div>
+  <div class="impact"><div class="jauge" role="meter" aria-valuemin="0" aria-valuemax="100"
+    aria-valuenow="0" aria-label="Impact"><span style="width:0%"></span></div>
+    <span class="note">Impact 0/100</span></div>
+  <p class="role">Un élément de Exemple VPN SAS qui lance « com.exemple.vpn.daemon » (à l&#x27;ouverture de session, relancé s&#x27;il s&#x27;arrête). Il n&#x27;est pas dans la base de connaissances : on ne devine pas son rôle.</p>
+  <p class="raison"><strong>Pourquoi :</strong> impact négligeable.</p>
+  
+  <dl class="mesures"><div><dt>Processeur à l&#x27;ouverture</dt><dd>—</dd></div><div><dt>Processeur moyen</dt><dd>—</dd></div><div><dt>Mémoire</dt><dd>—</dd></div><div><dt>Énergie</dt><dd>—</dd></div><div><dt>Veille</dt><dd>—</dd></div></dl>
+  <details class="plus"><summary>Où il est, et comment agir</summary>
+    <dl class="details"><div><dt>Identifiant</dt><dd>d80c0dff</dd></div><div><dt>Label</dt><dd>com.exemple.vpn.daemon</dd></div><div><dt>Fichier</dt><dd>/Library/LaunchDaemons/com.exemple.vpn.daemon.plist</dd></div><div><dt>Programme</dt><dd>/Library/PrivilegedHelperTools/com.exemple.vpn.daemon</dd></div><div><dt>Quand</dt><dd>à l&#x27;ouverture de session, relancé s&#x27;il s&#x27;arrête</dd></div><div><dt>Emplacement</dt><dd>/Library/LaunchDaemons (système, administrateur)</dd></div><div><dt>Vu pour la première fois</dt><dd>5 octobre 2026 à 06:54</dd></div></dl><h4>Pour agir</h4><pre class="code">sudo launchctl bootout system/com.exemple.vpn.daemon
+sudo launchctl disable system/com.exemple.vpn.daemon</pre><h4>Pour annuler</h4><pre class="code">sudo launchctl enable system/com.exemple.vpn.daemon
+sudo launchctl bootstrap system /Library/LaunchDaemons/com.exemple.vpn.daemon.plist</pre></details>
+</article><article class="fiche v-utile" id="f-be3cefc7">
+  <div class="tete">
+    <span class="rang">19</span>
+    <div class="titre"><h3>com.exemple.vpn.daemon</h3><p class="qui">Exemple VPN SAS · Assistant privilégié</p></div>
+    <span class="verdict">✅ Utile, à garder</span>
+  </div>
+  <div class="impact"><div class="jauge" role="meter" aria-valuemin="0" aria-valuemax="100"
+    aria-valuenow="0" aria-label="Impact"><span style="width:0%"></span></div>
+    <span class="note">Impact 0/100</span></div>
+  <p class="role">Un élément de Exemple VPN SAS qui lance « com.exemple.vpn.daemon » (à la demande). Il n&#x27;est pas dans la base de connaissances : on ne devine pas son rôle.</p>
+  <p class="raison"><strong>Pourquoi :</strong> impact négligeable.</p>
+  
+  <dl class="mesures"><div><dt>Processeur à l&#x27;ouverture</dt><dd>—</dd></div><div><dt>Processeur moyen</dt><dd>—</dd></div><div><dt>Mémoire</dt><dd>—</dd></div><div><dt>Énergie</dt><dd>—</dd></div><div><dt>Veille</dt><dd>—</dd></div></dl>
+  <details class="plus"><summary>Où il est, et comment agir</summary>
+    <dl class="details"><div><dt>Identifiant</dt><dd>be3cefc7</dd></div><div><dt>Label</dt><dd>com.exemple.vpn.daemon</dd></div><div><dt>Fichier</dt><dd>—</dd></div><div><dt>Programme</dt><dd>/Library/PrivilegedHelperTools/com.exemple.vpn.daemon</dd></div><div><dt>Quand</dt><dd>à la demande</dd></div><div><dt>Emplacement</dt><dd>/Library/PrivilegedHelperTools (administrateur)</dd></div><div><dt>Vu pour la première fois</dt><dd>5 octobre 2026 à 06:54</dd></div></dl><h4>Pour agir</h4><pre class="code">Il est lancé par le daemon « com.exemple.vpn.daemon » : c&#x27;est lui qu&#x27;il faut désactiver (voir sa fiche).</pre></details>
+</article><article class="fiche v-utile" id="f-bbc97cd4">
+  <div class="tete">
+    <span class="rang">20</span>
+    <div class="titre"><h3>com.exemple.Étiquette avec espaces</h3><p class="qui">Café Logiciels · Agent de ta session</p></div>
+    <span class="verdict">✅ Utile, à garder</span>
+  </div>
+  <div class="impact"><div class="jauge" role="meter" aria-valuemin="0" aria-valuemax="100"
+    aria-valuenow="0" aria-label="Impact"><span style="width:0%"></span></div>
+    <span class="note">Impact 0/100</span></div>
+  <p class="role">Un élément de Café Logiciels qui lance « Éditeur Café » (à l&#x27;ouverture de session). Il n&#x27;est pas dans la base de connaissances : on ne devine pas son rôle.</p>
+  <p class="raison"><strong>Pourquoi :</strong> déjà désactivé.</p>
+  
+  <dl class="mesures"><div><dt>Processeur à l&#x27;ouverture</dt><dd>—</dd></div><div><dt>Processeur moyen</dt><dd>—</dd></div><div><dt>Mémoire</dt><dd>—</dd></div><div><dt>Énergie</dt><dd>—</dd></div><div><dt>Veille</dt><dd>—</dd></div><div><dt>Dernière ouverture de l&#x27;app</dt><dd>il y a 3 jours</dd></div></dl>
+  <details class="plus"><summary>Où il est, et comment agir</summary>
+    <dl class="details"><div><dt>Identifiant</dt><dd>bbc97cd4</dd></div><div><dt>Label</dt><dd>com.exemple.Étiquette avec espaces</dd></div><div><dt>Fichier</dt><dd>/Users/utilisateur/Library/LaunchAgents/com.exemple.accents.plist</dd></div><div><dt>Programme</dt><dd>/Applications/Éditeur Café.app/Contents/MacOS/Éditeur Café</dd></div><div><dt>Quand</dt><dd>à l&#x27;ouverture de session</dd></div><div><dt>Emplacement</dt><dd>~/Library/LaunchAgents (à toi)</dd></div><div><dt>Vu pour la première fois</dt><dd>5 octobre 2026 à 06:54</dd></div></dl><p>Rien à faire.</p></details>
+</article><article class="fiche v-orphelin" id="f-0073b6d4">
+  <div class="tete">
+    <span class="rang">21</span>
+    <div class="titre"><h3>cron : absent</h3><p class="qui">éditeur inconnu · Tâche planifiée (cron)</p></div>
+    <span class="verdict">👻 Orphelin (reste d&#x27;une app désinstallée)</span>
+  </div>
+  <div class="impact"><div class="jauge" role="meter" aria-valuemin="0" aria-valuemax="100"
+    aria-valuenow="0" aria-label="Impact"><span style="width:0%"></span></div>
+    <span class="note">Impact 0/100</span></div>
+  <p class="role">Un élément d&#x27;un éditeur inconnu qui lance « absent » (à l&#x27;ouverture de session). Il n&#x27;est pas dans la base de connaissances : on ne devine pas son rôle.</p>
+  <p class="raison"><strong>Pourquoi :</strong> le programme /opt/homebrew/bin/absent n&#x27;existe plus.</p>
+  
+  <dl class="mesures"><div><dt>Processeur à l&#x27;ouverture</dt><dd>—</dd></div><div><dt>Processeur moyen</dt><dd>—</dd></div><div><dt>Mémoire</dt><dd>—</dd></div><div><dt>Énergie</dt><dd>—</dd></div><div><dt>Veille</dt><dd>—</dd></div></dl>
+  <details class="plus"><summary>Où il est, et comment agir</summary>
+    <dl class="details"><div><dt>Identifiant</dt><dd>0073b6d4</dd></div><div><dt>Label</dt><dd>cron : absent</dd></div><div><dt>Fichier</dt><dd>—</dd></div><div><dt>Programme</dt><dd>/opt/homebrew/bin/absent</dd></div><div><dt>Quand</dt><dd>à l&#x27;ouverture de session</dd></div><div><dt>Emplacement</dt><dd>tâche cron</dd></div><div><dt>Vu pour la première fois</dt><dd>5 octobre 2026 à 06:54</dd></div></dl><h4>Pour agir</h4><pre class="code">Tape « crontab -e », puis ajoute un # au début de la ligne qui commence par « au démarrage », et enregistre.</pre><h4>Pour annuler</h4><pre class="code">« crontab -e », puis retire le # que tu avais ajouté.</pre></details>
+</article><article class="fiche v-inconnu" id="f-4690307a">
+  <div class="tete">
+    <span class="rang">22</span>
+    <div class="titre"><h3>cron : sauvegarde.sh</h3><p class="qui">éditeur inconnu · Tâche planifiée (cron)</p></div>
+    <span class="verdict">⚠️ Inconnu, à vérifier</span>
+  </div>
+  <div class="impact"><div class="jauge" role="meter" aria-valuemin="0" aria-valuemax="100"
+    aria-valuenow="0" aria-label="Impact"><span style="width:0%"></span></div>
+    <span class="note">Impact 0/100</span></div>
+  <p class="role">Un élément d&#x27;un éditeur inconnu qui lance « sauvegarde.sh » (à la demande). Il n&#x27;est pas dans la base de connaissances : on ne devine pas son rôle.</p>
+  <p class="raison"><strong>Pourquoi :</strong> programme non signé : éditeur inconnu.</p>
+  
+  <dl class="mesures"><div><dt>Processeur à l&#x27;ouverture</dt><dd>—</dd></div><div><dt>Processeur moyen</dt><dd>—</dd></div><div><dt>Mémoire</dt><dd>—</dd></div><div><dt>Énergie</dt><dd>—</dd></div><div><dt>Veille</dt><dd>—</dd></div></dl>
+  <details class="plus"><summary>Où il est, et comment agir</summary>
+    <dl class="details"><div><dt>Identifiant</dt><dd>4690307a</dd></div><div><dt>Label</dt><dd>cron : sauvegarde.sh</dd></div><div><dt>Fichier</dt><dd>—</dd></div><div><dt>Programme</dt><dd>/Users/utilisateur/bin/sauvegarde.sh</dd></div><div><dt>Quand</dt><dd>à la demande</dd></div><div><dt>Emplacement</dt><dd>tâche cron</dd></div><div><dt>Vu pour la première fois</dt><dd>5 octobre 2026 à 06:54</dd></div></dl><h4>Pour le vérifier</h4><pre class="code">⚠️ À vérifier : programme non signé : éditeur inconnu.
+   Éditeur : inconnu
+   Fichier de lancement : —
+   Programme : /Users/utilisateur/bin/sauvegarde.sh
+   Vu pour la première fois : 05/10/2026 à 06:54
+   Pour voir sa signature : codesign -dv --verbose=2 /Users/utilisateur/bin/sauvegarde.sh
+   Si tu ne le reconnais pas, cherche son nom avant d&#x27;agir. Ne le supprime pas à l&#x27;aveugle.</pre></details>
+</article><article class="fiche v-utile" id="f-afbd36c4">
+  <div class="tete">
+    <span class="rang">23</span>
+    <div class="titre"><h3>Exemple VPN</h3><p class="qui">Exemple VPN SAS · Extension système</p></div>
+    <span class="verdict">✅ Utile, à garder</span>
+  </div>
+  <div class="impact"><div class="jauge" role="meter" aria-valuemin="0" aria-valuemax="100"
+    aria-valuenow="0" aria-label="Impact"><span style="width:0%"></span></div>
+    <span class="note">Impact 0/100</span></div>
+  <p class="role">Un élément de Exemple VPN SAS qui ne dit pas quel programme il lance (à la demande). Il n&#x27;est pas dans la base de connaissances : on ne devine pas son rôle.</p>
+  <p class="raison"><strong>Pourquoi :</strong> impact négligeable.</p>
+  
+  <dl class="mesures"><div><dt>Processeur à l&#x27;ouverture</dt><dd>—</dd></div><div><dt>Processeur moyen</dt><dd>—</dd></div><div><dt>Mémoire</dt><dd>—</dd></div><div><dt>Énergie</dt><dd>—</dd></div><div><dt>Veille</dt><dd>—</dd></div></dl>
+  <details class="plus"><summary>Où il est, et comment agir</summary>
+    <dl class="details"><div><dt>Identifiant</dt><dd>afbd36c4</dd></div><div><dt>Label</dt><dd>com.exemple.vpn.tunnel</dd></div><div><dt>Fichier</dt><dd>—</dd></div><div><dt>Programme</dt><dd>—</dd></div><div><dt>Quand</dt><dd>à l&#x27;ouverture de session</dd></div><div><dt>Emplacement</dt><dd>extension système</dd></div><div><dt>Vu pour la première fois</dt><dd>5 octobre 2026 à 06:54</dd></div></dl><h4>Pour agir</h4><pre class="code">Réglages Système → Général → Ouverture et extensions (« Ouverture » sur les macOS plus anciens) → « Extensions » : décoche « Exemple VPN ». Ou désinstalle l&#x27;app qui l&#x27;a installée.</pre><h4>Pour annuler</h4><pre class="code">Même endroit : recoche « Exemple VPN ».</pre></details>
+</article><article class="fiche v-utile" id="f-e6a9df74">
+  <div class="tete">
+    <span class="rang">24</span>
+    <div class="titre"><h3>Mise à jour de Zoom</h3><p class="qui">Zoom Video Communications, Inc. · Service intégré à une app</p></div>
+    <span class="verdict">✅ Utile, à garder</span>
+  </div>
+  <div class="impact"><div class="jauge" role="meter" aria-valuemin="0" aria-valuemax="100"
+    aria-valuenow="0" aria-label="Impact"><span style="width:0%"></span></div>
+    <span class="note">Impact 0/100</span></div>
+  <p class="role">Installe les mises à jour de Zoom.</p>
+  <p class="raison"><strong>Pourquoi :</strong> déclaré par son app mais pas activé : il ne se lance pas.</p>
+  
+  <dl class="mesures"><div><dt>Processeur à l&#x27;ouverture</dt><dd>—</dd></div><div><dt>Processeur moyen</dt><dd>—</dd></div><div><dt>Mémoire</dt><dd>—</dd></div><div><dt>Énergie</dt><dd>—</dd></div><div><dt>Veille</dt><dd>—</dd></div><div><dt>Dernière ouverture de l&#x27;app</dt><dd>il y a 12 jours</dd></div></dl>
+  <details class="plus"><summary>Où il est, et comment agir</summary>
+    <dl class="details"><div><dt>Identifiant</dt><dd>e6a9df74</dd></div><div><dt>Label</dt><dd>us.zoom.ZoomDaemon</dd></div><div><dt>Fichier</dt><dd>/Applications/zoom.us.app/Contents/Library/LaunchDaemons/us.zoom.ZoomDaemon.plist</dd></div><div><dt>Programme</dt><dd>/Applications/zoom.us.app/Contents/Library/LaunchServices/ZoomDaemon</dd></div><div><dt>Quand</dt><dd>à la demande</dd></div><div><dt>Emplacement</dt><dd>dans une app (Contents/Library/LaunchDaemons)</dd></div><div><dt>Vu pour la première fois</dt><dd>5 octobre 2026 à 06:54</dd></div></dl><p>Rien à faire.</p></details>
+</article></section>
+<section><h2>🍎 macOS (18)</h2>
+  <details><summary>Voir les éléments de macOS (on n'y touche jamais)</summary>
+  <ul class="apple"><li>com.apple.backupd <span class="discret">(com.apple.backupd.plist)</span></li><li>com.apple.mDNSResponder <span class="discret">(com.apple.mDNSResponder.plist)</span></li><li>com.apple.metadata.mds <span class="discret">(com.apple.metadata.mds.plist)</span></li><li>com.apple.powerd <span class="discret">(com.apple.powerd.plist)</span></li><li>com.apple.softwareupdated <span class="discret">(com.apple.softwareupdated.plist)</span></li><li>com.apple.WindowServer <span class="discret">(com.apple.WindowServer.plist)</span></li><li>com.apple.bird <span class="discret">(com.apple.bird.plist)</span></li><li>com.apple.cloudd <span class="discret">(com.apple.cloudd.plist)</span></li><li>com.apple.coreservices.uiagent <span class="discret">(com.apple.coreservices.uiagent.plist)</span></li><li>com.apple.Dock.agent <span class="discret">(com.apple.Dock.agent.plist)</span></li><li>com.apple.Finder <span class="discret">(com.apple.Finder.plist)</span></li><li>com.apple.knowledge-agent <span class="discret">(com.apple.knowledge-agent.plist)</span></li><li>com.apple.mediaanalysisd <span class="discret">(com.apple.mediaanalysisd.plist)</span></li><li>com.apple.notificationcenterui.agent <span class="discret">(com.apple.notificationcenterui.agent.plist)</span></li><li>com.apple.photoanalysisd <span class="discret">(com.apple.photoanalysisd.plist)</span></li><li>com.apple.siriknowledged <span class="discret">(com.apple.siriknowledged.plist)</span></li><li>com.apple.Spotlight <span class="discret">(com.apple.Spotlight.plist)</span></li><li>com.apple.WindowManager.agent <span class="discret">(com.apple.WindowManager.agent.plist)</span></li></ul></details></section>
+<section><h2>Bonus : l'ouverture du Terminal</h2><p>Un Terminal s'ouvre en <strong>412 ms</strong> (médiane de 5 essais) : c'est lent.</p><h4>Ce qui le ralentit (mesuré par zprof)</h4><ul><li>nvm (Node.js) : 245 ms</li><li>compinit (complétion) : 70 ms</li></ul><h4>Ce que j'ai repéré dans tes fichiers zsh</h4><ul><li>~/.zshrc, ligne 12 : nvm (Node.js) — charger nvm à la demande</li></ul><p class="discret">Je ne modifie jamais tes fichiers zsh : à toi de choisir.</p></section>
+<section><h2>Ce que j'ai pu voir</h2><ul class="collecteurs"><li>✅ <strong>S1</strong> ok <span class="discret">(13)</span></li><li>✅ <strong>S2</strong> ok <span class="discret">(3)</span></li><li>✅ <strong>S3</strong> ok <span class="discret">(18)</span></li><li>✅ <strong>S4</strong> ok <span class="discret">(1)</span></li><li>✅ <strong>S6</strong> ok <span class="discret">(0)</span></li><li>⚠️ <strong>S5</strong> dégradé : sfltool dumpbtm réservé à l&#x27;administrateur ; liste lue par System Events (les tâches de fond n&#x27;y sont pas) <span class="discret">(2)</span></li><li>✅ <strong>S7</strong> ok <span class="discret">(1)</span></li><li>✅ <strong>S8</strong> ok <span class="discret">(2)</span></li><li>✅ <strong>S9</strong> ok <span class="discret">(2)</span></li><li>✅ <strong>S10</strong> ok <span class="discret">(0)</span></li></ul></section>
+<footer class="discret">Fait sur ton Mac, sans Internet ni IA.
+Données : ~/Assistant/donnees/demarrage.</footer>
+</main>
+<script>
+(function(){
+  var racine=document.documentElement, bouton=document.querySelector('.theme');
+  try{var choisi=localStorage.getItem('demarrage-theme');
+    if(choisi){racine.setAttribute('data-theme',choisi);}}catch(e){}
+  bouton.addEventListener('click',function(){
+    var theme=racine.getAttribute('data-theme');
+    var sombre=theme==='dark'||(!theme&&matchMedia('(prefers-color-scheme: dark)').matches);
+    var nouveau=sombre?'light':'dark'; racine.setAttribute('data-theme',nouveau);
+    try{localStorage.setItem('demarrage-theme',nouveau);}catch(e){}
+  });
+  document.querySelectorAll('.cadre-courbe').forEach(function(cadre){
+    var svg=cadre.querySelector('svg'), bulle=cadre.querySelector('.bulle');
+    var repere=svg.querySelector('.repere');
+    function montrer(zone){
+      var x=parseFloat(zone.getAttribute('data-x')); repere.setAttribute('x1',x); repere.setAttribute('x2',x);
+      repere.setAttribute('visibility','visible');
+      bulle.textContent=zone.getAttribute('data-bulle'); bulle.hidden=false;
+      bulle.style.left=(x/svg.viewBox.baseVal.width*svg.getBoundingClientRect().width)+'px';
+    }
+    function cacher(){repere.setAttribute('visibility','hidden'); bulle.hidden=true;}
+    svg.querySelectorAll('.zone').forEach(function(z){
+      z.addEventListener('mouseenter',function(){montrer(z);}); z.addEventListener('focus',function(){montrer(z);});
+      z.addEventListener('mouseleave',cacher); z.addEventListener('blur',cacher);
+    });
+  });
+})();
+</script>
+</body>
+</html>

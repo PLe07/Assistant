@@ -42,7 +42,10 @@ def metriques(base: Base, reglages: dict[str, Any], maintenant: float) -> dict[s
     resultats: dict[str, Metriques] = defaultdict(Metriques)
 
     # Ouverture de session : la somme sur chaque session, puis la médiane des dernières sessions.
-    sessions = [s for s in base.sessions(v["sessions_retenues"]) if s.get("connexion")]
+    # Seules les sessions vraiment observées (des relevés dans les 5 minutes) comptent : une session « pas observée »
+    # (surveillance lancée trop tard) ferait croire à 0 s de processeur pour tout le monde.
+    sessions = [s for s in base.sessions(4 * v["sessions_retenues"]) if s.get("connexion") and s.get("releves")]
+    sessions = sessions[-v["sessions_retenues"] :]
     par_session: dict[str, list[float]] = defaultdict(list)
     for s in sessions:
         fin = s["connexion"] + e["session_minutes"] * 60
