@@ -11,7 +11,7 @@ Porte unique : `modules/demarrage/check.sh` (dans le conteneur : `PYTHON=<venv>/
 | P3 Collecteurs S5, S7-S10, modes dégradés | ✅ | 156 tests, couverture 98,4 % |
 | P4 Mesure (session, croisière, énergie, veille, zsh) | ✅ | secondes de processeur exactes sur le faux Mac ; 16 ms par relevé |
 | P5 Scores, verdicts, connaissances, gains | ✅ | faux Mac n° 1 : 100 % ; 2e faux Mac : 5/5 graines à 100 % |
-| P6 Actions réversibles + sécurité | ⏳ | |
+| P6 Actions réversibles + sécurité | ✅ | 12 tests d'actions, 18 tests de sécurité |
 | P7 Rapport HTML, CLI, notifications, surveillance | ⏳ | |
 | P8 Bout en bout, performance | ⏳ | |
 | P9 Installation | ⏳ | |
@@ -209,8 +209,42 @@ $ PYTHON=…/venv/bin/python modules/demarrage/check.sh
 CHECK OK
 ```
 
+## P6 — Actions réversibles et sécurité (✅)
+
+- `actions/desactiver.py` : plan en lecture seule (`est_lecture`), `--confirmer` pour agir, vérification après,
+  journal (D-28).
+- `actions/restaurer.py` : défait exactement l'action notée, idempotent (D-29).
+- `actions/quarantaine.py` : déplacement + manifeste + empreinte, retour refusé si écrasement ou modification
+  (D-30).
+- `actions/journal.py` (avant, après, commandes, détails, annulée), `actions/instructions.py` (le seul fichier où
+  « sudo » existe, en texte).
+- Faux Mac : un launchd et un System Events simulés qui se souviennent (`faux_mac/launchd_simule.py`).
+- Prouvé par les tests :
+  - désactiver → arrêté et désactivé → restaurer → rechargé et réactivé ;
+  - deuxième désactivation : « rien à faire » ;
+  - réactivé à la main : restaurer le note sans rien refaire ;
+  - quarantaine aller-retour, octet pour octet ;
+  - échec partiel noté puis défait ;
+  - élément d'ouverture retiré puis remis ; sans autorisation : le chemin des Réglages.
+- Sécurité (§9.4), sur le faux Mac n° 1 et sur un faux Mac aléatoire :
+  - simulation de desactiver + restaurer sur chaque élément : 0 commande de modification, 0 fichier touché ;
+  - 🍎 : toujours refusé, même avec `--confirmer` ;
+  - global : instructions seules ;
+  - inconnu : « vérifier » seulement ;
+  - sur le vrai `Mac`, `subprocess.run` intercepté : la simulation ne lance que de la lecture, et Apple et les
+    éléments globaux rien du tout ;
+  - aucune commande `sudo` lancée, et la fouille du code est toujours vide.
+
+```
+$ PYTHON=…/venv/bin/python modules/demarrage/check.sh
+▶ ruff check ✅  ▶ ruff format ✅  ▶ mypy ✅
+▶ pytest + couverture ≥ 85 %   232 passed · Total coverage: 98.60%   ✅
+▶ faux Mac (+ 2e faux Mac, 5 graines)   22 passed   ✅   ▶ sécurité   18 passed   ✅   ▶ performance   2 passed   ✅
+CHECK OK
+```
+
 ## Prochaine étape
 
-P6 : actions. `desactiver ID` (simulation par défaut, `--confirmer`), quarantaine avec manifeste, retrait d'un
-élément d'ouverture, instructions pour les éléments globaux, refus Apple, `restaurer ID`, journal, vérification de
-l'état avant d'agir ; tests de sécurité (subprocess intercepté).
+P7 : rapport HTML (résumé, classement, fiches, courbe des sessions, bonus zsh, mode sombre), CLI complète
+(scan, mesurer, rapport, desactiver, restaurer, historique, surveiller, doctor), notifications (nouvel élément,
+récap hebdomadaire, 1 par jour, jamais 23 h-8 h), démon de surveillance.

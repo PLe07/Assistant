@@ -251,3 +251,40 @@ non dit. Le script d'une tâche cron est non signé, donc ⚠️ : c'est souvent
 Un test vérifie qu'aucune entrée générale ne masque une entrée plus précise placée après elle : par exemple,
 « Mise à jour de OneDrive » avant « OneDrive », et « Docker (réseau et socket) » avant « Docker Desktop ».
 Un élément absent de la base reçoit une description générique qui ne dit que ce qu'on sait.
+
+## 2026-10-05 · P6 — Actions réversibles et sécurité
+
+**D-28 · Le plan lit, la confirmation agit.**
+`desactiver` établit toujours d'abord un plan, en lisant l'état actuel : `launchctl print gui/UID/label` (chargé ?)
+et `print-disabled` (désactivé ?). Ce plan ne contient que les commandes encore nécessaires. Si tout est déjà fait,
+il n'y a rien à faire et rien n'est noté : c'est l'idempotence.
+`est_lecture` liste les seules commandes qu'une simulation peut lancer. Les tests de sécurité prouvent qu'aucune
+autre ne part, sur le faux Mac et sur le vrai `Mac` dont `subprocess.run` est intercepté.
+
+**D-29 · Restaurer d'après le journal, pas d'après le scan.**
+`restaurer` défait la dernière action encore en place sur l'élément, avec ce que le journal a noté avant
+d'agir :
+- `enable` s'il n'était pas désactivé avant ;
+- `bootstrap` s'il était chargé ;
+- sortie de quarantaine.
+L'état actuel est relu d'abord : si tu as déjà tout remis à la main, il n'y a rien à faire, et l'action est
+seulement marquée annulée.
+Une action à moitié faite (le bootout passé, le disable refusé) est notée telle quelle, pour que `restaurer` sache
+la défaire.
+
+**D-30 · La quarantaine ne supprime rien.**
+Le plist part dans `donnees/demarrage/quarantaine/<horodatage>/` (dossier 700), avec un manifeste : chemin
+d'origine, empreinte SHA-256, état avant.
+Au retour, deux refus possibles :
+- un fichier a pris la place d'origine : on ne l'écrase pas ;
+- le plist en quarantaine a été modifié : on ne remet pas un fichier qu'on ne reconnaît plus.
+
+**D-31 · Ce que le Nettoyeur ne fait jamais lui-même.**
+- **🍎 et « c'est moi »** : refus.
+- **Éléments globaux, extensions et cron** : le texte exact à recopier, avec la commande d'annulation. Pour un
+  agent de `/Library/LaunchAgents`, ce sont des commandes de ta session, sans administrateur ; pour un daemon, les
+  commandes `sudo` à taper toi-même.
+- **⚠️ Inconnu** : de quoi le reconnaître (éditeur, fichier, programme, date d'apparition, commande `codesign` en
+  lecture), et la phrase « Ne le supprime pas à l'aveugle ».
+- **Élément d'ouverture** : System Events retire l'élément (et `restaurer` le remet) si l'autorisation existe.
+  Sinon, le chemin exact dans les Réglages, et rien n'est noté au journal.
