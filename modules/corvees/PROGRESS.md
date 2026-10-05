@@ -10,6 +10,7 @@ Porte unique : `modules/corvees/check.sh` (dans le conteneur : `PYTHON=<venv>/bi
 | P2 Normalisation + simulateur de vie | ✅ | 6 tests du simulateur |
 | P3 Détecteurs, score, mémoire | ✅ | 100 % / 100 % sur 5 graines × 2 jeux ; 208 k événements en ~6 s |
 | P4 Capteurs C1-C6 + inactivité | ✅ | 26 tests (vrais fichiers, vraies bases SQLite, vraie surveillance) |
+| P5 Démon, planification, robustesse | ✅ | 20 tests du démon |
 
 ## P0 — Reconnaissance (✅)
 
@@ -111,5 +112,19 @@ $ modules/corvees/check.sh
 simulation 16 passed · performance 1 passed · CHECK OK
 ```
 
-**Prochaine étape :** P5 — démon (superviseur de l'Assistant), écritures groupées, battement, pause, analyse à 21 h
-ou au réveil, purge, relance des capteurs, robustesse.
+## P5 — Démon (✅)
+
+`daemon.py` : `Demon` (sessions, écriture groupée, battement + santé, purge quotidienne, pause, analyse au dernier
+21 h manqué si branché ou batterie > 30 %, capteurs relancés avec délai croissant, disque plein, base abîmée),
+`boucle(ctx)` pour le superviseur, interface `start / stop / status / health`. `python -m modules.corvees` lance le
+démon ; avec des arguments, la commande. Module ajouté (éteint) aux réglages de l'Assistant.
+
+```
+$ modules/corvees/check.sh
+✅ ruff · ✅ format · ✅ mypy
+190 passed · Total coverage: 98.20%
+simulation 16 passed · performance 1 passed · CHECK OK
+```
+
+**Prochaine étape :** P6 — couche IA (1 appel par jour au plus, schéma JSON, budget), propositions et vérification
+statique des scripts, accept --installer / desinstaller.

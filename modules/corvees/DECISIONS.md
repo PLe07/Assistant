@@ -184,3 +184,27 @@ sans horodatage, relue après une réécriture, n'est jamais redonnée.
 A → B est noté quand on change d'appli moins de 2 minutes après. Les types « secret », « éphémère » et
 « auto-généré » des gestionnaires de mots de passe sont ignorés entièrement. On ne garde jamais le contenu :
 seulement sa longueur et une empreinte HMAC.
+
+## 2026-10-05 · P5 — Démon
+
+**D-28 · Une boucle d'une demi-seconde, sous le superviseur de l'Assistant.** Chaque capteur est relevé à son
+rythme : appli 2 s, presse-papiers 1 s, fenêtres et inactivité 5 s, zsh 60 s, navigateurs 5 min. Les fichiers
+arrivent en continu par watchdog. Écriture groupée toutes les 30 s (ou dès 5 000 événements en attente),
+battement et santé des capteurs chaque minute, purge une fois par jour. Sur le Mac, la demi-seconde d'attente
+fait tourner la boucle d'événements de macOS (voir D-23).
+
+**D-29 · Analyse « au dernier 21 h manqué ».** L'analyse a lieu dès que le dernier 21 h passé n'a pas eu la
+sienne, et si le Mac est branché ou que la batterie dépasse 30 %. Un Mac endormi à 21 h analyse donc à son réveil.
+Le calcul se fait en heure de Paris (zoneinfo), donc juste les jours de changement d'heure.
+
+**D-30 · Robustesse.**
+- Un capteur qui plante passe « dégradé » et est relancé (arrêt puis démarrage) après 2, 4, 8… secondes, au plus
+  5 minutes.
+- Disque plein : le paquet en attente est abandonné, on le dit une fois, et l'attente est bornée à 20 000
+  événements.
+- Base abîmée en cours de route : elle est mise de côté et reconstruite.
+- Panne après l'analyse (IA, rapport, notification) : notée dans le journal, sans jamais faire tomber le démon.
+
+**D-31 · Pause.** `corvees pause [heures]` écrit l'heure de fin dans la base (sans durée : jusqu'à
+`corvees resume`). Le démon la voit au tour suivant, en moins d'une seconde, et coupe tous les capteurs ; il les
+rallume à la fin de la pause. La pause générale de l'Assistant arrête aussi le module, via le superviseur.

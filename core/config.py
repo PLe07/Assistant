@@ -79,6 +79,8 @@ DEFAUTS = {
         # 🇬🇧 Allumée (icône), chaque phrase française finie par un point devient anglaise (traduite sur le Mac).
         "traduction": {"actif": False, "moteur": "nllb", "mots_min": 3, "applis_exclues": [], "titres_exclus": [],
                        "applis_clavier": []},
+        # 🔁 Le détecteur de corvées répétées (détails et seuils : modules/corvees/config.py). Éteint par défaut.
+        "corvees": {"actif": False},
         # Au bouton (voir AU_BOUTON) : « actif »: false les rend muets.
         **{nom: {"actif": True} for nom in AU_BOUTON},
     },
