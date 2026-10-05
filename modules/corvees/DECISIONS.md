@@ -60,3 +60,93 @@ modifié.
 **D-09 · Tests dans le dépôt.**
 `tests/corvees/` : unitaires, simulation, e2e, vie_privee, perf. La porte unique est `modules/corvees/check.sh`.
 La configuration des outils (ruff, mypy, pytest, coverage) est dans `pyproject.toml` à la racine, limitée au module.
+
+## 2026-10-05 · P3 — Détecteurs, score, réglage
+
+Réglage fait sur les graines 1 à 5 (jeu A). Les critères ont été vérifiés sur les graines 101 à 505, jamais
+utilisées pour régler, puis sur un dernier lot jamais lancé avant (1111 à 5555).
+
+**D-10 · Sessions.** Une session s'arrête après 10 minutes sans action, sur un signal d'inactivité, et à minuit.
+Deux actions identiques de suite n'en font qu'une. Les titres de fenêtres ne servent pas à la détection : ils
+varient trop. Ils restent notés, caviardés.
+
+**D-11 · D1, croissance de motifs + lift ≥ 8.** On ne prolonge que les motifs déjà présents sur au moins 3 jours.
+Pas de répétition d'un même token dans un motif : un aller-retour n'est pas une corvée. Le lift est calculé en
+supposant les actions indépendantes.
+*Écarté :* un lift calculé avec un modèle de Markov d'ordre 1. Une vraie corvée est déterministe (ses transitions
+n'existent que par elle), donc ce modèle lui donnait un lift d'environ 1. *Écarté :* lift ≥ 4, qui laissait passer
+des coïncidences 5 à 6 fois plus fréquentes que le hasard parmi des milliers de combinaisons testées.
+
+**D-12 · D1 laisse les ponts purs à D4.** « Appli A → copie → appli B » a toujours un lift énorme par construction,
+puisque la copie est toujours entre ses deux applis : seul D4 sait en juger.
+
+**D-13 · D2, concentration.**
+- Une appli utilisée toute la journée n'est pas une routine : il faut au moins 60 % de ses occurrences dans le
+  créneau, ou 75 % sur le jour de la semaine.
+- Le motif hebdomadaire est cherché avant le créneau quotidien : ce qui n'arrive que le lundi est une routine du
+  lundi.
+- Pour une suite d'actions, il faut 4 jours dans le créneau, et la même heure pour un motif hebdomadaire.
+  Parmi des centaines de séquences rares, le hasard en fabrique avec 3 jours ou un même jour de la semaine.
+
+**D-14 · D3, parcours et règles.** Les étapes d'un même fichier sont reliées par l'empreinte de son chemin
+(avant → fichier). L'arrivée (le téléchargement) n'est que le contexte. Les noms sont ramenés à leur racine
+(« Devoir_Eco_* » → « Devoir_* »). Des variantes trop rares séparément sont réunies sous leur préfixe commun
+(au moins 3 caractères, « Lettre_motivation_* »), jamais sous « * » seul : ce ne serait plus une règle.
+
+**D-15 · D4, test statistique au lieu d'un seuil de lift.** On calcule la probabilité de voir autant de copies
+A → B par hasard (loi de Poisson), avec une correction de Bonferroni sur le nombre de paires testées, au risque
+de 5 %.
+*Écarté :* un seuil de lift. Safari est la source de copie dominante, donc un vrai pont Safari → Numbers n'y est
+« que » 2,7 fois plus fréquent que le hasard, autant que certaines coïncidences.
+
+**D-16 · D5.** Deux formes sont détectées :
+- les lignes enchaînées : au moins 2 sous-commandes, 4 fois, sur 2 jours ;
+- les suites de lignes : au plus 5 minutes d'écart, lift ≥ 3.
+
+Le texte entre guillemets devient « * » : un message de commit varie à chaque fois et peut contenir du privé.
+
+**D-17 · Score.**
+- *Durée :* la somme du temps habituel de chaque étape, ou la durée mesurée si elle est plus longue, sans
+  dépasser 3 fois ce temps. Entre deux étapes, on lit, on réfléchit : ce n'est pas la corvée. Une commande
+  compte par sous-commande.
+- *Facteurs :*
+  - selon le type : fichiers et shell 1,0 ; routine 0,9 (heure fixe : la plus facile à programmer) ;
+    séquence 0,6 ; pont 0,5 ;
+  - action seule (une appli ou un site) : × 0,1, car c'est déjà instantané (le piège « Spotify ») ;
+  - suite de navigation sans horaire : × 0,1. Dans une suite, une copie que D4 n'a pas retenue compte comme de
+    la navigation.
+
+**D-18 · Fusion des descriptions d'une même corvée.**
+- *Critère :* des étapes en commun (les fichiers comparés par leur squelette : sorte, dossiers, extension), et au
+  moins la moitié des occurrences de l'une au même moment que l'autre.
+- *Représentant :* le meilleur score, une fois chacun évalué avec son propre horaire.
+- *Type :* le plus parlant du groupe.
+- *Écartés :* « la plus longue », qui ajoutait des actions de contexte, et « la plus vue », qui préférait une
+  sous-séquence diluée par des coïncidences et perdait l'horaire.
+
+**D-19 · Mémoire des refus.** Une corvée refusée est reconnue par ses étapes clés : tout sauf les simples
+changements d'appli. « 3 fois plus fréquente » se mesure sur ces étapes clés, de la même façon au moment du refus
+et ensuite. Une variante proposée d'abord (6 fois par mois) faisait croire au retour de la corvée entière
+(24 fois par mois).
+
+**D-20 · Simulateur.**
+- Pendant une corvée, le bruit s'efface : on ne fait pas cinq choses à la fois, et l'énoncé permet au plus une
+  action parasite.
+- Le piège des secrets varie d'un jour à l'autre. Identique chaque jour, il formait une vraie suite répétée.
+- Chaque jour a au moins une session.
+
+**D-21 · Honnêteté de l'évaluation.**
+- Le jeu B a été écrit après le réglage sur le jeu A.
+- B a révélé des faiblesses génériques, corrigées sans toucher aux corvées : renommages de variantes, noms sans
+  chiffres, guillemets, seuil des ponts, créneau des séquences, choix du représentant, hebdomadaire à heure fixe,
+  squelette des fichiers. Le jeu A est resté à 100 %.
+- Lot final jamais vu (1111 à 5555), laissé tel quel :
+  - 49 corvées sur 50 retrouvées (98 %) ;
+  - 1 fausse alerte sur 100 places du top 10.
+
+  La corvée manquée est hebdomadaire : 4 occurrences par mois, le cas limite par nature.
+
+**D-22 · Performance.** La fusion est indexée par étape et élaguée : un candidat sous le score minimal divisé
+par 3 ne pourra jamais l'atteindre. Les fenêtres du calcul de hasard sont comptées une fois par longueur, et le
+créneau est cherché par fenêtre glissante incrémentale. Pour 208 000 événements, l'analyse passe de 73 s à
+environ 6 s.

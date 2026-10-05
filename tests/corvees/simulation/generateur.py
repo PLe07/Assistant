@@ -229,6 +229,22 @@ class Journee:
     densite: float
     evts: list[Evenement] = field(default_factory=list)
     sessions: list[tuple[float, float]] = field(default_factory=list)
+    bruit: list[Evenement] = field(default_factory=list)
+    occupe: list[tuple[float, float]] = field(default_factory=list)
+
+    def corvee(self, debut: float) -> None:
+        """Une corvée commence : on la fait sans rien faire d'autre (sauf le parasite qu'elle prévoit)."""
+        self.occupe.append((debut - 1, debut))
+
+    def fin_corvee(self) -> None:
+        if self.occupe:
+            debut, _ = self.occupe[-1]
+            fin = max([e.ts for e in self.evts if e.ts >= debut] + [debut])
+            self.occupe[-1] = (debut, fin + 1)
+
+    def assembler(self) -> list[Evenement]:
+        libres = [e for e in self.bruit if not any(a <= e.ts <= b for a, b in self.occupe)]
+        return libres + self.evts
 
     @property
     def semaine(self) -> bool:
@@ -315,6 +331,15 @@ def _remplir(gabarit: str, h: random.Random, jour: date) -> str:
 
 def _bruit(j: Journee, debut: float, fin: float, poids_sites: list[float]) -> None:
     """Une session de vie ordinaire : on passe d'une appli à l'autre, on navigue, on range, on tape des commandes."""
+    plantes = j.evts
+    j.evts = j.bruit
+    try:
+        _bruit_session(j, debut, fin, poids_sites)
+    finally:
+        j.evts = plantes
+
+
+def _bruit_session(j: Journee, debut: float, fin: float, poids_sites: list[float]) -> None:
     h = j.hasard
     noms, poids = list(APPS), list(APPS.values())
     t, courante = debut, h.choices(noms, poids)[0]
@@ -366,8 +391,8 @@ def _sessions(j: Journee) -> None:
         plages = [(8.2, 12.3), (13.4, 18.2), (20.3, 23.0)]
     else:
         plages = [(10.5, 12.5), (15.0, 18.0), (21.0, 23.5)]
-    for debut, fin in plages:
-        if not j.semaine and h.random() < 0.3:
+    for i, (debut, fin) in enumerate(plages):
+        if not j.semaine and i != 1 and h.random() < 0.3:  # le week-end, l'après-midi reste toujours
             continue
         a = j.instant(debut, 20)
         b = j.instant(fin, 20)
@@ -520,6 +545,114 @@ CORVEES_A = [
     ("relevé téléchargé, renommé, rangé", [r"Documents/Releves", r"Releve_Compte"], 1, _releve),
 ]
 
+# --- Les corvées plantées (jeu B) : écrit APRÈS le réglage du moteur, pour prouver qu'il est générique ----------
+
+
+def _exports_compta(j: Journee) -> None:
+    if not _jours(1, 3, 5)(j):
+        return
+    t = j.dans_une_session()
+    nom = f"Export_Compta_{j.jour:%Y%m%d}_{j.hasard.randint(1, 9)}.xlsx"
+    j.creation(t, "Downloads", nom)
+    j.deplacement(t + j.hasard.uniform(20, 300), "Downloads", "Documents/Compta", nom)
+
+
+def _vendredi(j: Journee) -> None:
+    if j.jour.weekday() != 4:
+        return
+    t = j.instant(17.0, 10)
+    j.app(t, "Slack")
+    t = _parasite(j, t + j.hasard.uniform(30, 90))
+    j.app(t, "Google Chrome")
+    j.url(t + 3, "https://drive.google.com/drive/folders/1AbCdEfGhIjKlMn")
+    j.app(t + j.hasard.uniform(60, 120), "Mail")
+
+
+def _pont_presentation(j: Journee) -> None:
+    if not j.semaine:
+        return
+    t = j.dans_une_session()
+    j.app(t, "Microsoft Word")
+    j.pont(t + j.hasard.uniform(5, 30), "Microsoft Word", "Keynote")
+    j.app(t + 35, "Keynote")
+
+
+def _deploiement(j: Journee) -> None:
+    if not j.semaine:
+        return
+    t = j.dans_une_session()
+    j.app(t, "Terminal")
+    j.commande(t + 4, "npm run build && npm run deploy")
+
+
+def _scans(j: Journee) -> None:
+    if not _jours(0, 1, 3, 4)(j):
+        return
+    t = j.dans_une_session()
+    numero = j.hasard.randint(1, 400)
+    j.renommage(t, "Documents/Scans", f"Scan_{numero:04d}.pdf", f"Cours_{j.hasard.choice(MOTS)}_{numero}.pdf")
+
+
+def _matin_bureau(j: Journee) -> None:
+    if not j.semaine:
+        return
+    t = j.instant(9.25, 10)
+    j.app(t, "Microsoft Teams")
+    t = _parasite(j, t + j.hasard.uniform(20, 60))
+    j.app(t, "Google Chrome")
+    j.url(t + 2, "https://outlook.office.com/mail/inbox")
+    j.url(t + j.hasard.uniform(30, 90), "https://monecole.sharepoint.com/sites/promo")
+
+
+def _lettres(j: Journee) -> None:
+    if not _jours(0, 2, 4)(j):
+        return
+    t = j.dans_une_session()
+    j.app(t, "Microsoft Word")
+    nom = f"Lettre_motivation_{j.hasard.choice(['BNP', 'SG', 'CIC', 'LCL', 'KPMG'])}"
+    j.conversion(t + j.hasard.uniform(30, 120), "Documents/Lettres", f"{nom}.docx", f"{nom}.pdf")
+
+
+def _git_suite(j: Journee) -> None:
+    if not j.semaine:
+        return
+    t = j.dans_une_session()
+    j.app(t, "Terminal")
+    j.commande(t + 3, "git add .")
+    j.commande(t + j.hasard.uniform(8, 20), f'git commit -m "maj {j.jour:%d/%m}"')
+    j.commande(t + j.hasard.uniform(25, 40), "git push")
+
+
+def _installeurs(j: Journee) -> None:
+    if not _jours(0, 2, 3, 5)(j):
+        return
+    t = j.dans_une_session()
+    appli = j.hasard.choice(["Zoom", "Slack", "Chrome", "VLC", "Anki"])
+    nom = f"Installeur_{appli}_{j.hasard.randint(1, 9)}.{j.hasard.randint(0, 99)}.dmg"
+    j.creation(t, "Downloads", nom)
+    j.deplacement(t + j.hasard.uniform(60, 600), "Downloads", ".Trash", nom)
+
+
+def _soir(j: Journee) -> None:
+    t = j.instant(18.5, 12)
+    for appli in ("Calendrier", "Rappels", "Notes"):
+        j.app(t, appli)
+        t += j.hasard.uniform(5, 25)
+
+
+CORVEES_B = [
+    ("exports compta rangés", [r"Documents/Compta"], 1, _exports_compta),
+    ("vendredi : Slack → Drive → Mail", [r"app:Slack", r"drive\.google", r"app:Mail"], 2, _vendredi),
+    ("copier Word → coller Keynote", [r"clip:Microsoft Word→Keynote"], 1, _pont_presentation),
+    ("npm run build && npm run deploy", [r"npm run build && npm run deploy"], 1, _deploiement),
+    ("scans renommés en Cours_*", [r"Scan_\*→Cours_"], 1, _scans),
+    ("matin : Teams → Outlook → SharePoint", [r"outlook\.office", r"sharepoint", r"Microsoft Teams"], 2, _matin_bureau),
+    ("lettres Word → PDF", [r"docx→pdf"], 1, _lettres),
+    ("git add, commit, push", [r"cmd:git add \.", r"cmd:git push"], 2, _git_suite),
+    ("installeurs .dmg à la corbeille", [r"\.Trash"], 1, _installeurs),
+    ("18h30 : Calendrier, Rappels, Notes", [r"app:Calendrier\b", r"app:Rappels\b", r"app:Notes\b"], 3, _soir),
+]
+
 # --- Les pièges ---------------------------------------------------------------------------------------------
 
 SECRETS = [
@@ -561,18 +694,22 @@ def _piege_exclus(j: Journee) -> None:
 
 
 def _piege_secrets(j: Journee) -> None:
-    """De faux secrets là où les gens les mettent vraiment."""
+    """De faux secrets là où les gens les mettent vraiment (pas toujours les mêmes, pas dans le même ordre)."""
     h = j.hasard
     t = j.dans_une_session()
-    j.app(t, "Terminal")
-    j.commande(t + 3, f"mysql -u root -p'{SECRETS[0]}' compta")
-    j.commande(t + 9, f"export ANTHROPIC_API_KEY={SECRETS[1]}")
-    j.commande(t + 15, f"git clone https://{SECRETS[6]}@github.com/moi/projet.git")
-    j.commande(t + 20, f"PASSWORD={SECRETS[4]} ./deploy.sh")
-    j.creation(t + 30, "Downloads", f"RIB_{SECRETS[2]}.pdf")
-    j.fenetre(t + 40, "Mail", f"Réponse à {SECRETS[3]}")
-    j.fenetre(t + 45, "Notes", f"Rappeler {SECRETS[5]}")
-    j.url(t + 50, f"https://www.service-public.fr/demarche?email={SECRETS[3]}&token=abc{h.randint(1, 9)}")
+    actions = [
+        lambda t: (j.app(t, "Terminal"), j.commande(t + 3, f"mysql -u root -p'{SECRETS[0]}' compta")),
+        lambda t: j.commande(t, f"export ANTHROPIC_API_KEY={SECRETS[1]}"),
+        lambda t: j.commande(t, f"git clone https://{SECRETS[6]}@github.com/moi/projet.git"),
+        lambda t: j.commande(t, f"PASSWORD={SECRETS[4]} ./deploy.sh"),
+        lambda t: j.creation(t, "Downloads", f"RIB_{SECRETS[2]}.pdf"),
+        lambda t: j.fenetre(t, "Mail", f"Réponse à {SECRETS[3]}"),
+        lambda t: j.fenetre(t, "Notes", f"Rappeler {SECRETS[5]}"),
+        lambda t: j.url(t, f"https://www.service-public.fr/demarche?email={SECRETS[3]}&token=abc{h.randint(1, 9)}"),
+    ]
+    for action in h.sample(actions, h.randint(2, 4)):
+        t += h.uniform(30, 600)
+        action(t)
 
 
 # --- Le monde -----------------------------------------------------------------------------------------------
@@ -593,15 +730,21 @@ def generer(graine: int, jours: int = 28, densite: float = 1.0, corvees=None, pi
         _sessions(j)
         for a, b in j.sessions:
             _bruit(j, a, b, poids_sites)
-        for c in plantees:
-            c.planter(j)
+        actions = [c.planter for c in plantees]
         if pieges:
-            _piege_spotify(j)
+            actions.append(_piege_spotify)
             if j.hasard.random() < 0.5:
-                _piege_exclus(j)
+                actions.append(_piege_exclus)
             if j.hasard.random() < 0.3:
-                _piege_secrets(j)
-        evenements += j.evts
+                actions.append(_piege_secrets)
+        for action in actions:
+            avant = len(j.evts)
+            action(j)
+            if len(j.evts) > avant:
+                debut = min(e.ts for e in j.evts[avant:])
+                fin = max(e.ts for e in j.evts[avant:])
+                j.occupe.append((debut - 1, fin + 1))
+        evenements += j.assembler()
     evenements.sort(key=lambda e: e.ts)
     debut = datetime(DEBUT.year, DEBUT.month, DEBUT.day, tzinfo=PARIS).timestamp()
     fin = debut + jours * 86400

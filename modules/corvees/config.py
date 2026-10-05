@@ -55,18 +55,37 @@ DEFAUTS: dict[str, Any] = {
     "sessions": {"inactivite_min": 10},
     "detection": {
         "fenetre_jours": 30,
-        "sequences": {"longueur_min": 3, "longueur_max": 8, "jours_min": 3, "parasites_max": 1, "lift_min": 4.0},
-        "routines": {"tolerance_min": 45, "jours_min": 3, "sur_jours": 14, "semaines_min": 3},
-        "fichiers": {"occurrences_min": 4},
-        "ponts": {"occurrences_min": 5, "jours_min": 3},
-        "shell": {"longueur_min": 2, "occurrences_min": 4},
+        "sequences": {
+            "longueur_min": 3,
+            "longueur_max": 8,
+            "jours_min": 3,
+            "parasites_max": 1,
+            "lift_min": 8.0,
+            "tolerance_maximale": 0.8,
+        },
+        "routines": {
+            "tolerance_min": 45,
+            "jours_min": 3,
+            "sur_jours": 14,
+            "semaines_min": 3,
+            "concentration_min": 0.6,
+            "concentration_semaine_min": 0.75,
+            "jours_min_sequence": 4,  # pour donner un créneau à une suite d'actions
+        },
+        "fichiers": {"occurrences_min": 4, "jours_min": 2},
+        "ponts": {
+            "occurrences_min": 5,
+            "jours_min": 3,
+            "alpha": 0.05,
+        },  # alpha : risque de prendre le hasard pour un pont
+        "shell": {"longueur_min": 2, "occurrences_min": 4, "lift_min": 3.0},
     },
     "scoring": {
         # Facteur d'automatisabilité par type de corvée (1 = s'automatise sans peine).
         "automatisabilite": {
             "fichiers": 1.0,
             "shell": 1.0,
-            "routine": 0.7,
+            "routine": 0.9,  # une corvée à heure fixe s'automatise facilement (Raccourcis, launchd)
             "sequence": 0.6,
             "pont": 0.5,
         },
@@ -75,14 +94,16 @@ DEFAUTS: dict[str, Any] = {
             "app": 3,
             "url": 6,
             "fen": 3,
-            "fmove": 15,
-            "fren": 15,
-            "fcreate": 10,
+            "fmove": 20,
+            "fren": 20,
+            "fcreate": 5,
             "fconv": 40,
             "clip": 12,
-            "cmd": 8,
+            "cmd": 8,  # par commande (une ligne « a && b » en compte deux)
         },
         "duree_max_s": 600,
+        "facteur_action_instantanee": 0.1,  # ouvrir une seule appli ou un seul site
+        "facteur_navigation_irreguliere": 0.1,  # suite d'applis/sites sans créneau ni jour fixe
         "score_min": 3.0,
         "top": 10,
     },

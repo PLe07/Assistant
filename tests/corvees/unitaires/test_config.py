@@ -9,7 +9,7 @@ def test_valeurs_par_defaut_completes():
     assert erreurs == []
     assert r["actif"] is False
     assert r["detection"]["fichiers"]["occurrences_min"] == 4
-    assert r["detection"]["ponts"] == {"occurrences_min": 5, "jours_min": 3}
+    assert r["detection"]["ponts"] == {"occurrences_min": 5, "jours_min": 3, "alpha": 0.05}
     assert r["ia"]["budget_mensuel_usd"] == 2.0 and r["ia"]["max_candidats"] == 8
     assert r["analyse"]["heure"] == "21:00" and r["retention_jours"] == 30
 
@@ -17,7 +17,7 @@ def test_valeurs_par_defaut_completes():
 def test_mes_valeurs_remplacent_les_defauts_en_profondeur():
     r, erreurs = config.charger({"detection": {"ponts": {"jours_min": 4}}, "capteurs": {"pressepapiers": False}})
     assert erreurs == []
-    assert r["detection"]["ponts"] == {"occurrences_min": 5, "jours_min": 4}
+    assert r["detection"]["ponts"] == {"occurrences_min": 5, "jours_min": 4, "alpha": 0.05}
     assert r["capteurs"]["pressepapiers"] is False and r["capteurs"]["apps"] is True
 
 

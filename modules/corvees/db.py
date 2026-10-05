@@ -30,7 +30,8 @@ CREATE TABLE IF NOT EXISTS agregats (
     PRIMARY KEY (jour, source, token)
 );
 CREATE TABLE IF NOT EXISTS decisions (
-    signature TEXT PRIMARY KEY, id TEXT, statut TEXT NOT NULL, jusqua REAL, frequence_ref REAL, quand REAL
+    signature TEXT PRIMARY KEY, id TEXT, statut TEXT NOT NULL, jusqua REAL, frequence_ref REAL, quand REAL,
+    tokens TEXT NOT NULL DEFAULT '[]'
 );
 CREATE TABLE IF NOT EXISTS candidats (
     id TEXT PRIMARY KEY, signature TEXT UNIQUE NOT NULL, type TEXT, donnees TEXT, score REAL,
@@ -194,18 +195,42 @@ class Base:
 
     # --- décisions (accepter, refuser, reporter) -----------------------------------------------------------------
 
-    def decider(self, signature: str, id_: str, statut: str, jusqua: float | None, frequence_ref: float) -> None:
+    def decider(
+        self,
+        signature: str,
+        id_: str,
+        statut: str,
+        jusqua: float | None,
+        frequence_ref: float,
+        tokens: list[str] | None = None,
+    ) -> None:
         with self.db:
             self.db.execute(
-                "INSERT INTO decisions (signature, id, statut, jusqua, frequence_ref, quand) VALUES (?, ?, ?, ?, ?, ?) "
-                "ON CONFLICT(signature) DO UPDATE SET id = excluded.id, statut = excluded.statut, "
-                "jusqua = excluded.jusqua, frequence_ref = excluded.frequence_ref, quand = excluded.quand",
-                (signature, id_, statut, jusqua, frequence_ref, time.time()),
+                "INSERT INTO decisions (signature, id, statut, jusqua, frequence_ref, quand, tokens) "
+                "VALUES (?, ?, ?, ?, ?, ?, ?) ON CONFLICT(signature) DO UPDATE SET id = excluded.id, "
+                "statut = excluded.statut, jusqua = excluded.jusqua, frequence_ref = excluded.frequence_ref, "
+                "quand = excluded.quand, tokens = excluded.tokens",
+                (
+                    signature,
+                    id_,
+                    statut,
+                    jusqua,
+                    frequence_ref,
+                    time.time(),
+                    json.dumps(tokens or [], ensure_ascii=False),
+                ),
             )
 
+    def oublier_decision(self, signature: str) -> None:
+        with self.db:
+            self.db.execute("DELETE FROM decisions WHERE signature = ?", (signature,))
+
     def decisions(self) -> dict[str, dict[str, Any]]:
-        lignes = self.db.execute("SELECT signature, id, statut, jusqua, frequence_ref, quand FROM decisions")
-        return {s: {"id": i, "statut": st, "jusqua": j, "frequence_ref": f, "quand": q} for s, i, st, j, f, q in lignes}
+        lignes = self.db.execute("SELECT signature, id, statut, jusqua, frequence_ref, quand, tokens FROM decisions")
+        return {
+            s: {"id": i, "statut": st, "jusqua": j, "frequence_ref": f, "quand": q, "tokens": json.loads(t)}
+            for s, i, st, j, f, q, t in lignes
+        }
 
     # --- candidats de la dernière analyse ---------------------------------------------------------------------
 
