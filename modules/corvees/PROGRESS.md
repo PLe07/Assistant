@@ -7,6 +7,7 @@ Porte unique : `modules/corvees/check.sh` (dans le conteneur : `PYTHON=<venv>/bi
 |---|---|---|
 | P0 Reconnaissance, squelette, check.sh | ✅ | ci-dessous |
 | P1 Données, config, vie privée | ✅ | 112 tests, couverture 99 % |
+| P2 Normalisation + simulateur de vie | ✅ | 6 tests du simulateur |
 
 ## P0 — Reconnaissance (✅)
 
@@ -43,4 +44,20 @@ $ modules/corvees/check.sh
 CHECK OK
 ```
 
-**Prochaine étape :** P2 — simulateur de vie (10 corvées plantées, 4 pièges, vérité terrain, 2e jeu).
+## P2 — Simulateur de vie (✅)
+
+`tests/corvees/simulation/generateur.py` : 28 jours (à partir d'un lundi), ~440 événements par jour de bruit
+réaliste (26 applis pondérées, ~60 sites avec des chemins variables, fichiers téléchargés/rangés/renommés,
+commandes, copier-coller, titres de fenêtres, inactivité), produits par la vraie normalisation.
+10 corvées plantées (jeu A) avec leur vérité terrain (motifs + nombre requis), 4 pièges : Spotify seul chaque
+matin, une corvée refusée (Mail → Excel), applis et sites exclus (1Password, Messages, Boursorama, impots.gouv),
+7 faux secrets (mot de passe MySQL, clé sk-ant, IBAN, e-mail, téléphone, jeton GitHub, PASSWORD=).
+Le 2e jeu de corvées sera écrit seulement après le réglage (P3).
+
+```
+$ modules/corvees/check.sh
+✅ ruff · ✅ format · ✅ mypy · 112 passed (99.15 %) · simulation 6 passed · CHECK OK
+$ densité de performance : generer(1, jours=30, densite=30) → 213 561 événements
+```
+
+**Prochaine étape :** P3 — détecteurs D1 à D5, scoring, mémoire des décisions ; itérer jusqu'aux critères §9.1.
