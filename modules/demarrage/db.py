@@ -10,7 +10,7 @@ import json
 import os
 import sqlite3
 import time
-from collections.abc import Callable, Iterator
+from collections.abc import Callable, Iterable, Iterator
 from contextlib import contextmanager
 from pathlib import Path
 from typing import Any
@@ -28,26 +28,21 @@ CREATE TABLE IF NOT EXISTS apparitions (
 );
 CREATE TABLE IF NOT EXISTS signatures (chemin TEXT PRIMARY KEY, donnees TEXT NOT NULL);
 CREATE TABLE IF NOT EXISTS releves (ts REAL PRIMARY KEY, mode TEXT NOT NULL, cpu_total_pct REAL);
-CREATE TABLE IF NOT EXISTS echantillons (
-    ts REAL NOT NULL, pid INTEGER NOT NULL, ppid INTEGER, uid INTEGER, cpu_s REAL, rss_ko INTEGER, comm TEXT
+CREATE TABLE IF NOT EXISTS mesures (
+    ts REAL NOT NULL, mode TEXT NOT NULL, fiche_id TEXT NOT NULL, cpu_s REAL NOT NULL, rss_ko INTEGER NOT NULL,
+    puissance REAL, veille INTEGER NOT NULL
 );
-CREATE INDEX IF NOT EXISTS echantillons_ts ON echantillons (ts);
-CREATE TABLE IF NOT EXISTS pids_launchd (ts REAL NOT NULL, pid INTEGER NOT NULL, label TEXT NOT NULL);
-CREATE INDEX IF NOT EXISTS pids_launchd_ts ON pids_launchd (ts);
-CREATE TABLE IF NOT EXISTS energie (ts REAL NOT NULL, pid INTEGER NOT NULL, commande TEXT, cpu REAL, puissance REAL);
-CREATE INDEX IF NOT EXISTS energie_ts ON energie (ts);
-CREATE TABLE IF NOT EXISTS veille (ts REAL NOT NULL, pid INTEGER NOT NULL, type TEXT, nom TEXT, au_nom_de INTEGER);
-CREATE INDEX IF NOT EXISTS veille_ts ON veille (ts);
+CREATE INDEX IF NOT EXISTS mesures_ts ON mesures (ts);
 CREATE TABLE IF NOT EXISTS sessions (
-    boot REAL PRIMARY KEY, connexion REAL, source_connexion TEXT, calme REAL, details TEXT
+    boot REAL PRIMARY KEY, connexion REAL, calme REAL, details TEXT
 );
 CREATE TABLE IF NOT EXISTS actions (
     id INTEGER PRIMARY KEY, ts REAL NOT NULL, fiche_id TEXT NOT NULL, label TEXT NOT NULL, genre TEXT NOT NULL,
     avant TEXT, apres TEXT, commandes TEXT, details TEXT, annulee REAL
 );
 CREATE TABLE IF NOT EXISTS agregats (
-    jour TEXT NOT NULL, comm TEXT NOT NULL, cpu_s REAL, rss_med_ko INTEGER, puissance REAL, veille_n INTEGER,
-    n INTEGER, PRIMARY KEY (jour, comm)
+    jour TEXT NOT NULL, fiche_id TEXT NOT NULL, mode TEXT NOT NULL, cpu_s REAL, rss_moy_ko INTEGER, puissance REAL,
+    veille_n INTEGER, n INTEGER, PRIMARY KEY (jour, fiche_id, mode)
 );
 CREATE TABLE IF NOT EXISTS zsh (ts REAL PRIMARY KEY, mediane_ms REAL, details TEXT);
 CREATE TABLE IF NOT EXISTS notifications (ts REAL NOT NULL, genre TEXT NOT NULL, titre TEXT, texte TEXT);
@@ -202,3 +197,135 @@ class Base:
                 "INSERT OR REPLACE INTO signatures (chemin, donnees) VALUES (?, ?)",
                 [(c, json.dumps(e)) for c, e in entrees.items()],
             )
+
+    # --- relevés de l'échantillonneur ------------------------------------------------------------------------
+
+    def enregistrer_releve(
+        self, ts: float, mode: str, cpu_total_pct: float | None, par_fiche: dict[str, dict[str, Any]]
+    ) -> None:
+        with self.transaction() as db:
+            db.execute(
+                "INSERT OR REPLACE INTO releves (ts, mode, cpu_total_pct) VALUES (?, ?, ?)", (ts, mode, cpu_total_pct)
+            )
+            db.executemany(
+                "INSERT INTO mesures (ts, mode, fiche_id, cpu_s, rss_ko, puissance, veille)"
+                " VALUES (?, ?, ?, ?, ?, ?, ?)",
+                [
+                    (ts, mode, fid, m["cpu_s"], m["rss_ko"], m["puissance"], int(m["veille"]))
+                    for fid, m in par_fiche.items()
+                ],
+            )
+
+    def releves(
+        self, debut: float = 0.0, fin: float = float("inf"), modes: Iterable[str] | None = None
+    ) -> list[tuple[float, float | None]]:
+        lignes = self.db.execute(
+            "SELECT ts, cpu_total_pct, mode FROM releves WHERE ts >= ? AND ts <= ? ORDER BY ts", (debut, min(fin, 1e15))
+        ).fetchall()
+        choisis = set(modes) if modes is not None else None
+        return [(t, c) for t, c, m in lignes if choisis is None or m in choisis]
+
+    def mesures(
+        self, debut: float = 0.0, fin: float = float("inf"), modes: Iterable[str] | None = None
+    ) -> list[tuple[float, str, str, float, int, float | None, int]]:
+        """(ts, mode, fiche_id, cpu_s, rss_ko, puissance, veille), dans l'ordre du temps."""
+        lignes = self.db.execute(
+            "SELECT ts, mode, fiche_id, cpu_s, rss_ko, puissance, veille FROM mesures WHERE ts >= ? AND ts <= ?"
+            " ORDER BY ts",
+            (debut, min(fin, 1e15)),
+        ).fetchall()
+        choisis = set(modes) if modes is not None else None
+        return [tuple(x) for x in lignes if choisis is None or x[1] in choisis]
+
+    def agregats(self) -> list[tuple[str, str, str, float, int, float | None, int, int]]:
+        return [tuple(x) for x in self.db.execute("SELECT * FROM agregats ORDER BY jour")]
+
+    # --- sessions ----------------------------------------------------------------------------------------------
+
+    def enregistrer_session(
+        self, boot: float, connexion: float | None, calme: float | None, details: dict[str, Any]
+    ) -> None:
+        with self.transaction() as db:
+            db.execute(
+                "INSERT OR REPLACE INTO sessions (boot, connexion, calme, details) VALUES (?, ?, ?, ?)",
+                (boot, connexion, calme, json.dumps(details)),
+            )
+
+    def session(self, boot: float) -> dict[str, Any] | None:
+        ligne = self.db.execute(
+            "SELECT boot, connexion, calme, details FROM sessions WHERE boot = ?", (boot,)
+        ).fetchone()
+        return self._session(ligne) if ligne else None
+
+    def sessions(self, n: int = 60) -> list[dict[str, Any]]:
+        """Les n dernières sessions, de la plus ancienne à la plus récente."""
+        lignes = self.db.execute(
+            "SELECT boot, connexion, calme, details FROM sessions ORDER BY boot DESC LIMIT ?", (n,)
+        ).fetchall()
+        return [self._session(x) for x in reversed(lignes)]
+
+    @staticmethod
+    def _session(ligne: tuple[Any, ...]) -> dict[str, Any]:
+        try:
+            details = json.loads(ligne[3]) if ligne[3] else {}
+        except ValueError:
+            details = {}
+        return {"boot": ligne[0], "connexion": ligne[1], "calme": ligne[2], **details}
+
+    # --- rétention ---------------------------------------------------------------------------------------------
+
+    def purger(self, retention_jours: int, maintenant: float, jour_de: Callable[[float], str]) -> int:
+        """Les relevés de plus de retention_jours deviennent des agrégats par jour, élément et mode. Renvoie combien
+        de mesures ont été résumées."""
+        limite = maintenant - retention_jours * 86400
+        vieilles = self.db.execute(
+            "SELECT ts, mode, fiche_id, cpu_s, rss_ko, puissance, veille FROM mesures WHERE ts < ?", (limite,)
+        ).fetchall()
+        if not vieilles:
+            self.db.execute("DELETE FROM releves WHERE ts < ?", (limite,))
+            self.db.commit()
+            return 0
+        groupes: dict[tuple[str, str, str], list[tuple[Any, ...]]] = {}
+        for ligne in vieilles:
+            groupes.setdefault((jour_de(ligne[0]), ligne[2], ligne[1]), []).append(ligne)
+        with self.transaction() as db:
+            for (jour, fid, mode), lignes in groupes.items():
+                ancien = db.execute(
+                    "SELECT cpu_s, rss_moy_ko, puissance, veille_n, n FROM agregats"
+                    " WHERE jour = ? AND fiche_id = ? AND mode = ?",
+                    (jour, fid, mode),
+                ).fetchone()
+                cpu = sum(x[3] for x in lignes) + (ancien[0] if ancien else 0.0)
+                n_ancien = ancien[4] if ancien else 0
+                n = len(lignes) + n_ancien
+                rss = (sum(x[4] for x in lignes) + (ancien[1] * n_ancien if ancien else 0)) // n
+                puissances = [x[5] for x in lignes if x[5] is not None]
+                puissance = sum(puissances) / len(puissances) if puissances else (ancien[2] if ancien else None)
+                veille_n = sum(x[6] for x in lignes) + (ancien[3] if ancien else 0)
+                db.execute(
+                    "INSERT OR REPLACE INTO agregats VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                    (jour, fid, mode, cpu, rss, puissance, veille_n, n),
+                )
+            db.execute("DELETE FROM mesures WHERE ts < ?", (limite,))
+            db.execute("DELETE FROM releves WHERE ts < ?", (limite,))
+        return len(vieilles)
+
+    # --- zsh -------------------------------------------------------------------------------------------------------
+
+    def enregistrer_zsh(self, ts: float, mediane_ms: float | None, details: dict[str, Any]) -> None:
+        with self.transaction() as db:
+            db.execute(
+                "INSERT OR REPLACE INTO zsh (ts, mediane_ms, details) VALUES (?, ?, ?)",
+                (ts, mediane_ms, json.dumps(details)),
+            )
+
+    def zsh(self, n: int = 30) -> list[dict[str, Any]]:
+        lignes = self.db.execute("SELECT ts, mediane_ms, details FROM zsh ORDER BY ts DESC LIMIT ?", (n,)).fetchall()
+        resultats = []
+        for ts, mediane, details in reversed(lignes):
+            try:
+                d = json.loads(details) if details else {}
+            except ValueError:
+                d = {}
+            resultats.append({"ts": ts, "mediane_ms": mediane, **d})
+        return resultats

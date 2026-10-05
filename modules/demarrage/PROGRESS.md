@@ -9,7 +9,7 @@ Porte unique : `modules/demarrage/check.sh` (dans le conteneur : `PYTHON=<venv>/
 | P1 Modèle, plists, collecteurs S1-S4 + S6, signatures | ✅ | 118 tests, couverture 98 % |
 | P2 Faux Mac + vérité terrain | ✅ | 36 éléments plantés, tous trouvés |
 | P3 Collecteurs S5, S7-S10, modes dégradés | ✅ | 156 tests, couverture 98,4 % |
-| P4 Mesure (session, croisière, énergie, veille, zsh) | ⏳ | |
+| P4 Mesure (session, croisière, énergie, veille, zsh) | ✅ | secondes de processeur exactes sur le faux Mac ; 16 ms par relevé |
 | P5 Scores, verdicts, connaissances, gains | ⏳ | |
 | P6 Actions réversibles + sécurité | ⏳ | |
 | P7 Rapport HTML, CLI, notifications, surveillance | ⏳ | |
@@ -120,8 +120,37 @@ $ PYTHON=…/venv/bin/python modules/demarrage/check.sh
 CHECK OK
 ```
 
+## P4 — Mesure (✅)
+
+- `mesure/echantillonneur.py` : analyse de ps (temps cumulé `time`, `etime`, chemins avec espaces), relevé par
+  élément (D-20), modes session (5 s pendant 5 min), croisière, mesure ponctuelle, disque plein signalé une fois.
+- `mesure/energie.py` (top lu par la droite, 2e relevé), `mesure/veille.py` (pmset, « on behalf of »),
+  `mesure/rattachement.py` (D-21), `mesure/session.py` (boottime, last, journal, calme ; D-19),
+  `mesure/zsh.py` (médiane de 5, zprof isolé ; D-22).
+- `db.py` : relevés, mesures par élément, sessions, agrégats après 60 jours, historique zsh.
+- Sur le faux Mac n° 1, les secondes de processeur des 5 premières minutes de chaque élément planté sont exactes
+  (écart < 0,1 s), y compris les processus fils. Le temps jusqu'au calme est égal à celui recalculé à partir des
+  processus simulés eux-mêmes.
+- Avec le vrai zsh du conteneur, zprof trouve la fonction lente, et le `.zshrc` n'est pas modifié.
+- Coût réel d'un relevé (vrai ps de cette machine) :
+
+```
+$ pytest -s tests/demarrage/perf/test_echantillonneur.py
+   relevé : 16.2 ms de processeur, 0.35 s pour 20 ; pic mémoire Python 0.12 Mo ; moyenne projetée sur 24 h : 0.015 %
+```
+
+(La mesure du démon pendant 10 minutes sur le vrai Mac, avec launchctl, pmset et top, est en P8.)
+
+```
+$ PYTHON=…/venv/bin/python modules/demarrage/check.sh
+▶ ruff check ✅  ▶ ruff format ✅  ▶ mypy ✅
+▶ pytest + couverture ≥ 85 %   172 passed · Total coverage: 98.7 %   ✅
+▶ faux Mac   16 passed   ✅   ▶ sécurité   9 passed   ✅   ▶ performance   2 passed   ✅
+CHECK OK
+```
+
 ## Prochaine étape
 
-P4 : la mesure. Analyse de ps/top/pmset, échantillonneur (session toutes les 5 s pendant 5 min, croisière toutes
-les 2 min, énergie toutes les 10 min), temps d'ouverture de session et « temps jusqu'au calme », rattachement
-processus → élément, chronométrage de zsh (+ zprof isolé).
+P5 : scores d'impact et d'utilité, règles de verdict (dans la config, testées une par une),
+`analyse/connaissances.json` (≥ 60 entrées), gains ; critères du §9.2 sur le faux Mac n° 1, puis 2e faux Mac
+aléatoire (5 graines).

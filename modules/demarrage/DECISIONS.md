@@ -158,3 +158,42 @@ jamais réessayé dans le même scan.
 On ne garde que le fichier, le numéro de ligne, la cause reconnue (nvm, conda, oh-my-zsh, compinit sans -C,
 pyenv, rbenv, SDKMAN, brew shellenv, thefuck, brew update) et un conseil.
 Un ~/.zshrc contient souvent des `export …_TOKEN=…`.
+
+## 2026-10-05 · P4 — La mesure
+
+**D-19 · Ce qu'on appelle « ouverture de session » et « calme ».**
+- **Démarrage → connexion** (`connexion − kern.boottime`) : affiché pour information. Il inclut le temps passé
+  devant l'écran de connexion.
+- **Connexion → calme** : la courbe principale, celle que tes choix font bouger. Le calme est le début de la
+  première période d'au moins 30 s où le processeur total reste sous 15 % de la capacité de tous les cœurs
+  (`hw.ncpu`). Le processeur total est calculé exactement : la somme des secondes de processeur consommées entre
+  deux relevés (`time` de ps), divisée par la durée et le nombre de cœurs.
+- **L'heure de connexion** vient de `last` (à la minute) ou, à défaut, du journal de loginwindow (15 s au plus).
+  Elle est affinée par le lancement de ton plus ancien processus quand il tombe dans la même minute.
+- **L'année absente de `last`** est celle du démarrage, ou la suivante pour une connexion juste après le Nouvel
+  An, jamais dans le futur.
+- **Les heures locales** passent par `time.mktime`, qui suit le fuseau du Mac et le passage à l'heure d'été.
+
+**D-20 · On rattache au relevé, on ne garde pas les processus.**
+Garder chaque processus à chaque relevé ferait environ 360 000 lignes par jour. À la place, chaque relevé
+rattache tout de suite les processus aux éléments du dernier scan (D-21), et ne garde qu'une ligne par élément
+actif : secondes de processeur depuis le relevé précédent, mémoire, énergie (si `top` a tourné), veille empêchée.
+Un processus vu pour la première fois compte en entier s'il est né après le relevé précédent (ou après la
+connexion, au premier relevé d'une session). Sinon, le premier relevé sert de référence.
+Un PID est le même processus tant que son heure de lancement estimée ne bouge pas de plus de 2 s. Au-delà, c'est
+un PID réutilisé.
+
+**D-21 · Le rattachement, et une exception au « bundle ».**
+L'ordre est celui du §4 : PID launchd → exécutable → bundle de l'app → parent.
+L'étape « bundle » ne s'applique qu'aux processus lancés directement par launchd (parent 1). Sinon, un agent
+d'une app (Docker) prendrait aussi les processus de l'app que tu as ouverte toi-même.
+Quand plusieurs fiches partagent une app, l'élément d'ouverture passe d'abord, puis les agents, Apple en dernier.
+
+**D-22 · Rétention et zsh.**
+- **Rétention** : les relevés de plus de 60 jours deviennent des agrégats par jour, élément et mode (processeur
+  total, mémoire moyenne, énergie moyenne, nombre de veilles empêchées) ; les sessions et le temps de zsh sont
+  gardés.
+- **zprof** tourne dans une copie de tes fichiers zsh, dans `donnees/demarrage/`, effacée juste après ; tes
+  fichiers ne sont jamais ouverts en écriture. C'est vérifié avec le vrai zsh dans `tests/demarrage/e2e`.
+- **psutil** n'est toujours pas utilisé (D-06) : `ps` donne déjà le temps processeur cumulé, et un processus root
+  qu'on ne peut pas lire n'existe pas pour ps (pas d'erreur à gérer).

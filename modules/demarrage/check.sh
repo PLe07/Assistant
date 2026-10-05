@@ -18,6 +18,7 @@ etape "ruff check" "$PY" -m ruff check "${CIBLES[@]}"
 etape "ruff format" "$PY" -m ruff format --check "${CIBLES[@]}"
 etape "mypy" "$PY" -m mypy modules/demarrage demarrage.py
 etape "pytest + couverture ≥ 85 %" "$PY" -m pytest -q -p no:cacheprovider tests/demarrage/unitaires tests/demarrage/e2e \
+  tests/demarrage/faux_mac \
   --cov=modules/demarrage --cov-config=modules/demarrage/.coveragerc --cov-report=term-missing
 etape "faux Mac (+ 2e faux Mac, 5 graines)" "$PY" -m pytest -q -p no:cacheprovider tests/demarrage/faux_mac
 etape "sécurité" "$PY" -m pytest -q -p no:cacheprovider tests/demarrage/securite
