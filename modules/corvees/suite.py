@@ -11,7 +11,7 @@ import time
 from collections.abc import Callable
 from typing import Any
 
-from modules.corvees import ia, propositions
+from modules.corvees import ia, notifier, propositions, rapport
 
 _fil: threading.Thread | None = None
 
@@ -23,8 +23,11 @@ def traiter(
     journal: Callable[[str], None],
     demander: Callable[..., Any] | None = None,
     dormir: Callable[[float], None] = time.sleep,
+    prevenir: bool = True,
+    afficher: Callable[[str, str], bool] | None = None,
 ) -> dict[str, dict[str, Any]]:
-    """Décrit les corvées et écrit leurs propositions ; renvoie signature → description."""
+    """Décrit les corvées, écrit leurs propositions et le rapport, puis prépare la notification (prevenir=False :
+    pas de notification, par exemple quand tu lances l'analyse toi-même). Renvoie signature → description."""
     from modules.corvees.daemon import ouvrir
 
     base = ouvrir(reglages)  # sa propre connexion : on est dans un autre fil que le démon
@@ -36,6 +39,10 @@ def traiter(
             d = descriptions.get(c["signature"])
             if d is not None:
                 propositions.ecrire(reglages, c, d)
+        rapport.ecrire(base, reglages, maintenant)
+        if prevenir:
+            notifier.preparer(base, candidats, descriptions, maintenant)
+            notifier.tenter(base, reglages, maintenant, afficher=afficher, journal=journal)
         return descriptions
     finally:
         base.fermer()

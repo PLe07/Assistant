@@ -379,7 +379,10 @@ def desinstaller(
         raise Refus(f"Rien d'installé sous « {id_} ».")
     if entree["type"] == "tache_launchd":
         uid = os.getuid() if uid is None else uid
-        lancer(["launchctl", "bootout", f"gui/{uid}/{entree['etiquette']}"], capture_output=True, text=True)
+        try:  # déjà arrêtée, ou launchctl absent : on retire quand même le fichier
+            lancer(["launchctl", "bootout", f"gui/{uid}/{entree['etiquette']}"], capture_output=True, text=True)
+        except OSError:
+            pass
         for fichier in entree["fichiers"]:
             Path(fichier).unlink(missing_ok=True)
         message = f"Tâche {entree['etiquette']} arrêtée et retirée."

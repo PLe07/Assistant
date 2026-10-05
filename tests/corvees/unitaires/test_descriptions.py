@@ -168,3 +168,31 @@ def test_le_script_de_conversion_appelle_sips_une_fois_par_fichier(tmp_path):
     assert (maison / "Downloads" / "IMG_1.jpg").exists() and (maison / "Downloads" / "IMG_1.heic").exists()
     assert script_conversion("fconv:Documents/* [heic→jpg, IMG_*]") is None
     assert script_conversion("pas une conversion") is None
+
+
+def test_ce_qui_a_ete_observe():
+    from modules.corvees.descriptions import observe
+
+    c = CAS[0]  # 12 fois, du 1 au 2 (une seconde d'écart)
+    assert observe(c) == (
+        "Tu déplaces les fichiers « Facture_*.pdf » de ~/Downloads vers ~/Documents/Factures : 12 fois en 1 jour."
+    )
+    c = dict(CAS[9], premiere=1.0, derniere=1.0 + 20 * 86400)
+    assert observe(c) == (
+        "Tu ouvres Safari, puis vas sur mail.google.com/mail, puis ouvres Notes vers 08:30 : 12 fois en 3 semaines."
+    )
+    c = candidat(
+        ["app:A", "app:B", "url:x.fr", "url:y.fr", "cmd:a", "cmd:b"], "sequence", creneau="09:00", jour_semaine="lundi"
+    )
+    c["premiere"] = c["derniere"] = None
+    assert observe(c) == (
+        "Tu ouvres A et B, puis vas sur x.fr et y.fr, puis tapes « a » et « b » dans le terminal vers 09:00 "
+        "le lundi : 12 fois en 10 jours."
+    )
+
+
+def test_le_titre_garde_toujours_l_heure():
+    longs = candidat(
+        ["app:Microsoft Teams", "app:Google Chrome", "url:outlook.office.com/mail"], "routine", creneau="09:12"
+    )
+    assert titre(longs) == "Ouvrir Microsoft Teams, Google Chrome… à 09:12"  # le 3e nom ne tient plus

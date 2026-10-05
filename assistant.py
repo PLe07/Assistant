@@ -11,6 +11,7 @@
     python assistant.py micro off         COUPE le micro tout de suite (micro on pour le rallumer)
     python assistant.py ecran off         COUPE l'écran tout de suite (ecran on pour le rallumer)
     python assistant.py traduction on     🇬🇧 chaque phrase française finie par un point devient anglaise (off : arrêter)
+    python assistant.py corvees rapport   🔁 tes corvées répétées repérées (corvees seul : toutes ses commandes)
     python assistant.py activer mails     active un module (il démarre dans les 2 secondes)
     python assistant.py desactiver mails  désactive un module (il s'arrête dans les 2 secondes)
                                           (au bouton aussi : desactiver cine → son bouton ne fait plus rien)
@@ -126,6 +127,15 @@ def afficher_etat() -> int:
             else "allumée, démarrage…"))
     else:
         print("   🇬🇧 Traduction : éteinte (python assistant.py traduction on)")
+    if config.module_actif("corvees"):
+        try:
+            from modules.corvees import daemon as corvees
+
+            s = corvees.status()
+            print("   🔁 Corvées : " + ("en pause" if s["pause"] else "observe" if s["vivant"] else "démarrage…")
+                  + f" · {s['corvees']} repérée(s) (python assistant.py corvees rapport)")
+        except Exception as e:
+            print(f"   🔁 Corvées : ⚠️ {e}")
     if r["aides"]:
         print(f"   💡 {len(r['aides'])} aide(s) t'attendent dans le menu de l'icône")
     vue = r["icone_vue"]
@@ -656,6 +666,10 @@ def essai_memoire(etape: int | None) -> int:
 
 
 def main() -> int:
+    if sys.argv[1:2] == ["corvees"]:  # le détecteur a ses propres commandes (accept ID --installer…)
+        from modules.corvees.cli import main as corvees
+
+        return corvees(sys.argv[2:])
     actions = {
         "pause": pause, "reprendre": reprendre, "etat": afficher_etat, "journal": journal,
         "test-notif": test_notif, "test-claude": test_claude, "test-plantage": test_plantage,
@@ -666,7 +680,8 @@ def main() -> int:
                   "veille": veille, "recherche": recherche, "rediger": rediger, "depenses": depenses,
                   "cine": cine, "revue": revue, "proactivite": proactivite}
     parser = argparse.ArgumentParser(description="Commandes de l'assistant")
-    parser.add_argument("action", choices=[*actions, *avec_texte, "activer", "desactiver", "habitudes", "essai-memoire"])
+    parser.add_argument("action", choices=[*actions, *avec_texte, "activer", "desactiver", "habitudes", "essai-memoire",
+                                           "corvees"])
     parser.add_argument("suite", nargs="*", help="activer / desactiver : le module ; micro, ecran : on ou off ; "
                                                  "noter, demander, memoire, recherche, rediger : ton texte")
     parser.add_argument("--etape", type=int, choices=[1, 2, 3, 4, 5], help="essai-memoire : une seule étape")

@@ -109,7 +109,11 @@ DEFAUTS: dict[str, Any] = {
         "top": 10,
     },
     "analyse": {"heure": "21:00", "batterie_min": 30},
-    "notifications": {"silence_debut": "23:00", "silence_fin": "08:00"},
+    "notifications": {
+        "silence_debut": "23:00",
+        "silence_fin": "08:00",
+        "vers_journal": False,  # mode test : la notification est écrite dans notifications.log au lieu d'apparaître
+    },
     "ia": {
         "actif": True,
         "modele": "rapide",  # « rapide » (économique, par défaut) ou « fort » (plus puissant)

@@ -57,6 +57,73 @@ def etape(token: str) -> str:
     return token
 
 
+_TU = {
+    "ouvrir": "ouvres",
+    "aller": "vas",
+    "passer": "passes",
+    "copier": "copies",
+    "taper": "tapes",
+    "déplacer": "déplaces",
+    "renommer": "renommes",
+    "convertir": "convertis",
+    "supprimer": "supprimes",
+    "recevoir": "reçois",
+}
+
+
+def conjuguer(phrase: str) -> str:
+    """« déplacer les fichiers… » → « déplaces les fichiers… » (pour « tu »)."""
+    verbe, espace, reste = phrase.partition(" ")
+    return f"{_TU.get(verbe, verbe)}{espace}{reste}"
+
+
+def duree_observee(c: dict[str, Any]) -> str:
+    """« en 3 semaines », « en 9 jours » : de la première à la dernière fois."""
+    if c.get("premiere") and c.get("derniere"):
+        jours = max(1, round((float(c["derniere"]) - float(c["premiere"])) / 86400) + 1)
+    else:
+        jours = int(c["jours_distincts"])
+    return f"en {round(jours / 7)} semaines" if jours >= 14 else f"en {jours} jour{'s' if jours > 1 else ''}"
+
+
+def _et(noms: list[str]) -> str:
+    return noms[0] if len(noms) == 1 else ", ".join(noms[:-1]) + " et " + noms[-1]
+
+
+def etapes_groupees(tokens: list[str]) -> list[str]:
+    """Les étapes, celles qui se suivent et se ressemblent réunies : « ouvrir Teams et Chrome »."""
+    groupes: list[tuple[str, list[str]]] = []
+    for t in tokens:
+        sorte, _, reste = t.partition(":")
+        if sorte in ("app", "url", "cmd") and groupes and groupes[-1][0] == sorte:
+            groupes[-1][1].append(reste)
+        else:
+            groupes.append((sorte if sorte in ("app", "url", "cmd") else t, [reste]))
+    phrases = []
+    for sorte, objets in groupes:
+        if sorte == "app":
+            phrases.append(f"ouvrir {_et(objets)}")
+        elif sorte == "url":
+            phrases.append(f"aller sur {_et(objets)}")
+        elif sorte == "cmd":
+            phrases.append(f"taper {_et([f'« {o} »' for o in objets])} dans le terminal")
+        else:
+            phrases.append(etape(sorte))
+    return phrases
+
+
+def observe(c: dict[str, Any]) -> str:
+    """Ce qui a été vu, en une phrase : « Tu déplaces les fichiers « Facture_*.pdf » … : 14 fois en 3 semaines. »"""
+    etapes = ", puis ".join(conjuguer(e) for e in etapes_groupees(c["tokens"]))
+    details = c.get("details") or {}
+    moment = ""
+    if details.get("creneau"):
+        moment = f" vers {details['creneau']}" + (
+            f" le {details['jour_semaine']}" if details.get("jour_semaine") else ""
+        )
+    return f"Tu {etapes}{moment} : {c['occurrences']} fois {duree_observee(c)}."
+
+
 def _lisible(lieu: str) -> str:
     return "ton dossier personnel" if lieu == "~" else (lieu if lieu.startswith("/") else f"~/{lieu}")
 
@@ -216,10 +283,12 @@ def titre(c: dict[str, Any]) -> str:
         de, _, vers = reste.partition("→")
         t = f"Copier de {de} vers {vers}"
     elif sorte in ("app", "url"):
-        noms = [t.partition(":")[2] for t in tokens if t.startswith(("app:", "url:"))]
-        t = "Ouvrir " + ", ".join(noms[:3]) + ("…" if len(noms) > 3 else "")
-        if details.get("creneau"):
-            t = f"{t} à {details['creneau']}"
+        noms = [t.partition(":")[2].split("/")[0] for t in tokens if t.startswith(("app:", "url:"))]
+        moment = f" à {details['creneau']}" if details.get("creneau") else ""
+        for n in (3, 2, 1):  # l'heure reste toujours visible
+            t = "Ouvrir " + ", ".join(noms[:n]) + ("…" if len(noms) > n else "") + moment
+            if len(t) <= 60:
+                break
     else:
         t = etape(premier)[:1].upper() + etape(premier)[1:]
     if len(t) <= 60:
@@ -235,7 +304,7 @@ def locale(c: dict[str, Any]) -> dict[str, Any]:
     tokens: list[str] = list(c["tokens"])
     sortes = {_sorte(t) for t in tokens}
     details = c.get("details") or {}
-    etapes = [etape(t) for t in tokens]
+    etapes = etapes_groupees(tokens)
     court = titre(c)
     script: str | None = None
     type_, explication, pas, risques = "autre", "", [], "Aucun : rien n'est fait sans toi."
@@ -243,14 +312,14 @@ def locale(c: dict[str, Any]) -> dict[str, Any]:
     if sortes & {"fmove", "fren"} and (script := script_rangement(tokens)):
         type_ = "tache_launchd"
         explication = "Une petite tâche range les fichiers dès qu'ils arrivent dans le dossier de départ."
-        pas = ["Lis le script ci-dessous.", f"Installe-le : python corvees.py accept {c['id']} --installer"]
+        pas = ["Lis le script ci-dessous.", f"Installe-le : corvees accept {c['id']} --installer"]
         risques = "Un fichier du même nom déjà rangé n'est jamais écrasé (il reste où il est)."
         if ".Trash" in script:
             risques = "Les fichiers vont à la Corbeille : récupérables tant que tu ne l'as pas vidée."
     elif "fconv" in sortes and (script := script_conversion(next(t for t in tokens if t.startswith("fconv:")))):
         type_ = "tache_launchd"
         explication = "Une petite tâche convertit les nouveaux fichiers avec « sips », l'outil d'images de macOS."
-        pas = ["Lis le script ci-dessous.", f"Installe-le : python corvees.py accept {c['id']} --installer"]
+        pas = ["Lis le script ci-dessous.", f"Installe-le : corvees accept {c['id']} --installer"]
         risques = "L'original est gardé ; une conversion déjà faite n'est jamais refaite."
     elif sortes == {"cmd"} and (script := alias([t[4:] for t in tokens], c["id"])):
         type_ = "alias_zsh"
@@ -258,7 +327,7 @@ def locale(c: dict[str, Any]) -> dict[str, Any]:
         if "()" in script:
             explication += " Ce qui change à chaque fois (entre guillemets) se donne après le mot."
         pas = [
-            f"Installe-le : python corvees.py accept {c['id']} --installer",
+            f"Installe-le : corvees accept {c['id']} --installer",
             "Ouvre un nouveau terminal, puis tape corvee_" + c["id"] + " (tu peux le renommer dans alias.zsh).",
         ]
     elif sortes <= {"app", "url", "fen", "copie"} and (script := script_ouverture(tokens, court)):
@@ -266,7 +335,8 @@ def locale(c: dict[str, Any]) -> dict[str, Any]:
             type_ = "tache_launchd"
             jour = details.get("jour_semaine") or "jour"
             explication = f"Une tâche ouvre tout ça pour toi, chaque {jour} à {details['creneau']}."
-            pas = ["Lis le script ci-dessous.", f"Installe-le : python corvees.py accept {c['id']} --installer"]
+            risques = "Tout s'ouvrira aussi les jours où tu n'en as pas besoin : désinstalle la tâche si ça te gêne."
+            pas = ["Lis le script ci-dessous.", f"Installe-le : corvees accept {c['id']} --installer"]
         else:
             type_ = "app_raccourcis"
             explication = (
@@ -295,7 +365,7 @@ def locale(c: dict[str, Any]) -> dict[str, Any]:
     return {
         "id": c["id"],
         "titre_court": court,
-        "description_fr": f"Tu fais ceci {quand(c)} : {', puis '.join(etapes)}."[:600],
+        "description_fr": f"Tu {', puis '.join(conjuguer(e) for e in etapes)}, {quand(c)}."[:600],
         "pourquoi_corvee": (
             f"{c['occurrences']} fois sur {c['jours_distincts']} jours, toujours les mêmes étapes : "
             f"environ {c['minutes_mois']:.0f} min par mois."

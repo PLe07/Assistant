@@ -268,3 +268,78 @@ def test_interface_de_module(tmp_path, monkeypatch):
     assert h["capteurs"][0]["statut"] == "ok" and h["cout_du_mois_usd"] == 0 and h["taille_octets"] > 0
     with mock.patch("core.config.module_actif", return_value=False):
         assert not daemon.status(base, maintenant=5000.0)["vivant"]
+
+
+def test_la_commande_demande_de_vider_le_tampon(demon):
+    t = ts(5, 10)
+    demon.base.ecrire("derniere_analyse", t)
+    demon.tour(t)
+    demon.recevoir(Evenement(t + 1, "x", "app", "app:A"))
+    demon.base.ecrire("demande", {"quoi": "vider", "quand": t + 2})
+    demon.tour(t + 2)
+    assert demon.base.compter() == 1 and demon.base.lire("demande") is None
+    assert demon.base.lire("demande_faite") == {"quoi": "vider", "quand": t + 2}
+
+
+def test_la_pause_est_confirmee_dans_la_base(demon):
+    t = ts(5, 10)
+    demon.base.ecrire("derniere_analyse", t)
+    demon.base.ecrire("pause", {"jusqua": None})
+    demon.tour(t)
+    assert demon.base.lire("en_pause") is True
+    demon.base.effacer("pause")
+    demon.tour(t + 1)
+    assert demon.base.lire("en_pause") is False
+
+
+def test_purge_par_le_demon_tout_repart_de_zero(demon):
+    t = ts(5, 10)
+    demon.base.ecrire("derniere_analyse", t)
+    demon.base.ajouter([Evenement(t, "x", "app", "app:A", {}, 0)])
+    demon.base.ecrire("pause", {"jusqua": None})
+    demon.tour(t)
+    dossier = demon.dossier
+    (dossier / "propositions" / "abc").mkdir(parents=True)
+    (dossier / "rapport.html").write_text("vieux")
+    (dossier / "a_moi.txt").write_text("à toi")
+    sel_avant = (dossier / "sel").read_bytes()
+    ancienne = demon.base
+    demon.base.ecrire("demande", {"quoi": "purge", "quand": t + 1})
+    demon.tour(t + 1)
+    assert demon.base is not ancienne and demon.base.compter() == 0
+    assert not (dossier / "propositions").exists() and not (dossier / "rapport.html").exists()
+    assert (dossier / "a_moi.txt").exists()  # ce qui n'est pas au détecteur n'est jamais touché
+    assert (dossier / "sel").read_bytes() != sel_avant  # nouvelles empreintes : rien ne se recoupe
+    assert demon.bavard.memoire is demon.base  # ses curseurs repartent de zéro aussi
+    assert demon.base.lire("pause") == {"jusqua": None}  # la pause est gardée
+    assert demon.base.lire("demande_faite") == {"quoi": "purge", "quand": t + 1}
+    assert any("Purge : toutes les données" in m for m in demon.messages)
+
+
+def test_purge_capteurs_reconstruits(tmp_path):
+    reglages, _ = config.charger({"dossier": str(tmp_path / "d"), "capteurs": {"fichiers": False}})
+    d = daemon.Demon(reglages, natif=None, journal=lambda m: None)
+    avant = list(d.capteurs)
+    d.recommencer(ts(5, 10))
+    assert d.capteurs and all(c not in avant for c in d.capteurs)
+    assert all(c.memoire is d.base for c in d.capteurs)
+    d.fermer(ts(5, 10))
+
+
+def test_la_notification_en_attente_part_au_battement(demon):
+    demon.reglages["notifications"]["vers_journal"] = True
+    t = ts(5, 21, 30)
+    demon.base.ecrire("derniere_analyse", t)
+    demon.base.ecrire("notification_en_attente", {"titre": "🔁 1 corvée repérée", "message": "m", "signatures": ["s"]})
+    demon.tour(t)
+    assert (demon.dossier / "notifications.log").read_text().count("🔁 1 corvée repérée") == 1
+    assert any("Notification :" in m for m in demon.messages)
+
+
+def test_une_notification_qui_plante_ne_fait_rien_tomber(demon):
+    t = ts(5, 21, 30)
+    demon.base.ecrire("derniere_analyse", t)
+    with mock.patch("modules.corvees.notifier.tenter", side_effect=RuntimeError("non")):
+        demon.tour(t)
+        demon.tour(t + 61)
+    assert sum("Notification : RuntimeError" in m for m in demon.messages) == 1

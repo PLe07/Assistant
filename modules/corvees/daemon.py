@@ -23,6 +23,18 @@ from modules.corvees.normalize import debut_du_jour, instant_du_jour, veille
 PAS_S = 0.5  # la boucle
 BATTEMENT_S = 60
 RELANCE_MAX_S = 300  # un capteur qui plante attend au plus 5 minutes avant d'être relancé
+A_EFFACER = [
+    "corvees.db",
+    "corvees.db-*",
+    "corvees.db.corrompue-*",
+    "sel",
+    "propositions",
+    "sauvegardes",
+    "rapport.html",
+    "notifications.log",
+    "alias.zsh",
+    "installations.json",
+]
 TAMPON_MAX = 20000  # au-delà (disque plein longtemps), les plus anciens événements en attente sont abandonnés
 
 
@@ -49,6 +61,7 @@ class Demon:
         self.en_pause = False
         self.relance: dict[str, float] = {}  # capteur → instant avant lequel on ne le relance pas
         self.apres_analyse = apres_analyse
+        self.capteurs_construits = capteurs is None
         self.capteurs = (
             capteurs
             if capteurs is not None
@@ -183,12 +196,7 @@ class Demon:
 
     def analyser(self, maintenant: float) -> list[dict[str, Any]]:
         self.vider(maintenant)
-        depuis = maintenant - int(self.reglages["detection"]["fenetre_jours"]) * 86400
-        evenements = self.base.evenements(depuis)
-        candidats = analyser(evenements, self.reglages, self.base.decisions(), maintenant, fin=maintenant)
-        self.base.enregistrer_candidats(candidats, maintenant)
-        self.base.ecrire("derniere_analyse", maintenant)
-        self.journal(f"Analyse : {len(evenements)} événements, {len(candidats)} corvées repérées")
+        candidats = analyser_base(self.base, self.reglages, maintenant, self.journal)
         if self.apres_analyse:
             try:
                 self.apres_analyse(self, candidats, maintenant)
@@ -204,11 +212,13 @@ class Demon:
                 self.en_pause = True
                 self.arreter_capteurs()
                 self.vider(maintenant)
+                self.base.ecrire("en_pause", True)  # la commande « pause » attend cette confirmation
                 self.journal("En pause : tous les capteurs sont coupés")
         else:
             if self.en_pause:
                 self.en_pause = False
                 self.demarrer_capteurs()
+                self.base.ecrire("en_pause", False)
                 self.journal("Reprise : capteurs rallumés")
             self.relever(maintenant)
         if maintenant - self.dernier_vidage >= self.reglages["ecriture_groupee_s"] or len(self.tampon) >= 5000:
@@ -216,13 +226,106 @@ class Demon:
         if maintenant - self.dernier_battement >= BATTEMENT_S:
             self.battre(maintenant)
             self.entretenir(maintenant)
+            self.prevenir(maintenant)
+        self.traiter_demande(maintenant)
         if self.doit_analyser(maintenant):
             self.analyser(maintenant)
+
+    # --- ce que la commande demande au démon (vider le tampon, tout effacer) ---------------------------------
+
+    def traiter_demande(self, maintenant: float) -> None:
+        demande = self.base.lire("demande")
+        if not demande:
+            return
+        self.base.effacer("demande")
+        quoi = demande.get("quoi")
+        if quoi == "vider":
+            self.vider(maintenant)
+        elif quoi == "purge":
+            self.recommencer(maintenant)
+        self.base.ecrire("demande_faite", {"quoi": quoi, "quand": demande.get("quand")})
+
+    def recommencer(self, maintenant: float) -> None:
+        """« corvees purge » : tout est effacé, puis le détecteur repart de zéro (la pause éventuelle est gardée)."""
+        pause = self.base.lire("pause")
+        self.arreter_capteurs()
+        self.tampon = []
+        self.base.fermer()
+        effacer_donnees(self.reglages, self.journal)
+        self.gardien = privacy.Gardien(self.reglages, privacy.sel(self.dossier))
+        self.base = Base(self.dossier / "corvees.db", self.gardien, journal=self.journal)
+        self.session, self.dernier_evt = 0, 0.0
+        if self.capteurs_construits:
+            self.capteurs = construire(
+                self.reglages, self.recevoir, self.base, self.natif, self.gardien.empreinte, self.gardien.chemin_exclu
+            )
+        else:
+            for c in self.capteurs:
+                c.memoire = self.base
+        if pause:
+            self.base.ecrire("pause", pause)
+        self.base.ecrire("derniere_analyse", maintenant)  # pas d'analyse sur une base vide ce soir
+        if not self.en_pause:
+            self.demarrer_capteurs()
+        self.journal("Purge : toutes les données effacées, le détecteur repart de zéro")
+
+    def prevenir(self, maintenant: float) -> None:
+        """La notification en attente (préparée après l'analyse) part dès que c'est permis."""
+        from modules.corvees import notifier
+
+        try:
+            notifier.tenter(self.base, self.reglages, maintenant, journal=self.journal)
+        except Exception as e:
+            self._dire_une_fois("notification", f"Notification : {e.__class__.__name__} : {e}")
 
     def fermer(self, maintenant: float | None = None) -> None:
         self.arreter_capteurs()
         self.vider(maintenant or time.time())
         self.base.fermer()
+
+
+def analyser_base(
+    base: Base, reglages: dict[str, Any], maintenant: float, journal: Callable[[str], None] | None = None
+) -> list[dict[str, Any]]:
+    """L'analyse des 30 derniers jours : les corvées repérées sont enregistrées dans la base et renvoyées."""
+    depuis = maintenant - int(reglages["detection"]["fenetre_jours"]) * 86400
+    evenements = base.evenements(depuis)
+    candidats = analyser(evenements, reglages, base.decisions(), maintenant, fin=maintenant)
+    base.enregistrer_candidats(candidats, maintenant)
+    base.ecrire("derniere_analyse", maintenant)
+    if journal:
+        journal(f"Analyse : {len(evenements)} événements, {len(candidats)} corvées repérées")
+    return candidats
+
+
+def effacer_donnees(
+    reglages: dict[str, Any], journal: Callable[[str], None] | None = None, lancer: Callable[..., Any] | None = None
+) -> list[str]:
+    """Efface tout ce que le détecteur a écrit (base, sel, propositions, rapport, sauvegardes…), après avoir
+    désinstallé ce que tu avais installé avec « accept --installer ». Renvoie ce qui a été désinstallé."""
+    import shutil
+
+    from modules.corvees import propositions
+
+    desinstalles = []
+    for id_ in list(propositions.installations(reglages)):
+        try:
+            if lancer is None:
+                propositions.desinstaller(reglages, id_)
+            else:
+                propositions.desinstaller(reglages, id_, lancer=lancer)
+            desinstalles.append(id_)
+        except Exception as e:
+            if journal:
+                journal(f"Purge : désinstallation de {id_} impossible ({e})")
+    dossier = config.dossier_donnees(reglages)
+    for motif in A_EFFACER:  # seulement ce que le détecteur a créé, même si le dossier a été mal réglé
+        for chose in dossier.glob(motif):
+            if chose.is_dir() and not chose.is_symlink():
+                shutil.rmtree(chose)
+            else:
+                chose.unlink(missing_ok=True)
+    return desinstalles
 
 
 def boucle(ctx: Any) -> None:

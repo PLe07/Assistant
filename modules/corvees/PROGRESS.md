@@ -12,6 +12,7 @@ Porte unique : `modules/corvees/check.sh` (dans le conteneur : `PYTHON=<venv>/bi
 | P4 Capteurs C1-C6 + inactivité | ✅ | 26 tests (vrais fichiers, vraies bases SQLite, vraie surveillance) |
 | P5 Démon, planification, robustesse | ✅ | 20 tests du démon |
 | P6 Couche IA, budget, propositions | ✅ | 116 tests de plus ; fuites cherchées aussi dans ce qui part chez Claude |
+| P7 Rapport HTML, notifications, CLI | ✅ | 52 tests de plus ; rapport vérifié en clair, sombre et sur mobile |
 
 ## P0 — Reconnaissance (✅)
 
@@ -152,6 +153,48 @@ CHECK OK
 Non-régression de l'Assistant (après P5) : 931 ✅. Le seul ❌ venait d'une liste de modules figée dans un essai,
 à laquelle il manquait « corvees » ; la fiche FICHE.md sera complétée en P10.
 
-**Prochaine étape :** P7 — rapport HTML autonome (mode sombre), notifications (1 par jour au plus, silence de
-23 h à 8 h, rien s'il n'y a rien de nouveau), CLI complète (status, rapport, accept, reject, snooze, pause, resume,
-analyser --maintenant, purge, doctor, desinstaller).
+## P7 — Rapport, notifications, commande (✅)
+
+- `rapport.py` : page autonome, en français, avec mode sombre. Pour chaque corvée :
+  - ce qui a été observé (« Tu déplaces les fichiers « Facture_*.pdf » de ~/Downloads vers ~/Documents/Factures :
+    12 fois en 4 semaines. ») ;
+  - la fréquence, la dernière fois, le temps perdu et le gain ;
+  - la solution, avec son script contrôlé et un bouton « Copier » ;
+  - les commandes accept, reject et snooze.
+
+  Le rendu a été vérifié dans Chromium : en clair, en sombre, et à 390 px de large sans défilement horizontal.
+- `notifier.py` : une notification par jour au plus, jamais de 23 h à 8 h, aucune sans nouveauté. Elle part par
+  les notifications de l'Assistant ; en mode test, elle va dans un fichier de journal.
+- `cli.py` : status, rapport, accept [--installer], reject, snooze, pause, resume, analyser --maintenant, purge
+  (avec confirmation), doctor, desinstaller. La commande parle au démon par la base (vider, purge, confirmation de
+  pause).
+- Assistant : `python assistant.py corvees …`, une ligne dans `etat`, et le module dans FICHE.md.
+
+Le juge de simulation cherche maintenant les fuites dans tout le dossier du détecteur, rapport HTML compris.
+
+```
+$ modules/corvees/check.sh
+✅ ruff check · ✅ ruff format · ✅ mypy
+358 passed, 1 deselected · Total coverage: 98.80%
+simulation 16 passed · performance 1 passed
+CHECK OK
+```
+
+Démonstration sur un mois simulé (graine 101), sans jeton Claude dans le conteneur :
+
+```
+$ corvees analyser --maintenant
+🔎 Analyse des 30 derniers jours…
+   · Claude indisponible (Jeton Claude absent du .env de l'assistant.) : descriptions faites sur place
+   10 corvée(s) repérée(s) en 0.3 s :
+   [53iuxw] Renommer les « Capture d’écran * à *.png » · ≈ 29 min/mois
+   [lvyerd] Ranger les « Facture_*.pdf » dans ~/Documents/Factures · ≈ 13 min/mois
+   …
+```
+
+**Prochaine étape :** P8-P9. Côté conteneur :
+- bout en bout avec un vrai démon, sur de vrais fichiers, un HISTFILE de test et un bac à sable ;
+- mesure du CPU et de la RAM pendant 10 minutes ;
+- relance par le superviseur après un kill.
+
+Puis ACTIONS_HUMAINES.md pour le Mac.

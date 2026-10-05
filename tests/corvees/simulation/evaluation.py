@@ -71,9 +71,9 @@ def evaluer(graine: int, dossier: Path, corvees=None, jours: int = 28) -> Result
     suite.traiter(reglages, final, monde.fin, journal.append, demander=_claude_perroquet(envoye))
 
     # Fuites : rien d'exclu, aucun secret, ni dans la base (fichier brut), ni dans les candidats, ni dans ce qui
-    # part chez Claude, ni dans les propositions, ni dans le journal.
-    brut = b"".join(p.read_bytes() for p in dossier.glob("corvees.db*"))
-    brut += b"".join(p.read_bytes() for p in (dossier / "propositions").rglob("*") if p.is_file())
+    # part chez Claude, ni dans les propositions, ni dans le rapport HTML, ni dans le journal.
+    brut = b"".join(p.read_bytes() for p in dossier.rglob("*") if p.is_file())  # base, propositions, rapport…
+    assert (dossier / "rapport.html").exists()
     texte = json.dumps(final, ensure_ascii=False) + "\n".join(envoye + journal)
     fuites = []
     for cherche in monde.exclus + monde.secrets + [s.replace(" ", "") for s in monde.secrets]:

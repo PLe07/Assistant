@@ -34,6 +34,7 @@ Ce que tu dois voir : `✅ superviseur : en marche` et `✅ icone : en marche`, 
 | **Le micro** | « 🎙 Couper le micro » | `python assistant.py micro off` | le micro se ferme tout de suite ; 🎙 disparaît de l'icône |
 | **L'écran** | « 👁 Couper l'écran » | `python assistant.py ecran off` | plus aucune capture ; 👁 disparaît de l'icône |
 | **La traduction** 🇬🇧 | « 🇬🇧 Arrêter la traduction » | `python assistant.py traduction off` | plus rien n'est traduit ; 🇬🇧 disparaît de l'icône |
+| **Le détecteur de corvées** 🔁 | — | `python assistant.py corvees pause` | tous ses capteurs se coupent dans la seconde (`corvees resume` pour rallumer) |
 | **Tout** (interrupteur maître) | « ⏸ Tout mettre en pause » | `python assistant.py pause` | tout s'arrête : micro, écran, traduction, mails, aides ; l'icône affiche ⏸ |
 
 Pour rallumer : le même bouton (« Rallumer… », « Reprendre », « 🇬🇧 Traduire mes phrases en anglais »), ou
@@ -77,7 +78,7 @@ Pour rallumer : le même bouton (« Rallumer… », « Reprendre », « 🇬🇧
 | `depenses` · surveille le dossier ~/Reçus | `redacteur` · ✒️ dans ton style |
 | `battement` · prouve que tout tourne | `brief` · ☀️ ton brief |
 | `traduction` · 🇬🇧 tes phrases en anglais (au point) | `cine` · 🎬 je regarde quoi ce soir |
-| | `revue` · 🗓 la revue de la semaine |
+| `corvees` · 🔁 repère tes corvées répétées (éteint au départ) | `revue` · 🗓 la revue de la semaine |
 
 Un module « au bouton » désactivé ne fait plus rien : son bouton, sa commande et la voix répondent
 « … est désactivé » avec la commande pour le réactiver. (Pour `depenses`, désactiver arrête seulement

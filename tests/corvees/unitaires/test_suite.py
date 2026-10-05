@@ -47,3 +47,23 @@ def test_le_fil_normal_passe_par_traiter(reglages):
         suite.apres_analyse(demon, [candidat(1)], SOIR)
         suite.attendre(5)
     assert vu == [(1, SOIR)]
+
+
+def test_traiter_ecrit_le_rapport_et_prevoit_la_notification(reglages):
+    from modules.corvees import rapport
+    from modules.corvees.daemon import ouvrir
+
+    vues = []
+    suite.traiter(
+        reglages,
+        [candidat(1)],
+        SOIR,
+        lambda m: None,
+        demander=FauxClaude(tout_decrire),
+        afficher=lambda titre, message: vues.append(titre) or True,
+    )
+    assert rapport.chemin(reglages).exists() and vues == ["🔁 1 corvée repérée"]
+    suite.traiter(reglages, [candidat(2)], SOIR + 60, lambda m: None, demander=FauxClaude(), prevenir=False)
+    base = ouvrir(reglages)
+    assert base.lire("notification_en_attente") is None  # prevenir=False : rien de préparé
+    base.fermer()

@@ -267,3 +267,39 @@ Un script douteux est marqué « ⚠️ à vérifier » et ne s'installe pas.
 `desinstaller` défait tout, d'après le registre `installations.json`. Les étiquettes ne contiennent aucun nom
 (dépôt public). Elles restent dans le périmètre autorisé : ce sont des tâches utilisateur, créées sur demande
 explicite.
+
+## 2026-10-05 · P7 — Rapport, notifications, commande
+
+**D-38 · La commande.** `python corvees.py <commande>`, `python -m modules.corvees <commande>` et
+`python assistant.py corvees <commande>` font la même chose. Pour taper simplement `corvees rapport`, comme dans
+le cahier des charges, il faut un alias dans `~/.zshrc`. Le détecteur ne touche jamais à ce fichier : l'alias est
+une action humaine facultative. Les textes affichés (notification, rapport) disent « corvees … ».
+
+**D-39 · La commande parle au démon par la base.**
+- `pause` et `resume` écrivent l'état ; le démon le lit à chaque tour, en moins d'une seconde, et confirme
+  (`en_pause`).
+- `analyser --maintenant` demande d'abord au démon de vider son tampon (les 30 dernières secondes), puis analyse
+  dans la commande elle-même, pour afficher le résultat. Il n'y a pas de notification : tu es devant l'écran.
+- `purge` est faite par le démon s'il tourne : il ferme sa base, efface, recrée un sel neuf et repart de zéro
+  (une base effacée sous un démon qui écrit encore serait perdue). Sinon, c'est la commande qui efface.
+- La purge n'efface que les fichiers du détecteur, d'après une liste, même si le dossier a été mal réglé. Elle
+  désinstalle d'abord ce qui avait été installé. La pause en cours est gardée.
+
+**D-40 · La notification.** Elle est préparée après l'analyse, seulement si une corvée n'a encore jamais été
+annoncée (on garde les 500 dernières signatures annoncées). Elle part tout de suite, sauf de 23 h à 8 h, et pas
+plus d'une fois par jour. Sinon, le démon réessaie au plus tous les quarts d'heure : une analyse faite au réveil, à
+2 h du matin, est annoncée à 8 h. Elle passe par les notifications de l'Assistant (osascript, garde-fous
+communs). En mode test, elle est écrite dans `notifications.log`.
+
+**D-41 · Le rapport.**
+- Une page HTML autonome : CSS et quelques lignes de JS en ligne, aucun lien externe, mode sombre par
+  `prefers-color-scheme`, lisible sur mobile.
+- Tout texte est échappé.
+- Ce que tu as décidé depuis la dernière analyse n'y figure plus : elle est refaite après chaque accept, reject
+  et snooze.
+- La phrase « ce qui a été observé » est faite sur place, à partir des chiffres. Elle reste donc exacte même si
+  Claude se trompe. Le texte de Claude vient en plus.
+- La page est en `chmod 600`.
+
+**D-42 · Intégration à l'Assistant.** Une ligne « 🔁 Corvées » dans `python assistant.py etat` quand le module est
+allumé ; le module figure dans FICHE.md (tableau des modules, pause).
