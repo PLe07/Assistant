@@ -6,6 +6,7 @@ Porte unique : `modules/corvees/check.sh` (dans le conteneur : `PYTHON=<venv>/bi
 | Phase | Statut | Preuve |
 |---|---|---|
 | P0 Reconnaissance, squelette, check.sh | ✅ | ci-dessous |
+| P1 Données, config, vie privée | ✅ | 112 tests, couverture 99 % |
 
 ## P0 — Reconnaissance (✅)
 
@@ -23,4 +24,23 @@ $ modules/corvees/check.sh
 CHECK OK
 ```
 
-**Prochaine étape :** P1 — modèle de données, configuration, vie privée (tests d'abord).
+## P1 — Données, configuration, vie privée (✅)
+
+- `config.py` : toutes les valeurs par défaut et tous les seuils ; reglages.json → modules.corvees, fusion en
+  profondeur ; une valeur de mauvais type est remplacée et signalée.
+- `privacy.py` : caviardage (e-mails, téléphones FR, IBAN avec contrôle mod 97, cartes avec Luhn, clés sk-/sk-ant-/
+  ghp_/AKIA…, JWT, Bearer, hexadécimal ≥ 32, base64 ≥ 40, mots de passe en ligne de commande, paramètres d'URL,
+  identifiants dans les URL, clés privées) ; exclusions (applis par nom/bundle/accents, domaines, dossiers,
+  titres de fenêtres sensibles) ; empreinte HMAC salée ; sel 32 octets en 600.
+- `db.py` : seul chemin d'écriture = `Base.ajouter()` qui passe par le Gardien ; base en 600 ; purge → agrégats ;
+  base corrompue → mise de côté + reconstruite ; disque plein → `DisquePlein`.
+- `normalize.py` : heure de Paris (changements d'heure testés), motifs de noms, lieux, URL, commandes, tokens.
+
+```
+$ modules/corvees/check.sh
+✅ ruff check · ✅ ruff format · ✅ mypy (9 fichiers)
+112 passed · Total coverage: 99.15%
+CHECK OK
+```
+
+**Prochaine étape :** P2 — simulateur de vie (10 corvées plantées, 4 pièges, vérité terrain, 2e jeu).
