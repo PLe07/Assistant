@@ -13,6 +13,26 @@ from modules.corvees.db import Evenement
 
 Sortie = Callable[[Evenement], None]
 
+# Des processus du système, jamais « l'appli devant » ni « sa fenêtre » : Stage Manager, Dock, Centre de contrôle…
+# (noms anglais et français). Vu sur le Mac : « WindowManager » s'intercalait entre deux vraies applis.
+PROCESSUS_SYSTEME = frozenset(
+    {
+        "WindowManager",
+        "Window Server",
+        "Dock",
+        "SystemUIServer",
+        "Control Center",
+        "Centre de contrôle",
+        "Notification Center",
+        "Centre de notifications",
+        "Spotlight",
+        "loginwindow",
+        "screencaptureui",
+        "Wallpaper",
+        "Fond d'écran",
+    }
+)
+
 
 class Memoire(Protocol):
     """Où un capteur garde ses curseurs (la base du détecteur)."""

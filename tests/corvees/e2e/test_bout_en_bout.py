@@ -173,7 +173,7 @@ def test_de_vraies_actions_remontent_jusqu_au_rapport(bac, capsys):
 
 @pytest.mark.skipif(
     sys.platform != "darwin" or os.getenv("CORVEES_E2E_MAC") != "1",
-    reason="sur le Mac seulement, à la demande : CORVEES_E2E_MAC=1 (ouvre et referme TextEdit et Calculette)",
+    reason="sur le Mac seulement, à la demande : CORVEES_E2E_MAC=1 (ouvre et referme TextEdit et Calculatrice)",
 )
 def test_sur_le_mac_les_applis_alternees(bac):  # pragma: no cover - lancé à la main sur le Mac
     """Comme le vrai démon : sa boucle sur le fil principal, qui laisse macOS tenir à jour l'appli au premier plan
@@ -215,4 +215,6 @@ def test_sur_le_mac_les_applis_alternees(bac):  # pragma: no cover - lancé à l
     print(f"\nApplis vues : {[t for t in jetons if t.startswith('app:')]}\nSanté : {sante}")
     assert sante["apps"][0] == "ok", sante["apps"]  # la méthode principale, pas celle de secours
     assert jetons.count("app:TextEdit") >= 2, jetons
-    assert jetons.count("app:Calculator") + jetons.count("app:Calculette") >= 2, jetons
+    calculette = sum(jetons.count(f"app:{nom}") for nom in ("Calculator", "Calculatrice", "Calculette"))
+    assert calculette >= 2, jetons  # son nom dépend de la langue du Mac (« Calculatrice » en français)
+    assert not any(t in jetons for t in ("app:WindowManager", "app:Dock")), jetons

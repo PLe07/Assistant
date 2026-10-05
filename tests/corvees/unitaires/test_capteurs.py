@@ -44,8 +44,8 @@ class FauxMac:
     def accessibilite(self):
         return self.ax
 
-    def titre_fenetre(self):
-        return self.titre
+    def fenetre_devant(self):
+        return (self.devant[0], self.titre) if self.devant and self.titre else None
 
     def compteur_presse_papiers(self):
         return self.compteur
@@ -103,6 +103,20 @@ def test_c1_secours_puis_rien():
     assert c.statut == "dégradé" and len(sortie) == 1
 
 
+def test_c1_les_processus_du_systeme_ne_sont_pas_des_applis():
+    """Vu sur le Mac : « WindowManager » (Stage Manager) apparaissait entre deux vraies applis."""
+    mac = FauxMac()
+    c, sortie = capteur(Apps, mac)
+    c.relever(10)
+    for systeme in ("WindowManager", "Dock", "Centre de contrôle"):
+        mac.devant = (systeme, "")
+        c.relever(12)
+    mac.devant = ("Numbers", "com.apple.iWork.Numbers")
+    c.relever(20)
+    assert [e.token for e in sortie] == ["app:Safari", "app:Numbers"]
+    assert sortie[1].attrs["duree_precedente"] == 10.0 and c.statut == "ok"
+
+
 def test_c1_desactive_hors_mac():
     c, sortie = capteur(Apps, None)
     c.relever(1)
@@ -114,9 +128,7 @@ def test_c1_desactive_hors_mac():
 
 def test_c2_titres_normalises_avec_l_autorisation():
     mac = FauxMac()
-    apps, _ = capteur(Apps, mac)
-    apps.relever(1)
-    c, sortie = capteur(Fenetres, mac, apps=apps)
+    c, sortie = capteur(Fenetres, mac)
     mac.titre = "Budget 2026.numbers"
     c.relever(2)
     c.relever(3)
@@ -128,13 +140,27 @@ def test_c2_titres_normalises_avec_l_autorisation():
     assert len(sortie) == 1
 
 
+def test_c2_l_appli_et_son_titre_sont_lus_ensemble():
+    """Vu sur le Mac : « fen:TextEdit:Calculatrice », le titre de la nouvelle appli avec le nom de l'ancienne. Le
+    nom de l'appli et le titre de sa fenêtre viennent maintenant de la même question à macOS."""
+    mac = FauxMac()
+    c, sortie = capteur(Fenetres, mac)
+    mac.devant, mac.titre = ("Calculatrice", "com.apple.calculator"), "Calculatrice"
+    c.relever(1)
+    mac.devant, mac.titre = ("WindowManager", ""), "Claude"  # un processus du système : pas une fenêtre d'appli
+    c.relever(2)
+    assert [e.token for e in sortie] == ["fen:Calculatrice:Calculatrice"]
+    assert sortie[0].attrs == {"appli": "Calculatrice"}
+
+
 def test_c2_sans_accessibilite_desactive():
     mac = FauxMac()
     mac.ax = False
     c, sortie = capteur(Fenetres, mac)
     assert c.statut == "désactivé" and "Accessibilité" in c.detail
     mac.ax = True
-    c.relever(1)  # pas encore de courante : rien
+    mac.titre = None
+    c.relever(1)  # pas de fenêtre au premier plan : rien
     assert c.statut == "ok" and sortie == []
     mac.ax = False
     c.relever(2)

@@ -3,7 +3,7 @@
 Construit du 5 octobre 2026, phases P0 à P10. Chaque preuve ci-dessous est la sortie réelle d'une commande.
 Le détail de chaque étape est dans [PROGRESS.md](PROGRESS.md), et les choix dans [DECISIONS.md](DECISIONS.md).
 
-Légende : ✅ fait et prouvé · ⏳ fait dans l'environnement de construction (Linux), à confirmer sur le Mac par
+Légende : ✅ fait et prouvé (sur le Mac quand c'est précisé) · ⏳ fait dans l'environnement de construction (Linux), à confirmer sur le Mac par
 une action humaine ([ACTIONS_HUMAINES.md](ACTIONS_HUMAINES.md) §3).
 
 ## Définition de « terminé »
@@ -13,12 +13,12 @@ une action humaine ([ACTIONS_HUMAINES.md](ACTIONS_HUMAINES.md) §3).
 | 1 | `check.sh` vert | ✅ |
 | 2 | Simulation : 5 graines, plus le 2e jeu de corvées écrit après le réglage | ✅ 100 % de rappel et de précision partout |
 | 3 | Zéro faux secret retrouvé | ✅ 0 sur 10 mondes simulés |
-| 4 | Bout en bout réel | ✅ conteneur (vrais fichiers, vrai zsh) · ⏳ partie applis sur le Mac |
-| 5 | Démon installé, actif, relancé après un kill | ✅ sous le vrai superviseur (conteneur) · ⏳ sur le Mac |
-| 6 | CPU, RAM, temps d'analyse mesurés et dans les budgets | ✅ conteneur · ⏳ avec les capteurs du Mac |
-| 7 | `corvees doctor` sans erreur bloquante | ✅ |
+| 4 | Bout en bout réel | ✅ sur le Mac : fichiers et zsh (passé), applis vues par la méthode principale (TextEdit ×3, Calculatrice ×3) |
+| 5 | Démon installé, actif, relancé après un kill | ✅ sur le Mac : `kill -9`, démon vivant 70 s après |
+| 6 | CPU, RAM, temps d'analyse mesurés et dans les budgets | ✅ sur le Mac : CPU 0,13 à 0,14 %, RAM 74 à 84 Mo |
+| 7 | `corvees doctor` sans erreur bloquante | ✅ sur le Mac : 8 capteurs sur 9 « ok » ; navigateurs en attente de l'Accès complet au disque (facultatif) |
 | 8 | README en français | ✅ [README.md](README.md) |
-| 9 | ACTIONS_HUMAINES.md : seulement l'impossible sans toi | ✅ 2 actions obligatoires, 2 facultatives |
+| 9 | ACTIONS_HUMAINES.md : seulement l'impossible sans toi | ✅ les actions obligatoires sont faites ; restent 2 facultatives |
 
 ## 1. check.sh
 
@@ -124,8 +124,28 @@ Ce test a trouvé 3 défauts réels, corrigés (DECISIONS D-44) :
 - la sauvegarde par copie de zsh prise pour une réécriture ;
 - le journal SQLite en 644.
 
-⏳ **Sur le Mac** : la partie applis (TextEdit et Calculette alternées, puis refermées), par
-`CORVEES_E2E_MAC=1 .venv/bin/python -m pytest tests/corvees/e2e`.
+✅ **Sur le Mac** (MacBook Air, macOS 26, Python 3.14). Le test fichiers + zsh passe. Le test applis reproduit
+la vraie boucle du démon :
+
+```
+$ CORVEES_E2E_MAC=1 .venv/bin/python -m pytest tests/corvees/e2e -q -s
+   2 corvée(s) repérée(s) en 0.0 s :
+   [ugn5ie] Ranger les « Devis_*.pdf » dans Devis · ≈ 7 min/mois
+   [diesag] Commande « cd ~/CorveesSandbox && ls -la » · ≈ 6 min/mois
+(historique écrit par zsh)
+.
+Applis vues : ['app:Terminal', 'app:TextEdit', 'app:Calculatrice', 'app:TextEdit', 'app:Terminal',
+'app:Calculatrice', 'app:Terminal', 'app:TextEdit', 'app:Terminal', 'app:Calculatrice', 'app:Terminal']
+Santé : {'apps': ('ok', ''), 'fenetres': ('ok', ''), 'fichiers': ('ok', ''), 'shell': ('ok', ''),
+'pressepapiers': ('ok', ''), 'inactivite': ('ok', '')}
+```
+
+Toutes les applis ont été vues, par la méthode principale. Le test échouait seulement parce qu'il attendait
+« Calculette », alors que l'appli s'appelle « Calculatrice » sur un Mac en français. C'est corrigé (D-54).
+
+Les essais sur le Mac ont aussi trouvé deux défauts des capteurs, corrigés (D-53, D-54) :
+- « WindowManager » (Stage Manager) était noté comme une appli ;
+- un titre de fenêtre était parfois attribué à l'appli d'avant.
 
 ## 5. Démon installé, relancé après un kill
 
@@ -143,8 +163,14 @@ relancé en 7 s : pid 1796
 
 Le délai d'essai était de 5 s ; en vrai, l'Assistant relance au bout de 1 minute.
 
-⏳ **Sur le Mac** : `python service.py installer`, `python assistant.py activer corvees`, puis le `pkill` de
-ACTIONS_HUMAINES §3.
+✅ **Sur le Mac**, avec le vrai superviseur (relance au bout de 1 minute) :
+
+```
+$ pkill -9 -f 'modules\.corvees$'; sleep 70; .venv/bin/python assistant.py corvees status
+🔁 Détecteur de corvées
+   Module : allumé · démon : vivant (battement il y a 7 s)
+   133 événements gardés · 0 corvée(s) à la dernière analyse
+```
 
 ## 6. Ressources
 
@@ -163,10 +189,45 @@ $ python tests/corvees/perf/mesure_demon.py 600
 ✅ dans les budgets (CPU < 1 %, RAM < 120 Mo, base < 200 Mo)
 ```
 
-⏳ **Sur le Mac** : la même commande, avec les capteurs propres au Mac allumés (appli au premier plan, fenêtres,
-presse-papiers, inactivité).
+✅ **Sur le Mac**, avec tous les capteurs allumés (appli au premier plan, fenêtres, fichiers, zsh, presse-papiers,
+inactivité). Deux mesures de 10 minutes, en utilisant le Mac normalement :
+
+```
+$ .venv/bin/python tests/corvees/perf/mesure_demon.py 600
+{'pid': 94543, 'duree_s': 602, 'cpu_moyen_pct': 0.131, 'ram_max_mo': 83.9, 'base_mo': 0.51}
+✅ dans les budgets (CPU < 1 %, RAM < 120 Mo, base < 200 Mo)
+{'pid': 95582, 'duree_s': 602, 'cpu_moyen_pct': 0.141, 'ram_max_mo': 74.3, 'base_mo': 0.4}
+✅ dans les budgets (CPU < 1 %, RAM < 120 Mo, base < 200 Mo)
+```
+
+La mémoire est plus haute que dans le conteneur, à cause des bibliothèques d'Apple (pyobjc), comme prévu en D-51.
+L'analyse du soir tourne à part : elle ne s'y ajoute pas.
 
 ## 7. doctor
+
+✅ **Sur le Mac** (code de sortie 0) :
+
+```
+$ .venv/bin/python assistant.py corvees doctor
+🩺 Détecteur de corvées
+   ✅ Module allumé
+   ✅ Démon vivant (battement il y a 6 s)
+   ✅ Capteur apps ok
+   ✅ Capteur fenetres ok
+   ✅ Capteur fichiers ok
+   ✅ Capteur shell ok
+   ⚠️ Capteur navigateur dégradé : chrome : « Accès complet au disque » requis ; safari : « Accès complet au disque » requis
+   ✅ Capteur pressepapiers ok
+   ✅ Capteur inactivite ok
+   ✅ Base : 2 événements · 0.2 Mo (plafond 200 Mo) · lisible par toi seul
+   ✅ Dernière analyse : lun. 5 oct. à 14:17 · prochaine : lun. 5 oct. à 21:00
+   ✅ Claude ce mois-ci : 0.00 $ sur 2.00 $
+   ✅ Claude : Claude Code trouvé, jeton présent
+```
+
+Le seul ⚠️ est facultatif : l'Accès complet au disque, pour lire l'historique des navigateurs.
+
+Dans l'environnement de construction, plus tôt :
 
 ```
 $ python assistant.py corvees doctor ; echo "code $?"

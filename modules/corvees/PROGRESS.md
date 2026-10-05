@@ -292,4 +292,16 @@ FICHE de l'Assistant.
 TOTAL : 932 ✅  0 ❌
 ```
 
-**État : terminé.** Il reste les vérifications sur le Mac (ACTIONS_HUMAINES §3).
+## Sur le Mac (✅)
+
+Installé et vérifié sur le Mac (voir RAPPORT_FINAL.md §4 à §7 pour les sorties exactes) :
+- bout en bout : fichiers et zsh ✅ ; applis vues par la méthode principale ;
+- mesures de 10 minutes : CPU 0,13 et 0,14 %, RAM 84 et 74 Mo ✅ ;
+- relance après `kill -9` ✅ ;
+- doctor : 8 capteurs sur 9 « ok ».
+
+Deux défauts des capteurs trouvés sur le Mac ont été corrigés (D-53, D-54) : les processus du système notés comme
+des applis, et un titre de fenêtre attribué à l'appli d'avant.
+
+**État : terminé.** Il ne reste que des actions facultatives : l'Accès complet au disque pour les navigateurs, et
+l'alias `corvees`.

@@ -415,3 +415,19 @@ suite (Claude, propositions, rapport, notification) tournent donc dans un progra
   ce que le détecteur capte, et rien d'autre n'est gardé.
 - Les commandes à coller ne contiennent plus de lignes `# commentaire` : zsh interactif ne les accepte pas, et
   une parenthèse y était lue comme un motif de fichiers.
+
+**D-54 · Deuxième essai sur le Mac : tout est vérifié, deux défauts des capteurs corrigés.**
+- Vérifié sur le Mac :
+  - le bout en bout (fichiers, zsh) passe ;
+  - le test applis a vu TextEdit ×3 et Calculatrice ×3 par la méthode principale ; il échouait seulement parce
+    qu'il attendait « Calculette » au lieu de « Calculatrice » ;
+  - les mesures de 10 minutes donnent 0,13 et 0,14 % de CPU, 84 et 74 Mo de RAM ;
+  - après un `kill -9`, le superviseur relance le démon.
+- `corvees derniers` a montré deux défauts, reproduits par un test puis corrigés :
+  1. « WindowManager » (Stage Manager), un processus du système, était noté comme une appli. Il s'intercalait
+     entre deux vraies applis et aurait gêné la détection des suites d'actions (au plus 1 parasite). Les
+     processus du système (Stage Manager, Dock, Centre de contrôle…) sont maintenant ignorés par les capteurs
+     d'applis et de fenêtres.
+  2. « fen:TextEdit:Calculatrice » : le titre de la nouvelle fenêtre était attribué à l'appli d'avant, parce que
+     les deux capteurs ne lisaient pas au même instant. L'appli et son titre viennent maintenant de la même
+     question à macOS (`fenetre_devant`).

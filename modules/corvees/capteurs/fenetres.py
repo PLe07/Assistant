@@ -6,17 +6,13 @@ toute écriture. Sans l'autorisation, ce capteur est désactivé et `corvees doc
 
 from __future__ import annotations
 
-from modules.corvees.capteurs.base import Capteur
+from modules.corvees.capteurs.base import PROCESSUS_SYSTEME, Capteur
 from modules.corvees.normalize import tok_fenetre
 
 
 class Fenetres(Capteur):
     nom = "fenetres"
     intervalle = 5.0
-
-    def __init__(self, *args, apps=None, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.apps = apps  # le capteur C1, pour savoir dans quelle appli est la fenêtre
 
     def demarrer(self) -> None:
         self.dernier: str | None = None
@@ -32,9 +28,11 @@ class Fenetres(Capteur):
             self.desactiver("autorisation « Accessibilité » non accordée (voir ACTIONS_HUMAINES.md)")
             return
         self.statut, self.detail = "ok", ""
-        titre = self.natif.titre_fenetre()
-        appli = getattr(self.apps, "courante", None) or ""
-        if not titre or not appli:
+        devant = self.natif.fenetre_devant()  # l'appli et son titre, lus ensemble
+        if devant is None:
+            return
+        appli, titre = devant
+        if not titre or not appli or appli in PROCESSUS_SYSTEME:
             return
         token = tok_fenetre(appli, titre)
         if token != self.dernier:

@@ -11,22 +11,7 @@ import subprocess
 import sys
 from typing import Any
 
-# Des fenêtres du système, jamais « l'appli devant » (noms anglais et français).
-FENETRES_SYSTEME = {
-    "WindowManager",
-    "Window Server",
-    "Dock",
-    "SystemUIServer",
-    "Control Center",
-    "Centre de contrôle",
-    "Notification Center",
-    "Centre de notifications",
-    "Spotlight",
-    "loginwindow",
-    "screencaptureui",
-    "Wallpaper",
-    "Fond d'écran",
-}
+from modules.corvees.capteurs.base import PROCESSUS_SYSTEME
 
 
 class Natif:
@@ -58,7 +43,7 @@ class Natif:
             options = Quartz.kCGWindowListOptionOnScreenOnly | Quartz.kCGWindowListExcludeDesktopElements
             for w in Quartz.CGWindowListCopyWindowInfo(options, Quartz.kCGNullWindowID) or []:
                 proprietaire = str(w.get(Quartz.kCGWindowOwnerName, "") or "")
-                if int(w.get(Quartz.kCGWindowLayer, 1)) != 0 or proprietaire in FENETRES_SYSTEME:
+                if int(w.get(Quartz.kCGWindowLayer, 1)) != 0 or proprietaire in PROCESSUS_SYSTEME:
                     continue
                 cadre = w.get(Quartz.kCGWindowBounds) or {}
                 if float(cadre.get("Width", 0)) < 200 or float(cadre.get("Height", 0)) < 120:
@@ -89,8 +74,9 @@ class Natif:
         except Exception:
             return False
 
-    def titre_fenetre(self) -> str | None:
-        """Le titre de la fenêtre au premier plan (autorisation « Accessibilité »)."""
+    def fenetre_devant(self) -> tuple[str, str] | None:
+        """(appli, titre de sa fenêtre) au premier plan, lus ensemble (autorisation « Accessibilité ») : le titre
+        n'est jamais attribué à l'appli d'avant."""
         try:
             import ApplicationServices as AS
             from AppKit import NSWorkspace
@@ -103,7 +89,9 @@ class Natif:
             if erreur or fenetre is None:
                 return None
             erreur, titre = AS.AXUIElementCopyAttributeValue(fenetre, "AXTitle", None)
-            return None if erreur or titre is None else str(titre)
+            if erreur or titre is None:
+                return None
+            return str(appli.localizedName() or ""), str(titre)
         except Exception:
             return None
 

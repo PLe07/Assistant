@@ -28,7 +28,7 @@ def construire(
     apps = Apps(reglages, sortie, memoire, natif)
     liste: list[Capteur] = [apps] if actifs["apps"] else []
     if actifs["fenetres"]:
-        liste.append(Fenetres(reglages, sortie, memoire, natif, apps=apps))
+        liste.append(Fenetres(reglages, sortie, memoire, natif))
     if actifs["fichiers"]:
         liste.append(Fichiers(reglages, sortie, memoire, natif, empreinte=empreinte, exclu=exclu))
     if actifs["shell"]:
