@@ -286,4 +286,10 @@ programme à part : le démon reste à 23 Mo pendant l'analyse de 208 426 évén
 [RAPPORT_FINAL.md](RAPPORT_FINAL.md) (définition de « terminé » et preuves). Le module figure dans le README et la
 FICHE de l'Assistant.
 
+**Non-régression de l'Assistant** (les 15 suites de tous les modules, après P10) :
+
+```
+TOTAL : 932 ✅  0 ❌
+```
+
 **État : terminé.** Il reste les vérifications sur le Mac (ACTIONS_HUMAINES §3).
