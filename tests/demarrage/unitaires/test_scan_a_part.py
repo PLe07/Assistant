@@ -43,3 +43,16 @@ def test_le_demon_ne_charge_pas_la_pile_du_scan():
     r = subprocess.run([sys.executable, "-c", script], cwd=RACINE, capture_output=True, text=True, timeout=60)
     assert r.returncode == 0, r.stderr
     assert r.stdout.strip() == "[]"
+
+
+def test_moyenne_du_jour_separe_le_ponctuel_du_regime():
+    """D-47 : 2,25 s en 602 s (le total du 3e passage sur le Mac) ; 0,30 s de régime en 450 s (un exemple)."""
+    from tests.demarrage.e2e_mac.mesure_demon import moyenne_du_jour
+
+    r = moyenne_du_jour(cpu_total_s=2.25, ecoule_s=602, regime_cpu_s=0.30, regime_duree_s=450, top_s=0.32,
+                        top_pas_s=1800)  # fmt: skip
+    assert r["regime_pct"] == 0.067  # 0,30 s en 450 s
+    assert r["ponctuel_s"] == 1.85  # 2,25 − 602 × 0,30 / 450 : le lancement et le scan
+    assert r["jour_pct"] == round(0.30 / 450 * 100 + 0.32 / 1800 * 100 + 1.85 / 86400 * 100, 3)
+    # Rien de ponctuel : la moyenne du jour, c'est le régime (plus top).
+    assert moyenne_du_jour(1.0, 100, 1.0, 100, 0.0, 1800)["jour_pct"] == 1.0

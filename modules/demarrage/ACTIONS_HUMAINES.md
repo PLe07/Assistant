@@ -5,8 +5,9 @@ le Nettoyeur a été construit et vérifié dans un conteneur Linux, sur un faux
 
 Les commandes se tapent dans le Terminal. Copie chaque bloc tel quel.
 
-**Où tu en es (5 octobre au soir)** : § 1, § 2, § 3 et § 5 faits. Il reste seulement le § 9, une vérification
-finale de 12 minutes après les dernières corrections (D-46). Les § 4, 6, 7 et 8 sont facultatifs.
+**Où tu en es (5 octobre au soir)** : § 1, § 2, § 3 et § 5 faits ; la relance après un plantage est prouvée.
+Il reste seulement le § 9, une mesure de 10 minutes après le dernier allègement (D-47). Les § 4, 6, 7 et 8 sont
+facultatifs.
 
 ## 1. Mettre à jour et faire le point (1 minute)
 
@@ -133,23 +134,17 @@ cd ~/Assistant
 Copie la ligne « Pour voir son contenu : plutil -p … » de chacun, lance-la, et colle-moi les sorties : je saurai
 s'ils sont à ranger avec le 👻 Google Updater.
 
-## 9. La vérification finale (12 minutes, dont 10 de mesure)
+## 9. La mesure finale (10 minutes)
 
-Elle confirme deux choses :
-- la mémoire de la surveillance, maintenant que son scan quotidien tourne à part (D-46) ;
-- qu'elle se relance bien après un plantage : moins de 70 s de battement après le `kill`.
+Elle mesure la surveillance après le dernier allègement (D-47) : processeur en moyenne sur une journée, et mémoire
+maximale, scan quotidien compris.
 
 ```zsh
 cd ~/Assistant
 git pull
 .venv/bin/python service.py redemarrer
 .venv/bin/python tests/demarrage/e2e_mac/mesure_demon.py 600
-pkill -9 -f 'modules\.demarrage$'
-sleep 70
-.venv/bin/python assistant.py etat | grep Démarrage
 ```
 
-Résultat attendu :
-- `✅ dans les budgets`, avec une mémoire nettement sous 40 Mo, scan compris ;
-- « 🧹 Démarrage : surveille (battement il y a N s) » avec N plus petit que 70.
-
+Résultat attendu : « → moyenne sur une journée : … % » sous 0,3 %, une mémoire sous 40 Mo, puis
+`✅ dans les budgets`. La ligne « fenêtre brute » donne le chiffre des 10 minutes, lancement compris.

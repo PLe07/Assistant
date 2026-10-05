@@ -18,7 +18,8 @@ DEFAUTS: dict[str, Any] = {
         "session_minutes": 5,  # mode « ouverture de session » : juste après la connexion
         "session_pas_s": 5,
         "croisiere_pas_s": 120,
-        "energie_pas_s": 600,  # « top » (impact énergétique), en croisière seulement
+        # « top » (impact énergétique), en croisière seulement : 0,3 s de processeur à chaque fois sur le Mac (D-47)
+        "energie_pas_s": 1800,
     },
     "calme": {"seuil_cpu_pct": 15.0, "duree_s": 30},  # le Mac est « calme » sous 15 % pendant 30 s de suite
     "retention_jours": 60,

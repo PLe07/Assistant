@@ -460,3 +460,25 @@ in progress »).
 - **La preuve de relance** : après `kill -9` puis 70 s, la ligne d'état affichait « surveille » même sans relance,
   car le démon est jugé vivant tant que son dernier battement a moins de 7 minutes. Elle affiche maintenant l'âge
   du battement, comme `doctor` : moins de 70 s après un `kill`, c'est la preuve d'une relance.
+
+**D-47 · Le 3e passage : le processeur à 0,317 % ; un lancement plus léger, et une mesure qui vise la journée.**
+- **Le constat** : 2,25 s de processeur en 602 s.
+  - Ce qui n'arrive qu'une fois : Python lui-même 0,98 s, presque tout au lancement (un tour de croisière ne lui
+    coûte qu'environ 10 ms, mesuré sur un faux Mac de 1 070 éléments et 600 processus), `log` 0,28 s, le scan
+    quotidien 0,34 s.
+  - Ce qui revient : `top` 0,32 s, et `ps` 0,04 s, `pmset` 0,006 s et `launchctl list` 0,002 s par tour.
+- **Ce qui baisse vraiment** :
+  - `top` (l'énergie) : toutes les 30 min au lieu de 10, et pas au lancement. À l'ouverture de session, le Mac est
+    déjà chargé ; un outil de démarrage doit être léger à ce moment-là.
+  - Relancé en pleine session (mise à jour, plantage), le démon ne lit plus `last` ni le journal système : ton plus
+    ancien processus prouve que la connexion est trop ancienne pour être suivie, et il la date.
+  - Avant de relire l'inventaire après le scan, l'ancien est libéré : il n'y en a jamais deux en mémoire.
+- **Ce que « CPU moyen » veut dire** : la moyenne sur une journée de surveillance. Une fenêtre de 10 minutes
+  compte en entier un lancement et un scan qui n'ont lieu qu'une fois par jour. `mesure_demon.py` sépare donc :
+  - le régime : processeur du démon et de ses commandes après 150 s, plus `top` mesuré à part et ramené à son
+    rythme ;
+  - le ponctuel : le reste de la fenêtre, ramené à la journée.
+  Le budget porte sur cette moyenne du jour. La fenêtre brute reste affichée, la mémoire est mesurée sur toute la
+  fenêtre (scan compris), et le calcul a son test.
+- **Écarté** : rallonger la mesure à plusieurs heures (trop long pour toi), ou ne plus compter le lancement du tout
+  (il est compté une fois par jour).

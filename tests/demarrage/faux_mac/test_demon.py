@@ -97,12 +97,12 @@ def test_croisiere_energie_purge_recap(monde, reglages):
     t0 = faux.mac.maintenant()
     assert demon.base.lire("dernier_recap") == faux.boot  # posé au lancement : pas de récap le premier jour
     demon.base.ecrire("dernier_recap", t0 - 8 * 86400)  # une semaine plus tard…
-    for _ in range(12):
+    for _ in range(31):
         demon.tour(faux.mac.maintenant())
         faux.mac.attendre(120)
     releves = demon.base.mesures(t0, faux.mac.maintenant(), modes=("croisiere",))
     energie = {ts for ts, *_, p, _ in releves if p is not None}
-    assert len(energie) == 3  # toutes les 10 min
+    assert len(energie) == 3  # toutes les 30 min sur ces 62 min (D-47)
     assert demon.base.lire("derniere_purge") == t0
     zsh = demon.base.zsh()  # mesuré avec le récap ; ce faux Mac n'a pas de zsh qui réponde : l'erreur est notée
     assert len(zsh) == 1 and zsh[0]["mediane_ms"] is None and "zsh" in zsh[0]["erreur"]
@@ -185,3 +185,19 @@ def test_le_demon_note_le_cout_de_ses_commandes(monde):
     faux.mac.couts = lambda: {"ps": {"appels": 3, "processeur_s": 0.06, "reel_s": 0.3}}
     demon.tour(faux.mac.maintenant() + 120)
     assert demon.base.lire("couts_commandes")["ps"]["appels"] == 3
+
+
+def test_lancement_leger(monde, reglages):
+    """D-47 : au lancement, pas de « top » ; relancé en pleine session, ni last ni journal système."""
+    faux, demon, _ = monde
+    faux.a_l_instant(3600)  # relancé une heure après la connexion (mise à jour, plantage)
+    neuf = daemon.Demon(faux.mac, demon.base, reglages, demon.notifieur)
+    avant = len(faux.mac.appels)
+    details = neuf.demarrer()
+    neuf.tour(faux.mac.maintenant())
+    lancees = [c[0] for c in faux.mac.appels[avant:]]
+    assert "top" not in lancees and "last" not in lancees and "log" not in lancees
+    assert "trop tard" in details["note"] and details["demarrage_s"] is not None  # daté par ton premier processus
+    faux.mac.attendre(1800)
+    neuf.tour(faux.mac.maintenant())
+    assert "top" in [c[0] for c in faux.mac.appels]  # le premier relevé d'énergie, un pas plus tard

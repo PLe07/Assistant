@@ -1,7 +1,8 @@
 # Rapport final — Nettoyeur de démarrage
 
-Construit le 5 octobre 2026, phases P0 à P11. Ton Mac a été diagnostiqué en deux passages : 9 défauts réels
-trouvés et corrigés (D-42 à D-46). Il reste une vérification finale de 12 minutes (ACTIONS_HUMAINES § 9). Chaque preuve ci-dessous est la sortie réelle d'une commande. Le détail est dans
+Construit le 5 octobre 2026, phases P0 à P11. Ton Mac a été diagnostiqué en trois passages, et chaque défaut réel
+trouvé a été corrigé et testé (D-42 à D-47). Il reste une mesure finale de 10 minutes (ACTIONS_HUMAINES § 9).
+Chaque preuve ci-dessous est la sortie réelle d'une commande. Le détail est dans
 [PROGRESS.md](PROGRESS.md), les choix dans [DECISIONS.md](DECISIONS.md), ce qui te reste dans
 [ACTIONS_HUMAINES.md](ACTIONS_HUMAINES.md).
 
@@ -18,8 +19,8 @@ Légende :
 | 2 | Critères du faux Mac + 2e faux Mac sur 5 graines | ✅ 100 % partout (§ 2) |
 | 3 | Tests de sécurité verts, recherche « sudo » vide | ✅ (§ 3) |
 | 4 | Bout en bout réussi, recherche de traces vide | ✅ sur ton Mac au 2e passage (`1 passed` : désactivé, restauré, aucune trace) |
-| 5 | Budgets de performance tenus | ✅ sur ton Mac : scan 3,0 s puis 2,1 s ; démon 0,274 % et 39,9 Mo, de justesse, puis allégé (D-46) · ⏳ vérification finale (ACTIONS_HUMAINES § 9) |
-| 6 | Démon installé, actif, relancé après un `kill` | ✅ allumé et actif sur ton Mac · ⏳ relance : la ligne d'état n'était pas probante, elle montre maintenant l'âge du battement (D-46 ; ACTIONS_HUMAINES § 9) |
+| 5 | Budgets de performance tenus | ✅ scan et mémoire sur ton Mac (3,0 s puis 2,1 s ; 37,8 Mo scan compris) · ⏳ processeur : 0,317 % au 3e passage, allégé et mesuré sur la journée (D-47 ; ACTIONS_HUMAINES § 9) |
+| 6 | Démon installé, actif, relancé après un `kill` | ✅ sur ton Mac : « surveille (battement il y a 7 s) » 70 s après `kill -9` |
 | 7 | `demarrage doctor` sans erreur bloquante | ✅ dans le conteneur et sur ton Mac (macOS 27.0.1, toutes les commandes présentes) |
 | 8 | README en français | ✅ [README.md](README.md) |
 | 9 | ACTIONS_HUMAINES.md : seulement l'impossible sans toi | ✅ |
@@ -163,7 +164,19 @@ mesure_demon.py 600   →  {'duree_s': 602, 'cpu_s': 1.65, 'cpu_moyen_pct': 0.27
 
 Les budgets tenaient, mais de justesse : 39,9 Mo pour 40, et sans scan pendant la mesure. Le scan quotidien tourne
 désormais dans un processus fils, et le démon ne charge plus la pile du scan (D-46). Dans le conteneur, cela donne
-18,1 Mo, scan compris. La vérification finale sur ton Mac est dans ACTIONS_HUMAINES § 9.
+18,1 Mo, scan compris.
+
+3e passage, avec D-46 :
+
+```
+mesure_demon.py 600   →  2,25 s de processeur en 602 s (0,317 % hors scan) ❌ · 37,8 Mo scan compris ✅
+   dont Python ≈ 0.98 s (surtout au lancement) ; scan 0.34 s ; top 0.32 s ; log 0.28 s ; ps (6 fois) 0.26 s
+```
+
+Le lancement et le scan quotidien, qui n'arrivent qu'une fois par jour, pesaient sur la fenêtre de 10 minutes
+autant que tout le reste. Le lancement est maintenant plus léger : pas de `top`, et pas de journal quand le démon est
+relancé en pleine session. `top` passe à toutes les 30 min. La mesure vise la moyenne sur une journée, en gardant la
+fenêtre brute affichée (D-47). Mesure finale : ACTIONS_HUMAINES § 9.
 
 ## 5. Diagnostic de ton Mac
 

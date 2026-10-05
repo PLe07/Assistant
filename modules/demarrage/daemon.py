@@ -61,7 +61,9 @@ class Demon:
         self.scan_a_part = scan_a_part  # sur le vrai Mac : le scan dans un processus fils (D-46)
         self.inventaire: Inventaire | None = base.dernier_scan()
         self.echantillonneur = Echantillonneur(systeme, base, reglages, self.fiches)
-        self.derniere_energie = -1e18
+        # Pas de « top » au lancement : à l'ouverture de session, le Mac est déjà chargé ; le premier relevé
+        # d'énergie vient un pas plus tard (D-47).
+        self.derniere_energie = systeme.maintenant()
         self.signature: tuple[tuple[str, int], ...] | None = None
         if base.lire("dernier_recap") is None:  # le premier récap (et la mesure de zsh) : une semaine après
             base.ecrire("dernier_recap", systeme.maintenant())
@@ -82,6 +84,8 @@ class Demon:
         return tuple(resultat)
 
     def scanner(self, maintenant: float) -> list[str]:
+        if self.scan_a_part:
+            self.inventaire = None  # l'ancien est libéré avant que le nouveau soit relu : un seul en mémoire
         resultat = travail.scanner_a_part(self.systeme, self.base, self.reglages) if self.scan_a_part else None
         if resultat is None:  # pas à part, ou le fils a échoué : sur place (plus de mémoire, mais le scan a lieu)
             resultat = travail.scanner(self.systeme, self.base, self.reglages)
@@ -146,9 +150,16 @@ class Demon:
         if boot is None or self.base.session(boot) is not None:
             return None
         fenetre = self.reglages["echantillonnage"]["session_minutes"] * 60
-        connexion, source = session.connexion(
-            self.systeme, boot, self.premier_processus(), self.reglages["delais"]["journal_systeme_s"], fenetre + 60
-        )
+        premier = self.premier_processus()
+        connexion: float | None
+        if premier is not None and premier >= boot and self.systeme.maintenant() - premier > fenetre + 60:
+            # Relancé en pleine session (mise à jour, plantage) : ton plus ancien processus prouve que la connexion
+            # est trop ancienne pour être suivie ; inutile de lire last et le journal (D-47).
+            connexion, source = premier, "processus"
+        else:
+            connexion, source = session.connexion(
+                self.systeme, boot, premier, self.reglages["delais"]["journal_systeme_s"], fenetre + 60
+            )
         if self.inventaire is None:
             self.scanner(self.systeme.maintenant())
         if connexion is not None and self.systeme.maintenant() - connexion < fenetre:

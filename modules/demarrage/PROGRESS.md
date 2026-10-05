@@ -14,9 +14,9 @@ Porte unique : `modules/demarrage/check.sh` (dans le conteneur : `PYTHON=<venv>/
 | P6 Actions réversibles + sécurité | ✅ | 12 tests d'actions, 18 tests de sécurité |
 | P7 Rapport HTML, CLI, notifications, surveillance | ✅ | 311 tests ; rapport vérifié en clair, sombre et sur mobile |
 | P8 Bout en bout, performance | ✅ bout en bout sur le Mac · ✅ budgets (de justesse, allégé ensuite : D-46) · ⏳ vérification finale | Mac : 1 passed ; scan 3,0 s puis 2,1 s ; démon 0,27 %, 39,9 Mo |
-| P9 Installation | ✅ surveillance allumée sur le Mac · ⏳ preuve de relance (âge du battement, D-46) | lancée par le superviseur (D-03) |
+| P9 Installation | ✅ sur le Mac : allumée, relancée 7 s après un `kill -9` | lancée par le superviseur (D-03) |
 | P10 Revue hostile | ✅ | 6 défauts trouvés et corrigés, chacun avec son test |
-| P11 Diagnostic réel sur le Mac | ✅ 2 passages | 7 + 2 défauts réels corrigés, chacun testé (D-42 à D-46) ; top 10 réel ci-dessous |
+| P11 Diagnostic réel sur le Mac | ✅ 3 passages | défauts réels corrigés, chacun testé (D-42 à D-47) ; top 10 réel ci-dessous |
 
 ## P0 — Reconnaissance (✅)
 
@@ -462,6 +462,30 @@ Corrigé après ce passage (D-46), et testé :
 | 39,9 Mo pour 40, sans scan pendant la mesure ; un scan sur place ajoutait environ 17 Mo, jamais rendus | scan quotidien dans un processus fils ; démon allégé de 5 Mo d'imports | `test_scan_a_part` (fils réel, repli sur place, imports absents) ; conteneur : 18,1 Mo scan compris |
 | Relance après `kill` non prouvée par la ligne d'état | âge du battement dans `assistant.py etat` et `doctor` | `test_cli::test_doctor` |
 
+### 3e passage (avec D-46)
+
+```
+mesure_demon.py 600
+{'duree_s': 602, 'cpu_s': 2.25, 'cpu_moyen_pct': 0.374, 'scan_cpu_s': 0.34, 'cpu_regime_pct': 0.317, 'ram_max_mo': 37.8}
+   dont Python lui-même ≈ 0.98 s ; python (scan quotidien, fils) 0.34 s ; top 0.32 s ; log 0.28 s ;
+   ps (6 fois) 0.26 s ; pmset 0.03 s ; launchctl list 0.01 s ; last 0.01 s ; sysctl 0.01 s
+   plus grosse commande : 62.3 Mo
+❌ hors budget (CPU < 0.3 %, RAM < 40.0 Mo)           → mémoire ✅ 37,8 Mo scan compris ; processeur → D-47
+
+kill -9 ; 70 s
+   🧹 Démarrage : surveille (battement il y a 7 s)     ✅ relancé par le superviseur
+```
+
+Corrigé après ce passage (D-47), et testé :
+- `top` toutes les 30 min, et pas au lancement ;
+- pas de `last` ni de journal quand le démon est relancé en pleine session ;
+- un seul inventaire en mémoire ;
+- `mesure_demon.py` sépare le régime du ponctuel (lancement, scan) et vise la moyenne du jour, sans cacher la
+  fenêtre brute.
+
+Tests : `test_demon::test_lancement_leger`, `test_scan_a_part::test_moyenne_du_jour_separe_le_ponctuel_du_regime`.
+Dans le conteneur (400 s) : fenêtre brute 0,194 %, régime 0,008 %, moyenne du jour 0,01 %, 18,2 Mo.
+
 ## Prochaine étape
 
-Sur ton Mac : la vérification finale (ACTIONS_HUMAINES § 9), puis le message final.
+Sur ton Mac : la mesure finale (ACTIONS_HUMAINES § 9), puis le message final.
