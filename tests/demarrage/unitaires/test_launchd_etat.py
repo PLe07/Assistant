@@ -86,3 +86,11 @@ def test_detail(mac):
     mac.repondre(["launchctl", "print", "gui/501/com.exemple.boucle"], fixture("launchctl_print_service_boucle.txt"))
     assert le.detail(mac, "gui/501", "com.exemple.boucle").relances == 412
     assert le.detail(mac, "gui/501", "absent") is None
+
+
+def test_desactives_format_inattendu():
+    """print-disabled sans le titre habituel, ou avec 1/0 : lu quand même (D-43) ; dans « print gui », bloc exigé."""
+    texte = '\t"com.a" => disabled\n\tcom.b => enabled\n\t"com.c" => 1\n\t"com.d" => FALSE\n\tpid = 12\n'
+    assert le.analyser_desactives(texte, bloc_obligatoire=False) == {"com.a": True, "com.b": False, "com.c": True,
+                                                                  "com.d": False}  # fmt: skip
+    assert le.analyser_desactives(texte) == {}

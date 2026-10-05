@@ -5,6 +5,9 @@ le Nettoyeur a été construit et vérifié dans un conteneur Linux, sur un faux
 
 Les commandes se tapent dans le Terminal. Copie chaque bloc tel quel.
 
+**Où tu en es (5 octobre)** : § 1, § 2 et § 5 faits une première fois. Ils ont révélé 7 défauts, corrigés depuis
+(DECISIONS D-42 à D-45). À refaire : § 2, puis § 3, `demarrage top` (§ 5) et § 8.
+
 ## 1. Mettre à jour et faire le point (1 minute)
 
 ```zsh
@@ -30,9 +33,10 @@ cd ~/Assistant
 ```
 
 Résultat attendu :
-- `1 passed`, avec le temps du scan (moins de 15 s, puis moins de 5 s avec le cache) et « en tête : … test.charge
-  … empêche la veille » ;
-- `✅ dans les budgets` (processeur moyen sous 0,3 %, mémoire sous 40 Mo).
+- `1 passed`, avec le temps du scan (moins de 15 s, puis moins de 5 s avec le cache) et « en tête :
+  com.assistant.nettoyeur.test.charge … empêche la veille » ;
+- `✅ dans les budgets` (processeur moyen sous 0,3 %, mémoire sous 40 Mo), suivi du détail par commande
+  (`ps`, `launchctl list`, `pmset`, `top`…) : si le budget n'est pas tenu, ce détail dit pourquoi.
 
 Colle-moi les deux sorties : elles vont dans RAPPORT_FINAL.md.
 
@@ -113,3 +117,19 @@ cd ~/Assistant
 ```
 
 Résultat attendu : `✅ … sortie(s) anonymisée(s)`, puis `passed`.
+
+## 8. Les deux fichiers Google « sans Label » (2 minutes, lecture seule)
+
+Le diagnostic a trouvé deux fichiers de lancement Google que launchd ne peut pas utiliser (« pas de Label »). Ils
+ne lancent rien, mais je ne sais pas d'où ils viennent. Ces commandes ne font que lire : la première affiche, en
+simulation, où est chaque fichier et la commande `plutil -p` qui montre son contenu.
+
+```zsh
+cd ~/Assistant
+.venv/bin/python demarrage.py desactiver ebf8a226
+.venv/bin/python demarrage.py desactiver 14140c57
+```
+
+Copie la ligne « Pour voir son contenu : plutil -p … » de chacun, lance-la, et colle-moi les sorties : je saurai
+s'ils sont à ranger avec le 👻 Google Updater.
+

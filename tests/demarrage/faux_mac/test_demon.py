@@ -78,14 +78,15 @@ def test_nouvel_element_notifie_une_fois(monde):
     faux.mac.attendre(120)
     demon.tour(faux.mac.maintenant())  # le dossier a changé : nouveau scan tout de suite
     assert envoyees == [] and demon.base.lire("en_attente")["elements"] == [
-        "Mise à jour de Zoom (Zoom Video Communications, Inc.)"
+        "Mise à jour de Zoom · us.zoom.updater.bis (Zoom Video Communications, Inc.)"
     ]
     faux.a_l_instant(3600 + 3 * 3600)  # 10 h 54
     demon.tour(faux.mac.maintenant())
     assert envoyees == [
         (
             "Nettoyeur de démarrage",
-            "⚠️ Nouveau programme au démarrage : Mise à jour de Zoom (Zoom Video Communications, Inc.)",
+            "⚠️ Nouveau programme au démarrage : Mise à jour de Zoom · us.zoom.updater.bis "
+            "(Zoom Video Communications, Inc.)",
         )
     ]
 
@@ -175,3 +176,12 @@ def test_boucle_du_superviseur(tmp_path, reglages, monkeypatch):
     assert Ctx.avertis and travail.ouvrir_base(reglages).lire("battement") is not None
     statut = daemon.status(Base(travail.dossier(reglages) / "demarrage.db"), faux.mac.maintenant())
     assert statut["vivant"] and statut["dernier_scan"] is not None
+
+
+def test_le_demon_note_le_cout_de_ses_commandes(monde):
+    faux, demon, _ = monde
+    demon.tour(faux.mac.maintenant())
+    assert demon.base.lire("couts_commandes") is None  # le faux Mac ne compte rien
+    faux.mac.couts = lambda: {"ps": {"appels": 3, "processeur_s": 0.06, "reel_s": 0.3}}
+    demon.tour(faux.mac.maintenant() + 120)
+    assert demon.base.lire("couts_commandes")["ps"]["appels"] == 3

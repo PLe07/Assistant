@@ -1,6 +1,7 @@
 """Le vrai Mac (systeme.py) avec des commandes inoffensives présentes partout."""
 
 import sys
+from pathlib import Path
 
 from modules.demarrage.systeme import Mac
 
@@ -29,3 +30,15 @@ def test_chemin_horloge_commandes():
     assert m.maintenant() > 1_700_000_000
     m.attendre(0)
     assert m.a_la_commande("echo") and not m.a_la_commande("commande-qui-n-existe-pas-42")
+
+
+def test_cout_des_commandes():
+    m = Mac()
+    m.executer([sys.executable, "-c", "sum(range(10**6))"])
+    m.executer([sys.executable, "-c", "pass"])
+    couts = m.couts()
+    python = couts[Path(sys.executable).name]
+    assert python["appels"] == 2 and python["processeur_s"] > 0 and python["reel_s"] > 0
+    assert couts["(plus grosse commande)"]["memoire_mo"] > 0
+    m.executer(["launchctl-absent-42", "print"])  # introuvable : pas compté
+    assert set(m.couts()) == set(couts)

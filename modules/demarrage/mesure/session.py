@@ -8,6 +8,7 @@ loginwindow, affiné par le plus ancien de tes processus), et quand le processeu
 from __future__ import annotations
 
 import calendar
+import math
 import re
 import time
 from collections.abc import Iterable
@@ -73,16 +74,27 @@ def demarrage(systeme: Systeme) -> float | None:
 
 
 def connexion(
-    systeme: Systeme, boot: float, premier_processus: float | None, delai_journal: float = 15.0
+    systeme: Systeme,
+    boot: float,
+    premier_processus: float | None,
+    delai_journal: float = 15.0,
+    fenetre_journal_s: float = 360.0,
 ) -> tuple[float | None, str]:
-    """(instant de connexion, d'où il vient). premier_processus : le lancement de ton plus ancien processus."""
+    """(instant de connexion, d'où il vient). premier_processus : le lancement de ton plus ancien processus.
+
+    Le journal système n'est lu que sur les dernières minutes (fenetre_journal_s) : le relire depuis le démarrage
+    coûte des secondes de processeur et des centaines de Mo quand le Mac tourne depuis des jours (D-42). Une
+    connexion plus ancienne n'est de toute façon plus observable ; last ou ton premier processus la datent.
+    """
     quand, source = None, ""
+    maintenant = systeme.maintenant()
     r = systeme.executer(["last", "-20", systeme.utilisateur], delai=5)
     if r.ok:
-        quand, source = analyser_last(r.sortie, systeme.utilisateur, boot, systeme.maintenant()), "last"
+        quand, source = analyser_last(r.sortie, systeme.utilisateur, boot, maintenant), "last"
     if quand is None and systeme.a_la_commande("log"):
+        minutes = math.ceil(max(0.0, min(maintenant - boot, fenetre_journal_s)) / 60) + 1
         predicat = 'process == "loginwindow"'
-        r = systeme.executer(["log", "show", "--last", "boot", "--style", "compact", "--predicate", predicat],
+        r = systeme.executer(["log", "show", "--last", f"{minutes}m", "--style", "compact", "--predicate", predicat],
                              delai=delai_journal)  # fmt: skip
         if r.ok:
             quand, source = analyser_journal(r.sortie, boot), "journal"

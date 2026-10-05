@@ -43,6 +43,15 @@ def desactive(label: str) -> bool:
     return any(f'"{label}" => disabled' in ligne or f'"{label}" => true' in ligne for ligne in sortie.splitlines())
 
 
+def etat_brut(label: str) -> str:
+    """Ce que launchd dit vraiment (affiché seulement si une vérification échoue)."""
+    service = launchctl("print", f"gui/{UID}/{label}")
+    desactives = [ligne.strip() for ligne in launchctl("print-disabled", f"gui/{UID}").stdout.splitlines()
+                  if PREFIXE in ligne]  # fmt: skip
+    debut = "\n".join(service.stdout.splitlines()[:12]) or service.stderr.strip()
+    return f"\nprint (code {service.returncode}) :\n{debut}\nprint-disabled : {desactives}\n"
+
+
 def traces() -> list[str]:
     """Tout ce qui resterait de nos éléments de test : fichiers, launchd, désactivations."""
     restes = [str(p) for p in AGENTS.glob(PREFIXE + "*")]
@@ -105,6 +114,7 @@ def test_bout_en_bout_sur_le_mac(ctx, tmp_path):
         bilan = travail.bilan(contexte.systeme, contexte.base, reglages)
         premier = bilan.classement[0]
         print(f"   en tête : {premier.nom} (impact {premier.impact:.0f}) {premier.drapeaux}")
+        assert "c'est moi" not in premier.nom, premier.nom  # un élément de test n'est pas l'Assistant (D-44)
         assert premier.fiche.label == CHARGE, [(e.fiche.label, e.impact) for e in bilan.classement[:5]]
         assert "empêche la veille" in premier.drapeaux
         orphelin = next(e for e in bilan.elements if e.fiche.label == ORPHELIN)
@@ -113,9 +123,9 @@ def test_bout_en_bout_sur_le_mac(ctx, tmp_path):
         # Désactiver pour de vrai (notre élément de test), vérifier, puis restaurer.
         args = type("A", (), {"id": premier.fiche.id, "confirmer": True})()
         assert cli.desactiver(contexte, args) == 0
-        assert not charge(CHARGE) and desactive(CHARGE)
+        assert not charge(CHARGE) and desactive(CHARGE), etat_brut(CHARGE)
         assert cli.restaurer(contexte, args) == 0
-        assert not desactive(CHARGE) and charge(CHARGE)
+        assert not desactive(CHARGE) and charge(CHARGE), etat_brut(CHARGE)
     finally:
         nettoyer(trace)
         contexte.fermer()

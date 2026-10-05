@@ -53,6 +53,8 @@ def test_connexion(mac):
     mac.repondre(["last", "-20", "utilisateur"], "wtmp begins Tue Sep  1\n")
     mac.repondre_debut(["log", "show"], fixture("log_loginwindow.txt"))
     assert session.connexion(mac, BOOT, None) == (BOOT + 52, "journal")
+    journaux = [c for c in mac.lancees("log")]
+    assert journaux and all(c[3] == "1m" for c in journaux)  # jamais « --last boot » (D-42)
     mac.commandes.discard("log")
     assert session.connexion(mac, BOOT, BOOT + 30) == (BOOT + 30, "processus")
     assert session.connexion(mac, BOOT, None) == (None, "inconnue")
@@ -75,3 +77,15 @@ def test_temps_jusquau_calme():
 
 def test_fuseau_retabli():
     assert os.environ["TZ"] == "Europe/Paris"
+
+
+def test_journal_lu_sur_quelques_minutes_meme_si_le_mac_tourne_depuis_des_jours(mac):
+    """Sur le vrai Mac, « log show --last boot » coûtait 12 s de processeur et 300 Mo au démon (D-42)."""
+    mac.repondre(["last", "-20", "utilisateur"], "wtmp begins Tue Sep  1\n")
+    mac.repondre_debut(["log", "show"], "")
+    mac.horloge = BOOT + 3 * 86400
+    assert session.connexion(mac, BOOT, None, fenetre_journal_s=360) == (None, "inconnue")
+    assert mac.lancees("log")[-1][:4] == ["log", "show", "--last", "7m"]
+    mac.horloge = BOOT + 90
+    session.connexion(mac, BOOT, None, fenetre_journal_s=360)
+    assert mac.lancees("log")[-1][3] == "3m"  # depuis le démarrage seulement

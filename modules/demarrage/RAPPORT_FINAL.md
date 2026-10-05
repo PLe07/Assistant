@@ -1,8 +1,9 @@
 # Rapport final — Nettoyeur de démarrage
 
-Construit le 5 octobre 2026, phases P0 à P10 ; P11 (diagnostic de ton Mac) attend tes sorties. Chaque preuve
-ci-dessous est la sortie réelle d'une commande. Le détail est dans [PROGRESS.md](PROGRESS.md), les choix dans
-[DECISIONS.md](DECISIONS.md), ce qui te reste dans [ACTIONS_HUMAINES.md](ACTIONS_HUMAINES.md).
+Construit le 5 octobre 2026, phases P0 à P10. P11 (diagnostic de ton Mac) : 1er passage fait, 7 défauts réels
+corrigés, 2e passage attendu. Chaque preuve ci-dessous est la sortie réelle d'une commande. Le détail est dans
+[PROGRESS.md](PROGRESS.md), les choix dans [DECISIONS.md](DECISIONS.md), ce qui te reste dans
+[ACTIONS_HUMAINES.md](ACTIONS_HUMAINES.md).
 
 Légende :
 - ✅ fait et prouvé ;
@@ -16,13 +17,13 @@ Légende :
 | 1 | `./check.sh` vert | ✅ (sortie § 1) |
 | 2 | Critères du faux Mac + 2e faux Mac sur 5 graines | ✅ 100 % partout (§ 2) |
 | 3 | Tests de sécurité verts, recherche « sudo » vide | ✅ (§ 3) |
-| 4 | Bout en bout réussi, recherche de traces vide | ⏳ test prêt (`tests/demarrage/e2e_mac`), à lancer sur ton Mac (ACTIONS_HUMAINES § 2) |
-| 5 | Budgets de performance tenus | ✅ dans le conteneur (§ 4) · ⏳ sur ton Mac (ACTIONS_HUMAINES § 2) |
+| 4 | Bout en bout réussi, recherche de traces vide | ❌ 1er passage : désactivation pas encore visible dans launchd ; corrigé (D-43) · ⏳ 2e passage (ACTIONS_HUMAINES § 2) |
+| 5 | Budgets de performance tenus | ✅ scan sur ton Mac (5,1 s puis 1,7 s) · ❌ démon au 1er passage (2,07 %, 308 Mo) ; cause corrigée (D-42) · ⏳ 2e passage |
 | 6 | Démon installé, actif, relancé après un `kill` | ⏳ c'est le superviseur de l'Assistant qui le lance et le relance (D-03), comme pour les corvées, déjà prouvé sur ton Mac ; à confirmer (ACTIONS_HUMAINES § 3) |
-| 7 | `demarrage doctor` sans erreur bloquante | ✅ dans le conteneur (mode dégradé, aucune erreur) · ⏳ sur ton Mac |
+| 7 | `demarrage doctor` sans erreur bloquante | ✅ dans le conteneur et sur ton Mac (macOS 27.0.1, toutes les commandes présentes) |
 | 8 | README en français | ✅ [README.md](README.md) |
 | 9 | ACTIONS_HUMAINES.md : seulement l'impossible sans toi | ✅ |
-| 10 | Diagnostic de ton vrai Mac (top 10, verdicts, commandes) | ⏳ § 5, après `demarrage top` (ACTIONS_HUMAINES § 5) |
+| 10 | Diagnostic de ton vrai Mac (top 10, verdicts, commandes) | ✅ 1er passage (§ 5), qui a révélé 7 défauts, corrigés (D-44, D-45) · ⏳ top 10 corrigé |
 
 ## 1. check.sh
 
@@ -142,10 +143,46 @@ $ python tests/demarrage/e2e_mac/mesure_demon.py 600
 ✅ dans les budgets
 ```
 
-Sur ton Mac, `launchctl`, `pmset` et `top` ajoutent leur part : ACTIONS_HUMAINES § 2 donne la vraie mesure.
+Sur ton Mac, au 1er passage (5 octobre) :
+
+```
+pytest tests/demarrage/e2e_mac    →  scan : 5.1 s, puis 1.7 s avec le cache codesign   ✅ (< 15 s, < 5 s)
+mesure_demon.py 600                →  {'duree_s': 602, 'cpu_s': 12.46, 'cpu_moyen_pct': 2.071, 'ram_max_mo': 308.0}  ❌
+```
+
+Le démon dépassait : au lancement, il relisait tout le journal système depuis le démarrage du Mac
+(`log show --last boot`). Il ne le lit plus que sur 7 minutes au plus (D-42). La prochaine mesure affichera aussi
+le coût de chaque commande, pour vérifier.
 
 ## 5. Diagnostic de ton Mac
 
-⏳ En attente de la sortie de `demarrage top` (ACTIONS_HUMAINES § 5). Le tableau donnera :
-- les 10 éléments qui coûtent le plus, avec leur verdict ;
-- pour chacun, la commande pour le désactiver et celle pour le restaurer, prêtes à copier.
+1er passage (5 octobre), avant les corrections D-44 et D-45 : 931 éléments trouvés en 3,3 s, dont 911 de macOS
+(🍎) ; 💤 4 · 👻 1 · ⚠️ 4 · ✅ 11 ; 117 relevés en 10 minutes.
+
+| # | Élément | Éditeur | Impact | Coût mesuré | Verdict | Désactiver | Restaurer |
+|---|---|---|---|---|---|---|---|
+| 1 | Spotify | Spotify | 42 | 5,1 % d'un cœur · 968 Mo | ✅ Utile, à garder | `demarrage desactiver b8e39d87 --confirmer` | `demarrage restaurer b8e39d87 --confirmer` |
+| 2 | L'Assistant (c'est moi) | inconnu | 12 | 1,5 % d'un cœur · 144 Mo | ✅ Utile, à garder | — | — |
+| 3 | L'Assistant (c'est moi) | inconnu | 8 | 1,3 % d'un cœur · 45 Mo | ✅ Utile, à garder | — | — |
+| 4 | Google Updater (Keystone) | Google LLC | 3 (estimé) | — | 👻 Orphelin (reste d'une app désinstallée) | `demarrage desactiver cf0af4b1 --confirmer` | `demarrage restaurer cf0af4b1 --confirmer` |
+| 5 | Google Updater (Keystone) | inconnu | 3 (estimé) | — | ⚠️ Inconnu, à vérifier | `demarrage desactiver ebf8a226 --confirmer` | `demarrage restaurer ebf8a226 --confirmer` |
+| 6 | Google Updater (Keystone) | inconnu | 3 (estimé) | — | ⚠️ Inconnu, à vérifier | `demarrage desactiver 14140c57 --confirmer` | `demarrage restaurer 14140c57 --confirmer` |
+| 7 | Mise à jour de Zoom | Zoom Video Communications, Inc. | 3 (estimé) | — | 💤 Inutile au démarrage | à taper soi-même : `demarrage desactiver d14a1655` les affiche | idem |
+| 8 | Mise à jour de Zoom | Zoom Video Communications, Inc. | 3 (estimé) | — | 💤 Inutile au démarrage | à taper soi-même : `demarrage desactiver e77d2aff` les affiche | idem |
+| 9 | Mise à jour de Zoom | Zoom Video Communications, Inc. | 3 (estimé) | — | 💤 Inutile au démarrage | à taper soi-même : `demarrage desactiver efb58e77` les affiche | idem |
+| 10 | Mise à jour de Zoom | Zoom Video Communications, Inc. | 3 (estimé) | — | 💤 Inutile au démarrage | à taper soi-même : `demarrage desactiver 48502476` les affiche | idem |
+
+Ce que ce passage a montré, puis ce qui a été corrigé :
+- **Spotify** s'ouvre à chaque connexion et coûte à lui seul 968 Mo et 5 % d'un cœur, en permanence. Il était
+  jugé ✅, parce qu'il avait l'air utilisé tous les jours… justement parce qu'il s'ouvre tout seul.
+  Il passe 💤 (D-45). L'action est réversible : `demarrage desactiver b8e39d87 --confirmer`. Coupe aussi
+  « Ouvrir Spotify automatiquement… » dans les paramètres de Spotify.
+- **Les deux « L'Assistant (c'est moi) »** (le superviseur, 1,5 % d'un cœur et 144 Mo avec tous ses modules ;
+  l'icône, 45 Mo) sont désormais distingués par leur label (D-44).
+- **Google Updater** : un 👻 (son app a été désinstallée, quarantaine réversible) et deux fichiers cassés
+  (« pas de Label »). Ceux-ci ne lancent rien : impact 0 désormais (D-45). D'où ils viennent : ACTIONS_HUMAINES
+  § 8.
+- **Les quatre « Mise à jour de Zoom »** sont dans /Library : des instructions à taper toi-même, réversibles. Ils
+  sont désormais distingués par leur label (D-44).
+
+⏳ Le top 10 corrigé : `demarrage top` (ACTIONS_HUMAINES § 5), qui reprend les mesures déjà faites.

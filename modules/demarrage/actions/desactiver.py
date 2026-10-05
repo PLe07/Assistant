@@ -1,7 +1,8 @@
 """`demarrage desactiver ID` : d'abord un plan, établi en lisant l'état actuel (rien n'est modifié) ; puis, seulement
 avec `--confirmer`, son exécution, sa vérification et son inscription au journal.
 
-- Agent de ta session (S1, S4, chargé par launchd) : `launchctl bootout` puis `launchctl disable`, plist gardé.
+- Agent de ta session (S1, S4, chargé par launchd) : `launchctl disable` puis `launchctl bootout`, plist gardé ;
+  puis on attend que launchd le montre arrêté et désactivé (il le fait parfois avec un temps de retard, D-43).
 - Orphelin dans ~/Library/LaunchAgents : `bootout` s'il est chargé, puis le plist part en quarantaine.
 - Élément d'ouverture de session : retiré par System Events si l'autorisation existe, sinon le chemin des Réglages.
 - Global (/Library, daemons, assistants privilégiés), extension système, cron : des instructions, rien d'exécuté.
@@ -21,7 +22,7 @@ from modules.demarrage.actions.journal import Action, Journal
 from modules.demarrage.analyse import Element
 from modules.demarrage.collecteurs.launchd_etat import analyser_desactives
 from modules.demarrage.modele import SOURCES_GLOBALES
-from modules.demarrage.systeme import Systeme
+from modules.demarrage.systeme import Resultat, Systeme
 
 # Les seules commandes qu'une simulation a le droit de lancer : elles ne font que lire.
 LECTURE = {
@@ -79,13 +80,41 @@ def applescript(texte: str) -> str:
     return '"' + texte.replace("\\", "\\\\").replace('"', '\\"') + '"'
 
 
+ATTENTE_LAUNCHD_S = 10.0
+PAS_LAUNCHD_S = 0.5
+
+
 def etat_launchd(systeme: Systeme, label: str) -> dict[str, bool]:
     """Chargé dans ta session ? Désactivé ? (deux commandes de lecture)"""
     domaine = f"gui/{systeme.uid}"
     charge = systeme.executer(["launchctl", "print", f"{domaine}/{label}"], delai=5).ok
     r = systeme.executer(["launchctl", "print-disabled", domaine], delai=5)
-    desactive = analyser_desactives(r.sortie).get(label, False) if r.ok else False
+    desactive = analyser_desactives(r.sortie, bloc_obligatoire=False).get(label, False) if r.ok else False
     return {"charge": charge, "desactive": desactive}
+
+
+def attendre_etat(
+    systeme: Systeme, label: str, voulu: dict[str, bool], delai_s: float | None = None
+) -> dict[str, bool]:
+    """Relit l'état jusqu'à ce qu'il soit celui voulu, au plus delai_s secondes : launchd applique parfois un arrêt
+    ou un chargement avec un temps de retard (le programme met un instant à s'arrêter). Renvoie le dernier état lu."""
+    debut, delai = systeme.maintenant(), ATTENTE_LAUNCHD_S if delai_s is None else delai_s
+    while True:
+        etat = etat_launchd(systeme, label)
+        if all(etat.get(cle) == valeur for cle, valeur in voulu.items()) or systeme.maintenant() - debut >= delai:
+            return etat
+        systeme.attendre(PAS_LAUNCHD_S)
+
+
+def ecart(etat: dict[str, bool], voulu: dict[str, bool]) -> str:
+    """Ce qui manque, en clair (vide si l'état est celui voulu)."""
+    textes = {
+        ("charge", True): "pas (encore) chargé",
+        ("charge", False): "encore chargé",
+        ("desactive", True): "pas (encore) marqué désactivé",
+        ("desactive", False): "encore marqué désactivé",
+    }
+    return " et ".join(textes[(cle, valeur)] for cle, valeur in voulu.items() if etat.get(cle) != valeur)
 
 
 def _instructions(e: Element, uid: int) -> tuple[str, str]:
@@ -127,7 +156,7 @@ def commandes_affichees(e: Element, uid: int) -> tuple[str, str]:
     if action == "quarantaine":
         return f"{agir}\n(son fichier part en quarantaine, rien n'est effacé)", annuler
     cible = f"gui/{uid}/{f.label}"
-    faire = shlex.join(["launchctl", "bootout", cible]) + "\n" + shlex.join(["launchctl", "disable", cible])
+    faire = shlex.join(["launchctl", "disable", cible]) + "\n" + shlex.join(["launchctl", "bootout", cible])
     defaire = [shlex.join(["launchctl", "enable", cible])]
     if f.chemin_plist:
         defaire.append(shlex.join(["launchctl", "bootstrap", f"gui/{uid}", f.chemin_plist]))
@@ -213,9 +242,9 @@ def _plan(plan: Plan, e: Element, systeme: Systeme, action: str) -> Plan:
     etat = etat_launchd(systeme, f.label)
     plan.avant = etat
     plan.details = {"domaine": domaine, "chemin_plist": f.chemin_plist}
-    if etat["charge"]:
-        plan.commandes.append(["launchctl", "bootout", f"{domaine}/{f.label}"])
     if action == "quarantaine":
+        if etat["charge"]:
+            plan.commandes.append(["launchctl", "bootout", f"{domaine}/{f.label}"])
         if not f.chemin_plist or not systeme.chemin(f.chemin_plist).exists():
             plan.message = "Rien à faire : son fichier n'est plus là."
             return plan
@@ -224,8 +253,11 @@ def _plan(plan: Plan, e: Element, systeme: Systeme, action: str) -> Plan:
                         + (" Il est chargé : je l'arrête d'abord." if etat["charge"] else ""))  # fmt: skip
         plan.annulation = f"demarrage restaurer {f.id} --confirmer"
         return plan
+    # D'abord désactiver (rien ne le relance, pas même son app), puis arrêter.
     if not etat["desactive"]:
         plan.commandes.append(["launchctl", "disable", f"{domaine}/{f.label}"])
+    if etat["charge"]:
+        plan.commandes.append(["launchctl", "bootout", f"{domaine}/{f.label}"])
     if not plan.commandes:
         plan.message = "Rien à faire : il est déjà arrêté et désactivé."
         return plan
@@ -248,6 +280,12 @@ def desactiver(e: Element, systeme: Systeme, journal: Journal, dossier: Path, co
     erreurs: list[str] = []
     for commande in plan.commandes:
         r = systeme.executer(commande, delai=15)
+        if (
+            not r.ok
+            and commande[1] == "bootout"
+            and not attendre_etat(systeme, e.fiche.label, {"charge": False})["charge"]
+        ):
+            r = Resultat(0, r.sortie)  # « Operation now in progress » : l'arrêt a bien eu lieu, avec retard
         if not r.ok:
             erreurs.append(f"{shlex.join(commande)} : {r.erreur.strip()[:200] or f'code {r.code}'}")
             break
@@ -266,12 +304,19 @@ def desactiver(e: Element, systeme: Systeme, journal: Journal, dossier: Path, co
             erreurs.append(f"quarantaine impossible : {err}")
     if not faites and "quarantaine" not in details:
         return Bilan(plan, False, "Rien n'a été modifié.", erreurs=erreurs)
-    apres = etat_launchd(systeme, e.fiche.label) if plan.genre in ("launchd", "quarantaine") else {}
+    voulu = {"charge": False, "desactive": True} if plan.genre == "launchd" else {"charge": False}
+    apres = (
+        attendre_etat(systeme, e.fiche.label, voulu) if plan.genre in ("launchd", "quarantaine") and not erreurs else {}
+    )
+    if plan.genre in ("launchd", "quarantaine") and erreurs:
+        apres = etat_launchd(systeme, e.fiche.label)
     action = Action(0, systeme.maintenant(), e.fiche.id, e.fiche.label, plan.genre, plan.avant, apres, faites, details)
     action_id = journal.noter(action)
     if erreurs:
         return Bilan(plan, True, "Fait en partie seulement (noté au journal, « restaurer » sait le défaire).",
                      action_id, erreurs)  # fmt: skip
-    if plan.genre == "launchd" and (apres.get("charge") or not apres.get("desactive")):
-        return Bilan(plan, True, "Commandes passées, mais launchd ne le montre pas encore désactivé.", action_id)
+    manque = ecart(apres, voulu) if plan.genre == "launchd" else ""
+    if manque:
+        return Bilan(plan, True, f"Commandes passées, mais après {ATTENTE_LAUNCHD_S:.0f} s launchd le montre {manque} "
+                                 "(noté au journal ; « demarrage restaurer » sait le défaire).", action_id)  # fmt: skip
     return Bilan(plan, True, "C'est fait. Pour annuler : " + plan.annulation.splitlines()[0], action_id)

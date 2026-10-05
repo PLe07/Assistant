@@ -12,7 +12,7 @@ from modules.demarrage.analyse.connaissances import Connaissance
 from modules.demarrage.analyse.scores import Metriques
 from modules.demarrage.analyse.verdicts import Contexte, Verdict
 from modules.demarrage.db import Base
-from modules.demarrage.modele import Fiche, Inventaire
+from modules.demarrage.modele import SOURCES, Fiche, Inventaire
 
 
 @dataclass
@@ -81,24 +81,45 @@ def nom_lisible(f: Fiche, c: Connaissance | None) -> str:
     return f.label
 
 
+def distinguer_les_homonymes(elements: list[Element]) -> None:
+    """Quatre « Mise à jour de Zoom » ou deux « L'Assistant » côte à côte : on ajoute de quoi les distinguer (le label,
+    ou la source si le label est le même), D-44. Les éléments d'Apple gardent leur nom."""
+    groupes: dict[str, list[Element]] = {}
+    for e in elements:
+        if e.verdict.code != "apple":
+            groupes.setdefault(e.nom.casefold(), []).append(e)
+    for groupe in groupes.values():
+        if len(groupe) < 2:
+            continue
+        labels = [e.fiche.label for e in groupe]
+        for e in groupe:
+            precision = e.fiche.label
+            if labels.count(e.fiche.label) > 1 or precision.casefold() == e.nom.casefold():
+                precision = SOURCES.get(e.fiche.source, ("", e.fiche.source))[1]
+            e.nom = f"{e.nom} · {precision}"
+
+
 def analyser(inventaire: Inventaire, base: Base, reglages: dict[str, Any], maintenant: float) -> Bilan:
     mesures = scores.metriques(base, reglages, maintenant)
     premieres = base.premieres_vues()
     elements: list[Element] = []
     for f in inventaire.fiches:
         c = connaissances.trouver(f)
+        if c is not None and c.categorie == "assistant" and not f.c_est_moi:
+            c = None  # un élément de test ou d'ailleurs qui ressemble à l'Assistant n'est pas lui (D-44)
         m = mesures.get(f.id, Metriques())
         if m.mesure or c is None:
             impact, estime = scores.impact(f, m, reglages), False
         else:
             impact, estime = scores.impact_estime(c.impact, reglages), True
-        if f.actif is False:
-            impact, estime = 0.0, False  # il ne se lance pas : il ne coûte rien au démarrage
+        if f.actif is False or (f.erreurs and not f.programme and not m.mesure):
+            impact, estime = 0.0, False  # il ne se lance pas (ou son fichier est cassé) : il ne coûte rien
         niveau, raison = scores.utilite(f, maintenant, reglages, c.recommandation if c else None)
         ctx = Contexte(f, m, impact, niveau, raison, c, reglages)
         verdict = verdicts.juger(ctx)
         role = c.role if c else connaissances.description_generique(f)
         elements.append(Element(f, m, impact, estime, niveau, raison, c, verdict, verdicts.drapeaux(ctx),
                                 nom_lisible(f, c), role, premieres.get(f.id)))  # fmt: skip
+    distinguer_les_homonymes(elements)
     elements.sort(key=lambda e: (e.verdict.code == "apple", -e.impact, e.nom.casefold()))
     return Bilan(maintenant, elements, gains.calculer(elements), inventaire)

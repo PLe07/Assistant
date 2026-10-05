@@ -49,7 +49,17 @@ DEFAUTS: dict[str, Any] = {
         "fenetre_jours": 7,  # les mesures de croisière des 7 derniers jours
         "sessions_retenues": 5,  # la médiane des 5 dernières ouvertures de session
         # L'ordre des règles de verdict (la première qui s'applique l'emporte), voir analyse/verdicts.py.
-        "ordre": ["apple", "moi", "orphelin", "inconnu", "inactif", "mise_a_jour", "lourd_inutile", "utile"],
+        "ordre": [
+            "apple",
+            "moi",
+            "orphelin",
+            "inconnu",
+            "inactif",
+            "mise_a_jour",
+            "pas_au_demarrage",
+            "lourd_inutile",
+            "utile",
+        ],  # fmt: skip
     },
     "notifications": {"silence_debut": "23:00", "silence_fin": "08:00", "vers_journal": False},
     "delais": {"commande_s": 10.0, "osascript_s": 10.0, "journal_systeme_s": 15.0, "codesign_s": 5.0},

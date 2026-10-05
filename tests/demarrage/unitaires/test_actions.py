@@ -35,7 +35,8 @@ def test_desactiver_puis_restaurer_un_agent(monde):
     docker = element(bilan, "com.docker.socket")
     simulation = desactiver(docker, faux.mac, journal, dossier)
     assert not simulation.fait and simulation.plan.genre == "launchd" and "com.docker.socket" in launchd.charges
-    assert [c[1] for c in simulation.plan.commandes] == ["bootout", "disable"] and journal.toutes() == []
+    # D'abord désactiver (rien ne le relance), puis arrêter (D-43).
+    assert [c[1] for c in simulation.plan.commandes] == ["disable", "bootout"] and journal.toutes() == []
     fait = desactiver(docker, faux.mac, journal, dossier, confirmer=True)
     assert fait.fait and "C'est fait" in fait.message
     assert "com.docker.socket" not in launchd.charges and "com.docker.socket" in launchd.desactives
@@ -158,25 +159,30 @@ def test_echec_partiel_note_et_restaurable(monde):
     faux, bilan, launchd, journal, dossier = monde
     from modules.demarrage.systeme import Resultat
 
-    faux.mac.repondre_debut(["launchctl", "disable"], Resultat(1, "", "Operation not permitted"))
+    faux.mac.repondre_debut(["launchctl", "bootout"], Resultat(1, "", "Operation not permitted"))
     notes = element(bilan, "com.notesrapides.agent")
     r = desactiver(notes, faux.mac, journal, dossier, confirmer=True)
     assert r.fait and "en partie" in r.message and "Operation not permitted" in r.erreurs[0]
-    assert notes.fiche.label not in launchd.charges
+    assert notes.fiche.label in launchd.charges and notes.fiche.label in launchd.desactives  # désactivé, pas arrêté
     retour = restaurer(notes.fiche.id, faux.mac, journal, confirmer=True)
-    assert retour.fait and [c[1] for c in retour.commandes] == ["bootstrap"] and notes.fiche.label in launchd.charges
+    assert (
+        retour.fait and [c[1] for c in retour.commandes] == ["enable"] and notes.fiche.label not in launchd.desactives
+    )
 
 
 def test_echec_complet(monde):
     faux, bilan, launchd, journal, dossier = monde
     from modules.demarrage.systeme import Resultat
 
-    faux.mac.repondre_debut(["launchctl", "bootout"], Resultat(1, "", "refusé"))
+    faux.mac.repondre_debut(["launchctl", "disable"], Resultat(1, "", "refusé"))
     r = desactiver(element(bilan, "com.docker.socket"), faux.mac, journal, dossier, confirmer=True)
     assert not r.fait and r.message == "Rien n'a été modifié." and journal.toutes() == []
+    faux.mac.repondre_debut(["launchctl", "disable"], launchd._disable)
     faux.mac.repondre_debut(["launchctl", "bootout"], Resultat(0, ""))  # bootout « réussi » mais rien ne change
+    avant = faux.mac.horloge
     r = desactiver(element(bilan, "com.docker.socket"), faux.mac, journal, dossier, confirmer=True)
-    assert r.fait and "ne le montre pas encore" in r.message
+    assert r.fait and "le montre encore chargé" in r.message and "marqué" not in r.message
+    assert faux.mac.horloge - avant >= 10  # il a attendu launchd avant de conclure
 
 
 def test_restaurer_qui_echoue(monde):
@@ -220,3 +226,22 @@ def test_un_inconnu_verifie_peut_etre_arrete_et_restaure(monde):
     )
     casse = element(bilan, "com.exemple.casse")  # jamais chargé : seulement la désactivation, réversible
     assert [c[1] for c in planifier(casse, faux.mac).commandes] == ["disable"]
+
+
+@pytest.mark.parametrize("code", [0, 36])
+def test_launchd_qui_arrete_avec_retard(tmp_path, reglages, code):
+    """Sur le vrai Mac, juste après bootout, launchd montrait encore l'agent : on attend qu'il ait fini (D-43)."""
+    faux = construire(tmp_path / "mac")
+    bilan = diagnostiquer(faux, tmp_path, reglages)
+    charges = {p.label: p.chemin_plist for p in faux.plantes if p.charge and p.source != "apple"}
+    launchd = LaunchdSimule(faux.mac, charges, retard_arret_s=2.0, code_bootout=code)
+    base = Base(tmp_path / "actions.db")
+    journal = Journal(base)
+    docker = element(bilan, "com.docker.socket")
+    fait = desactiver(docker, faux.mac, journal, tmp_path / "donnees", confirmer=True)
+    assert fait.fait and "C'est fait" in fait.message and not fait.erreurs
+    assert "com.docker.socket" not in launchd.charges and "com.docker.socket" in launchd.desactives
+    assert journal.toutes()[0].apres == {"charge": False, "desactive": True}
+    retour = restaurer(docker.fiche.id, faux.mac, journal, confirmer=True)
+    assert retour.fait and "C'est restauré" in retour.message and "com.docker.socket" in launchd.charges
+    base.fermer()

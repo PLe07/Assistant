@@ -316,12 +316,22 @@ def resume(bilan: Bilan, reglages: dict[str, Any]) -> tuple[str, str]:
         phrase += " Aucun ne te coûte vraiment : ton démarrage est sain."
     g = bilan.gains
     if g.elements:
-        pluriel = "s" if g.veilles > 1 else ""
-        veilles_txt = f", et {g.veilles} mise{pluriel} en veille débloquée{pluriel}" if g.veilles else ""
-        gain = (
-            f"Si tu coupes les {len(g.elements)} éléments 💤 et 👻 : environ {memoire(g.memoire_mo)} de mémoire "
-            f"libérée, {secondes(g.cpu_session_s)} de processeur en moins à chaque ouverture de session{veilles_txt}."
-        )
+        n = len(g.elements)
+        quoi = f"les {n} éléments 💤 et 👻" if n > 1 else "l'élément 💤 ou 👻"
+        morceaux = []
+        if g.memoire_mo:
+            morceaux.append(f"environ {memoire(g.memoire_mo)} de mémoire libérée")
+        if g.cpu_session_s:
+            morceaux.append(f"{secondes(g.cpu_session_s)} de processeur en moins à chaque ouverture de session")
+        if g.veilles:
+            pluriel = "s" if g.veilles > 1 else ""
+            morceaux.append(f"{g.veilles} mise{pluriel} en veille débloquée{pluriel}")
+        if morceaux:
+            liste = ", ".join(morceaux[:-1]) + (" et " if len(morceaux) > 1 else "") + morceaux[-1]
+            gain = f"Si tu coupes {quoi} : {liste}."
+        else:
+            gain = (f"Si tu coupes {quoi} : pas de gain mesuré pour l'instant (ils ne tournaient pas pendant les "
+                    "mesures), mais ils ne se relanceront plus en arrière-plan.")  # fmt: skip
     else:
         gain = "Rien à couper : aucun élément 💤 ni 👻."
     return phrase, gain

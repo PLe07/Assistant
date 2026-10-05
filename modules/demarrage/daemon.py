@@ -137,12 +137,12 @@ class Demon:
         boot = session.demarrage(self.systeme)
         if boot is None or self.base.session(boot) is not None:
             return None
+        fenetre = self.reglages["echantillonnage"]["session_minutes"] * 60
         connexion, source = session.connexion(
-            self.systeme, boot, self.premier_processus(), self.reglages["delais"]["journal_systeme_s"]
+            self.systeme, boot, self.premier_processus(), self.reglages["delais"]["journal_systeme_s"], fenetre + 60
         )
         if self.inventaire is None:
             self.scanner(self.systeme.maintenant())
-        fenetre = self.reglages["echantillonnage"]["session_minutes"] * 60
         if connexion is not None and self.systeme.maintenant() - connexion < fenetre:
             battre = lambda t: self.base.ecrire("battement", t)  # noqa: E731 — vivant, même pendant ces 5 minutes
             bilan = self.echantillonneur.suivre_session(boot, connexion, self.arret, battre)
@@ -182,6 +182,13 @@ class Demon:
             travail.mesurer_zsh(self.systeme, self.base, self.reglages)
             self.recap(maintenant)
         self.notifieur.relancer(maintenant)
+        self.noter_couts()
+
+    def noter_couts(self) -> None:
+        """Ce que chaque commande a coûté depuis le lancement (lu par tests/demarrage/e2e_mac/mesure_demon.py)."""
+        couts = getattr(self.systeme, "couts", None)
+        if callable(couts):
+            self.base.ecrire("couts_commandes", couts())
 
     def tour_protege(self, maintenant: float) -> bool:
         """Un tour qui ne fait jamais tomber le démon. Renvoie False si le tour a échoué."""
@@ -226,6 +233,10 @@ def boucle(ctx: Any) -> None:
     try:
         demon.tourner(ctx.attendre)
     finally:
+        try:
+            demon.noter_couts()
+        except (sqlite3.Error, DisquePlein):
+            pass
         demon.base.fermer()
 
 

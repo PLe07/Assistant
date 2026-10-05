@@ -6,13 +6,17 @@ Il lance sa propre surveillance (python -m modules.demarrage) dans un dossier de
 de préparation (le cache codesign est chaud, comme en régime normal). Le processeur compte AUSSI les commandes
 lancées par le démon (ps, launchctl, pmset, top) : resource.getrusage(RUSAGE_CHILDREN) les additionne quand le démon
 s'arrête. Budgets du §4 : CPU moyen < 0,3 %, RAM < 40 Mo.
+
+Il affiche aussi le détail par commande (noté par le démon, D-42) : en cas de dépassement, on sait laquelle coûte.
 """
 
 from __future__ import annotations
 
+import json
 import os
 import resource
 import signal
+import sqlite3
 import subprocess
 import sys
 import tempfile
@@ -49,14 +53,38 @@ def mesurer(duree: float, pas: float = 5.0) -> dict[str, float]:
             demon.send_signal(signal.SIGTERM)
             demon.wait(30)
         apres = resource.getrusage(resource.RUSAGE_CHILDREN)
+        couts = couts_notes(Path(dossier) / "demarrage.db")
     cpu = (apres.ru_utime + apres.ru_stime) - (avant.ru_utime + avant.ru_stime)
     return {"duree_s": round(ecoule), "cpu_s": round(cpu, 2), "cpu_moyen_pct": round(100 * cpu / ecoule, 3),
-            "ram_max_mo": round(rss_max / 1024, 1)}  # fmt: skip
+            "ram_max_mo": round(rss_max / 1024, 1), "commandes": couts}  # fmt: skip
+
+
+def couts_notes(base: Path) -> dict[str, dict[str, float]]:
+    try:
+        with sqlite3.connect(base) as db:
+            ligne = db.execute("SELECT valeur FROM etat WHERE cle = 'couts_commandes'").fetchone()
+    except sqlite3.Error:
+        return {}
+    return json.loads(ligne[0]) if ligne else {}
+
+
+def afficher(r: dict) -> None:
+    commandes = r.pop("commandes", {})
+    print(r)
+    enfants = sum(c.get("processeur_s", 0.0) for c in commandes.values())
+    print(f"   dont Python lui-même ≈ {max(0.0, r['cpu_s'] - enfants):.2f} s, et les commandes qu'il lance :")
+    for nom, c in commandes.items():
+        if "appels" in c:
+            print(
+                f"   · {nom} : {c['appels']} fois, {c['processeur_s']:.2f} s de processeur, {c['reel_s']:.1f} s en tout"
+            )
+        else:
+            print(f"   · {nom} : {c.get('memoire_mo', 0)} Mo")
 
 
 if __name__ == "__main__":
     r = mesurer(float(sys.argv[1]) if len(sys.argv) > 1 else 600)
-    print(r)
+    afficher(r)
     ok = r["cpu_moyen_pct"] < BUDGET_CPU_PCT and r["ram_max_mo"] < BUDGET_RAM_MO
     print("✅ dans les budgets" if ok else f"❌ hors budget (CPU < {BUDGET_CPU_PCT} %, RAM < {BUDGET_RAM_MO} Mo)")
     sys.exit(0 if ok else 1)

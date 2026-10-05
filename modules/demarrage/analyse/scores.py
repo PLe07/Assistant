@@ -143,5 +143,8 @@ def utilite(f: Fiche, maintenant: float, reglages: dict[str, Any], recommandatio
         seuil = reglages["verdicts"]["utilite_jours"]
         if jours > seuil:
             return "faible", f"app pas ouverte depuis {int(jours)} jours"
+        if f.source in ("ouverture", "ouverture_app"):
+            # Elle s'ouvre toute seule à chaque connexion : « ouverte hier » ne dit pas si tu t'en sers (D-45).
+            return "inconnue", "elle s'ouvre toute seule à chaque connexion : impossible de savoir si tu t'en sers"
         return "forte", "app ouverte il y a " + ("moins d'un jour" if jours < 1 else f"{int(jours)} jour(s)")
     return "inconnue", "pas d'app associée dont on connaisse l'usage"

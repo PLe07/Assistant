@@ -102,13 +102,13 @@ def test_desactiver_qui_echoue(faux, reglages):
 
     lancer(faux, reglages, "scan")
     launchd = LaunchdSimule(faux.mac, {"com.docker.socket": "/x"})
-    faux.mac.repondre_debut(["launchctl", "bootout"], Resultat(1, "", "refusé"))
+    faux.mac.repondre_debut(["launchctl", "disable"], Resultat(1, "", "refusé"))
     code, texte = lancer(faux, reglages, "desactiver", "com.docker.socket", "--confirmer")
     assert code == 1 and "❌ Rien n'a été modifié" in texte and "refusé" in texte
-    faux.mac.repondre_debut(["launchctl", "bootout"], launchd._bootout)  # l'arrêt passe…
-    faux.mac.repondre_debut(["launchctl", "disable"], Resultat(1, "", "non"))  # … la désactivation non
+    faux.mac.repondre_debut(["launchctl", "disable"], launchd._disable)  # la désactivation passe…
+    faux.mac.repondre_debut(["launchctl", "bootout"], Resultat(1, "", "non"))  # … l'arrêt non
     lancer(faux, reglages, "desactiver", "com.docker.socket", "--confirmer")
-    faux.mac.repondre_debut(["launchctl", "bootstrap"], Resultat(1, "", "toujours non"))
+    faux.mac.repondre_debut(["launchctl", "enable"], Resultat(1, "", "toujours non"))
     code, texte = lancer(faux, reglages, "restaurer", "com.docker.socket", "--confirmer")
     assert code == 1 and "toujours non" in texte
 

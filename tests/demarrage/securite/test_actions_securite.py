@@ -6,6 +6,7 @@ import subprocess
 
 import pytest
 
+from modules.demarrage.actions import desactiver as desactiver_module
 from modules.demarrage.actions.desactiver import desactiver, est_lecture
 from modules.demarrage.actions.journal import Journal
 from modules.demarrage.actions.restaurer import restaurer
@@ -115,6 +116,7 @@ def element(source, verdict, action, label="com.exemple.agent"):
 def test_vrai_mac_subprocess_intercepte(monkeypatch, tmp_path):
     intercepteur = Intercepteur()
     monkeypatch.setattr(subprocess, "run", intercepteur)
+    monkeypatch.setattr(desactiver_module, "ATTENTE_LAUNCHD_S", 0.5)  # l'attente de launchd, en vraies secondes ici
     monkeypatch.setattr(subprocess, "Popen", lambda *a, **k: pytest.fail("Popen interdit"))
     base = Base(tmp_path / "d.db")
     journal, mac = Journal(base), Mac()

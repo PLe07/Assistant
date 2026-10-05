@@ -9,7 +9,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from modules.demarrage.actions import quarantaine
-from modules.demarrage.actions.desactiver import applescript, etat_launchd
+from modules.demarrage.actions.desactiver import applescript, attendre_etat, ecart, etat_launchd
 from modules.demarrage.actions.journal import Action, Journal
 from modules.demarrage.systeme import Systeme
 
@@ -75,4 +75,12 @@ def restaurer(fiche_id: str, systeme: Systeme, journal: Journal, confirmer: bool
     if erreurs:
         return Retour(False, "Restauration incomplète.", commandes, erreurs)
     journal.annuler(a.id, systeme.maintenant())
+    voulu = {}
+    if any(c[1] == "enable" for c in commandes):
+        voulu["desactive"] = False
+    if any(c[1] == "bootstrap" for c in commandes):
+        voulu["charge"] = True
+    manque = ecart(attendre_etat(systeme, a.label, voulu), voulu) if voulu else ""
+    if manque:
+        return Retour(True, f"Commandes passées ({' ; '.join(resume)}), mais launchd le montre {manque}.", commandes)
     return Retour(True, "C'est restauré : " + " ; ".join(resume), commandes)

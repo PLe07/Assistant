@@ -98,16 +98,23 @@ def analyser_print_domaine(texte: str) -> dict[str, Service]:
     return services
 
 
-_DESACTIVE = re.compile(r'^"(.+)"\s*=>\s*(\w+)\s*$')
+_DESACTIVE = re.compile(r'^"?([^"\s][^"]*?)"?\s*=>\s*(\w+)\s*$')
+_OUI, _NON = ("disabled", "true", "1", "yes"), ("enabled", "false", "0", "no")
 
 
-def analyser_desactives(texte: str) -> dict[str, bool]:
-    """« "label" => disabled|enabled » (macOS récent) ou « => true|false » (ancien). Vrai : désactivé."""
+def analyser_desactives(texte: str, bloc_obligatoire: bool = True) -> dict[str, bool]:
+    """« "label" => disabled|enabled » (macOS récent) ou « => true|false » (ancien). Vrai : désactivé.
+
+    bloc_obligatoire=False (sortie de « print-disabled », qui n'a que ça) : si le titre du bloc change d'une version
+    de macOS à l'autre, on lit quand même toutes les lignes « label => état »."""
+    lignes = _bloc(texte, "disabled services")
+    if not lignes and not bloc_obligatoire:
+        lignes = [ligne.strip() for ligne in texte.splitlines()]
     etats: dict[str, bool] = {}
-    for ligne in _bloc(texte, "disabled services"):
+    for ligne in lignes:
         m = _DESACTIVE.match(ligne)
-        if m and m.group(2) in ("disabled", "true", "enabled", "false"):
-            etats[m.group(1)] = m.group(2) in ("disabled", "true")
+        if m and m.group(2).lower() in _OUI + _NON:
+            etats[m.group(1)] = m.group(2).lower() in _OUI
     return etats
 
 

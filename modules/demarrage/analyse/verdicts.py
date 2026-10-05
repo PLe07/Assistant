@@ -123,7 +123,8 @@ def regle_orphelin(ctx: Contexte) -> Verdict | None:
 def regle_inconnu(ctx: Contexte) -> Verdict | None:
     f = ctx.fiche
     if f.erreurs and not f.programme:
-        return _verdict(ctx, "inconnu", f"fichier de lancement illisible : {f.erreurs[0]}")
+        return _verdict(ctx, "inconnu", f"fichier de lancement illisible ({f.erreurs[0]}) : launchd ne peut pas "
+                                        "s'en servir, il ne lance rien ; reste à savoir d'où il vient")  # fmt: skip
     if f.details.get("se_dit_apple"):
         return _verdict(ctx, "inconnu", "porte un nom d'Apple (com.apple…) sans être signé par Apple")
     if f.programme is None and f.source not in ("extension",):
@@ -167,6 +168,16 @@ def regle_mise_a_jour(ctx: Contexte) -> Verdict | None:
     return None
 
 
+def regle_pas_au_demarrage(ctx: Contexte) -> Verdict | None:
+    """La base de connaissances dit « rien ne l'oblige à démarrer tout seul » (Spotify, Steam, Notion…) : 💤 même si
+    l'app sert souvent, car on l'ouvre quand on en a besoin. Avant (D-45), une app ouverte à chaque connexion paraissait
+    « utilisée hier » justement parce qu'elle s'ouvre toute seule, et restait ✅ en coûtant 1 Go."""
+    c = ctx.connaissance
+    if c is not None and c.recommandation == "desactiver" and ctx.utilite != "indispensable":
+        return _verdict(ctx, "inutile", f"rien ne l'oblige à démarrer tout seul : {c.effet}")
+    return None
+
+
 def regle_lourd_inutile(ctx: Contexte) -> Verdict | None:
     seuil = ctx.reglages["verdicts"]["impact_significatif"]
     if ctx.impact >= seuil and ctx.utilite == "faible":
@@ -190,6 +201,7 @@ REGLES: dict[str, Callable[[Contexte], Verdict | None]] = {
     "inconnu": regle_inconnu,
     "inactif": regle_inactif,
     "mise_a_jour": regle_mise_a_jour,
+    "pas_au_demarrage": regle_pas_au_demarrage,
     "lourd_inutile": regle_lourd_inutile,
     "utile": regle_utile,
 }

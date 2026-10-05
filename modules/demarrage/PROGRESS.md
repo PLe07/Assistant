@@ -13,10 +13,10 @@ Porte unique : `modules/demarrage/check.sh` (dans le conteneur : `PYTHON=<venv>/
 | P5 Scores, verdicts, connaissances, gains | ✅ | faux Mac n° 1 : 100 % ; 2e faux Mac : 5/5 graines à 100 % |
 | P6 Actions réversibles + sécurité | ✅ | 12 tests d'actions, 18 tests de sécurité |
 | P7 Rapport HTML, CLI, notifications, surveillance | ✅ | 311 tests ; rapport vérifié en clair, sombre et sur mobile |
-| P8 Bout en bout, performance | ✅ conteneur · ⏳ Mac | démon réel 10 min : 0,17 % de processeur, 22,8 Mo |
+| P8 Bout en bout, performance | ✅ conteneur · ❌ 1er passage Mac, corrigé (D-42, D-43) · ⏳ 2e | conteneur : démon 10 min à 0,17 %, 22,8 Mo ; Mac : scan 5,1 s puis 1,7 s |
 | P9 Installation | ⏳ Mac | lancé par le superviseur de l'Assistant (D-03) |
 | P10 Revue hostile | ✅ | 6 défauts trouvés et corrigés, chacun avec son test |
-| P11 Diagnostic réel sur le Mac | ⏳ Mac | ACTIONS_HUMAINES § 5 |
+| P11 Diagnostic réel sur le Mac | 1er passage fait · ⏳ 2e | 7 défauts réels corrigés, chacun testé (D-42 à D-45) |
 
 ## P0 — Reconnaissance (✅)
 
@@ -348,12 +348,69 @@ Required test coverage of 85.0% reached. Total coverage: 97.99%
 CHECK OK
 ```
 
-## P11 — Diagnostic réel (⏳ Mac)
+## P11 — Diagnostic réel (1er passage le 5 octobre : 7 défauts trouvés et corrigés · ⏳ 2e passage)
 
-Les commandes sont dans ACTIONS_HUMAINES § 5 : `scan`, `mesurer --minutes 10`, `rapport`, `top`. La sortie de `top`
-ira dans RAPPORT_FINAL.md § 5.
+Premier passage sur ton Mac (ACTIONS_HUMAINES § 1, § 2 et § 5). Sorties réelles, sans chemin ni nom :
+
+```
+🩺 Nettoyeur de démarrage
+   ✅ macOS 27.0.1 · arm64 · Python 3.14.4
+   ✅ launchctl, ps, top, pmset, codesign, mdls, sfltool, osascript, systemextensionsctl, crontab, sysctl, last,
+      log, zsh (toutes présentes)
+
+pytest tests/demarrage/e2e_mac
+🔎 933 éléments trouvés en 5.0 s (911 de macOS).
+   scan : 5.1 s, puis 1.7 s avec le cache codesign                        ✅ (< 15 s, < 5 s)
+✅ 36 relevés. … en tête : [l'agent de test] (impact 66) ['empêche la veille']   ✅
+   orphelin de test : 👻, quarantaine                                       ✅
+   desactiver --confirmer : « Commandes passées, mais launchd ne le montre pas encore désactivé. »
+   assert not charge(CHARGE) → encore chargé                               ❌ → D-43
+1 failed in 190.36s
+
+mesure_demon.py 600
+{'duree_s': 602, 'cpu_s': 12.46, 'cpu_moyen_pct': 2.071, 'ram_max_mo': 308.0}
+❌ hors budget (CPU < 0.3 %, RAM < 40.0 Mo)                                → D-42
+
+demarrage scan
+🔎 931 éléments trouvés en 3.3 s (911 de macOS).   💤 4 · 👻 1 · ⚠️ 4 · ✅ 11
+demarrage mesurer --minutes 10
+✅ 117 relevés.
+```
+
+Après le test, le scan ne trouve plus les deux éléments de test (933 → 931) : le nettoyage du `finally` a bien
+eu lieu. En revanche, la recherche automatique des traces n'a pas tourné, car le test s'est arrêté avant. Le 2e
+passage la refera.
+
+`demarrage top` (avant les corrections) :
+
+| # | Élément | Éditeur | Impact | Coût mesuré | Verdict | Désactiver | Restaurer |
+|---|---|---|---|---|---|---|---|
+| 1 | Spotify | Spotify | 42 | 5,1 % d'un cœur · 968 Mo | ✅ Utile, à garder | `demarrage desactiver b8e39d87 --confirmer` | `demarrage restaurer b8e39d87 --confirmer` |
+| 2 | L'Assistant (c'est moi) | inconnu | 12 | 1,5 % d'un cœur · 144 Mo | ✅ Utile, à garder | — | — |
+| 3 | L'Assistant (c'est moi) | inconnu | 8 | 1,3 % d'un cœur · 45 Mo | ✅ Utile, à garder | — | — |
+| 4 | Google Updater (Keystone) | Google LLC | 3 (estimé) | — | 👻 Orphelin (reste d'une app désinstallée) | `demarrage desactiver cf0af4b1 --confirmer` | `demarrage restaurer cf0af4b1 --confirmer` |
+| 5 | Google Updater (Keystone) | inconnu | 3 (estimé) | — | ⚠️ Inconnu, à vérifier | `demarrage desactiver ebf8a226 --confirmer` | `demarrage restaurer ebf8a226 --confirmer` |
+| 6 | Google Updater (Keystone) | inconnu | 3 (estimé) | — | ⚠️ Inconnu, à vérifier | `demarrage desactiver 14140c57 --confirmer` | `demarrage restaurer 14140c57 --confirmer` |
+| 7 | Mise à jour de Zoom | Zoom Video Communications, Inc. | 3 (estimé) | — | 💤 Inutile au démarrage | à taper soi-même : `demarrage desactiver d14a1655` les affiche | idem |
+| 8 | Mise à jour de Zoom | Zoom Video Communications, Inc. | 3 (estimé) | — | 💤 Inutile au démarrage | à taper soi-même : `demarrage desactiver e77d2aff` les affiche | idem |
+| 9 | Mise à jour de Zoom | Zoom Video Communications, Inc. | 3 (estimé) | — | 💤 Inutile au démarrage | à taper soi-même : `demarrage desactiver efb58e77` les affiche | idem |
+| 10 | Mise à jour de Zoom | Zoom Video Communications, Inc. | 3 (estimé) | — | 💤 Inutile au démarrage | à taper soi-même : `demarrage desactiver 48502476` les affiche | idem |
+
+Les défauts, leurs corrections et leurs tests :
+
+| Vu sur ton Mac | Cause | Correction | Test |
+|---|---|---|---|
+| Démon : 2,07 % de processeur, 308 Mo | `log show --last boot` : tout le journal depuis le démarrage | journal lu sur 7 min au plus ; coût de chaque commande noté et affiché (D-42) | `test_session`, `test_systeme`, `test_demon` |
+| `desactiver` : encore chargé juste après | launchd rend la main avant la fin de l'arrêt (code 36 possible) | `disable` puis `bootout`, attente jusqu'à 10 s, message précis, `print-disabled` lu avec tolérance (D-43) | `test_launchd_qui_arrete_avec_retard` (codes 0 et 36), `test_desactives_format_inattendu` |
+| L'agent de test nommé « L'Assistant (c'est moi) » | motif `com\.assistant\.` de la base | motif sans les éléments de test, entrée « assistant » réservée à l'Assistant (D-44) | `test_diagnostic_reel` |
+| 4 × « Mise à jour de Zoom », 2 × « L'Assistant », 3 × « Google Updater » | noms identiques | « · label », ou « · d'où il vient » (D-44) | `test_diagnostic_reel` |
+| Spotify (968 Mo, 5 % d'un cœur) ✅ « ouvert il y a moins d'un jour » | une app ouverte à la connexion paraît toujours utilisée | règle `pas_au_demarrage` ; utilité « inconnue » pour une app ouverte à la connexion (D-45) | `test_diagnostic_reel` |
+| 2 fichiers Google « pas de Label » classés 5e et 6e (impact 3 estimé) | estimation de la base pour un fichier qui ne lance rien | impact 0 et raison claire ; `plutil -p` proposé pour le reconnaître (D-45) | `test_diagnostic_reel` |
+| « environ 0 Mo de mémoire libérée, 0,0 s » | phrase écrite même sans rien de mesuré | seulement ce qui est mesuré, sinon « pas de gain mesuré pour l'instant » (D-45) | `test_diagnostic_reel` |
+
+Le faux Mac n° 1 et le 2e faux Mac (5 graines) restent à 100 %.
 
 ## Prochaine étape
 
-Sur le Mac : ACTIONS_HUMAINES § 1 à § 3 et § 5. Ensuite, RAPPORT_FINAL.md § 4 et § 5 seront complétés avec les
-vraies sorties.
+Sur ton Mac : le 2e passage (ACTIONS_HUMAINES § 2, § 3, puis `demarrage top` et § 8). RAPPORT_FINAL § 4 et § 5
+seront alors complétés avec ces sorties.

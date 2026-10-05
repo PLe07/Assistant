@@ -12,8 +12,14 @@ from tests.demarrage.faux_mac.systeme_faux import FauxMac
 
 class LaunchdSimule:
     def __init__(self, mac: FauxMac, charges: dict[str, str | None] | None = None, desactives: set[str] | None = None,
-                 ouverture: dict[str, str] | None = None, automatisation: bool = True):  # fmt: skip
+                 ouverture: dict[str, str] | None = None, automatisation: bool = True,
+                 retard_arret_s: float = 0.0, code_bootout: int = 0):  # fmt: skip
         self.mac = mac
+        # Le vrai launchd : bootout rend la main avant que le programme ait fini de s'arrêter (parfois avec le code
+        # 36 « Operation now in progress ») ; il reste visible quelques instants (D-43).
+        self.retard_arret_s = retard_arret_s
+        self.code_bootout = code_bootout
+        self.arrets: dict[str, float] = {}  # label → instant où il disparaît vraiment
         self.charges = dict(charges or {})  # label → plist (None : sans fichier connu)
         self.desactives = set(desactives or set())
         self.ouverture = dict(ouverture or {})  # nom → chemin de l'app
@@ -37,6 +43,9 @@ class LaunchdSimule:
 
     def _print(self, c: list[str], m: FauxMac) -> Resultat:
         label = self._label(c[2]) if len(c) > 2 else ""
+        if label in self.arrets and m.horloge >= self.arrets[label]:
+            del self.arrets[label]
+            self.charges.pop(label, None)
         if label in self.charges:
             fixe = self.details.get(c[2])
             if fixe is not None:
@@ -46,8 +55,14 @@ class LaunchdSimule:
 
     def _bootout(self, c: list[str], m: FauxMac) -> Resultat:
         label = self._label(c[2])
-        if self.charges.pop(label, "absent") == "absent":
+        if label not in self.charges:
             return Resultat(3, "", "Boot-out failed: 3: No such process\n")
+        if self.retard_arret_s > 0:
+            self.arrets[label] = m.horloge + self.retard_arret_s
+        else:
+            del self.charges[label]
+        if self.code_bootout:
+            return Resultat(self.code_bootout, "", "Boot-out failed: 36: Operation now in progress\n")
         return Resultat(0, "")
 
     def _disable(self, c: list[str], m: FauxMac) -> Resultat:

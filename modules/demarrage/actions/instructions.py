@@ -21,7 +21,7 @@ def _ligne(*args: str) -> str:
 def agent_global(label: str, uid: int, chemin_plist: str | None) -> tuple[str, str]:
     """(désactiver, annuler) pour un agent de /Library/LaunchAgents : dans ta session, sans administrateur."""
     cible = f"gui/{uid}/{label}"
-    faire = "\n".join([_ligne("launchctl", "bootout", cible), _ligne("launchctl", "disable", cible)])
+    faire = "\n".join([_ligne("launchctl", "disable", cible), _ligne("launchctl", "bootout", cible)])
     defaire = [_ligne("launchctl", "enable", cible)]
     if chemin_plist:
         defaire.append(_ligne("launchctl", "bootstrap", f"gui/{uid}", chemin_plist))
@@ -31,7 +31,7 @@ def agent_global(label: str, uid: int, chemin_plist: str | None) -> tuple[str, s
 def daemon(label: str, chemin_plist: str | None) -> tuple[str, str]:
     """(désactiver, annuler) pour un daemon système : droits d'administrateur, à taper toi-même."""
     cible = f"system/{label}"
-    faire = "\n".join([_ligne("sudo", "launchctl", "bootout", cible), _ligne("sudo", "launchctl", "disable", cible)])
+    faire = "\n".join([_ligne("sudo", "launchctl", "disable", cible), _ligne("sudo", "launchctl", "bootout", cible)])
     defaire = [_ligne("sudo", "launchctl", "enable", cible)]
     if chemin_plist:
         defaire.append(_ligne("sudo", "launchctl", "bootstrap", "system", chemin_plist))
@@ -83,6 +83,8 @@ def verifier(nom: str, editeur: str | None, chemin_plist: str | None, programme:
         lignes.append(
             f"   Vu pour la première fois : {time.strftime('%d/%m/%Y à %H:%M', time.localtime(premiere_vue))}"
         )
+    if chemin_plist:
+        lignes.append(f"   Pour voir son contenu : {_ligne('plutil', '-p', chemin_plist)}")
     if programme:
         lignes.append(f"   Pour voir sa signature : {_ligne('codesign', '-dv', '--verbose=2', programme)}")
     lignes.append("   Si tu ne le reconnais pas, cherche son nom avant d'agir. Ne le supprime pas à l'aveugle.")

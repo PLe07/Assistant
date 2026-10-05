@@ -59,7 +59,7 @@ complet suffisent.
 
 | Élément | Ce qui est fait | Pour annuler |
 |---|---|---|
-| Agent de ta session (`~/Library/LaunchAgents`, ou intégré à une app) | `launchctl bootout` puis `launchctl disable` ; le fichier reste en place | `restaurer` : `enable`, puis `bootstrap` s'il tournait |
+| Agent de ta session (`~/Library/LaunchAgents`, ou intégré à une app) | `launchctl disable` puis `launchctl bootout`, puis on attend que launchd le montre (D-43) ; le fichier reste en place | `restaurer` : `enable`, puis `bootstrap` s'il tournait |
 | Orphelin dans `~/Library/LaunchAgents` | son fichier part en quarantaine (`donnees/demarrage/quarantaine/…`), jamais effacé | `restaurer` le remet en place |
 | App ouverte à la connexion | retirée de la liste par System Events (si tu l'as autorisé), sinon le chemin dans les Réglages | `restaurer` la remet |
 | Pour tous les comptes (`/Library`), service système, extension, cron | rien d'automatique : la commande exacte à taper toi-même, et celle pour annuler | — |

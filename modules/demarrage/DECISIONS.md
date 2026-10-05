@@ -383,3 +383,60 @@ n'affiche que :
 - le nom lisible, l'éditeur, l'impact, le coût et le verdict ;
 - `demarrage desactiver ID --confirmer` / `demarrage restaurer ID --confirmer`.
 Aucun chemin `/Users/…` n'y figure.
+
+## P11 — Ce que le premier passage sur ton Mac a appris
+
+**D-42 · Le journal système, lu sur quelques minutes seulement ; le coût de chaque commande, noté.**
+Sur ton Mac, `mesure_demon.py 600` a donné ❌ : 2,07 % de processeur moyen et 308 Mo, au lieu de 0,17 % et 23 Mo
+dans le conteneur. La cause probable : au lancement, si `last` ne datait pas ta connexion, le démon lisait
+`log show --last boot`, c'est-à-dire tout le journal depuis le démarrage du Mac. Sur un Mac allumé depuis des jours,
+cela fait des secondes de processeur et des centaines de Mo de texte gardés en mémoire.
+- **Correction** : le journal n'est lu que sur la fenêtre utile, soit les 5 minutes d'ouverture de session plus
+  1 minute (`--last 7m` au plus). Une connexion plus ancienne n'est de toute façon plus observable ; `last` ou ton
+  plus ancien processus la datent.
+- **Preuve pour la prochaine fois** : le vrai `Mac` compte, par commande, les appels, le processeur
+  (`getrusage(RUSAGE_CHILDREN)`) et le temps. Le démon l'écrit en base à chaque tour, et `mesure_demon.py`
+  affiche ce détail. Si le budget n'est toujours pas tenu, on sait quelle commande coûte.
+
+**D-43 · Désactiver : d'abord `disable`, puis `bootout`, puis attendre que launchd le montre.**
+Sur ton Mac, `desactiver --confirmer` sur l'agent de test a répondu « Commandes passées, mais launchd ne le montre
+pas encore désactivé », et l'agent était encore chargé juste après. Les deux commandes avaient pourtant réussi.
+launchd rend souvent la main avant que le programme ait fini de s'arrêter, parfois avec le code 36 (« Operation now
+in progress »).
+- **Ordre** : `disable` d'abord, pour que rien ne le relance (pas même son app), puis `bootout`.
+- **Attente** : on relit l'état au plus 10 s, toutes les 0,5 s, jusqu'à « arrêté et désactivé ». Un `bootout` en
+  erreur dont l'arrêt a bien eu lieu compte comme réussi. `restaurer` attend de même « rechargé et réactivé ».
+- **Message** : il dit précisément ce qui manque (« encore chargé », « pas marqué désactivé »).
+- **Lecture de `print-disabled`** : si le titre du bloc change d'une version de macOS à l'autre, ou si l'état
+  s'écrit 1/0, on le lit quand même.
+- **Test du Mac** : en cas d'échec, il affiche ce que launchd dit vraiment (`print` et `print-disabled`).
+- **Tests adaptés à l'ordre** : un échec total, c'est maintenant `disable` refusé (rien n'est noté). Un échec
+  partiel, c'est `disable` passé puis `bootout` refusé (noté ; `restaurer` réactive).
+- **Le faux launchd** sait maintenant s'arrêter avec retard, avec ou sans code 36.
+
+**D-44 · Les noms : un élément de test n'est pas « L'Assistant », et deux noms identiques sont distingués.**
+- **Élément de test** : la base de connaissances nommait « L'Assistant (c'est moi) » tout `com.assistant.*`, donc
+  aussi l'agent de test. Le motif exclut maintenant `com.assistant.nettoyeur.test.`, et une entrée « assistant »
+  n'est retenue que pour un élément qui est vraiment l'Assistant (complète D-38).
+- **Homonymes** : quatre « Mise à jour de Zoom », deux « L'Assistant (c'est moi) » et trois « Google Updater »
+  côte à côte ne se distinguaient pas. Quand plusieurs éléments non Apple portent le même nom, on ajoute
+  « · label ». Si le label est le même lui aussi, on ajoute « · d'où il vient ».
+
+**D-45 · Les verdicts sur données réelles.**
+- **Le constat** : Spotify, ouvert à chaque connexion, coûtait 968 Mo et 5 % d'un cœur, et il était jugé ✅
+  « utile : app ouverte il y a moins d'un jour ». Or il est « ouvert » chaque jour justement parce qu'il s'ouvre
+  tout seul.
+- **Nouvelle règle `pas_au_demarrage`**, placée après `mise_a_jour` : quand la base de connaissances dit
+  « désactiver » (Spotify, Steam, Notion, Skype, TeamViewer…, 17 entrées hors mises à jour), le verdict est 💤,
+  même si l'app sert souvent : on l'ouvre quand on en a besoin. L'effet de la base dit ce qui change. Pour
+  Spotify, il ajoute de couper aussi son option « Ouvrir Spotify automatiquement… », sinon il se remet.
+- **Utilité d'une app ouverte à la connexion** (sources S4 `ouverture_app` et S5) : une ouverture récente ne prouve
+  plus qu'elle sert. L'utilité devient « inconnue », sauf si l'app n'a pas été ouverte depuis plus de 30 jours.
+- **Fichier de lancement cassé** (illisible, ou sans Label ni programme) : impact 0 au lieu de l'estimation de la
+  base. launchd ne peut pas s'en servir, il ne lance rien. Le verdict reste ⚠️ (d'où vient-il ?) et la raison le
+  dit. L'arrêt réversible reste possible si tu le demandes (D-37).
+- **Gain** : quand rien de mesurable n'est en jeu, la phrase ne dit plus « environ 0 Mo » ; elle dit « pas de gain
+  mesuré pour l'instant ». Elle ne donne que les morceaux mesurés.
+- **Vérifié** : le faux Mac n° 1 et le 2e faux Mac (5 graines) restent à 100 % de verdicts justes.
+- **Non tranché sans toi** : pourquoi deux fichiers Google de ton dossier LaunchAgents n'ont « pas de Label ».
+  `plutil -p` sur ces fichiers le dira (ACTIONS_HUMAINES § 8).

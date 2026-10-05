@@ -3,7 +3,7 @@
  "elements": [
   {
    "motifs": [
-    "com\\.assistant\\."
+    "com\\.assistant\\.(?!nettoyeur\\.test\\.)"
    ],
    "nom": "L'Assistant (c'est moi)",
    "role": "Fait tourner tes modules : tri des mails, corvées, Nettoyeur de démarrage et les autres.",
@@ -266,7 +266,7 @@
    "role": "La musique en streaming, ouverte dès la connexion.",
    "impact": "moyen",
    "recommandation": "desactiver",
-   "effet": "Spotify ne s'ouvre plus tout seul ; tu le lances quand tu veux de la musique.",
+   "effet": "Spotify ne s'ouvre plus tout seul ; tu le lances quand tu veux de la musique. Coupe aussi « Ouvrir Spotify automatiquement… » dans ses paramètres, sinon il se remet.",
    "categorie": "divertissement",
    "editeur": "Spotify AB"
   },
