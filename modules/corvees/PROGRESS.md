@@ -15,6 +15,7 @@ Porte unique : `modules/corvees/check.sh` (dans le conteneur : `PYTHON=<venv>/bi
 | P7 Rapport HTML, notifications, CLI | ✅ | 52 tests de plus ; rapport vérifié en clair, sombre et sur mobile |
 | P8 Bout en bout, mesures | ✅ conteneur · ⏳ Mac | e2e réel, 3 défauts trouvés et corrigés ; CPU 0,17 %, RAM 29 Mo |
 | P9 Installation, relance après kill | ✅ conteneur · ⏳ Mac | relancé par le superviseur en 7 s ; doctor sans erreur |
+| P10 Revue hostile, démonstration, rapport final | ✅ | 8 défauts corrigés ; RAPPORT_FINAL.md |
 
 ## P0 — Reconnaissance (✅)
 
@@ -264,5 +265,25 @@ CHECK OK
 - la mesure de 10 minutes avec les capteurs propres au Mac (appli au premier plan, presse-papiers…) ;
 - le kill réel (relance en 1 minute).
 
-**Prochaine étape :** P10, la revue hostile du code. Puis un rapport de démonstration, le README, RAPPORT_FINAL.md
-et la non-régression complète de l'Assistant.
+## P10 — Revue hostile, démonstration, rapport final (✅)
+
+**Revue hostile** (DECISIONS D-47 à D-52), chaque défaut d'abord reproduit par un test :
+- base occupée prise pour une base abîmée ;
+- messages d'erreur non caviardés ;
+- notification possible en double ;
+- purge pendant la suite du soir ;
+- mémoire de l'analyse à 317 Mo.
+
+La mémoire est ramenée à 124 Mo (événements compacts, motifs en tableaux serrés), puis l'analyse passe dans un
+programme à part : le démon reste à 23 Mo pendant l'analyse de 208 426 événements. Les résultats sont identiques
+(tableau de simulation inchangé, 6 cas comparés motif par motif).
+
+**Démonstration** : `python -m tests.corvees.simulation.demo` →
+[demo/rapport_demo.html](demo/rapport_demo.html). C'est un mois inventé, décrit sans Claude, et la page n'est
+écrite que si aucun faux secret ni élément exclu n'y est retrouvé. Elle a été vérifiée en sombre et sur mobile.
+
+**Documents** : [README.md](README.md), [ACTIONS_HUMAINES.md](ACTIONS_HUMAINES.md),
+[RAPPORT_FINAL.md](RAPPORT_FINAL.md) (définition de « terminé » et preuves). Le module figure dans le README et la
+FICHE de l'Assistant.
+
+**État : terminé.** Il reste les vérifications sur le Mac (ACTIONS_HUMAINES §3).

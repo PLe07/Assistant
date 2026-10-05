@@ -27,6 +27,7 @@ activer un module, régler la proactivité, ajouter un module, tout arrêter).
 | `modules/revue/` | Phase 5 · la revue du dimanche : le bilan de ta semaine (voir `modules/revue/README.md`) |
 | `modules/traduction/` | 🇬🇧 la traduction au point : tes phrases françaises deviennent anglaises, sur le Mac (voir `modules/traduction/README.md`) |
 | `modules/brief/` | Phase 5 · le brief du jour : agenda, mails à traiter, rappels (voir `modules/brief/README.md`) |
+| `modules/corvees/` | 🔁 le détecteur de corvées répétées : il repère ce que tu refais à la main et propose de l'automatiser (voir `modules/corvees/README.md`) |
 | `tri-mails/` | Ancienne version du tri, gardée en sauvegarde |
 
 Restent **sur le Mac uniquement** (exclus de GitHub) : `.env`, `reglages.json`, `donnees/`, `logs/`.

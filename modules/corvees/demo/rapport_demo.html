@@ -1,0 +1,109 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light dark"><title>Tes corvées repérées</title><style>
+:root{--fond:#f6f6f3;--carte:#fff;--texte:#1d1d1f;--doux:#6e6e73;--trait:#e2e2de;--accent:#0a66c2;
+--vert:#1e7e34;--orange:#b35c00;--code:#f0f0ec}
+@media (prefers-color-scheme:dark){:root{--fond:#1b1b1d;--carte:#2a2a2d;--texte:#f2f2f7;--doux:#a1a1a6;
+--trait:#3a3a3d;--accent:#5aa9ff;--vert:#5cc879;--orange:#f0a04b;--code:#1f1f22}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--fond);color:var(--texte);
+font:16px/1.55 -apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif}
+main{max-width:820px;margin:0 auto;padding:28px 16px 56px}
+h1{font-size:1.6rem;margin:0 0 6px}
+.resume{color:var(--doux);margin:0 0 22px}
+.resume strong{color:var(--texte)}
+article{background:var(--carte);border:1px solid var(--trait);border-radius:14px;padding:18px 20px;margin:16px 0}
+article h2{font-size:1.15rem;margin:0 0 8px;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.id{font:600 .8rem ui-monospace,Menlo,monospace;color:var(--doux);border:1px solid var(--trait);border-radius:6px;
+padding:1px 6px}
+.vu{margin:0 0 10px}
+.chiffres{display:flex;flex-wrap:wrap;gap:8px 18px;margin:0 0 12px;padding:0;list-style:none;color:var(--doux);
+font-size:.92rem}
+.chiffres strong{color:var(--texte)}
+.solution{border-top:1px solid var(--trait);padding-top:12px}
+.solution h3{font-size:1rem;margin:0 0 6px}
+.etiquette{display:inline-block;font-size:.8rem;border-radius:6px;padding:1px 8px;margin-left:6px;
+background:var(--code);color:var(--doux)}
+.ok{color:var(--vert)}.attention{color:var(--orange)}
+pre{background:var(--code);border:1px solid var(--trait);border-radius:10px;padding:12px;overflow-x:auto;
+font:13px/1.45 ui-monospace,Menlo,monospace;margin:6px 0}
+ol{padding-left:22px}li{margin:4px 0}
+.commandes{margin:12px 0 0;font-size:.92rem;color:var(--doux)}
+code{font:13px ui-monospace,Menlo,monospace;background:var(--code);padding:1px 5px;border-radius:5px;
+color:var(--texte)}
+.revenue{color:var(--orange);font-weight:600}
+.vide{background:var(--carte);border:1px dashed var(--trait);border-radius:14px;padding:22px;text-align:center;
+color:var(--doux)}
+footer{margin-top:36px;color:var(--doux);font-size:.88rem}
+button.copier{float:right;font:inherit;font-size:.8rem;border:1px solid var(--trait);background:var(--carte);
+color:var(--texte);border-radius:6px;padding:2px 8px;cursor:pointer}
+</style></head><body><main><h1>🔁 Tes corvées repérées</h1><p class="resume"><strong>10 corvées</strong> · environ <strong>110 min/mois</strong> à récupérer · analyse du lun. 5 oct. à 00:00</p><article id="53iuxw"><h2>Renommer les « Capture d’écran * à *.png »<span class="id">53iuxw</span></h2><p class="vu">Tu renommes « Capture d’écran * à *.png » en « screen_*.png » dans ~/Desktop, puis déplaces les fichiers « screen_*.png » de ~/Desktop vers ~/Documents/Captures : 16 fois en 4 semaines.</p><ul class="chiffres"><li>Fréquence : <strong>17 fois par mois</strong></li><li>Dernière fois : <strong>ven. 2 oct. à 16:17</strong></li><li>Temps perdu : <strong>≈ 29 min/mois</strong></li><li>À récupérer : <strong>≈ 14 min/mois</strong></li></ul><div class="solution"><h3>💡 Règle de dossier<span class="etiquette">difficulté : moyen</span><span class="etiquette">confiance : 30 %</span><span class="etiquette">sans Claude</span></h3><p>Une règle de dossier (Hazel, ou une action de dossier du Finder) peut faire ces étapes dès qu&#x27;un fichier arrive ; les noms varient trop pour un script sûr fait sans Claude.</p><p><strong>Risques :</strong> Aucun : rien n&#x27;est fait sans toi.</p><p><strong>Pourquoi c'est une corvée :</strong> 16 fois sur 16 jours, toujours les mêmes étapes : environ 29 min par mois.</p></div><p class="commandes"><code>corvees accept 53iuxw</code> · <code>corvees reject 53iuxw</code> · <code>corvees snooze 53iuxw 7</code></p></article><article id="zqei3s"><h2>Ouvrir Safari, mail.google.com, calendar.google.com… à 08:34<span class="id">zqei3s</span></h2><p class="vu">Tu ouvres Safari, puis vas sur mail.google.com/mail, calendar.google.com/calendar et notion.so vers 08:34 : 20 fois en 4 semaines.</p><ul class="chiffres"><li>Fréquence : <strong>21 fois par mois</strong></li><li>Dernière fois : <strong>ven. 2 oct. à 08:37</strong></li><li>Temps perdu : <strong>≈ 22 min/mois</strong></li><li>À récupérer : <strong>≈ 20 min/mois</strong></li></ul><div class="solution"><h3>💡 Tâche automatique<span class="etiquette">difficulté : facile</span><span class="etiquette">confiance : 60 %</span><span class="etiquette">sans Claude</span></h3><p>Une tâche ouvre tout ça pour toi, chaque jour à 08:34.</p><ol><li>Lis le script ci-dessous.</li><li>Installe-le : corvees accept zqei3s --installer</li></ol><p><button class="copier" data-cible="script-zqei3s">Copier</button><span class="ok">✅ contrôlé</span> · il n'est jamais lancé tout seul</p><pre><code id="script-zqei3s">#!/bin/zsh
+# Ouvrir Safari, mail.google.com, calendar.google.com… à 08:34
+# Proposé par le détecteur de corvées : lis-le avant de l&#x27;installer.
+setopt null_glob 2&gt;/dev/null || true  # aucun fichier : la boucle ne fait rien
+
+open -a &#x27;Safari&#x27;
+open &#x27;https://mail.google.com/mail&#x27;
+open &#x27;https://calendar.google.com/calendar&#x27;
+open &#x27;https://notion.so&#x27;</code></pre><p><strong>Risques :</strong> Tout s&#x27;ouvrira aussi les jours où tu n&#x27;en as pas besoin : désinstalle la tâche si ça te gêne.</p><p><strong>Pourquoi c'est une corvée :</strong> 20 fois sur 20 jours, toujours les mêmes étapes : environ 22 min par mois.</p></div><p class="commandes"><code>corvees accept zqei3s</code> · <code>corvees accept zqei3s --installer</code> · <code>corvees reject zqei3s</code> · <code>corvees snooze zqei3s 7</code></p></article><article id="y7vsge"><h2>Commande « cd ~/Projets/assistant &amp;&amp; git pull &amp;&amp; python…<span class="id">y7vsge</span></h2><p class="vu">Tu tapes « cd ~/Projets/assistant &amp;&amp; git pull &amp;&amp; python main.py » dans le terminal vers 21:03 : 28 fois en 4 semaines.</p><ul class="chiffres"><li>Fréquence : <strong>30 fois par mois</strong></li><li>Dernière fois : <strong>dim. 4 oct. à 21:27</strong></li><li>Temps perdu : <strong>≈ 12 min/mois</strong></li><li>À récupérer : <strong>≈ 11 min/mois</strong></li></ul><div class="solution"><h3>💡 Raccourci de terminal (alias)<span class="etiquette">difficulté : facile</span><span class="etiquette">confiance : 60 %</span><span class="etiquette">sans Claude</span></h3><p>Un raccourci de terminal : un seul mot pour toute la suite de commandes.</p><ol><li>Installe-le : corvees accept y7vsge --installer</li><li>Ouvre un nouveau terminal, puis tape corvee_y7vsge (tu peux le renommer dans alias.zsh).</li></ol><p><button class="copier" data-cible="script-y7vsge">Copier</button><span class="ok">✅ contrôlé</span> · il n'est jamais lancé tout seul</p><pre><code id="script-y7vsge">alias corvee_y7vsge=&#x27;cd ~/Projets/assistant &amp;&amp; git pull &amp;&amp; python main.py&#x27;</code></pre><p><strong>Risques :</strong> Aucun : rien n&#x27;est fait sans toi.</p><p><strong>Pourquoi c'est une corvée :</strong> 28 fois sur 28 jours, toujours les mêmes étapes : environ 12 min par mois.</p></div><p class="commandes"><code>corvees accept y7vsge</code> · <code>corvees accept y7vsge --installer</code> · <code>corvees reject y7vsge</code> · <code>corvees snooze y7vsge 7</code></p></article><article id="xrgc45"><h2>Convertir les .heic en .jpg<span class="id">xrgc45</span></h2><p class="vu">Tu convertis les fichiers .heic en .jpg dans ~/Downloads : 25 fois en 4 semaines.</p><ul class="chiffres"><li>Fréquence : <strong>27 fois par mois</strong></li><li>Dernière fois : <strong>sam. 3 oct. à 22:50</strong></li><li>Temps perdu : <strong>≈ 18 min/mois</strong></li><li>À récupérer : <strong>≈ 16 min/mois</strong></li></ul><div class="solution"><h3>💡 Tâche automatique<span class="etiquette">difficulté : facile</span><span class="etiquette">confiance : 60 %</span><span class="etiquette">sans Claude</span></h3><p>Une petite tâche convertit les nouveaux fichiers avec « sips », l&#x27;outil d&#x27;images de macOS.</p><ol><li>Lis le script ci-dessous.</li><li>Installe-le : corvees accept xrgc45 --installer</li></ol><p><button class="copier" data-cible="script-xrgc45">Copier</button><span class="ok">✅ contrôlé</span> · il n'est jamais lancé tout seul</p><pre><code id="script-xrgc45">#!/bin/zsh
+# Convertit les fichiers .heic en .jpg (l&#x27;original est gardé).
+# Proposé par le détecteur de corvées : lis-le avant de l&#x27;installer.
+setopt null_glob 2&gt;/dev/null || true  # aucun fichier : la boucle ne fait rien
+
+dossier=&quot;$HOME&quot;/&#x27;Downloads&#x27;
+for f in &quot;$dossier&quot;/&#x27;IMG_&#x27;*&#x27;.heic&#x27;; do
+  [ -e &quot;$f&quot; ] || continue
+  sortie=&quot;${f%.*}.jpg&quot;
+  [ -e &quot;$sortie&quot; ] || sips -s format jpeg &quot;$f&quot; --out &quot;$sortie&quot; &gt;/dev/null
+done</code></pre><p><strong>Risques :</strong> L&#x27;original est gardé ; une conversion déjà faite n&#x27;est jamais refaite.</p><p><strong>Pourquoi c'est une corvée :</strong> 25 fois sur 12 jours, toujours les mêmes étapes : environ 18 min par mois.</p></div><p class="commandes"><code>corvees accept xrgc45</code> · <code>corvees accept xrgc45 --installer</code> · <code>corvees reject xrgc45</code> · <code>corvees snooze xrgc45 7</code></p></article><article id="lvyerd"><h2>Ranger les « Facture_*.pdf » dans ~/Documents/Factures<span class="id">lvyerd</span></h2><p class="vu">Tu déplaces les fichiers « Facture_*.pdf » de ~/Downloads vers ~/Documents/Factures : 12 fois en 4 semaines.</p><ul class="chiffres"><li>Fréquence : <strong>13 fois par mois</strong></li><li>Dernière fois : <strong>ven. 2 oct. à 20:30</strong></li><li>Temps perdu : <strong>≈ 13 min/mois</strong></li><li>À récupérer : <strong>≈ 12 min/mois</strong></li></ul><div class="solution"><h3>💡 Tâche automatique<span class="etiquette">difficulté : facile</span><span class="etiquette">confiance : 60 %</span><span class="etiquette">sans Claude</span></h3><p>Une petite tâche range les fichiers dès qu&#x27;ils arrivent dans le dossier de départ.</p><ol><li>Lis le script ci-dessous.</li><li>Installe-le : corvees accept lvyerd --installer</li></ol><p><button class="copier" data-cible="script-lvyerd">Copier</button><span class="ok">✅ contrôlé</span> · il n'est jamais lancé tout seul</p><pre><code id="script-lvyerd">#!/bin/zsh
+# Range les fichiers « Facture_*.pdf ».
+# Proposé par le détecteur de corvées : lis-le avant de l&#x27;installer.
+setopt null_glob 2&gt;/dev/null || true  # aucun fichier : la boucle ne fait rien
+
+de=&quot;$HOME&quot;/&#x27;Downloads&#x27;
+vers=&quot;$HOME&quot;/&#x27;Documents/Factures&#x27;
+mkdir -p &quot;$vers&quot;
+for f in &quot;$de&quot;/&#x27;Facture_&#x27;*&#x27;.pdf&#x27;; do
+  [ -e &quot;$f&quot; ] || continue
+  [ -e &quot;$vers/${f##*/}&quot; ] || mv -n &quot;$f&quot; &quot;$vers/&quot;
+done</code></pre><p><strong>Risques :</strong> Un fichier du même nom déjà rangé n&#x27;est jamais écrasé (il reste où il est).</p><p><strong>Pourquoi c'est une corvée :</strong> 12 fois sur 12 jours, toujours les mêmes étapes : environ 13 min par mois.</p></div><p class="commandes"><code>corvees accept lvyerd</code> · <code>corvees accept lvyerd --installer</code> · <code>corvees reject lvyerd</code> · <code>corvees snooze lvyerd 7</code></p></article><article id="agj5v3"><h2>Ranger les « Devoir_*.pdf » dans ~/Documents/Rendus<span class="id">agj5v3</span></h2><p class="vu">Tu déplaces les fichiers « Devoir_*.pdf » de ~/Documents vers ~/Documents/Rendus : 12 fois en 4 semaines.</p><ul class="chiffres"><li>Fréquence : <strong>13 fois par mois</strong></li><li>Dernière fois : <strong>sam. 3 oct. à 16:50</strong></li><li>Temps perdu : <strong>≈ 13 min/mois</strong></li><li>À récupérer : <strong>≈ 12 min/mois</strong></li></ul><div class="solution"><h3>💡 Tâche automatique<span class="etiquette">difficulté : facile</span><span class="etiquette">confiance : 60 %</span><span class="etiquette">sans Claude</span></h3><p>Une petite tâche range les fichiers dès qu&#x27;ils arrivent dans le dossier de départ.</p><ol><li>Lis le script ci-dessous.</li><li>Installe-le : corvees accept agj5v3 --installer</li></ol><p><button class="copier" data-cible="script-agj5v3">Copier</button><span class="ok">✅ contrôlé</span> · il n'est jamais lancé tout seul</p><pre><code id="script-agj5v3">#!/bin/zsh
+# Range les fichiers « Devoir_*.pdf ».
+# Proposé par le détecteur de corvées : lis-le avant de l&#x27;installer.
+setopt null_glob 2&gt;/dev/null || true  # aucun fichier : la boucle ne fait rien
+
+de=&quot;$HOME&quot;/&#x27;Documents&#x27;
+vers=&quot;$HOME&quot;/&#x27;Documents/Rendus&#x27;
+mkdir -p &quot;$vers&quot;
+for f in &quot;$de&quot;/&#x27;Devoir_&#x27;*&#x27;.pdf&#x27;; do
+  [ -e &quot;$f&quot; ] || continue
+  [ -e &quot;$vers/${f##*/}&quot; ] || mv -n &quot;$f&quot; &quot;$vers/&quot;
+done</code></pre><p><strong>Risques :</strong> Un fichier du même nom déjà rangé n&#x27;est jamais écrasé (il reste où il est).</p><p><strong>Pourquoi c'est une corvée :</strong> 12 fois sur 12 jours, toujours les mêmes étapes : environ 13 min par mois.</p></div><p class="commandes"><code>corvees accept agj5v3</code> · <code>corvees accept agj5v3 --installer</code> · <code>corvees reject agj5v3</code> · <code>corvees snooze agj5v3 7</code></p></article><article id="re3qrg"><h2>Renommer les « releve_*.pdf »<span class="id">re3qrg</span></h2><p class="vu">Tu renommes « releve_*.pdf » en « Releve_Compte_*.pdf » dans ~/Downloads, puis déplaces les fichiers « Releve_Compte_*.pdf » de ~/Downloads vers ~/Documents/Releves : 8 fois en 4 semaines.</p><ul class="chiffres"><li>Fréquence : <strong>8,6 fois par mois</strong></li><li>Dernière fois : <strong>ven. 2 oct. à 10:40</strong></li><li>Temps perdu : <strong>≈ 15 min/mois</strong></li><li>À récupérer : <strong>≈ 14 min/mois</strong></li></ul><div class="solution"><h3>💡 Tâche automatique<span class="etiquette">difficulté : facile</span><span class="etiquette">confiance : 60 %</span><span class="etiquette">sans Claude</span></h3><p>Une petite tâche range les fichiers dès qu&#x27;ils arrivent dans le dossier de départ.</p><ol><li>Lis le script ci-dessous.</li><li>Installe-le : corvees accept re3qrg --installer</li></ol><p><button class="copier" data-cible="script-re3qrg">Copier</button><span class="ok">✅ contrôlé</span> · il n'est jamais lancé tout seul</p><pre><code id="script-re3qrg">#!/bin/zsh
+# Range les fichiers « Releve_Compte_*.pdf ».
+# Proposé par le détecteur de corvées : lis-le avant de l&#x27;installer.
+setopt null_glob 2&gt;/dev/null || true  # aucun fichier : la boucle ne fait rien
+
+de=&quot;$HOME&quot;/&#x27;Downloads&#x27;
+vers=&quot;$HOME&quot;/&#x27;Documents/Releves&#x27;
+mkdir -p &quot;$vers&quot;
+a1=&#x27;releve_&#x27;; a2=&#x27;&#x27;; b1=&#x27;Releve_Compte_&#x27;; b2=&#x27;&#x27;; point=&#x27;.pdf&#x27;
+for f in &quot;$de&quot;/&#x27;releve_&#x27;*&#x27;.pdf&#x27;; do
+  [ -e &quot;$f&quot; ] || continue
+  nom=&quot;${f##*/}&quot;; nom=&quot;${nom%&quot;$point&quot;}&quot;
+  milieu=&quot;${nom#&quot;$a1&quot;}&quot;; milieu=&quot;${milieu%&quot;$a2&quot;}&quot;
+  nouveau=&quot;$de/$b1$milieu$b2$point&quot;
+  [ -e &quot;$nouveau&quot; ] || mv -n &quot;$f&quot; &quot;$nouveau&quot;
+done
+for f in &quot;$de&quot;/&#x27;Releve_Compte_&#x27;*&#x27;.pdf&#x27;; do
+  [ -e &quot;$f&quot; ] || continue
+  [ -e &quot;$vers/${f##*/}&quot; ] || mv -n &quot;$f&quot; &quot;$vers/&quot;
+done</code></pre><p><strong>Risques :</strong> Un fichier du même nom déjà rangé n&#x27;est jamais écrasé (il reste où il est).</p><p><strong>Pourquoi c'est une corvée :</strong> 8 fois sur 8 jours, toujours les mêmes étapes : environ 15 min par mois.</p></div><p class="commandes"><code>corvees accept re3qrg</code> · <code>corvees accept re3qrg --installer</code> · <code>corvees reject re3qrg</code> · <code>corvees snooze re3qrg 7</code></p></article><article id="73pg4d"><h2>Ouvrir Spotify, Code, Terminal à 14:08<span class="id">73pg4d</span></h2><p class="vu">Tu ouvres Spotify, Code et Terminal vers 14:08 : 22 fois en 4 semaines.</p><ul class="chiffres"><li>Fréquence : <strong>24 fois par mois</strong></li><li>Dernière fois : <strong>ven. 2 oct. à 16:26</strong></li><li>Temps perdu : <strong>≈ 7,3 min/mois</strong></li><li>À récupérer : <strong>≈ 6,6 min/mois</strong></li></ul><div class="solution"><h3>💡 Tâche automatique<span class="etiquette">difficulté : facile</span><span class="etiquette">confiance : 60 %</span><span class="etiquette">sans Claude</span></h3><p>Une tâche ouvre tout ça pour toi, chaque jour à 14:08.</p><ol><li>Lis le script ci-dessous.</li><li>Installe-le : corvees accept 73pg4d --installer</li></ol><p><button class="copier" data-cible="script-73pg4d">Copier</button><span class="ok">✅ contrôlé</span> · il n'est jamais lancé tout seul</p><pre><code id="script-73pg4d">#!/bin/zsh
+# Ouvrir Spotify, Code, Terminal à 14:08
+# Proposé par le détecteur de corvées : lis-le avant de l&#x27;installer.
+setopt null_glob 2&gt;/dev/null || true  # aucun fichier : la boucle ne fait rien
+
+open -a &#x27;Spotify&#x27;
+open -a &#x27;Code&#x27;
+open -a &#x27;Terminal&#x27;</code></pre><p><strong>Risques :</strong> Tout s&#x27;ouvrira aussi les jours où tu n&#x27;en as pas besoin : désinstalle la tâche si ça te gêne.</p><p><strong>Pourquoi c'est une corvée :</strong> 22 fois sur 20 jours, toujours les mêmes étapes : environ 7 min par mois.</p></div><p class="commandes"><code>corvees accept 73pg4d</code> · <code>corvees accept 73pg4d --installer</code> · <code>corvees reject 73pg4d</code> · <code>corvees snooze 73pg4d 7</code></p></article><article id="ptpux2"><h2>Copier de Safari vers Numbers<span class="id">ptpux2</span></h2><p class="vu">Tu copies dans Safari pour coller dans Numbers : 25 fois en 4 semaines.</p><ul class="chiffres"><li>Fréquence : <strong>27 fois par mois</strong></li><li>Dernière fois : <strong>sam. 3 oct. à 17:18</strong></li><li>Temps perdu : <strong>≈ 5,4 min/mois</strong></li><li>À récupérer : <strong>≈ 2,7 min/mois</strong></li></ul><div class="solution"><h3>💡 Idée<span class="etiquette">difficulté : moyen</span><span class="etiquette">confiance : 30 %</span><span class="etiquette">sans Claude</span></h3><p>Si c&#x27;est toujours le même genre d&#x27;information, un raccourci (app Raccourcis) peut la reprendre et l&#x27;ajouter à l&#x27;autre appli ; sinon, un historique du presse-papiers t&#x27;évite les allers-retours.</p><p><strong>Risques :</strong> Aucun : rien n&#x27;est fait sans toi.</p><p><strong>Pourquoi c'est une corvée :</strong> 25 fois sur 24 jours, toujours les mêmes étapes : environ 5 min par mois.</p></div><p class="commandes"><code>corvees accept ptpux2</code> · <code>corvees reject ptpux2</code> · <code>corvees snooze ptpux2 7</code></p></article><article id="azkxvl"><h2>Copier de Mail vers Microsoft Excel<span class="id">azkxvl</span></h2><p class="vu">Tu copies dans Mail pour coller dans Microsoft Excel : 22 fois en 4 semaines.</p><ul class="chiffres"><li>Fréquence : <strong>24 fois par mois</strong></li><li>Dernière fois : <strong>ven. 2 oct. à 08:12</strong></li><li>Temps perdu : <strong>≈ 4,7 min/mois</strong></li><li>À récupérer : <strong>≈ 2,4 min/mois</strong></li></ul><div class="solution"><h3>💡 Idée<span class="etiquette">difficulté : moyen</span><span class="etiquette">confiance : 30 %</span><span class="etiquette">sans Claude</span></h3><p>Si c&#x27;est toujours le même genre d&#x27;information, un raccourci (app Raccourcis) peut la reprendre et l&#x27;ajouter à l&#x27;autre appli ; sinon, un historique du presse-papiers t&#x27;évite les allers-retours.</p><p><strong>Risques :</strong> Aucun : rien n&#x27;est fait sans toi.</p><p><strong>Pourquoi c'est une corvée :</strong> 22 fois sur 20 jours, toujours les mêmes étapes : environ 5 min par mois.</p></div><p class="commandes"><code>corvees accept azkxvl</code> · <code>corvees reject azkxvl</code> · <code>corvees snooze azkxvl 7</code></p></article><footer><p>Je propose, tu décides : rien n'est jamais automatisé sans ton accord.</p><p>Tout reste sur ton Mac. Seuls des résumés caviardés partent chez Claude (≈ 0.00 $ ce mois-ci, plafond 2.00 $).</p><p><code>corvees pause</code> coupe tout · <code>corvees purge</code> efface tout · <code>corvees doctor</code> fait le point.</p></footer></main><script>
+document.querySelectorAll('button.copier').forEach(function(b){b.addEventListener('click',function(){
+var t=document.getElementById(b.dataset.cible).innerText;
+if(navigator.clipboard){navigator.clipboard.writeText(t).then(function(){b.textContent='Copié ✓';});}
+});});
+</script></body></html>
