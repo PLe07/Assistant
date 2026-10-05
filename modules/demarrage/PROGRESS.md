@@ -10,7 +10,7 @@ Porte unique : `modules/demarrage/check.sh` (dans le conteneur : `PYTHON=<venv>/
 | P2 Faux Mac + vérité terrain | ✅ | 36 éléments plantés, tous trouvés |
 | P3 Collecteurs S5, S7-S10, modes dégradés | ✅ | 156 tests, couverture 98,4 % |
 | P4 Mesure (session, croisière, énergie, veille, zsh) | ✅ | secondes de processeur exactes sur le faux Mac ; 16 ms par relevé |
-| P5 Scores, verdicts, connaissances, gains | ⏳ | |
+| P5 Scores, verdicts, connaissances, gains | ✅ | faux Mac n° 1 : 100 % ; 2e faux Mac : 5/5 graines à 100 % |
 | P6 Actions réversibles + sécurité | ⏳ | |
 | P7 Rapport HTML, CLI, notifications, surveillance | ⏳ | |
 | P8 Bout en bout, performance | ⏳ | |
@@ -149,8 +149,31 @@ $ PYTHON=…/venv/bin/python modules/demarrage/check.sh
 CHECK OK
 ```
 
+## P5 — Scores, verdicts, connaissances, gains (✅)
+
+-  : métriques depuis la base, score d'impact pondéré + bonus veille/boucle, utilité (D-26).
+-  : 8 règles dans l'ordre de la config, chacune testée seule (cas positifs et négatifs),
+  garde-fous Apple / inconnu, action selon la source (D-23 à D-25).
+-  : 82 entrées en français (tous les logiciels demandés au §5), rangées du plus
+  précis au plus général (D-27) ; .
+- ,  (classement, résumé, éditeur affiché, impact estimé).
+- Juge du §9.2 () : scan à la connexion, 5 min d'ouverture de session,
+  30 min de croisière, analyse, puis comparaison à la vérité terrain. Critères : 100 % des éléments plantés avec
+  le bon verdict et la bonne action, 0 Apple avec une action, 0 inconnu autre que « vérifier », les 3 plus lourds
+  en tête, pas de plantage sur un plist corrompu.
+
+Faux Mac n° 1 (éléments non Apple ; les 18 éléments Apple sont tous 🍎 sans action) :
+
+
+
+Le seul écart rencontré pendant le réglage : un daemon embarqué déjà inactif recevait encore des
+« instructions ». L'action d'un élément inactif passe maintenant avant celle de sa source.
+Le 2e faux Mac (aléatoire, 5 graines) a été écrit après ce réglage et a réussi du premier coup.
+
+
+
 ## Prochaine étape
 
-P5 : scores d'impact et d'utilité, règles de verdict (dans la config, testées une par une),
-`analyse/connaissances.json` (≥ 60 entrées), gains ; critères du §9.2 sur le faux Mac n° 1, puis 2e faux Mac
-aléatoire (5 graines).
+P6 : actions.  (simulation par défaut, ), quarantaine avec manifeste, retrait d'un
+élément d'ouverture, instructions pour les éléments globaux, refus Apple, , journal, vérification de
+l'état avant d'agir ; tests de sécurité (subprocess intercepté).

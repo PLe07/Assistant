@@ -67,3 +67,21 @@ def localiser(systeme: Systeme, programme: str, repertoire: str | None = None) -
         if existe(systeme, candidat):
             return candidat
     return None
+
+
+def absent_certain(systeme: Systeme, chemin: str | None) -> bool:
+    """Vrai si le programme manque pour de bon : son plus proche dossier existant se lit. Faux si ce dossier nous
+    est fermé (on ne voit pas dedans : on ne conclut pas)."""
+    if not chemin or not chemin.startswith("/"):
+        return False
+    for parent in PurePosixPath(chemin).parents:
+        reel = systeme.chemin(str(parent))
+        try:
+            if reel.is_dir():
+                next(iter(reel.iterdir()), None)
+                return True
+            if reel.exists():
+                return True  # un fichier là où on attendait un dossier : le chemin est cassé
+        except OSError:
+            return False
+    return True

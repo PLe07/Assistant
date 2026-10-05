@@ -197,3 +197,57 @@ Quand plusieurs fiches partagent une app, l'élément d'ouverture passe d'abord,
   fichiers ne sont jamais ouverts en écriture. C'est vérifié avec le vrai zsh dans `tests/demarrage/e2e`.
 - **psutil** n'est toujours pas utilisé (D-06) : `ps` donne déjà le temps processeur cumulé, et un processus root
   qu'on ne peut pas lire n'existe pas pour ps (pas d'erreur à gérer).
+
+## 2026-10-05 · P5 — Scores, verdicts, connaissances, gains
+
+**D-23 · L'action dépend de la source, le verdict du reste.**
+Le verdict dit quoi en penser, l'action dit comment agir, et l'action vient de la source :
+| Cas | Action |
+|---|---|
+| 🍎 Apple, ou « c'est moi » | aucune |
+| ⚠️ Inconnu | vérifier (jamais supprimer) |
+| déjà inactif | aucune |
+| élément d'ouverture de session (S5) | Réglages, ou System Events si permis |
+| global (S2, S4 daemons, S7, S8) ou cron | instructions à recopier |
+| 👻 Orphelin dans ~/Library/LaunchAgents | quarantaine |
+| autre cas | `launchctl bootout` + `disable` |
+Le juge (`juger`) impose aussi deux garde-fous en dernier, quel que soit l'ordre des règles dans la config :
+- un verdict 🍎 n'a jamais d'action ;
+- un verdict ⚠️ n'a que « vérifier ».
+
+**D-24 · Orphelin : seulement quand c'est sûr.**
+Un programme absent n'est déclaré 👻 que si son plus proche dossier existant se lit (`absent_certain`). Sinon, on
+ne voit peut-être simplement pas dedans : le verdict est ⚠️ « on ne conclut pas ».
+Deux autres cas d'orphelin exigent une signature valide, sinon c'est ⚠️ (on ne pousse jamais à se débarrasser de
+ce qu'on ne connaît pas) :
+- une app associée (AssociatedBundleIdentifiers) désinstallée ;
+- un assistant privilégié que plus rien ne lance.
+
+**D-25 · « Inconnu » : ce qui compte comme éditeur connu.**
+Est connu :
+- Developer ID, App Store ou Apple ;
+- une extension système avec son équipe (macOS ne l'active que notarisée) ;
+- une signature ad hoc dont la base de connaissances nomme l'éditeur (services Homebrew) ;
+- un programme de macOS lancé par une fiche tierce, seulement si la base de connaissances connaît la fiche.
+
+Est inconnu : non signé, signature invalide, ad hoc anonyme, faux « com.apple », plist illisible, programme
+non dit. Le script d'une tâche cron est non signé, donc ⚠️ : c'est souvent le tien, et le rapport le dit.
+
+**D-26 · Mesures, scores et estimations.**
+- **Processeur à l'ouverture** : la médiane des 5 dernières sessions (0 s pour une session où l'élément n'a pas
+  tourné).
+- **Croisière** : secondes de processeur / durée couverte sur 7 jours. Les trous de plus de 3 pas (veille, Mac
+  éteint) sont exclus, avec le relevé qui les suit.
+- **Mémoire** : la médiane quand il tourne.
+- **Veille** : « empêche la veille » dès 5 % des relevés.
+- **Pas encore mesuré** : l'impact typique de la base de connaissances (faible 3, moyen 12, fort 30). Il est
+  affiché « estimé » et ne compte pas dans « te coûtent vraiment ».
+- **Élément inactif** : impact 0.
+- **« helper »** est retiré des motifs de mise à jour : l'assistant réseau de Docker ou d'un VPN n'en est pas un.
+  Quand la base de connaissances reconnaît l'élément, c'est elle qui dit si c'est une mise à jour.
+
+**D-27 · La base de connaissances, rangée du plus précis au plus général.**
+82 entrées en français. La première entrée dont un motif correspond l'emporte.
+Un test vérifie qu'aucune entrée générale ne masque une entrée plus précise placée après elle : par exemple,
+« Mise à jour de OneDrive » avant « OneDrive », et « Docker (réseau et socket) » avant « Docker Desktop ».
+Un élément absent de la base reçoit une description générique qui ne dit que ce qu'on sait.

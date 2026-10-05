@@ -71,15 +71,18 @@ def test_attributs_des_elements_plantes(inventaire):
     assert fiche(inventaire, "agent_global", "com.exemple.doublon").doublon
     assert fiche(inventaire, "agent_utilisateur", "com.assistant.superviseur").c_est_moi
     vpn = fiche(inventaire, "daemon_global", "com.exemple.vpn.daemon")
-    assert vpn.charge is None and vpn.editeur == "Exemple VPN SAS"
+    assert vpn.charge is False and vpn.actif and vpn.editeur == "Exemple VPN SAS" and not vpn.doublon
     zoom = fiche(inventaire, "daemon_app", "us.zoom.ZoomDaemon")
-    assert zoom.actif is None and zoom.app_parente == "/Applications/zoom.us.app"
+    assert zoom.charge is False and zoom.actif is False and zoom.app_parente == "/Applications/zoom.us.app"
+    assert fiche(inventaire, "extension", "com.exemple.vpn.tunnel").editeur == "Exemple VPN SAS"
+    assert fiche(inventaire, "agent_utilisateur", "com.exemple.desinstalle.agent").details["absent_certain"]
 
 
-def test_domaine_systeme_lisible(tmp_path, reglages):
-    inv = scan.scanner(construire(tmp_path / "mac", systeme_lisible=True).mac, reglages)
+def test_domaine_systeme_illisible(tmp_path, reglages):
+    inv = scan.scanner(construire(tmp_path / "mac", systeme_lisible=False).mac, reglages)
     zoom = fiche(inv, "daemon_app", "us.zoom.ZoomDaemon")
-    assert zoom.charge is False and zoom.actif is False  # enregistré nulle part : inactif
+    assert zoom.charge is None and zoom.actif is None  # on ne devine pas
+    assert fiche(inv, "daemon_global", "com.exemple.vpn.daemon").charge is None
 
 
 def test_identifiants_stables_et_uniques(faux, reglages, inventaire):

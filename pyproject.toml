@@ -11,6 +11,7 @@ select = ["E", "F", "W", "I", "B", "UP"]
 [tool.ruff.lint.per-file-ignores]
 # Une table de données (chemins macOS complets, un élément planté par bloc) : la couper la rendrait illisible.
 "tests/demarrage/faux_mac/construire.py" = ["E501"]
+"tests/demarrage/faux_mac/aleatoire.py" = ["E501"]
 
 [tool.mypy]
 python_version = "3.10"

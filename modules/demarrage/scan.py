@@ -27,6 +27,7 @@ from modules.demarrage.collecteurs import (
 from modules.demarrage.collecteurs.applications import Index
 from modules.demarrage.collecteurs.launchd_etat import EtatLaunchd
 from modules.demarrage.collecteurs.plists import app_parente, est_systeme
+from modules.demarrage.fichiers import absent_certain
 from modules.demarrage.modele import Collecteur, Fiche, Inventaire, identifiant
 from modules.demarrage.signatures import CacheSignatures, dernieres_utilisations, signer
 from modules.demarrage.systeme import Systeme
@@ -112,7 +113,10 @@ def inconnus_charges(systeme: Systeme, fiches: list[Fiche], etat: EtatLaunchd) -
 def marquer_doublons(fiches: list[Fiche]) -> None:
     par_label: dict[str, list[Fiche]] = defaultdict(list)
     for f in fiches:
-        par_label[f.label].append(f)
+        if (
+            f.chemin_plist or f.source == "launchd"
+        ):  # un assistant (S8) qui porte le nom de son daemon n'est pas un doublon
+            par_label[f.label].append(f)
     for groupe in par_label.values():
         if len(groupe) < 2:
             continue
@@ -171,6 +175,16 @@ def appliquer_signatures(systeme: Systeme, fiches: list[Fiche], cache: CacheSign
     for f in fiches:
         if not f.est_apple and f.interprete and est_systeme(f.interprete) and f.signature == "inconnue":
             f.details["script"] = True
+
+
+def appliquer_extensions(fiches: list[Fiche]) -> None:
+    """Une extension système n'est activée que signée et notarisée : son équipe suffit, et si une autre fiche de la
+    même équipe nomme l'éditeur, on le reprend."""
+    par_equipe = {f.equipe: f.editeur for f in fiches if f.equipe and f.editeur}
+    for f in fiches:
+        if f.source == "extension" and f.equipe:
+            f.signature = "developpeur"
+            f.editeur = par_equipe.get(f.equipe)
 
 
 def appliquer_utilisations(systeme: Systeme, fiches: list[Fiche], delai: float) -> None:
@@ -259,11 +273,14 @@ def scanner(
 
     for f in inventaire.fiches:
         f.c_est_moi = f.label.startswith(PREFIXE_MOI)
+        if f.programme_existe is False:
+            f.details["absent_certain"] = absent_certain(systeme, f.programme)
     marquer_doublons(inventaire.fiches)
     for nom, fn2 in [
         ("apps parentes", lambda: appliquer_apps(inventaire.fiches, index)),
         ("signatures", lambda: appliquer_signatures(systeme, inventaire.fiches, cache, delais["codesign_s"])),
         ("relances", lambda: appliquer_relances(systeme, inventaire.fiches)),
+        ("extensions", lambda: appliquer_extensions(inventaire.fiches)),
         ("utilisation des apps", lambda: appliquer_utilisations(systeme, inventaire.fiches, delais["codesign_s"])),
     ]:
         try:

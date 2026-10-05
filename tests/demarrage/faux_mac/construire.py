@@ -358,7 +358,7 @@ def _apple(mac: FauxMac) -> tuple[list[Plante], list[Processus]]:
     return plantes, autres
 
 
-def construire(racine: Path, systeme_lisible: bool = False) -> Construction:
+def construire(racine: Path, systeme_lisible: bool = True) -> Construction:
     mac = FauxMac(racine)
     plantes, autres = _apple(mac)
     adobe = "/Applications/Adobe Creative Cloud/Adobe Creative Cloud.app"
@@ -510,9 +510,10 @@ def construire(racine: Path, systeme_lisible: bool = False) -> Construction:
         Plante("com.exemple.vpn.tunnel", "extension", Attendu("utile", "instructions")),
         # S8 : l'assistant du VPN (lancé par son daemon) et un reste sans daemon.
         Plante("com.exemple.vpn.daemon", "assistant_privilegie", Attendu("utile", "instructions")),
-        Plante("com.ancien.helper", "assistant_privilegie", Attendu("orphelin", "instructions")),
+        Plante("com.ancien.helper", "assistant_privilegie", Attendu("orphelin", "instructions"),
+               signatures={"/Library/PrivilegedHelperTools/com.ancien.helper": signe_par("Ancien Éditeur", "ANCIEN0001")}),
         # S9 : une tâche cron à toi (script non signé : à vérifier), une autre dont le programme a disparu.
-        Plante("cron : sauvegarde.sh", "cron", Attendu("inconnu", "instructions"), programmes=[f"{MAISON}/bin/sauvegarde.sh"]),
+        Plante("cron : sauvegarde.sh", "cron", Attendu("inconnu", "verifier"), programmes=[f"{MAISON}/bin/sauvegarde.sh"]),
         Plante("cron : absent", "cron", Attendu("orphelin", "instructions")),
     ]  # fmt: skip
     extensions = (

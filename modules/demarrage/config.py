@@ -35,13 +35,21 @@ DEFAUTS: dict[str, Any] = {
         "bonus_veille": 30.0,  # empêche le Mac de se mettre en veille
         "bonus_boucle": 15.0,  # relancé en boucle par KeepAlive, avec des sorties en erreur
         "relances_boucle": 5,  # à partir de combien de lancements on parle de boucle
+        # Pas encore mesuré : l'impact typique de la base de connaissances, affiché « estimé ».
+        "impact_estime": {"faible": 3.0, "moyen": 12.0, "fort": 30.0},
     },
     "verdicts": {
         "impact_significatif": 20.0,  # au-delà : il coûte vraiment
         "impact_negligeable": 5.0,  # en dessous : on peut le garder sans y penser
         "utilite_jours": 30,  # app pas ouverte depuis plus longtemps : utilité faible
         # Un simple outil de mise à jour peut tourner quand on ouvre l'app plutôt qu'au démarrage.
-        "motifs_mise_a_jour": ["updat", "keystone", "autoupdate", "helper", "agent.update", "softwareupdate"],
+        # (« helper » seul est trop large : l'assistant réseau de Docker ou d'un VPN n'est pas une mise à jour.)
+        "motifs_mise_a_jour": ["updat", "keystone", "autoupdate", "shipit", "softwareupdate"],
+        "veille_part_min": 0.05,  # « empêche la veille » s'il la bloque dans au moins 5 % des relevés
+        "fenetre_jours": 7,  # les mesures de croisière des 7 derniers jours
+        "sessions_retenues": 5,  # la médiane des 5 dernières ouvertures de session
+        # L'ordre des règles de verdict (la première qui s'applique l'emporte), voir analyse/verdicts.py.
+        "ordre": ["apple", "moi", "orphelin", "inconnu", "inactif", "mise_a_jour", "lourd_inutile", "utile"],
     },
     "notifications": {"silence_debut": "23:00", "silence_fin": "08:00", "vers_journal": False},
     "delais": {"commande_s": 10.0, "osascript_s": 10.0, "journal_systeme_s": 15.0, "codesign_s": 5.0},

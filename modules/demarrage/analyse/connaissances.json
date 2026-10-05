@@ -1,0 +1,1025 @@
+{
+ "version": 1,
+ "elements": [
+  {
+   "motifs": [
+    "com\\.assistant\\."
+   ],
+   "nom": "L'Assistant (c'est moi)",
+   "role": "Fait tourner tes modules : tri des mails, corvées, Nettoyeur de démarrage et les autres.",
+   "impact": "faible",
+   "recommandation": "garder",
+   "effet": "Plus aucun module de l'Assistant ne tournerait en fond.",
+   "categorie": "assistant"
+  },
+  {
+   "motifs": [
+    "com\\.google\\.keystone",
+    "GoogleSoftwareUpdate",
+    "com\\.google\\.GoogleUpdater"
+   ],
+   "nom": "Google Updater (Keystone)",
+   "role": "Met à jour Chrome et les autres logiciels Google en arrière-plan.",
+   "impact": "faible",
+   "recommandation": "desactiver",
+   "effet": "L'app se met encore à jour quand tu l'ouvres (ou depuis son menu « Rechercher des mises à jour »).",
+   "categorie": "mise_a_jour",
+   "editeur": "Google LLC"
+  },
+  {
+   "motifs": [
+    "com\\.google\\.Chrome$",
+    "/Google Chrome\\.app"
+   ],
+   "nom": "Google Chrome",
+   "role": "Le navigateur de Google, ouvert dès la connexion.",
+   "impact": "fort",
+   "recommandation": "au_choix",
+   "effet": "Chrome ne s'ouvre plus tout seul ; il marche normalement quand tu le lances.",
+   "categorie": "navigateur",
+   "editeur": "Google LLC"
+  },
+  {
+   "motifs": [
+    "com\\.google\\.drivefs",
+    "Google Drive\\.app"
+   ],
+   "nom": "Google Drive",
+   "role": "Synchronise tes fichiers Google Drive avec le Mac.",
+   "impact": "moyen",
+   "recommandation": "au_choix",
+   "effet": "Tes fichiers Drive ne se synchronisent que quand l'app est ouverte.",
+   "categorie": "synchro",
+   "editeur": "Google LLC"
+  },
+  {
+   "motifs": [
+    "com\\.microsoft\\.update\\.agent",
+    "com\\.microsoft\\.autoupdate",
+    "Microsoft AutoUpdate"
+   ],
+   "nom": "Microsoft AutoUpdate",
+   "role": "Cherche les mises à jour d'Office, Teams, Edge et des autres apps Microsoft.",
+   "impact": "faible",
+   "recommandation": "desactiver",
+   "effet": "L'app se met encore à jour quand tu l'ouvres (ou depuis son menu « Rechercher des mises à jour »).",
+   "categorie": "mise_a_jour",
+   "editeur": "Microsoft Corporation"
+  },
+  {
+   "motifs": [
+    "com\\.microsoft\\.office\\.licensing"
+   ],
+   "nom": "Licence Microsoft Office",
+   "role": "Vérifie la licence d'Office ; Office en a besoin pour s'ouvrir sans erreur.",
+   "impact": "faible",
+   "recommandation": "garder",
+   "effet": "Office peut redemander ta licence ou refuser de s'ouvrir.",
+   "categorie": "outil",
+   "editeur": "Microsoft Corporation"
+  },
+  {
+   "motifs": [
+    "com\\.microsoft\\.teams"
+   ],
+   "nom": "Microsoft Teams",
+   "role": "La messagerie et les réunions Microsoft, ouvertes dès la connexion.",
+   "impact": "fort",
+   "recommandation": "au_choix",
+   "effet": "Teams ne s'ouvre plus tout seul : tu ne reçois ses messages qu'une fois lancé.",
+   "categorie": "communication",
+   "editeur": "Microsoft Corporation"
+  },
+  {
+   "motifs": [
+    "com\\.microsoft\\.OneDriveStandaloneUpdater",
+    "com\\.microsoft\\.OneDriveUpdater"
+   ],
+   "nom": "Mise à jour de OneDrive",
+   "role": "Met à jour OneDrive en arrière-plan.",
+   "impact": "faible",
+   "recommandation": "desactiver",
+   "effet": "L'app se met encore à jour quand tu l'ouvres (ou depuis son menu « Rechercher des mises à jour »).",
+   "categorie": "mise_a_jour",
+   "editeur": "Microsoft Corporation"
+  },
+  {
+   "motifs": [
+    "com\\.microsoft\\.OneDrive"
+   ],
+   "nom": "OneDrive",
+   "role": "Synchronise tes fichiers OneDrive avec le Mac.",
+   "impact": "moyen",
+   "recommandation": "au_choix",
+   "effet": "Tes fichiers OneDrive ne se synchronisent que quand l'app est ouverte.",
+   "categorie": "synchro",
+   "editeur": "Microsoft Corporation"
+  },
+  {
+   "motifs": [
+    "com\\.microsoft\\.EdgeUpdater",
+    "com\\.microsoft\\.edgemac\\.update"
+   ],
+   "nom": "Mise à jour de Microsoft Edge",
+   "role": "Met à jour le navigateur Edge.",
+   "impact": "faible",
+   "recommandation": "desactiver",
+   "effet": "L'app se met encore à jour quand tu l'ouvres (ou depuis son menu « Rechercher des mises à jour »).",
+   "categorie": "mise_a_jour",
+   "editeur": "Microsoft Corporation"
+  },
+  {
+   "motifs": [
+    "com\\.microsoft\\.VSCode\\.ShipIt"
+   ],
+   "nom": "Mise à jour de VS Code",
+   "role": "Installe les mises à jour de Visual Studio Code.",
+   "impact": "faible",
+   "recommandation": "desactiver",
+   "effet": "L'app se met encore à jour quand tu l'ouvres (ou depuis son menu « Rechercher des mises à jour »).",
+   "categorie": "mise_a_jour",
+   "editeur": "Microsoft Corporation"
+  },
+  {
+   "motifs": [
+    "com\\.microsoft\\.VSCode"
+   ],
+   "nom": "Visual Studio Code",
+   "role": "L'éditeur de code de Microsoft.",
+   "impact": "moyen",
+   "recommandation": "au_choix",
+   "effet": "VS Code ne s'ouvre plus tout seul.",
+   "categorie": "developpement",
+   "editeur": "Microsoft Corporation"
+  },
+  {
+   "motifs": [
+    "com\\.microsoft\\.wdav"
+   ],
+   "nom": "Microsoft Defender",
+   "role": "L'antivirus de Microsoft (souvent installé par une entreprise).",
+   "impact": "moyen",
+   "recommandation": "garder",
+   "effet": "Ton Mac n'est plus protégé par Defender ; ton entreprise peut l'exiger.",
+   "categorie": "securite",
+   "editeur": "Microsoft Corporation"
+  },
+  {
+   "motifs": [
+    "com\\.adobe\\.ARMDC",
+    "com\\.adobe\\.ARM\\.",
+    "Adobe Acrobat Updater"
+   ],
+   "nom": "Mise à jour d'Adobe Acrobat",
+   "role": "Met à jour Acrobat et Acrobat Reader.",
+   "impact": "faible",
+   "recommandation": "desactiver",
+   "effet": "L'app se met encore à jour quand tu l'ouvres (ou depuis son menu « Rechercher des mises à jour »).",
+   "categorie": "mise_a_jour",
+   "editeur": "Adobe Inc."
+  },
+  {
+   "motifs": [
+    "com\\.adobe\\.ccxprocess"
+   ],
+   "nom": "Adobe CCXProcess",
+   "role": "Prépare des contenus pour les apps Creative Cloud (modèles, tutoriels).",
+   "impact": "moyen",
+   "recommandation": "desactiver",
+   "effet": "Les apps Adobe le relancent quand elles en ont besoin.",
+   "categorie": "outil",
+   "editeur": "Adobe Inc."
+  },
+  {
+   "motifs": [
+    "com\\.adobe\\.GC\\.",
+    "com\\.adobe\\.AGS",
+    "AdobeGCClient",
+    "com\\.adobe\\.agsservice"
+   ],
+   "nom": "Adobe Genuine Service",
+   "role": "Vérifie que tes logiciels Adobe sont authentiques (licence).",
+   "impact": "faible",
+   "recommandation": "au_choix",
+   "effet": "Adobe peut afficher des rappels de licence ; tes apps continuent de marcher.",
+   "categorie": "outil",
+   "editeur": "Adobe Inc."
+  },
+  {
+   "motifs": [
+    "com\\.adobe\\.AdobeCreativeCloud",
+    "com\\.adobe\\.acc\\.",
+    "Adobe Creative Cloud"
+   ],
+   "nom": "Adobe Creative Cloud",
+   "role": "Le gestionnaire des apps Adobe (installation, mises à jour, synchronisation des polices et fichiers).",
+   "impact": "fort",
+   "recommandation": "desactiver",
+   "effet": "Creative Cloud s'ouvrira quand tu lances une app Adobe ; les polices synchronisées restent disponibles.",
+   "categorie": "outil",
+   "editeur": "Adobe Inc."
+  },
+  {
+   "motifs": [
+    "us\\.zoom\\.updater",
+    "us\\.zoom\\.ZoomDaemon",
+    "ZoomUpdater"
+   ],
+   "nom": "Mise à jour de Zoom",
+   "role": "Installe les mises à jour de Zoom.",
+   "impact": "faible",
+   "recommandation": "desactiver",
+   "effet": "L'app se met encore à jour quand tu l'ouvres (ou depuis son menu « Rechercher des mises à jour »).",
+   "categorie": "mise_a_jour",
+   "editeur": "Zoom Video Communications, Inc."
+  },
+  {
+   "motifs": [
+    "us\\.zoom\\.xos",
+    "zoom\\.us\\.app"
+   ],
+   "nom": "Zoom",
+   "role": "Les visioconférences Zoom, ouvertes dès la connexion.",
+   "impact": "moyen",
+   "recommandation": "au_choix",
+   "effet": "Zoom ne s'ouvre plus tout seul ; les liens de réunion l'ouvrent quand même.",
+   "categorie": "communication",
+   "editeur": "Zoom Video Communications, Inc."
+  },
+  {
+   "motifs": [
+    "com\\.spotify\\.webhelper"
+   ],
+   "nom": "Spotify Web Helper",
+   "role": "Un ancien composant de Spotify qui ouvrait l'app depuis le navigateur.",
+   "impact": "faible",
+   "recommandation": "desactiver",
+   "effet": "Rien de visible : les versions récentes de Spotify ne l'utilisent plus.",
+   "categorie": "divertissement",
+   "editeur": "Spotify AB"
+  },
+  {
+   "motifs": [
+    "com\\.spotify\\.client"
+   ],
+   "nom": "Spotify",
+   "role": "La musique en streaming, ouverte dès la connexion.",
+   "impact": "moyen",
+   "recommandation": "desactiver",
+   "effet": "Spotify ne s'ouvre plus tout seul ; tu le lances quand tu veux de la musique.",
+   "categorie": "divertissement",
+   "editeur": "Spotify AB"
+  },
+  {
+   "motifs": [
+    "com\\.deezer\\."
+   ],
+   "nom": "Deezer",
+   "role": "La musique en streaming, ouverte dès la connexion.",
+   "impact": "moyen",
+   "recommandation": "desactiver",
+   "effet": "Deezer ne s'ouvre plus tout seul.",
+   "categorie": "divertissement"
+  },
+  {
+   "motifs": [
+    "com\\.hnc\\.Discord",
+    "Discord\\.app"
+   ],
+   "nom": "Discord",
+   "role": "La messagerie vocale et écrite, ouverte dès la connexion.",
+   "impact": "moyen",
+   "recommandation": "au_choix",
+   "effet": "Discord ne s'ouvre plus tout seul : tu ne reçois ses messages qu'une fois lancé.",
+   "categorie": "communication"
+  },
+  {
+   "motifs": [
+    "com\\.valvesoftware\\.steam"
+   ],
+   "nom": "Steam",
+   "role": "La boutique et le lanceur de jeux de Valve.",
+   "impact": "moyen",
+   "recommandation": "desactiver",
+   "effet": "Steam ne s'ouvre plus tout seul ; les mises à jour de jeux attendent que tu l'ouvres.",
+   "categorie": "jeux",
+   "editeur": "Valve Corporation"
+  },
+  {
+   "motifs": [
+    "com\\.epicgames\\."
+   ],
+   "nom": "Epic Games Launcher",
+   "role": "La boutique et le lanceur de jeux d'Epic Games.",
+   "impact": "fort",
+   "recommandation": "desactiver",
+   "effet": "Le lanceur ne s'ouvre plus tout seul.",
+   "categorie": "jeux",
+   "editeur": "Epic Games"
+  },
+  {
+   "motifs": [
+    "com\\.dropbox\\.DropboxUpdater",
+    "com\\.dropbox\\.dropboxmacupdate",
+    "DropboxMacUpdate"
+   ],
+   "nom": "Mise à jour de Dropbox",
+   "role": "Met à jour Dropbox.",
+   "impact": "faible",
+   "recommandation": "desactiver",
+   "effet": "L'app se met encore à jour quand tu l'ouvres (ou depuis son menu « Rechercher des mises à jour »).",
+   "categorie": "mise_a_jour",
+   "editeur": "Dropbox, Inc."
+  },
+  {
+   "motifs": [
+    "com\\.getdropbox\\.dropbox",
+    "Dropbox\\.app"
+   ],
+   "nom": "Dropbox",
+   "role": "Synchronise tes fichiers Dropbox avec le Mac.",
+   "impact": "moyen",
+   "recommandation": "au_choix",
+   "effet": "Tes fichiers Dropbox ne se synchronisent que quand l'app est ouverte.",
+   "categorie": "synchro",
+   "editeur": "Dropbox, Inc."
+  },
+  {
+   "motifs": [
+    "com\\.box\\.desktop"
+   ],
+   "nom": "Box Drive",
+   "role": "Synchronise tes fichiers Box avec le Mac.",
+   "impact": "moyen",
+   "recommandation": "au_choix",
+   "effet": "Tes fichiers Box ne se synchronisent que quand l'app est ouverte.",
+   "categorie": "synchro"
+  },
+  {
+   "motifs": [
+    "nz\\.co\\.mega\\."
+   ],
+   "nom": "MEGA",
+   "role": "Synchronise tes fichiers MEGA avec le Mac.",
+   "impact": "moyen",
+   "recommandation": "au_choix",
+   "effet": "Tes fichiers MEGA ne se synchronisent que quand l'app est ouverte.",
+   "categorie": "synchro"
+  },
+  {
+   "motifs": [
+    "com\\.apple\\.bird",
+    "com\\.apple\\.cloudd"
+   ],
+   "nom": "iCloud Drive (Apple)",
+   "role": "Synchronise iCloud Drive, Photos et les données de tes apps avec iCloud.",
+   "impact": "moyen",
+   "recommandation": "garder",
+   "effet": "Fait partie de macOS : on n'y touche pas.",
+   "categorie": "apple",
+   "editeur": "Apple"
+  },
+  {
+   "motifs": [
+    "com\\.logi\\.optionsplus\\.updater",
+    "com\\.logitech\\..*[Uu]pdat"
+   ],
+   "nom": "Mise à jour de Logi Options+",
+   "role": "Met à jour le logiciel des souris et claviers Logitech.",
+   "impact": "faible",
+   "recommandation": "desactiver",
+   "effet": "L'app se met encore à jour quand tu l'ouvres (ou depuis son menu « Rechercher des mises à jour »).",
+   "categorie": "mise_a_jour",
+   "editeur": "Logitech Inc."
+  },
+  {
+   "motifs": [
+    "com\\.logi\\.",
+    "com\\.logitech\\."
+   ],
+   "nom": "Logi Options+",
+   "role": "Les réglages de ta souris ou de ton clavier Logitech (boutons, défilement).",
+   "impact": "moyen",
+   "recommandation": "garder",
+   "effet": "Les boutons personnalisés de ta souris ou de ton clavier Logitech ne marchent plus.",
+   "categorie": "pilote",
+   "editeur": "Logitech Inc."
+  },
+  {
+   "motifs": [
+    "com\\.docker\\.vmnetd",
+    "com\\.docker\\.socket"
+   ],
+   "nom": "Docker (réseau et socket)",
+   "role": "Donne à Docker Desktop l'accès réseau et le canal de commande dont il a besoin.",
+   "impact": "moyen",
+   "recommandation": "au_choix",
+   "effet": "Docker Desktop les recrée à son prochain lancement.",
+   "categorie": "developpement",
+   "editeur": "Docker Inc"
+  },
+  {
+   "motifs": [
+    "com\\.docker\\."
+   ],
+   "nom": "Docker Desktop",
+   "role": "Fait tourner les conteneurs Docker (une machine virtuelle qui garde souvent 1 à 4 Go de mémoire).",
+   "impact": "fort",
+   "recommandation": "au_choix",
+   "effet": "Docker ne démarre plus tout seul ; lance-le quand tu en as besoin.",
+   "categorie": "developpement",
+   "editeur": "Docker Inc"
+  },
+  {
+   "motifs": [
+    "ollama",
+    "com\\.electron\\.ollama"
+   ],
+   "nom": "Ollama",
+   "role": "Fait tourner des modèles d'IA en local ; un modèle chargé occupe plusieurs Go de mémoire.",
+   "impact": "fort",
+   "recommandation": "au_choix",
+   "effet": "Ollama ne démarre plus tout seul ; lance-le quand tu en as besoin.",
+   "categorie": "developpement"
+  },
+  {
+   "motifs": [
+    "com\\.raycast\\.macos"
+   ],
+   "nom": "Raycast",
+   "role": "Le lanceur d'apps et de commandes (remplace Spotlight).",
+   "impact": "faible",
+   "recommandation": "garder",
+   "effet": "Ton raccourci Raycast ne répond plus tant que l'app n'est pas ouverte.",
+   "categorie": "outil",
+   "editeur": "Raycast Technologies"
+  },
+  {
+   "motifs": [
+    "com\\.runningwithcrayons\\.Alfred"
+   ],
+   "nom": "Alfred",
+   "role": "Le lanceur d'apps et de commandes (remplace Spotlight).",
+   "impact": "faible",
+   "recommandation": "garder",
+   "effet": "Ton raccourci Alfred ne répond plus tant que l'app n'est pas ouverte.",
+   "categorie": "outil",
+   "editeur": "Running with Crayons Ltd"
+  },
+  {
+   "motifs": [
+    "com\\.nordvpn\\.",
+    "NordVPN"
+   ],
+   "nom": "NordVPN",
+   "role": "Le VPN de Nord Security et ses assistants.",
+   "impact": "moyen",
+   "recommandation": "au_choix",
+   "effet": "Le VPN ne se connecte plus tout seul au démarrage.",
+   "categorie": "securite",
+   "editeur": "Nord Security"
+  },
+  {
+   "motifs": [
+    "io\\.tailscale\\."
+   ],
+   "nom": "Tailscale",
+   "role": "Le réseau privé Tailscale entre tes appareils.",
+   "impact": "faible",
+   "recommandation": "garder",
+   "effet": "Tes appareils Tailscale ne te voient plus tant que l'app n'est pas ouverte.",
+   "categorie": "securite",
+   "editeur": "Tailscale Inc."
+  },
+  {
+   "motifs": [
+    "com\\.cisco\\."
+   ],
+   "nom": "Cisco Secure Client (AnyConnect)",
+   "role": "Le VPN professionnel de Cisco, souvent imposé par une entreprise.",
+   "impact": "moyen",
+   "recommandation": "garder",
+   "effet": "La connexion au réseau de ton entreprise ne s'établit plus.",
+   "categorie": "securite",
+   "editeur": "Cisco"
+  },
+  {
+   "motifs": [
+    "com\\.macpaw\\.CleanMyMac",
+    "com\\.macpaw\\.cleanmymac"
+   ],
+   "nom": "CleanMyMac (assistant)",
+   "role": "Surveille le Mac en fond et affiche des alertes de nettoyage.",
+   "impact": "moyen",
+   "recommandation": "desactiver",
+   "effet": "L'app CleanMyMac marche toujours quand tu l'ouvres ; seules les alertes en fond s'arrêtent.",
+   "categorie": "outil",
+   "editeur": "MacPaw Inc."
+  },
+  {
+   "motifs": [
+    "com\\.grammarly\\."
+   ],
+   "nom": "Grammarly",
+   "role": "Le correcteur d'anglais intégré à tes apps.",
+   "impact": "moyen",
+   "recommandation": "au_choix",
+   "effet": "La correction Grammarly n'apparaît plus dans tes apps tant que l'app n'est pas ouverte.",
+   "categorie": "outil",
+   "editeur": "Grammarly, Inc."
+  },
+  {
+   "motifs": [
+    "notion\\.id",
+    "com\\.notion\\."
+   ],
+   "nom": "Notion",
+   "role": "Les notes et documents Notion, ouverts dès la connexion.",
+   "impact": "moyen",
+   "recommandation": "desactiver",
+   "effet": "Notion ne s'ouvre plus tout seul.",
+   "categorie": "productivite",
+   "editeur": "Notion Labs, Inc."
+  },
+  {
+   "motifs": [
+    "com\\.tinyspeck\\.slackmacgap",
+    "Slack\\.app"
+   ],
+   "nom": "Slack",
+   "role": "La messagerie d'équipe Slack, ouverte dès la connexion.",
+   "impact": "moyen",
+   "recommandation": "au_choix",
+   "effet": "Slack ne s'ouvre plus tout seul : tu ne reçois ses messages qu'une fois lancé.",
+   "categorie": "communication",
+   "editeur": "Slack Technologies"
+  },
+  {
+   "motifs": [
+    "net\\.whatsapp\\.WhatsApp",
+    "desktop\\.WhatsApp",
+    "WhatsApp\\.app"
+   ],
+   "nom": "WhatsApp",
+   "role": "La messagerie WhatsApp, ouverte dès la connexion.",
+   "impact": "moyen",
+   "recommandation": "au_choix",
+   "effet": "WhatsApp ne s'ouvre plus tout seul : tu reçois tes messages sur ton téléphone.",
+   "categorie": "communication",
+   "editeur": "WhatsApp Inc."
+  },
+  {
+   "motifs": [
+    "ru\\.keepcoder\\.Telegram",
+    "org\\.telegram\\."
+   ],
+   "nom": "Telegram",
+   "role": "La messagerie Telegram, ouverte dès la connexion.",
+   "impact": "faible",
+   "recommandation": "au_choix",
+   "effet": "Telegram ne s'ouvre plus tout seul.",
+   "categorie": "communication"
+  },
+  {
+   "motifs": [
+    "org\\.whispersystems\\.signal-desktop"
+   ],
+   "nom": "Signal",
+   "role": "La messagerie Signal, ouverte dès la connexion.",
+   "impact": "moyen",
+   "recommandation": "au_choix",
+   "effet": "Signal ne s'ouvre plus tout seul.",
+   "categorie": "communication",
+   "editeur": "Signal Messenger"
+  },
+  {
+   "motifs": [
+    "com\\.skype\\."
+   ],
+   "nom": "Skype",
+   "role": "Les appels Skype, ouverts dès la connexion.",
+   "impact": "moyen",
+   "recommandation": "desactiver",
+   "effet": "Skype ne s'ouvre plus tout seul.",
+   "categorie": "communication",
+   "editeur": "Skype Communications"
+  },
+  {
+   "motifs": [
+    "com\\.facebook\\.archon"
+   ],
+   "nom": "Messenger",
+   "role": "La messagerie de Facebook, ouverte dès la connexion.",
+   "impact": "moyen",
+   "recommandation": "desactiver",
+   "effet": "Messenger ne s'ouvre plus tout seul.",
+   "categorie": "communication",
+   "editeur": "Meta Platforms"
+  },
+  {
+   "motifs": [
+    "com\\.jetbrains\\.toolbox"
+   ],
+   "nom": "JetBrains Toolbox",
+   "role": "Installe et met à jour les éditeurs JetBrains (IntelliJ, PyCharm…).",
+   "impact": "moyen",
+   "recommandation": "desactiver",
+   "effet": "Les éditeurs JetBrains marchent toujours ; la Toolbox s'ouvre quand tu la lances.",
+   "categorie": "developpement",
+   "editeur": "JetBrains s.r.o."
+  },
+  {
+   "motifs": [
+    "homebrew\\.mxcl\\."
+   ],
+   "nom": "Service Homebrew",
+   "role": "Un service lancé par « brew services » (base de données, serveur…), installé depuis Homebrew.",
+   "impact": "moyen",
+   "recommandation": "au_choix",
+   "effet": "Le service ne tourne plus ; « brew services start <nom> » le relance quand tu en as besoin.",
+   "categorie": "developpement",
+   "editeur": "Homebrew (formule libre)"
+  },
+  {
+   "motifs": [
+    "com\\.bitdefender\\."
+   ],
+   "nom": "Bitdefender",
+   "role": "L'antivirus Bitdefender et ses assistants.",
+   "impact": "moyen",
+   "recommandation": "garder",
+   "effet": "Ton Mac n'est plus protégé par Bitdefender. Pour t'en passer, désinstalle-le depuis son app.",
+   "categorie": "securite",
+   "editeur": "Bitdefender"
+  },
+  {
+   "motifs": [
+    "com\\.avast\\.",
+    "com\\.avg\\."
+   ],
+   "nom": "Avast / AVG",
+   "role": "L'antivirus Avast (ou AVG) et ses assistants.",
+   "impact": "moyen",
+   "recommandation": "garder",
+   "effet": "Ton Mac n'est plus protégé par Avast. Pour t'en passer, désinstalle-le depuis son app.",
+   "categorie": "securite",
+   "editeur": "Avast Software"
+  },
+  {
+   "motifs": [
+    "com\\.malwarebytes\\."
+   ],
+   "nom": "Malwarebytes",
+   "role": "L'anti-logiciels malveillants Malwarebytes.",
+   "impact": "moyen",
+   "recommandation": "garder",
+   "effet": "La protection en temps réel de Malwarebytes s'arrête.",
+   "categorie": "securite",
+   "editeur": "Malwarebytes"
+  },
+  {
+   "motifs": [
+    "com\\.kaspersky\\.",
+    "com\\.symantec\\.",
+    "com\\.norton\\.",
+    "com\\.mcafee\\.",
+    "com\\.eset\\.",
+    "com\\.sophos\\."
+   ],
+   "nom": "Antivirus",
+   "role": "Un antivirus et ses assistants (Kaspersky, Norton, McAfee, ESET, Sophos).",
+   "impact": "moyen",
+   "recommandation": "garder",
+   "effet": "Ton Mac n'est plus protégé. Pour t'en passer, désinstalle-le depuis son app.",
+   "categorie": "securite"
+  },
+  {
+   "motifs": [
+    "com\\.1password\\.",
+    "com\\.agilebits\\."
+   ],
+   "nom": "1Password",
+   "role": "Ton gestionnaire de mots de passe.",
+   "impact": "faible",
+   "recommandation": "garder",
+   "effet": "Le remplissage des mots de passe ne marche plus tant que 1Password n'est pas ouvert.",
+   "categorie": "securite",
+   "editeur": "AgileBits Inc."
+  },
+  {
+   "motifs": [
+    "com\\.bitwarden\\."
+   ],
+   "nom": "Bitwarden",
+   "role": "Ton gestionnaire de mots de passe.",
+   "impact": "faible",
+   "recommandation": "garder",
+   "effet": "Le remplissage des mots de passe ne marche plus tant que Bitwarden n'est pas ouvert.",
+   "categorie": "securite",
+   "editeur": "Bitwarden Inc."
+  },
+  {
+   "motifs": [
+    "com\\.backblaze\\."
+   ],
+   "nom": "Backblaze",
+   "role": "La sauvegarde en ligne de ton Mac.",
+   "impact": "moyen",
+   "recommandation": "garder",
+   "effet": "Tes fichiers ne sont plus sauvegardés en ligne.",
+   "categorie": "sauvegarde",
+   "editeur": "Backblaze Inc."
+  },
+  {
+   "motifs": [
+    "com\\.bombich\\.ccc"
+   ],
+   "nom": "Carbon Copy Cloner",
+   "role": "Les sauvegardes programmées de Carbon Copy Cloner.",
+   "impact": "faible",
+   "recommandation": "garder",
+   "effet": "Tes sauvegardes programmées ne se font plus.",
+   "categorie": "sauvegarde",
+   "editeur": "Bombich Software"
+  },
+  {
+   "motifs": [
+    "at\\.obdev\\.littlesnitch",
+    "at\\.obdev\\."
+   ],
+   "nom": "Little Snitch",
+   "role": "Le pare-feu qui te montre et filtre les connexions sortantes.",
+   "impact": "faible",
+   "recommandation": "garder",
+   "effet": "Les connexions sortantes ne sont plus filtrées.",
+   "categorie": "securite",
+   "editeur": "Objective Development"
+  },
+  {
+   "motifs": [
+    "com\\.objective-see\\."
+   ],
+   "nom": "Outil Objective-See (LuLu, BlockBlock…)",
+   "role": "Un outil de sécurité gratuit (pare-feu, surveillance de la persistance).",
+   "impact": "faible",
+   "recommandation": "garder",
+   "effet": "La surveillance s'arrête.",
+   "categorie": "securite",
+   "editeur": "Objective-See"
+  },
+  {
+   "motifs": [
+    "com\\.teamviewer\\."
+   ],
+   "nom": "TeamViewer",
+   "role": "L'accès à distance à ton Mac.",
+   "impact": "moyen",
+   "recommandation": "desactiver",
+   "effet": "Personne ne peut plus prendre la main à distance tant que tu ne l'ouvres pas : si tu ne t'en sers pas, c'est plus sûr.",
+   "categorie": "acces_distant",
+   "editeur": "TeamViewer Germany GmbH"
+  },
+  {
+   "motifs": [
+    "com\\.philandro\\.anydesk"
+   ],
+   "nom": "AnyDesk",
+   "role": "L'accès à distance à ton Mac.",
+   "impact": "moyen",
+   "recommandation": "desactiver",
+   "effet": "Personne ne peut plus prendre la main à distance tant que tu ne l'ouvres pas : si tu ne t'en sers pas, c'est plus sûr.",
+   "categorie": "acces_distant",
+   "editeur": "AnyDesk Software GmbH"
+  },
+  {
+   "motifs": [
+    "com\\.parallels\\."
+   ],
+   "nom": "Parallels Desktop",
+   "role": "Fait tourner Windows ou Linux dans une machine virtuelle.",
+   "impact": "moyen",
+   "recommandation": "au_choix",
+   "effet": "Parallels ne prépare plus rien au démarrage ; tes machines virtuelles marchent quand tu l'ouvres.",
+   "categorie": "developpement",
+   "editeur": "Parallels International GmbH"
+  },
+  {
+   "motifs": [
+    "com\\.vmware\\."
+   ],
+   "nom": "VMware Fusion",
+   "role": "Fait tourner d'autres systèmes dans une machine virtuelle.",
+   "impact": "moyen",
+   "recommandation": "au_choix",
+   "effet": "VMware ne prépare plus rien au démarrage.",
+   "categorie": "developpement",
+   "editeur": "VMware, Inc."
+  },
+  {
+   "motifs": [
+    "org\\.virtualbox\\."
+   ],
+   "nom": "VirtualBox",
+   "role": "Fait tourner d'autres systèmes dans une machine virtuelle.",
+   "impact": "moyen",
+   "recommandation": "au_choix",
+   "effet": "VirtualBox ne prépare plus rien au démarrage.",
+   "categorie": "developpement",
+   "editeur": "Oracle America, Inc."
+  },
+  {
+   "motifs": [
+    "org\\.pqrs\\.karabiner"
+   ],
+   "nom": "Karabiner-Elements",
+   "role": "Remappe les touches de ton clavier.",
+   "impact": "faible",
+   "recommandation": "garder",
+   "effet": "Tes raccourcis et remappages de touches ne marchent plus.",
+   "categorie": "pilote",
+   "editeur": "Fumihiko Takayama"
+  },
+  {
+   "motifs": [
+    "com\\.hegenberg\\.BetterTouchTool"
+   ],
+   "nom": "BetterTouchTool",
+   "role": "Tes gestes, raccourcis et réglages du trackpad personnalisés.",
+   "impact": "faible",
+   "recommandation": "garder",
+   "effet": "Tes gestes et raccourcis personnalisés ne marchent plus.",
+   "categorie": "outil",
+   "editeur": "folivora.AI GmbH"
+  },
+  {
+   "motifs": [
+    "com\\.knollsoft\\.Rectangle",
+    "com\\.crowdcafe\\.windowmagnet"
+   ],
+   "nom": "Rectangle / Magnet",
+   "role": "Range tes fenêtres avec des raccourcis.",
+   "impact": "faible",
+   "recommandation": "garder",
+   "effet": "Les raccourcis de rangement des fenêtres ne marchent plus.",
+   "categorie": "outil"
+  },
+  {
+   "motifs": [
+    "com\\.surteesstudios\\.Bartender"
+   ],
+   "nom": "Bartender",
+   "role": "Range les icônes de la barre des menus.",
+   "impact": "faible",
+   "recommandation": "garder",
+   "effet": "Toutes les icônes réapparaissent dans la barre des menus.",
+   "categorie": "outil",
+   "editeur": "Surtees Studios"
+  },
+  {
+   "motifs": [
+    "com\\.if\\.Amphetamine"
+   ],
+   "nom": "Amphetamine",
+   "role": "Empêche volontairement la veille quand tu le lui demandes.",
+   "impact": "faible",
+   "recommandation": "garder",
+   "effet": "Ton Mac se remet en veille normalement.",
+   "categorie": "outil"
+  },
+  {
+   "motifs": [
+    "com\\.elgato\\."
+   ],
+   "nom": "Elgato (Stream Deck, Camera Hub…)",
+   "role": "Le logiciel de tes accessoires Elgato.",
+   "impact": "moyen",
+   "recommandation": "garder",
+   "effet": "Tes accessoires Elgato perdent leurs réglages tant que l'app n'est pas ouverte.",
+   "categorie": "pilote",
+   "editeur": "Corsair Memory, Inc."
+  },
+  {
+   "motifs": [
+    "com\\.razer\\."
+   ],
+   "nom": "Razer Synapse",
+   "role": "Les réglages de tes périphériques Razer (éclairage, boutons).",
+   "impact": "moyen",
+   "recommandation": "au_choix",
+   "effet": "Tes périphériques Razer reviennent à leurs réglages de base.",
+   "categorie": "pilote",
+   "editeur": "Razer Inc."
+  },
+  {
+   "motifs": [
+    "com\\.corsair\\."
+   ],
+   "nom": "Corsair iCUE",
+   "role": "Les réglages de tes périphériques Corsair.",
+   "impact": "moyen",
+   "recommandation": "au_choix",
+   "effet": "Tes périphériques Corsair reviennent à leurs réglages de base.",
+   "categorie": "pilote",
+   "editeur": "Corsair Memory, Inc."
+  },
+  {
+   "motifs": [
+    "com\\.wacom\\."
+   ],
+   "nom": "Pilote Wacom",
+   "role": "Le pilote de ta tablette graphique Wacom.",
+   "impact": "faible",
+   "recommandation": "garder",
+   "effet": "Ta tablette Wacom ne marche plus correctement.",
+   "categorie": "pilote",
+   "editeur": "Wacom Technology Corp."
+  },
+  {
+   "motifs": [
+    "com\\.hp\\.",
+    "com\\.epson\\.",
+    "jp\\.co\\.canon\\.",
+    "com\\.brother\\."
+   ],
+   "nom": "Logiciel d'imprimante",
+   "role": "Le moniteur d'état de ton imprimante (niveaux d'encre, alertes).",
+   "impact": "faible",
+   "recommandation": "desactiver",
+   "effet": "Tu imprimes toujours ; seules les alertes de l'imprimante s'arrêtent.",
+   "categorie": "pilote"
+  },
+  {
+   "motifs": [
+    "com\\.garmin\\."
+   ],
+   "nom": "Garmin Express",
+   "role": "Synchronise tes montres et GPS Garmin.",
+   "impact": "moyen",
+   "recommandation": "desactiver",
+   "effet": "La synchronisation se fait quand tu ouvres Garmin Express.",
+   "categorie": "synchro",
+   "editeur": "Garmin Ltd"
+  },
+  {
+   "motifs": [
+    "com\\.oracle\\.java\\.Java-Updater",
+    "com\\.oracle\\.java\\.Helper-Tool"
+   ],
+   "nom": "Mise à jour de Java",
+   "role": "Met à jour Java d'Oracle.",
+   "impact": "faible",
+   "recommandation": "desactiver",
+   "effet": "L'app se met encore à jour quand tu l'ouvres (ou depuis son menu « Rechercher des mises à jour »).",
+   "categorie": "mise_a_jour",
+   "editeur": "Oracle America, Inc."
+  },
+  {
+   "motifs": [
+    "org\\.gpgtools\\."
+   ],
+   "nom": "GPG Suite",
+   "role": "Le chiffrement des e-mails et des fichiers (OpenPGP).",
+   "impact": "faible",
+   "recommandation": "garder",
+   "effet": "Le chiffrement GPG ne marche plus dans tes apps.",
+   "categorie": "securite",
+   "editeur": "GPGTools GmbH"
+  },
+  {
+   "motifs": [
+    "com\\.setapp\\."
+   ],
+   "nom": "Setapp",
+   "role": "Le gestionnaire de ton abonnement Setapp.",
+   "impact": "moyen",
+   "recommandation": "au_choix",
+   "effet": "Les apps Setapp marchent ; le gestionnaire s'ouvre quand tu le lances.",
+   "categorie": "outil",
+   "editeur": "MacPaw Inc."
+  },
+  {
+   "motifs": [
+    "org\\.mozilla\\.firefox"
+   ],
+   "nom": "Firefox",
+   "role": "Le navigateur de Mozilla, ouvert dès la connexion.",
+   "impact": "fort",
+   "recommandation": "au_choix",
+   "effet": "Firefox ne s'ouvre plus tout seul.",
+   "categorie": "navigateur",
+   "editeur": "Mozilla Corporation"
+  },
+  {
+   "motifs": [
+    "com\\.evernote\\."
+   ],
+   "nom": "Evernote",
+   "role": "Les notes Evernote, ouvertes dès la connexion.",
+   "impact": "moyen",
+   "recommandation": "desactiver",
+   "effet": "Evernote ne s'ouvre plus tout seul.",
+   "categorie": "productivite",
+   "editeur": "Evernote Corporation"
+  }
+ ]
+}
