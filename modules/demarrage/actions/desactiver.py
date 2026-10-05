@@ -20,6 +20,7 @@ from modules.demarrage.actions import instructions, quarantaine
 from modules.demarrage.actions.journal import Action, Journal
 from modules.demarrage.analyse import Element
 from modules.demarrage.collecteurs.launchd_etat import analyser_desactives
+from modules.demarrage.modele import SOURCES_GLOBALES
 from modules.demarrage.systeme import Systeme
 
 # Les seules commandes qu'une simulation a le droit de lancer : elles ne font que lire.
@@ -106,9 +107,17 @@ def commandes_affichees(e: Element, uid: int) -> tuple[str, str]:
     if e.verdict.code == "apple" or f.c_est_moi or action == "aucune":
         return "", ""
     if action == "verifier":
-        return instructions.verifier(
-            e.nom, e.editeur, f.chemin_plist, f.programme, e.premiere_vue, e.verdict.raison
-        ), ""
+        verification = instructions.verifier(e.nom, e.editeur, f.chemin_plist, f.programme, e.premiere_vue,
+                                             e.verdict.raison)  # fmt: skip
+        mecanisme = mecanisme_sans_suppression(e)
+        if mecanisme == "aucune":
+            return verification, ""
+        if mecanisme == "instructions":
+            arreter, revenir = _instructions(e, uid)
+        else:
+            arreter, revenir = f"demarrage desactiver {f.id} --confirmer", f"demarrage restaurer {f.id} --confirmer"
+        si_tu_veux = "Si, après vérification, tu veux l'arrêter (réversible, rien n'est supprimé) :"
+        return f"{verification}\n\n{si_tu_veux}\n{arreter}", revenir
     if action == "instructions":
         return _instructions(e, uid)
     agir, annuler = f"demarrage desactiver {f.id} --confirmer", f"demarrage restaurer {f.id} --confirmer"
@@ -138,10 +147,39 @@ def planifier(e: Element, systeme: Systeme) -> Plan:
                         "pour tout arrêter : « python service.py desinstaller ».")  # fmt: skip
         return plan
     if action == "verifier":
-        plan.genre, plan.message = "verifier", "⚠️ Inconnu : je ne propose que de le vérifier, jamais de le supprimer."
-        plan.texte = instructions.verifier(e.nom, e.editeur, f.chemin_plist, f.programme, e.premiere_vue,
-                                           e.verdict.raison)  # fmt: skip
+        verification = instructions.verifier(e.nom, e.editeur, f.chemin_plist, f.programme, e.premiere_vue,
+                                             e.verdict.raison)  # fmt: skip
+        mecanisme = mecanisme_sans_suppression(e)
+        if mecanisme == "aucune":
+            plan.genre, plan.message, plan.texte = (
+                "verifier",
+                "⚠️ Inconnu : je ne propose que de le vérifier.",
+                verification,
+            )
+            return plan
+        # Tu l'as vérifié et tu veux l'arrêter : c'est réversible, et jamais une suppression ni une quarantaine.
+        plan = _plan(plan, e, systeme, mecanisme)
+        plan.message = ("⚠️ Inconnu : vérifie-le d'abord (ci-dessous). Si tu décides de l'arrêter, c'est réversible "
+                        "et rien n'est supprimé. " + plan.message)  # fmt: skip
+        plan.texte = verification + ("\n\n" + plan.texte if plan.texte else "")
         return plan
+    return _plan(plan, e, systeme, action)
+
+
+def mecanisme_sans_suppression(e: Element) -> str:
+    """Pour un élément inconnu : le moyen réversible de l'arrêter, jamais la quarantaine."""
+    f = e.fiche
+    if f.actif is False:
+        return "aucune"
+    if f.source == "ouverture":
+        return "reglages"
+    if f.source in SOURCES_GLOBALES or f.source == "cron":
+        return "instructions"
+    return "desactiver"
+
+
+def _plan(plan: Plan, e: Element, systeme: Systeme, action: str) -> Plan:
+    f = e.fiche
     if action == "aucune":
         plan.message = "Rien à faire : il ne se lance déjà plus."
         return plan

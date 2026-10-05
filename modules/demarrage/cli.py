@@ -6,6 +6,7 @@ rapport [--sans-ouvrir]    écrit et ouvre le rapport (classement, verdicts, com
 desactiver ID [--confirmer]  montre ce qui serait fait ; --confirmer le fait (réversible)
 restaurer ID [--confirmer]   défait la dernière action sur cet élément ; --confirmer le fait
 historique                 tes actions, et l'évolution de tes ouvertures de session
+top [--nombre N]           le top N en texte (Markdown), sans aucun chemin personnel
 surveiller on|off          la surveillance en fond (nouveaux éléments, mesure à chaque connexion)
 doctor                     la machine, les commandes, les données, ce qui est dégradé et pourquoi
 """
@@ -202,6 +203,40 @@ def restaurer(ctx: Contexte, args: argparse.Namespace) -> int:
     return 0 if not r.erreurs else 1
 
 
+def top(ctx: Contexte, args: argparse.Namespace) -> int:
+    """Le top N en Markdown, sans aucun chemin personnel : pour le coller ailleurs (RAPPORT_FINAL)."""
+    bilan = travail.bilan(ctx.systeme, ctx.base, ctx.reglages)
+    phrase, gain = rapport.resume(bilan, ctx.reglages)
+    ctx.ecrire(f"{phrase}\n\n{gain}\n")
+    ctx.ecrire("| # | Élément | Éditeur | Impact | Coût mesuré | Verdict | Désactiver | Restaurer |")
+    ctx.ecrire("|---|---|---|---|---|---|---|---|")
+    for i, el in enumerate(bilan.classement[: args.nombre], start=1):
+        m = el.metriques
+        morceaux = [
+            f"{rapport.secondes(m.cpu_session_s)} à l'ouverture" if m.cpu_session_s else "",
+            f"{rapport.nombre(m.cpu_croisiere_pct, 1)} % d'un cœur" if m.cpu_croisiere_pct else "",
+            rapport.memoire(m.memoire_mo) if m.memoire_mo else "",
+            "empêche la veille" if "empêche la veille" in el.drapeaux else "",
+        ]
+        cout = " · ".join(x for x in morceaux if x) or "—"
+        if el.verdict.action in ("desactiver", "quarantaine", "reglages") or (
+            el.verdict.action == "verifier" and el.fiche.actif is not False
+        ):
+            agir, annuler = (
+                f"`demarrage desactiver {el.fiche.id} --confirmer`",
+                f"`demarrage restaurer {el.fiche.id} --confirmer`",
+            )
+        elif el.verdict.action == "instructions":
+            agir, annuler = f"à taper soi-même : `demarrage desactiver {el.fiche.id}` les affiche", "idem"
+        else:
+            agir = annuler = "—"
+        impact = f"{el.impact:.0f}" + (" (estimé)" if el.impact_estime else "")
+        editeur = (el.editeur or "inconnu").replace("|", "/")
+        verdict = f"{el.verdict.emoji} {el.verdict.titre}"
+        ctx.ecrire(f"| {i} | {el.nom} | {editeur} | {impact} | {cout} | {verdict} | {agir} | {annuler} |")
+    return 0
+
+
 def historique(ctx: Contexte, _: argparse.Namespace) -> int:
     actions = Journal(ctx.base).toutes()
     ctx.ecrire("🗂 Tes actions")
@@ -316,6 +351,9 @@ def analyseur() -> argparse.ArgumentParser:
         a.add_argument("--confirmer", action="store_true", help="agir pour de vrai (sinon : simulation)")
         a.set_defaults(faire=fonction)
     sous.add_parser("historique").set_defaults(faire=historique)
+    t = sous.add_parser("top", help="le top N en Markdown, sans chemin personnel")
+    t.add_argument("--nombre", type=int, default=10)
+    t.set_defaults(faire=top)
     s = sous.add_parser("surveiller")
     s.add_argument("etat", choices=["on", "off"])
     s.set_defaults(faire=surveiller)

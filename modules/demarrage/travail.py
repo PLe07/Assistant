@@ -41,6 +41,7 @@ def scanner(systeme: Systeme, base: Base, reglages: dict[str, Any]) -> tuple[Inv
     nouveaux: list[str] = []
     try:
         nouveaux = base.enregistrer_scan(inventaire)
+        base.ecrire("dernier_scan", inventaire.ts)
         if cache.modifie:
             base.sauver_signatures(cache.entrees)
     except DisquePlein:

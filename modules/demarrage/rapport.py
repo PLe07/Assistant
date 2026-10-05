@@ -258,7 +258,9 @@ def fiche(el: Element, rang: int, maintenant: float, uid: int) -> str:
     elif not agir:
         action = f"<p>{e('Rien à faire.' if el.verdict.action == 'aucune' else '')}</p>"
     elif el.verdict.action == "verifier":
-        action = f"<h4>Pour le vérifier</h4>{_code(agir)}"
+        action = f"<h4>Pour le vérifier</h4>{_code(agir)}" + (
+            f"<h4>Pour annuler</h4>{_code(annuler)}" if annuler else ""
+        )
     else:
         titre = "À taper toi-même" if el.verdict.action == "instructions" else "Pour agir"
         action = f"<h4>{titre}</h4>{_code(agir)}" + (f"<h4>Pour annuler</h4>{_code(annuler)}" if annuler else "")

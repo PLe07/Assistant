@@ -45,6 +45,7 @@ def test_demarrage_suit_l_ouverture_de_session(monde):
     assert "/Applications/zoom.us.app" in bilan["apps_lancees"]  # S5 par déduction, au prochain scan
     assert faux.mac.horloge == pytest.approx(CONNEXION + 300)
     assert demon.base.session(faux.boot)["connexion"] == pytest.approx(CONNEXION, abs=1.5)  # affinée à la seconde
+    assert demon.base.lire("battement") >= CONNEXION + 295  # vivant pendant les 5 minutes
     assert demon.demarrer() is None  # déjà suivie : pas deux fois
     assert travail.apps_de_la_derniere_session(demon.base) == bilan["apps_lancees"]
 
@@ -93,6 +94,8 @@ def test_croisiere_energie_purge_recap(monde, reglages):
     faux, demon, envoyees = monde
     faux.a_l_instant(4 * 3600)  # 10 h 54
     t0 = faux.mac.maintenant()
+    assert demon.base.lire("dernier_recap") == faux.boot  # posé au lancement : pas de récap le premier jour
+    demon.base.ecrire("dernier_recap", t0 - 8 * 86400)  # une semaine plus tard…
     for _ in range(12):
         demon.tour(faux.mac.maintenant())
         faux.mac.attendre(120)

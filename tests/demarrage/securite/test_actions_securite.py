@@ -75,14 +75,23 @@ def test_global_instructions_seulement(monde):
     assert empreinte_de(faux.mac.racine) == avant and journal.toutes() == []
 
 
-def test_un_inconnu_n_est_jamais_touche(monde):
+def test_un_inconnu_n_est_jamais_supprime_ni_deplace(monde):
+    """Un ⚠️ est d'abord à vérifier. Sur ta commande explicite, il peut être arrêté (réversible), mais jamais
+    supprimé, déplacé en quarantaine ou modifié : aucun fichier ne bouge."""
     faux, bilan, journal, dossier = monde
-    appels = len(faux.mac.appels)
-    for e in [e for e in bilan.elements if e.verdict.code == "inconnu"]:
+    avant, appels = empreinte_de(faux.mac.racine), len(faux.mac.appels)
+    inconnus = [e for e in bilan.elements if e.verdict.code == "inconnu"]
+    assert inconnus
+    for e in inconnus:
+        assert e.verdict.action == "verifier"
         r = desactiver(e, faux.mac, journal, dossier, confirmer=True)
-        assert r.plan.genre == "verifier" and "Ne le supprime pas à l'aveugle" in r.plan.texte
-        assert "supprim" not in r.plan.message.replace("jamais de le supprimer", "")
-    assert all(est_lecture(c) for c in faux.mac.appels[appels:])
+        assert r.plan.genre in ("verifier", "launchd", "instructions", "system_events", "rien")
+        assert "Ne le supprime pas à l'aveugle" in r.plan.texte or r.plan.genre == "rien"
+    permises = {("launchctl", "bootout"), ("launchctl", "disable")}
+    for c in faux.mac.appels[appels:]:
+        assert est_lecture(c) or tuple(c[:2]) in permises or (c[0] == "osascript" and "delete login item" in c[-1]), c
+    assert empreinte_de(faux.mac.racine) == avant and not (dossier / "quarantaine").exists()
+    assert all(a.genre != "quarantaine" for a in journal.toutes())
 
 
 class Intercepteur:

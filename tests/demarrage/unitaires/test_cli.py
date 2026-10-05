@@ -146,3 +146,12 @@ def test_doctor_conseille_l_automatisation_et_signale_les_bases_corrompues(faux,
     (travail.dossier(reglages) / "demarrage.db.corrompue-1").write_bytes(b"x")
     _, texte = lancer(faux, reglages, "doctor")
     assert "Automatisation → coche « System Events »" in texte and "corrompue(s) mise(s) de côté" in texte
+
+
+def test_top_sans_chemin_personnel(faux, reglages):
+    lancer(faux, reglages, "mesurer", "--minutes", "1")
+    code, texte = lancer(faux, reglages, "top", "--nombre", "12")
+    assert code == 0 and texte.count("\n| ") == 13  # l'en-tête + 12 lignes
+    assert "| 1 | Docker (réseau et socket) | Docker Inc |" in texte and "`demarrage desactiver" in texte
+    assert "à taper soi-même" in texte and "⚠️ Inconnu, à vérifier" in texte
+    assert "/Users/" not in texte and "utilisateur" not in texte

@@ -62,6 +62,8 @@ class Demon:
         self.echantillonneur = Echantillonneur(systeme, base, reglages, self.fiches)
         self.derniere_energie = -1e18
         self.signature: tuple[tuple[str, int], ...] | None = None
+        if base.lire("dernier_recap") is None:  # le premier récap (et la mesure de zsh) : une semaine après
+            base.ecrire("dernier_recap", systeme.maintenant())
 
     def fiches(self) -> list[Fiche]:
         return self.inventaire.fiches if self.inventaire else []
@@ -81,7 +83,6 @@ class Demon:
     def scanner(self, maintenant: float) -> list[str]:
         inventaire, nouveaux, premier = travail.scanner(self.systeme, self.base, self.reglages)
         self.inventaire = inventaire
-        self.base.ecrire("dernier_scan", maintenant)
         if premier:
             return []  # le premier scan sert de référence : tout y serait « nouveau »
         self.notifier_nouveaux(nouveaux, maintenant)
@@ -143,7 +144,8 @@ class Demon:
             self.scanner(self.systeme.maintenant())
         fenetre = self.reglages["echantillonnage"]["session_minutes"] * 60
         if connexion is not None and self.systeme.maintenant() - connexion < fenetre:
-            bilan = self.echantillonneur.suivre_session(boot, connexion, self.arret)
+            battre = lambda t: self.base.ecrire("battement", t)  # noqa: E731 — vivant, même pendant ces 5 minutes
+            bilan = self.echantillonneur.suivre_session(boot, connexion, self.arret, battre)
             log.info("[demarrage] ouverture de session suivie (%s) : %s", source, bilan)
             return bilan
         details = {

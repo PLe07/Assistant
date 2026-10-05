@@ -29,6 +29,8 @@ def petit_mac(mac):
           ProgramArguments=["/usr/bin/python3", "/Users/utilisateur/Assistant/superviseur.py"])  # fmt: skip
     programme(mac, "/Users/utilisateur/Assistant/superviseur.py")
     plist(mac, f"{LA}/com.apple.faux.plist", Label="com.apple.faux", Program="/opt/outil/agent")
+    plist(mac, f"{LA}/com.assistant.nettoyeur.test.orphelin.plist", Label="com.assistant.nettoyeur.test.orphelin",
+          Program="/nulle/part")  # fmt: skip
     programme(mac, "/usr/bin/caffeinate")
     plist(mac, f"{LA}/com.tiers.cafe.plist", Label="com.tiers.cafe", ProgramArguments=["/usr/bin/caffeinate", "-i"])
     plist(mac, f"{LA}/doublon-a.plist", Label="com.doublon", Program="/opt/outil/agent")
@@ -109,6 +111,7 @@ def test_scan_complet(petit_mac, reglages):
     attendue = f[("agent_utilisateur", "com.attendue")]
     assert attendue.app_attendue_absente and attendue.details["apps_attendues"] == ["com.desinstallee"]
     assert f[("agent_utilisateur", "com.assistant.superviseur")].c_est_moi
+    assert not f[("agent_utilisateur", "com.assistant.nettoyeur.test.orphelin")].c_est_moi  # test : jugé normalement
     faux_apple = f[("agent_utilisateur", "com.apple.faux")]
     assert not faux_apple.est_apple and faux_apple.details["se_dit_apple"]
     cafe = f[("agent_utilisateur", "com.tiers.cafe")]

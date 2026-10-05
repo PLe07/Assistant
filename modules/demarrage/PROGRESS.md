@@ -13,10 +13,10 @@ Porte unique : `modules/demarrage/check.sh` (dans le conteneur : `PYTHON=<venv>/
 | P5 Scores, verdicts, connaissances, gains | ✅ | faux Mac n° 1 : 100 % ; 2e faux Mac : 5/5 graines à 100 % |
 | P6 Actions réversibles + sécurité | ✅ | 12 tests d'actions, 18 tests de sécurité |
 | P7 Rapport HTML, CLI, notifications, surveillance | ✅ | 311 tests ; rapport vérifié en clair, sombre et sur mobile |
-| P8 Bout en bout, performance | ⏳ | |
-| P9 Installation | ⏳ | |
-| P10 Revue hostile | ⏳ | |
-| P11 Diagnostic réel sur le Mac | ⏳ | |
+| P8 Bout en bout, performance | ✅ conteneur · ⏳ Mac | démon réel 10 min : 0,17 % de processeur, 22,8 Mo |
+| P9 Installation | ⏳ Mac | lancé par le superviseur de l'Assistant (D-03) |
+| P10 Revue hostile | ✅ | 6 défauts trouvés et corrigés, chacun avec son test |
+| P11 Diagnostic réel sur le Mac | ⏳ Mac | ACTIONS_HUMAINES § 5 |
 
 ## P0 — Reconnaissance (✅)
 
@@ -271,8 +271,89 @@ $ PYTHON=…/venv/bin/python modules/demarrage/check.sh
 CHECK OK
 ```
 
+## P8 — Bout en bout et performance (✅ conteneur · ⏳ Mac)
+
+- `tests/demarrage/e2e_mac/test_bout_en_bout_mac.py`, à lancer sur le Mac (ACTIONS_HUMAINES § 2). Il :
+  - crée `com.assistant.nettoyeur.test.charge` (environ 25 % d'un cœur sous nice, avec un caffeinate fils, arrêt
+    tout seul en 4 min) et `…test.orphelin` (programme inexistant, jamais chargé) ;
+  - fait un scan, puis un scan avec le cache, et vérifie les temps (< 15 s, puis < 5 s) ;
+  - lance `mesurer --minutes 3`, puis vérifie : l'agent de charge en tête et « empêche la veille », l'orphelin 👻 ;
+  - lance `desactiver --confirmer` (vérifie : arrêté et désactivé), puis `restaurer` (vérifie : réactivé et
+    rechargé) ;
+  - nettoie dans un `finally` (bootout, enable, plists effacés, PID tués) ;
+  - cherche automatiquement les traces : fichiers, launchd, désactivations, processus.
+- Défauts trouvés en le préparant, puis corrigés :
+  - les enveloppes `nice`, `env`… masquaient le vrai programme (D-36) ;
+  - un ⚠️ ne pouvait pas être arrêté, même sur ta commande (D-37) ;
+  - un label de test était pris pour « c'est moi » (D-38).
+- `tests/demarrage/e2e_mac/mesure_demon.py` : le vrai démon N secondes, processus fils compris (D-39).
+- `tests/demarrage/perf/test_scan.py` : gros faux Mac, codesign à 80 ms ; scan à froid puis avec le cache.
+
+```
+relevé : 16.6 ms de processeur, 0.36 s pour 20 ; pic mémoire Python 0.13 Mo ; moyenne projetée sur 24 h : 0.015 %
+1070 éléments · 1er scan 2.2 s (170 codesign à 80 ms, en parallèle) · avec le cache 0.4 s
+{'duree_s': 601, 'cpu_s': 1.01, 'cpu_moyen_pct': 0.168, 'ram_max_mo': 22.8}
+✅ dans les budgets
+```
+
+## P9 — Installation (⏳ Mac)
+
+La surveillance est le module `demarrage` de l'Assistant (D-03). `demarrage surveiller on`, puis le superviseur
+(`com.assistant.superviseur`, RunAtLoad + KeepAlive + ThrottleInterval, installé par `python service.py installer`)
+la lance et la relance. Vérifié dans le conteneur :
+- `daemon.boucle` sous un faux contexte du superviseur : battement écrit, état « vivant » ;
+- un tour en panne ne fait pas tomber le module ;
+- une base illisible en route est rouverte.
+Sur le Mac (ACTIONS_HUMAINES § 3) : `launchctl print gui/$(id -u)/com.assistant.superviseur`, `kill -9` du module,
+puis relance dans la minute, et `doctor`.
+
+## P10 — Revue hostile (✅)
+
+Relecture « pour le casser ». Six défauts réels ont été trouvés et corrigés, chacun avec son test
+(`unitaires/test_revue_hostile.py`), détail dans D-40 :
+- un antivirus jamais ouvert pouvait passer 💤 ;
+- un disque externe débranché pouvait être pris pour un orphelin ;
+- `~` dans un chemin n'était pas déplié ;
+- un `launchctl` muet faisait tout déclarer « pas chargé » ;
+- le démon semblait mort pendant le suivi de l'ouverture de session ;
+- un `caffeinate` du test réel pouvait survivre au nettoyage.
+Deux vérifications ont maintenant leur test :
+- le changement d'heure du 25 octobre ;
+- un élément Apple lourd reste 🍎, sans action.
+Ajout : `demarrage top`, le top 10 en Markdown sans chemin personnel (D-41).
+
+```
+▶ ruff check
+All checks passed!
+  ✅ ruff check
+▶ ruff format
+118 files already formatted
+  ✅ ruff format
+▶ mypy
+Success: no issues found in 50 source files
+  ✅ mypy
+▶ pytest + couverture ≥ 85 %
+Required test coverage of 85.0% reached. Total coverage: 97.99%
+272 passed in 13.30s
+  ✅ pytest + couverture ≥ 85 %
+▶ faux Mac (+ 2e faux Mac, 5 graines)
+30 passed in 2.28s
+  ✅ faux Mac (+ 2e faux Mac, 5 graines)
+▶ sécurité
+18 passed in 2.13s
+  ✅ sécurité
+▶ performance
+3 passed in 4.90s
+  ✅ performance
+CHECK OK
+```
+
+## P11 — Diagnostic réel (⏳ Mac)
+
+Les commandes sont dans ACTIONS_HUMAINES § 5 : `scan`, `mesurer --minutes 10`, `rapport`, `top`. La sortie de `top`
+ira dans RAPPORT_FINAL.md § 5.
+
 ## Prochaine étape
 
-P8 : test de bout en bout sur le vrai Mac (`tests/demarrage/e2e_mac/`, agents de test com.assistant.nettoyeur.test.*,
-nettoyage en `finally`, recherche des traces), performance du scan (< 15 s, < 5 s avec le cache) et de
-l'échantillonneur réel 10 min (CPU < 0,3 %, RAM < 40 Mo).
+Sur le Mac : ACTIONS_HUMAINES § 1 à § 3 et § 5. Ensuite, RAPPORT_FINAL.md § 4 et § 5 seront complétés avec les
+vraies sorties.

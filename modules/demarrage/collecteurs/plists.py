@@ -19,9 +19,7 @@ from modules.demarrage.systeme import Systeme
 
 TAILLE_MAX = 1_000_000  # un plist launchd fait quelques Ko ; au-delà, ce n'en est pas un
 
-_INTERPRETES = re.compile(
-    r"^(sh|bash|zsh|dash|ksh|csh|tcsh|fish|python[\d.]*|perl[\d.]*|ruby|node|osascript|env|nohup)$"
-)
+_INTERPRETES = re.compile(r"^(sh|bash|zsh|dash|ksh|csh|tcsh|fish|python[\d.]*|perl[\d.]*|ruby|node|osascript)$")
 _SYSTEME = ("/bin/", "/sbin/", "/usr/bin/", "/usr/sbin/", "/usr/libexec/", "/System/")
 
 
@@ -116,16 +114,29 @@ def app_parente(systeme: Systeme, *chemins: str | None) -> tuple[str | None, str
     return None, None
 
 
+# Les « enveloppes » qui lancent une autre commande : nom → options suivies d'une valeur.
+ENVELOPPES: dict[str, set[str]] = {
+    "nice": {"-n"}, "nohup": set(), "env": {"-u", "-P", "-S"}, "arch": set(), "caffeinate": {"-t", "-w"},
+}  # fmt: skip
+
+
+def derouler(args: list[str]) -> list[str]:
+    """Retire les enveloppes (nice -n 10, nohup, env VAR=…, arch -arm64, caffeinate -i) devant la vraie commande."""
+    while args and PurePosixPath(args[0]).name in ENVELOPPES:
+        avec_valeur = ENVELOPPES[PurePosixPath(args[0]).name]
+        i = 1
+        while i < len(args) and (args[i].startswith("-") or "=" in args[i]):
+            i += 2 if args[i] in avec_valeur else 1
+        if i >= len(args):
+            break  # l'enveloppe seule (caffeinate -i -t 240) : c'est elle le programme
+        args = args[i:]
+    return args
+
+
 def _script(interprete: str, args: list[str]) -> str | None:
     """Ce que lance vraiment un interpréteur : le script, ou la première commande de « sh -c "…" »."""
     nom = PurePosixPath(interprete).name
     reste = args[1:]
-    if nom == "env":
-        reste = [a for a in reste if "=" not in a or a.startswith("-")]
-        reste = [a for a in reste if not a.startswith("-")]
-        return reste[0] if reste else None
-    if nom == "nohup":
-        return reste[0] if reste else None
     i = 0
     while i < len(reste):
         a = reste[i]
@@ -164,10 +175,20 @@ def declaration(contenu: dict[str, Any], chemin_plist: str | None = None) -> Dec
     if programme is None:
         erreurs.append("aucun programme (Program et ProgramArguments vides)")
     interprete = None
+    if args and programme == args[0]:
+        deroule = derouler(args)
+        if deroule is not args and deroule[0] != args[0]:
+            interprete, programme, args_effectifs = args[0], deroule[0], deroule
+        else:
+            args_effectifs = args
+    else:
+        args_effectifs = args or ([programme] if programme else [])
     if programme and _INTERPRETES.match(PurePosixPath(programme).name):
-        script = _script(programme, args or [programme])
+        script = _script(
+            programme, args_effectifs if args_effectifs and args_effectifs[0] == programme else [programme]
+        )
         if script:
-            interprete, programme = programme, script
+            interprete, programme = interprete or programme, script
     if programme and PurePosixPath(programme).name == "open" and est_systeme(programme):
         app = next((a for a in args[1:] if a.endswith(".app") or a.endswith(".app/")), None)
         nom = args[args.index("-a") + 1] if "-a" in args and args.index("-a") + 1 < len(args) else None

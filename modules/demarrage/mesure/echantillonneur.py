@@ -185,7 +185,11 @@ class Echantillonneur:
             self.disque_plein = True
 
     def suivre_session(
-        self, boot: float, connexion: float, arret: Callable[[], bool] = lambda: False
+        self,
+        boot: float,
+        connexion: float,
+        arret: Callable[[], bool] = lambda: False,
+        pendant: Callable[[float], None] = lambda t: None,
     ) -> dict[str, Any]:
         """Le mode « ouverture de session » : un relevé toutes les 5 s jusqu'à connexion + 5 min, puis le bilan.
         On note aussi les apps lancées par launchd dans les 2 premières minutes (S5, déduction)."""
@@ -198,6 +202,7 @@ class Echantillonneur:
             while self.systeme.maintenant() < fin and not arret():
                 releve = self.prendre("session", depuis=connexion if premier else None)
                 premier = False
+                pendant(self.systeme.maintenant())
                 for p in releve.procs if releve else []:
                     apres = releve.ts - p.age_s - connexion if releve else 0.0
                     if p.ppid == 1 and 0 <= apres <= ouverture_session.FENETRE_DEDUCTION_S:

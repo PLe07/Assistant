@@ -35,6 +35,7 @@ from modules.demarrage.systeme import Systeme
 log = logging.getLogger("demarrage")
 
 PREFIXE_MOI = "com.assistant."
+PREFIXE_TESTS = "com.assistant.nettoyeur.test."  # les éléments de test du bout en bout : jugés comme les autres
 # Ce que launchd charge pour toi sans que ce soit un élément de démarrage : apps ouvertes à la main, XPC anonymes.
 _EPHEMERES = ("application.", "anonymous.", "com.apple.")
 _DOMAINE = {
@@ -69,7 +70,7 @@ def appliquer_launchd(fiches: list[Fiche], etat: EtatLaunchd) -> None:
             continue
         dom = domaine(f)
         services = etat.gui if dom == "gui" else etat.systeme
-        lisible = dom == "gui" or etat.systeme_lisible
+        lisible = etat.gui_lisible if dom == "gui" else etat.systeme_lisible
         service = services.get(f.label)
         f.charge = (service is not None) if lisible else None
         if service and service.pid:
@@ -80,7 +81,7 @@ def appliquer_launchd(fiches: list[Fiche], etat: EtatLaunchd) -> None:
         if f.label in surcharges:
             f.desactive = surcharges[f.label]
         elif f.desactive is None:
-            f.desactive = False if (lisible or f.source != "daemon_global") else None
+            f.desactive = False if lisible else None
         if f.source in ("agent_app", "daemon_app", "ouverture_app"):
             # Embarqué : actif seulement si l'app l'a enregistré auprès de launchd (ou des Réglages, vu en S5).
             f.actif = bool(f.charge) and not f.desactive if f.charge is not None else None
@@ -272,7 +273,7 @@ def scanner(
         inventaire.collecteurs.append(statut)
 
     for f in inventaire.fiches:
-        f.c_est_moi = f.label.startswith(PREFIXE_MOI)
+        f.c_est_moi = f.label.startswith(PREFIXE_MOI) and not f.label.startswith(PREFIXE_TESTS)
         if f.programme_existe is False:
             f.details["absent_certain"] = absent_certain(systeme, f.programme)
     marquer_doublons(inventaire.fiches)

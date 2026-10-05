@@ -144,7 +144,6 @@ def test_refus_instructions_verification(monde):
         ("com.exemple.vpn.daemon", "assistant_privilegie", "instructions", "lancé par le daemon"),
         ("com.exemple.vpn.tunnel", None, "instructions", "Extensions"),
         ("cron : absent", None, "instructions", "crontab -e"),
-        ("com.mystere.agent", None, "verifier", "codesign -dv --verbose=2"),
         ("com.exemple.Étiquette avec espaces", None, "rien", ""),
     ]:  # fmt: skip
         e = element(bilan, label, source)
@@ -200,3 +199,24 @@ def test_est_lecture_et_applescript():
               ["mv", "a", "b"], ["crontab", "-r"], ["pmset", "sleepnow"], ["open", "x"]):  # fmt: skip
         assert not est_lecture(c), c
     assert applescript('Mon "App" \\ x') == '"Mon \\"App\\" \\\\ x"'
+
+
+def test_un_inconnu_verifie_peut_etre_arrete_et_restaure(monde):
+    faux, bilan, launchd, journal, dossier = monde
+    mystere = element(bilan, "com.mystere.agent")
+    assert mystere.verdict.code == "inconnu" and mystere.verdict.action == "verifier"
+    simulation = desactiver(mystere, faux.mac, journal, dossier)
+    assert simulation.plan.genre == "launchd" and "vérifie-le d'abord" in simulation.plan.message
+    assert (
+        "codesign -dv --verbose=2" in simulation.plan.texte
+        and "Ne le supprime pas à l'aveugle" in simulation.plan.texte
+    )
+    fait = desactiver(mystere, faux.mac, journal, dossier, confirmer=True)
+    assert (
+        fait.fait and "com.mystere.agent" in launchd.desactives and faux.mac.chemin(mystere.fiche.chemin_plist).exists()
+    )
+    assert (
+        restaurer(mystere.fiche.id, faux.mac, journal, confirmer=True).fait and "com.mystere.agent" in launchd.charges
+    )
+    casse = element(bilan, "com.exemple.casse")  # jamais chargé : seulement la désactivation, réversible
+    assert [c[1] for c in planifier(casse, faux.mac).commandes] == ["disable"]

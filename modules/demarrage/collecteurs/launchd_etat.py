@@ -35,6 +35,7 @@ class EtatLaunchd:
     desactives_gui: dict[str, bool] = field(default_factory=dict)
     desactives_systeme: dict[str, bool] = field(default_factory=dict)
     systeme_lisible: bool = False
+    gui_lisible: bool = False  # faux si ni « print gui/UID » ni « list » n'ont répondu : on ne sait pas
     erreurs: list[str] = field(default_factory=list)
 
 
@@ -143,10 +144,12 @@ def collecter(systeme: Systeme, delai: float = 10.0) -> EtatLaunchd:
     if r.ok:
         etat.gui = analyser_print_domaine(r.sortie)
         etat.desactives_gui = analyser_desactives(r.sortie)
+        etat.gui_lisible = True
     else:
         etat.erreurs.append(f"launchctl print {gui} : {r.erreur.strip()[:120] or r.code}")
     r = systeme.executer(["launchctl", "list"], delai=delai)
     if r.ok:
+        etat.gui_lisible = True
         for label, service in analyser_list(r.sortie).items():
             ancien = etat.gui.get(label)
             etat.gui[label] = Service(service.pid or (ancien.pid if ancien else None), service.dernier_code)

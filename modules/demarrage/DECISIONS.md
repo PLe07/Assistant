@@ -329,3 +329,57 @@ démonstration qui a montré le défaut : « 0,0 s de processeur en moins ».
 - **Un tour en panne** ne fait jamais tomber le module : une base devenue illisible est rouverte, c'est-à-dire
   mise de côté et reconstruite.
 - **`module.py`** donne au superviseur la boucle, et à `python assistant.py etat` son état.
+
+## 2026-10-05 · P8 à P10 — Bout en bout, performance, installation, revue hostile
+
+**D-36 · Les « enveloppes » sont déroulées.**
+`nice -n 10 python3 agent.py`, `nohup x`, `env VAR=1 node app.js`, `arch -arm64 x` et `caffeinate -i x` lancent
+une autre commande. Le programme retenu est la vraie commande, et si c'est un interpréteur, son script. Sans
+cela, l'agent de charge du test de bout en bout (`nice … python3 agent_charge.py`) aurait été jugé d'après
+`/usr/bin/nice`.
+
+**D-37 · Un ⚠️ se vérifie d'abord, mais tu peux l'arrêter (complète D-31).**
+Le conseil reste « vérifier, jamais supprimer ». Mais si, après vérification, tu tapes
+`demarrage desactiver ID --confirmer`, l'élément est arrêté de façon réversible (bootout + disable, ou retrait de
+l'ouverture), avec la vérification affichée au-dessus.
+Jamais de quarantaine, jamais un fichier déplacé ou effacé : un test de sécurité le prouve sur tous les ⚠️ des deux
+faux Mac.
+*Écarté :* refuser toute action sur un ⚠️. Celui que tu as identifié comme indésirable resterait alors impossible à
+couper, et le §6 prévoit l'arrêt réversible pour tout agent de ta session.
+
+**D-38 · Les éléments de test ne sont pas « moi » ; pas de récap le premier jour.**
+- **Éléments de test** : `com.assistant.nettoyeur.test.*` est jugé comme n'importe quel élément. Sinon, la règle
+  « c'est moi » (`com.assistant.*`) l'aurait protégé, et le test du §9.5 n'aurait rien prouvé.
+- **Premier récap** : il part une semaine après le premier lancement de la surveillance. La mesure de zsh arrive
+  au même moment, ou à `demarrage rapport`.
+- **Battement** : le démon l'écrit aussi pendant les 5 minutes du mode « ouverture de session », pour ne pas
+  sembler arrêté.
+
+**D-39 · Mesurer la performance honnêtement.**
+- **`mesure_demon.py`** lance le vrai démon dans un dossier temporaire, après un scan de préparation : le cache
+  codesign est chaud, comme en régime normal. Il compte aussi le processeur des commandes lancées par le démon
+  (`ps`, `launchctl`, `pmset`, `top`), grâce à `getrusage(RUSAGE_CHILDREN)`.
+- **Le scan** est mesuré dans le conteneur sur un gros faux Mac (900 éléments Apple, 150 apps, 120 agents) dont
+  le codesign coûte 80 ms, comme le vrai. Sur le Mac, le test de bout en bout mesure le vrai premier scan et le
+  vrai scan avec le cache.
+
+**D-40 · La revue hostile (P10) : ce qui a été trouvé et corrigé.**
+| Défaut | Risque | Correction |
+|---|---|---|
+| Antivirus, VPN ou sauvegarde (« garder » dans la base) jamais ouvert depuis 30 jours | 💤 « inutile », donc le conseil de couper sa protection | utilité forte quoi qu'il arrive |
+| Programme sur un disque externe débranché (`/Volumes/…`) | 👻 et quarantaine d'un élément sain | jamais « absent pour de bon » sous `/Volumes` |
+| `~` dans ProgramArguments | faux « introuvable » | `~` déplié comme le fait launchd |
+| `launchctl` qui ne répond pas du tout | tout déclaré « pas chargé, actif » | chargé, désactivé et actif « inconnus » |
+| Mode « ouverture de session » | démon semblant mort pendant 5 min | battement écrit à chaque relevé |
+| Test réel : `caffeinate` survivant au `bootout` | trace laissée sur le Mac | SIGTERM géré, PID ajoutés (pas écrasés), vérification qu'aucun ne survit |
+Chaque correction a son test dans `tests/demarrage/unitaires/test_revue_hostile.py`.
+S'y ajoutent deux vérifications qui tenaient déjà, mais qui ont maintenant leur test :
+- le changement d'heure (25 octobre 2026, Europe/Paris) ;
+- un élément Apple lourd, empêchant la veille et « inutile » : toujours 🍎, sans action.
+
+**D-41 · `demarrage top` : le top 10 sans chemin personnel.**
+Pour coller le diagnostic de ton Mac dans RAPPORT_FINAL.md, qui est dans un dépôt public. Le tableau Markdown
+n'affiche que :
+- le nom lisible, l'éditeur, l'impact, le coût et le verdict ;
+- `demarrage desactiver ID --confirmer` / `demarrage restaurer ID --confirmer`.
+Aucun chemin `/Users/…` n'y figure.

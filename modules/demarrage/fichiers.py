@@ -56,6 +56,8 @@ def existe(systeme: Systeme, chemin: str | None) -> bool:
 
 def localiser(systeme: Systeme, programme: str, repertoire: str | None = None) -> str | None:
     """Où est vraiment ce programme : chemin absolu tel quel, relatif au WorkingDirectory, ou nom dans le PATH."""
+    if programme == "~" or programme.startswith("~/"):
+        programme = systeme.maison + programme[1:]  # launchd déplie ~ en ton dossier personnel
     if programme.startswith("/"):
         return programme
     if "/" in programme:
@@ -74,6 +76,8 @@ def absent_certain(systeme: Systeme, chemin: str | None) -> bool:
     est fermé (on ne voit pas dedans : on ne conclut pas)."""
     if not chemin or not chemin.startswith("/"):
         return False
+    if chemin.startswith("/Volumes/"):
+        return False  # un disque externe peut simplement être débranché
     for parent in PurePosixPath(chemin).parents:
         reel = systeme.chemin(str(parent))
         try:

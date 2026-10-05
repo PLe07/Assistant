@@ -135,12 +135,13 @@ def utilite(f: Fiche, maintenant: float, reglages: dict[str, Any], recommandatio
         return "indispensable", "fait partie de macOS"
     if f.c_est_moi:
         return "indispensable", "c'est l'Assistant lui-même"
+    if recommandation == "garder":
+        # Un antivirus, un VPN, un pilote ou une sauvegarde servent sans qu'on ouvre jamais leur app.
+        return "forte", "utile en permanence (sécurité, pilote, synchronisation…), même sans ouvrir l'app"
     if f.derniere_utilisation_app is not None:
         jours = (maintenant - f.derniere_utilisation_app) / JOUR
         seuil = reglages["verdicts"]["utilite_jours"]
         if jours > seuil:
             return "faible", f"app pas ouverte depuis {int(jours)} jours"
         return "forte", "app ouverte il y a " + ("moins d'un jour" if jours < 1 else f"{int(jours)} jour(s)")
-    if recommandation == "garder":
-        return "forte", "utile en permanence (sécurité, pilote, synchronisation…)"
     return "inconnue", "pas d'app associée dont on connaisse l'usage"
