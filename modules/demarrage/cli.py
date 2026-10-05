@@ -318,7 +318,7 @@ def doctor(ctx: Contexte, _: argparse.Namespace) -> int:
                 s["vivant"],
                 "Surveillance allumée · "
                 + (
-                    "elle tourne"
+                    f"elle tourne (battement il y a {int(ctx.systeme.maintenant() - float(s['battement']))} s)"
                     if s["vivant"]
                     else "elle ne tourne pas : python service.py installer, puis attends une minute"
                 ),

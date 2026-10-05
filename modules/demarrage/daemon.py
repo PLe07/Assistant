@@ -19,7 +19,6 @@ from collections.abc import Callable
 from typing import Any
 
 from modules.demarrage import config, travail
-from modules.demarrage.analyse import analyser
 from modules.demarrage.db import Base, DisquePlein
 from modules.demarrage.mesure import session
 from modules.demarrage.mesure.echantillonneur import COMMANDE_PS, Echantillonneur, analyser_ps
@@ -51,6 +50,7 @@ class Demon:
         notifieur: Notifieur,
         arret: Callable[[], bool] = lambda: False,
         rouvrir: Callable[[], Base] | None = None,
+        scan_a_part: bool = False,
     ):
         self.systeme = systeme
         self.base = base
@@ -58,6 +58,7 @@ class Demon:
         self.notifieur = notifieur
         self.arret = arret
         self.rouvrir = rouvrir
+        self.scan_a_part = scan_a_part  # sur le vrai Mac : le scan dans un processus fils (D-46)
         self.inventaire: Inventaire | None = base.dernier_scan()
         self.echantillonneur = Echantillonneur(systeme, base, reglages, self.fiches)
         self.derniere_energie = -1e18
@@ -81,7 +82,10 @@ class Demon:
         return tuple(resultat)
 
     def scanner(self, maintenant: float) -> list[str]:
-        inventaire, nouveaux, premier = travail.scanner(self.systeme, self.base, self.reglages)
+        resultat = travail.scanner_a_part(self.systeme, self.base, self.reglages) if self.scan_a_part else None
+        if resultat is None:  # pas à part, ou le fils a échoué : sur place (plus de mémoire, mais le scan a lieu)
+            resultat = travail.scanner(self.systeme, self.base, self.reglages)
+        inventaire, nouveaux, premier = resultat
         self.inventaire = inventaire
         if premier:
             return []  # le premier scan sert de référence : tout y serait « nouveau »
@@ -91,6 +95,8 @@ class Demon:
     def notifier_nouveaux(self, nouveaux: list[str], maintenant: float) -> None:
         if not nouveaux or self.inventaire is None:
             return
+        from modules.demarrage.analyse import analyser
+
         bilan = analyser(self.inventaire, self.base, self.reglages, maintenant)
         a_dire = []
         for id_ in nouveaux:
@@ -106,6 +112,8 @@ class Demon:
     def recap(self, maintenant: float) -> None:
         if self.inventaire is None:
             return
+        from modules.demarrage.analyse import analyser
+
         bilan = analyser(self.inventaire, self.base, self.reglages, maintenant)
         lourds = [el for el in bilan.couteux(self.reglages) if el.verdict.code in ("inutile", "orphelin")]
         self.base.ecrire("dernier_recap", maintenant)
@@ -229,7 +237,8 @@ def boucle(ctx: Any) -> None:
         ctx.log.warning(erreur)
     base = travail.ouvrir_base(reglages)
     notifieur = Notifieur(base, reglages)
-    demon = Demon(Mac(), base, reglages, notifieur, ctx.arret.is_set, lambda: travail.ouvrir_base(reglages))
+    demon = Demon(Mac(), base, reglages, notifieur, ctx.arret.is_set, lambda: travail.ouvrir_base(reglages),
+                  scan_a_part=True)  # fmt: skip
     try:
         demon.tourner(ctx.attendre)
     finally:

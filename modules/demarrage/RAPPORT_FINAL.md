@@ -1,7 +1,7 @@
 # Rapport final — Nettoyeur de démarrage
 
-Construit le 5 octobre 2026, phases P0 à P10. P11 (diagnostic de ton Mac) : 1er passage fait, 7 défauts réels
-corrigés, 2e passage attendu. Chaque preuve ci-dessous est la sortie réelle d'une commande. Le détail est dans
+Construit le 5 octobre 2026, phases P0 à P11. Ton Mac a été diagnostiqué en deux passages : 9 défauts réels
+trouvés et corrigés (D-42 à D-46). Il reste une vérification finale de 12 minutes (ACTIONS_HUMAINES § 9). Chaque preuve ci-dessous est la sortie réelle d'une commande. Le détail est dans
 [PROGRESS.md](PROGRESS.md), les choix dans [DECISIONS.md](DECISIONS.md), ce qui te reste dans
 [ACTIONS_HUMAINES.md](ACTIONS_HUMAINES.md).
 
@@ -17,13 +17,13 @@ Légende :
 | 1 | `./check.sh` vert | ✅ (sortie § 1) |
 | 2 | Critères du faux Mac + 2e faux Mac sur 5 graines | ✅ 100 % partout (§ 2) |
 | 3 | Tests de sécurité verts, recherche « sudo » vide | ✅ (§ 3) |
-| 4 | Bout en bout réussi, recherche de traces vide | ❌ 1er passage : désactivation pas encore visible dans launchd ; corrigé (D-43) · ⏳ 2e passage (ACTIONS_HUMAINES § 2) |
-| 5 | Budgets de performance tenus | ✅ scan sur ton Mac (5,1 s puis 1,7 s) · ❌ démon au 1er passage (2,07 %, 308 Mo) ; cause corrigée (D-42) · ⏳ 2e passage |
-| 6 | Démon installé, actif, relancé après un `kill` | ⏳ c'est le superviseur de l'Assistant qui le lance et le relance (D-03), comme pour les corvées, déjà prouvé sur ton Mac ; à confirmer (ACTIONS_HUMAINES § 3) |
+| 4 | Bout en bout réussi, recherche de traces vide | ✅ sur ton Mac au 2e passage (`1 passed` : désactivé, restauré, aucune trace) |
+| 5 | Budgets de performance tenus | ✅ sur ton Mac : scan 3,0 s puis 2,1 s ; démon 0,274 % et 39,9 Mo, de justesse, puis allégé (D-46) · ⏳ vérification finale (ACTIONS_HUMAINES § 9) |
+| 6 | Démon installé, actif, relancé après un `kill` | ✅ allumé et actif sur ton Mac · ⏳ relance : la ligne d'état n'était pas probante, elle montre maintenant l'âge du battement (D-46 ; ACTIONS_HUMAINES § 9) |
 | 7 | `demarrage doctor` sans erreur bloquante | ✅ dans le conteneur et sur ton Mac (macOS 27.0.1, toutes les commandes présentes) |
 | 8 | README en français | ✅ [README.md](README.md) |
 | 9 | ACTIONS_HUMAINES.md : seulement l'impossible sans toi | ✅ |
-| 10 | Diagnostic de ton vrai Mac (top 10, verdicts, commandes) | ✅ 1er passage (§ 5), qui a révélé 7 défauts, corrigés (D-44, D-45) · ⏳ top 10 corrigé |
+| 10 | Diagnostic de ton vrai Mac (top 10, verdicts, commandes) | ✅ § 5 |
 
 ## 1. check.sh
 
@@ -154,35 +154,49 @@ Le démon dépassait : au lancement, il relisait tout le journal système depuis
 (`log show --last boot`). Il ne le lit plus que sur 7 minutes au plus (D-42). La prochaine mesure affichera aussi
 le coût de chaque commande, pour vérifier.
 
+2e passage, avec D-42 :
+
+```
+mesure_demon.py 600   →  {'duree_s': 602, 'cpu_s': 1.65, 'cpu_moyen_pct': 0.274, 'ram_max_mo': 39.9}  ✅
+   dont Python ≈ 0.79 s ; top 0.31 s ; log 0.27 s ; ps (6 fois) 0.22 s ; pmset 0.03 s ; launchctl list 0.02 s
+```
+
+Les budgets tenaient, mais de justesse : 39,9 Mo pour 40, et sans scan pendant la mesure. Le scan quotidien tourne
+désormais dans un processus fils, et le démon ne charge plus la pile du scan (D-46). Dans le conteneur, cela donne
+18,1 Mo, scan compris. La vérification finale sur ton Mac est dans ACTIONS_HUMAINES § 9.
+
 ## 5. Diagnostic de ton Mac
 
-1er passage (5 octobre), avant les corrections D-44 et D-45 : 931 éléments trouvés en 3,3 s, dont 911 de macOS
-(🍎) ; 💤 4 · 👻 1 · ⚠️ 4 · ✅ 11 ; 117 relevés en 10 minutes.
+931 éléments trouvés en 3,3 s, dont 911 de macOS (🍎, jamais touchés). 16 se lancent tout seuls, et 1 coûte
+vraiment : **Spotify, 968 Mo de mémoire et 5 % d'un cœur, en permanence**.
 
 | # | Élément | Éditeur | Impact | Coût mesuré | Verdict | Désactiver | Restaurer |
 |---|---|---|---|---|---|---|---|
-| 1 | Spotify | Spotify | 42 | 5,1 % d'un cœur · 968 Mo | ✅ Utile, à garder | `demarrage desactiver b8e39d87 --confirmer` | `demarrage restaurer b8e39d87 --confirmer` |
-| 2 | L'Assistant (c'est moi) | inconnu | 12 | 1,5 % d'un cœur · 144 Mo | ✅ Utile, à garder | — | — |
-| 3 | L'Assistant (c'est moi) | inconnu | 8 | 1,3 % d'un cœur · 45 Mo | ✅ Utile, à garder | — | — |
-| 4 | Google Updater (Keystone) | Google LLC | 3 (estimé) | — | 👻 Orphelin (reste d'une app désinstallée) | `demarrage desactiver cf0af4b1 --confirmer` | `demarrage restaurer cf0af4b1 --confirmer` |
-| 5 | Google Updater (Keystone) | inconnu | 3 (estimé) | — | ⚠️ Inconnu, à vérifier | `demarrage desactiver ebf8a226 --confirmer` | `demarrage restaurer ebf8a226 --confirmer` |
-| 6 | Google Updater (Keystone) | inconnu | 3 (estimé) | — | ⚠️ Inconnu, à vérifier | `demarrage desactiver 14140c57 --confirmer` | `demarrage restaurer 14140c57 --confirmer` |
-| 7 | Mise à jour de Zoom | Zoom Video Communications, Inc. | 3 (estimé) | — | 💤 Inutile au démarrage | à taper soi-même : `demarrage desactiver d14a1655` les affiche | idem |
-| 8 | Mise à jour de Zoom | Zoom Video Communications, Inc. | 3 (estimé) | — | 💤 Inutile au démarrage | à taper soi-même : `demarrage desactiver e77d2aff` les affiche | idem |
-| 9 | Mise à jour de Zoom | Zoom Video Communications, Inc. | 3 (estimé) | — | 💤 Inutile au démarrage | à taper soi-même : `demarrage desactiver efb58e77` les affiche | idem |
-| 10 | Mise à jour de Zoom | Zoom Video Communications, Inc. | 3 (estimé) | — | 💤 Inutile au démarrage | à taper soi-même : `demarrage desactiver 48502476` les affiche | idem |
+| 1 | Spotify · com.spotify.client.startuphelper | Spotify | 42 | 5,1 % d'un cœur · 968 Mo | 💤 Inutile au démarrage | `demarrage desactiver b8e39d87 --confirmer` | `demarrage restaurer b8e39d87 --confirmer` |
+| 2 | L'Assistant (c'est moi) · com.assistant.superviseur | inconnu | 12 | 1,5 % d'un cœur · 144 Mo | ✅ Utile, à garder | — | — |
+| 3 | L'Assistant (c'est moi) · com.assistant.icone | inconnu | 8 | 1,3 % d'un cœur · 45 Mo | ✅ Utile, à garder | — | — |
+| 4 | Google Updater (Keystone) · com.google.GoogleUpdater.wake | Google LLC | 3 (estimé) | — | 👻 Orphelin (reste d'une app désinstallée) | `demarrage desactiver cf0af4b1 --confirmer` | `demarrage restaurer cf0af4b1 --confirmer` |
+| 5 | Mise à jour de Zoom · /Library/LaunchDaemons (système, administrateur) | Zoom Video Communications, Inc. | 3 (estimé) | — | 💤 Inutile au démarrage | à taper soi-même : `demarrage desactiver efb58e77` les affiche | idem |
+| 6 | Mise à jour de Zoom · /Library/PrivilegedHelperTools (administrateur) | Zoom Video Communications, Inc. | 3 (estimé) | — | 💤 Inutile au démarrage | à taper soi-même : `demarrage desactiver 48502476` les affiche | idem |
+| 7 | Mise à jour de Zoom · us.zoom.updater | Zoom Video Communications, Inc. | 3 (estimé) | — | 💤 Inutile au démarrage | à taper soi-même : `demarrage desactiver e77d2aff` les affiche | idem |
+| 8 | Mise à jour de Zoom · us.zoom.updater.login.check | Zoom Video Communications, Inc. | 3 (estimé) | — | 💤 Inutile au démarrage | à taper soi-même : `demarrage desactiver d14a1655` les affiche | idem |
+| 9 | com.jarvis.agent | inconnu | 1 | 0,2 % d'un cœur · 9 Mo | ⚠️ Inconnu, à vérifier | `demarrage desactiver 511c9b36 --confirmer` | `demarrage restaurer 511c9b36 --confirmer` |
+| 10 | com.apphousekitchen.aldente-pro.helper · /Library/LaunchDaemons (système, administrateur) | AppHouseKitchen GmbH | 1 | 0,1 % d'un cœur · 5 Mo | ✅ Utile, à garder | à taper soi-même : `demarrage desactiver e7fee7ff` les affiche | idem |
 
-Ce que ce passage a montré, puis ce qui a été corrigé :
-- **Spotify** s'ouvre à chaque connexion et coûte à lui seul 968 Mo et 5 % d'un cœur, en permanence. Il était
-  jugé ✅, parce qu'il avait l'air utilisé tous les jours… justement parce qu'il s'ouvre tout seul.
-  Il passe 💤 (D-45). L'action est réversible : `demarrage desactiver b8e39d87 --confirmer`. Coupe aussi
-  « Ouvrir Spotify automatiquement… » dans les paramètres de Spotify.
-- **Les deux « L'Assistant (c'est moi) »** (le superviseur, 1,5 % d'un cœur et 144 Mo avec tous ses modules ;
-  l'icône, 45 Mo) sont désormais distingués par leur label (D-44).
-- **Google Updater** : un 👻 (son app a été désinstallée, quarantaine réversible) et deux fichiers cassés
-  (« pas de Label »). Ceux-ci ne lancent rien : impact 0 désormais (D-45). D'où ils viennent : ACTIONS_HUMAINES
-  § 8.
-- **Les quatre « Mise à jour de Zoom »** sont dans /Library : des instructions à taper toi-même, réversibles. Ils
-  sont désormais distingués par leur label (D-44).
+**Si tu coupes les 6 éléments 💤 et 👻 : environ 968 Mo de mémoire libérée.**
 
-⏳ Le top 10 corrigé : `demarrage top` (ACTIONS_HUMAINES § 5), qui reprend les mesures déjà faites.
+- **Spotify** 💤 : il s'ouvre à chaque connexion. L'action est réversible : `demarrage desactiver b8e39d87
+  --confirmer`. Coupe aussi « Ouvrir Spotify automatiquement… » dans ses paramètres, sinon il se remet.
+- **L'Assistant** ✅ : le superviseur (144 Mo avec tous ses modules) et l'icône (45 Mo). C'est moi.
+- **Google Updater** 👻 : son app a été désinstallée. Quarantaine réversible.
+- **Deux fichiers Keystone cassés** (`com.google.keystone.agent` et `com.google.keystone.xpcservice`, sans Label) :
+  impact 0, ils ne lancent rien.
+- **Mise à jour de Zoom** 💤 ×4 : dans /Library, donc des instructions à taper toi-même (droits d'administrateur
+  pour deux d'entre elles), réversibles.
+- **`com.jarvis.agent`** ⚠️ : non signé, 9 Mo. Sans doute un ancien script à toi. `demarrage desactiver 511c9b36`
+  (simulation) montre son fichier et son programme.
+- **AlDente** ✅ : l'assistant de charge de la batterie, utile s'il te sert.
+
+Vu une fois pendant le test : la mise à jour de l'app Claude (`ShipIt`), ⚠️ et passagère (PROGRESS P11).
+
+Le rapport complet (courbes, mode sombre) : `cd ~/Assistant && .venv/bin/python demarrage.py rapport`.

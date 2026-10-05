@@ -143,7 +143,8 @@ def afficher_etat() -> int:
             from modules.demarrage import module as demarrage
 
             s = demarrage.status(time.time())
-            print("   🧹 Démarrage : " + ("surveille" if s["vivant"] else "démarrage…")
+            age = f" (battement il y a {int(time.time() - float(s['battement']))} s)" if s["vivant"] else ""
+            print("   🧹 Démarrage : " + ("surveille" + age if s["vivant"] else "démarrage…")
                   + f" · {s['sessions']} ouverture(s) mesurée(s) (python assistant.py demarrage rapport)")
         except Exception as e:
             print(f"   🧹 Démarrage : ⚠️ {e}")

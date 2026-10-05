@@ -2,17 +2,23 @@
 
 from __future__ import annotations
 
+import json
 import logging
+import sys
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from modules.demarrage import config, scan
-from modules.demarrage.analyse import Bilan, analyser
+from modules.demarrage import config
 from modules.demarrage.db import Base, DisquePlein
-from modules.demarrage.mesure import zsh
 from modules.demarrage.modele import Inventaire
-from modules.demarrage.signatures import CacheSignatures
 from modules.demarrage.systeme import Systeme
+
+if TYPE_CHECKING:
+    from modules.demarrage.analyse import Bilan
+
+# Le scan, l'analyse et zsh sont importés dans les fonctions qui s'en servent : la surveillance en fond, qui fait
+# scanner un processus fils (scanner_a_part), ne les charge jamais en mémoire (D-46).
+RACINE = Path(__file__).resolve().parents[2]
 
 log = logging.getLogger("demarrage")
 ZSH_TOUS_LES_S = 7 * 86400
@@ -35,6 +41,9 @@ def apps_de_la_derniere_session(base: Base) -> list[str]:
 
 def scanner(systeme: Systeme, base: Base, reglages: dict[str, Any]) -> tuple[Inventaire, list[str], bool]:
     """(inventaire, identifiants vus pour la première fois, premier scan ?). Le cache codesign est gardé en base."""
+    from modules.demarrage import scan
+    from modules.demarrage.signatures import CacheSignatures
+
     premier = base.dernier_scan() is None
     cache = CacheSignatures(base.signatures())
     inventaire = scan.scanner(systeme, reglages, cache, apps_de_la_derniere_session(base))
@@ -49,7 +58,27 @@ def scanner(systeme: Systeme, base: Base, reglages: dict[str, Any]) -> tuple[Inv
     return inventaire, nouveaux, premier
 
 
+def scanner_a_part(
+    systeme: Systeme, base: Base, reglages: dict[str, Any], delai_s: float = 600.0
+) -> tuple[Inventaire, list[str], bool] | None:
+    """Le même scan, dans un processus fils (python -m modules.demarrage.scan_fils) : la mémoire qu'il prend (~15 Mo)
+    est rendue au système dès qu'il se termine, au lieu de rester au démon pour toujours. None s'il a échoué."""
+    env = {"DEMARRAGE_DOSSIER": str(dossier(reglages)), "PYTHONPATH": str(RACINE)}
+    r = systeme.executer([sys.executable, "-m", "modules.demarrage.scan_fils"], delai=delai_s, env=env)
+    try:
+        resultat = json.loads(r.sortie.strip().splitlines()[-1]) if r.ok else None
+    except (IndexError, ValueError):
+        resultat = None
+    inventaire = base.dernier_scan() if isinstance(resultat, dict) else None
+    if resultat is None or inventaire is None:
+        log.error("[demarrage] scan à part en échec (code %s) : %s", r.code, (r.erreur or r.sortie).strip()[-300:])
+        return None
+    return inventaire, list(resultat.get("nouveaux", [])), bool(resultat.get("premier"))
+
+
 def bilan(systeme: Systeme, base: Base, reglages: dict[str, Any], rescanner: bool = False) -> Bilan:
+    from modules.demarrage.analyse import analyser
+
     inventaire = None if rescanner else base.dernier_scan()
     if inventaire is None:
         inventaire, _, _ = scanner(systeme, base, reglages)
@@ -61,6 +90,8 @@ def mesurer_zsh(systeme: Systeme, base: Base, reglages: dict[str, Any], forcer: 
     historique = base.zsh(1)
     if historique and not forcer and systeme.maintenant() - historique[-1]["ts"] < ZSH_TOUS_LES_S:
         return historique[-1]
+    from modules.demarrage.mesure import zsh
+
     t = zsh.mesurer(systeme, dossier(reglages), reglages["zsh"]["essais"], reglages["zsh"]["seuil_ms"])
     details = {"essais_ms": t.essais_ms, "causes": t.causes, "erreur": t.erreur}
     try:

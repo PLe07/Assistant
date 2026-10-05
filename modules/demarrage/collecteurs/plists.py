@@ -6,7 +6,6 @@ dictionnaire, BundleProgram relatif à l'app, programme qui est un interpréteur
 
 from __future__ import annotations
 
-import plistlib
 import re
 import shlex
 from dataclasses import dataclass, field
@@ -47,6 +46,8 @@ def lire(chemin: Path) -> tuple[dict[str, Any] | None, str | None]:
     if not donnees.strip():
         return None, "fichier vide"
     try:
+        import plistlib  # pas chargé par le démon (D-46)
+
         contenu = plistlib.loads(donnees)
     except Exception:  # selon la version : InvalidFileException, ExpatError, ValueError…
         return None, "plist corrompu (illisible par launchd aussi)"

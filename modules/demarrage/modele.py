@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import dataclasses
-import hashlib
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -28,6 +27,8 @@ SOURCES_GLOBALES = {"agent_global", "daemon_global", "daemon_app", "extension", 
 
 def identifiant(source: str, label: str, discriminant: str = "") -> str:
     """Stable d'un scan à l'autre : la même source et le même libellé donnent le même identifiant."""
+    import hashlib  # ici : le démon, qui ne scanne pas lui-même, n'a pas à charger OpenSSL (D-46)
+
     brut = f"{source}\x00{label}" + (f"\x00{discriminant}" if discriminant else "")
     return hashlib.sha1(brut.encode("utf-8")).hexdigest()[:8]
 

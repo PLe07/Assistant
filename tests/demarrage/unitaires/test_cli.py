@@ -136,6 +136,13 @@ def test_doctor(faux, reglages):
     _, texte = lancer(faux, reglages, "doctor")
     assert "Dernier scan" in texte and "S5 dégradé" in texte and "pmset" in texte and "absente" in texte
     assert "elle ne tourne pas" in texte and "0 relevés" in texte
+    from modules.demarrage import travail
+
+    base = travail.ouvrir_base(reglages)
+    base.ecrire("battement", faux.mac.maintenant() - 12)
+    base.fermer()
+    _, texte = lancer(faux, reglages, "doctor")
+    assert "elle tourne (battement il y a 12 s)" in texte  # l'âge prouve une relance après un kill (D-46)
 
 
 def test_doctor_conseille_l_automatisation_et_signale_les_bases_corrompues(faux, reglages):

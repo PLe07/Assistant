@@ -13,10 +13,10 @@ Porte unique : `modules/demarrage/check.sh` (dans le conteneur : `PYTHON=<venv>/
 | P5 Scores, verdicts, connaissances, gains | ✅ | faux Mac n° 1 : 100 % ; 2e faux Mac : 5/5 graines à 100 % |
 | P6 Actions réversibles + sécurité | ✅ | 12 tests d'actions, 18 tests de sécurité |
 | P7 Rapport HTML, CLI, notifications, surveillance | ✅ | 311 tests ; rapport vérifié en clair, sombre et sur mobile |
-| P8 Bout en bout, performance | ✅ conteneur · ❌ 1er passage Mac, corrigé (D-42, D-43) · ⏳ 2e | conteneur : démon 10 min à 0,17 %, 22,8 Mo ; Mac : scan 5,1 s puis 1,7 s |
-| P9 Installation | ⏳ Mac | lancé par le superviseur de l'Assistant (D-03) |
+| P8 Bout en bout, performance | ✅ bout en bout sur le Mac · ✅ budgets (de justesse, allégé ensuite : D-46) · ⏳ vérification finale | Mac : 1 passed ; scan 3,0 s puis 2,1 s ; démon 0,27 %, 39,9 Mo |
+| P9 Installation | ✅ surveillance allumée sur le Mac · ⏳ preuve de relance (âge du battement, D-46) | lancée par le superviseur (D-03) |
 | P10 Revue hostile | ✅ | 6 défauts trouvés et corrigés, chacun avec son test |
-| P11 Diagnostic réel sur le Mac | 1er passage fait · ⏳ 2e | 7 défauts réels corrigés, chacun testé (D-42 à D-45) |
+| P11 Diagnostic réel sur le Mac | ✅ 2 passages | 7 + 2 défauts réels corrigés, chacun testé (D-42 à D-46) ; top 10 réel ci-dessous |
 
 ## P0 — Reconnaissance (✅)
 
@@ -410,7 +410,58 @@ Les défauts, leurs corrections et leurs tests :
 
 Le faux Mac n° 1 et le 2e faux Mac (5 graines) restent à 100 %.
 
+### 2e passage (5 octobre au soir), avec D-42 à D-45
+
+```
+pytest tests/demarrage/e2e_mac
+🔎 934 éléments trouvés en 2.9 s (911 de macOS).
+   scan : 3.0 s, puis 2.1 s avec le cache codesign                         ✅
+   en tête : com.assistant.nettoyeur.test.charge (impact 65) ['empêche la veille']   ✅ (plus « L'Assistant »)
+   desactiver --confirmer : ✅ C'est fait.                                   ✅ (D-43)
+   restaurer --confirmer  : ✅ C'est restauré : launchctl enable … ; launchctl bootstrap …
+1 passed in 190.26s                                                        ✅ traces : aucune
+
+mesure_demon.py 600
+{'duree_s': 602, 'cpu_s': 1.65, 'cpu_moyen_pct': 0.274, 'ram_max_mo': 39.9}
+   dont Python lui-même ≈ 0.79 s ; top 1 fois 0.31 s ; log 1 fois 0.27 s (7 min de journal) ; ps 6 fois 0.22 s ;
+   pmset 5 fois 0.03 s ; launchctl list 5 fois 0.02 s ; last 0.01 s
+✅ dans les budgets                                                         (de justesse : 39,9 / 40 Mo → D-46)
+
+surveiller on ; service.py redemarrer ; kill -9 ; 70 s
+   🧹 Démarrage : surveille · 0 ouverture(s) mesurée(s)   (avant et après le kill : non probant → D-46)
+```
+
+`demarrage top` (avec D-44 et D-45, sur les mesures du 1er passage) :
+
+| # | Élément | Éditeur | Impact | Coût mesuré | Verdict | Désactiver | Restaurer |
+|---|---|---|---|---|---|---|---|
+| 1 | Spotify · com.spotify.client.startuphelper | Spotify | 42 | 5,1 % d'un cœur · 968 Mo | 💤 Inutile au démarrage | `demarrage desactiver b8e39d87 --confirmer` | `demarrage restaurer b8e39d87 --confirmer` |
+| 2 | L'Assistant (c'est moi) · com.assistant.superviseur | inconnu | 12 | 1,5 % d'un cœur · 144 Mo | ✅ Utile, à garder | — | — |
+| 3 | L'Assistant (c'est moi) · com.assistant.icone | inconnu | 8 | 1,3 % d'un cœur · 45 Mo | ✅ Utile, à garder | — | — |
+| 4 | Google Updater (Keystone) · com.google.GoogleUpdater.wake | Google LLC | 3 (estimé) | — | 👻 Orphelin (reste d'une app désinstallée) | `demarrage desactiver cf0af4b1 --confirmer` | `demarrage restaurer cf0af4b1 --confirmer` |
+| 5 | Mise à jour de Zoom · /Library/LaunchDaemons (système, administrateur) | Zoom Video Communications, Inc. | 3 (estimé) | — | 💤 Inutile au démarrage | à taper soi-même : `demarrage desactiver efb58e77` les affiche | idem |
+| 6 | Mise à jour de Zoom · /Library/PrivilegedHelperTools (administrateur) | Zoom Video Communications, Inc. | 3 (estimé) | — | 💤 Inutile au démarrage | à taper soi-même : `demarrage desactiver 48502476` les affiche | idem |
+| 7 | Mise à jour de Zoom · us.zoom.updater | Zoom Video Communications, Inc. | 3 (estimé) | — | 💤 Inutile au démarrage | à taper soi-même : `demarrage desactiver e77d2aff` les affiche | idem |
+| 8 | Mise à jour de Zoom · us.zoom.updater.login.check | Zoom Video Communications, Inc. | 3 (estimé) | — | 💤 Inutile au démarrage | à taper soi-même : `demarrage desactiver d14a1655` les affiche | idem |
+| 9 | com.jarvis.agent | inconnu | 1 | 0,2 % d'un cœur · 9 Mo | ⚠️ Inconnu, à vérifier | `demarrage desactiver 511c9b36 --confirmer` | `demarrage restaurer 511c9b36 --confirmer` |
+| 10 | com.apphousekitchen.aldente-pro.helper · /Library/LaunchDaemons (système, administrateur) | AppHouseKitchen GmbH | 1 | 0,1 % d'un cœur · 5 Mo | ✅ Utile, à garder | à taper soi-même : `demarrage desactiver e7fee7ff` les affiche | idem |
+
+`Si tu coupes les 6 éléments 💤 et 👻 : environ 968 Mo de mémoire libérée.`
+
+Vu pendant le test (base temporaire) : `com.anthropic.claudefordesktop.ShipIt`, impact 45, ⚠️ « éditeur inconnu ».
+C'est la mise à jour de l'app Claude qui s'installait à ce moment-là : passagère, elle n'apparaît pas dans le top
+de ta vraie base. Elle est ⚠️ parce que sa signature n'a pas pu être lue pendant qu'elle tournait.
+
+Les deux fichiers Google « sans Label » sont `com.google.keystone.agent.plist` et `com.google.keystone.xpcservice.plist`
+dans ton dossier LaunchAgents. Ils ne lancent rien, et leur impact est maintenant 0.
+
+Corrigé après ce passage (D-46), et testé :
+
+| Constat | Correction | Test |
+|---|---|---|
+| 39,9 Mo pour 40, sans scan pendant la mesure ; un scan sur place ajoutait environ 17 Mo, jamais rendus | scan quotidien dans un processus fils ; démon allégé de 5 Mo d'imports | `test_scan_a_part` (fils réel, repli sur place, imports absents) ; conteneur : 18,1 Mo scan compris |
+| Relance après `kill` non prouvée par la ligne d'état | âge du battement dans `assistant.py etat` et `doctor` | `test_cli::test_doctor` |
+
 ## Prochaine étape
 
-Sur ton Mac : le 2e passage (ACTIONS_HUMAINES § 2, § 3, puis `demarrage top` et § 8). RAPPORT_FINAL § 4 et § 5
-seront alors complétés avec ces sorties.
+Sur ton Mac : la vérification finale (ACTIONS_HUMAINES § 9), puis le message final.

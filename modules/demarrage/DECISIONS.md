@@ -440,3 +440,23 @@ in progress »).
 - **Vérifié** : le faux Mac n° 1 et le 2e faux Mac (5 graines) restent à 100 % de verdicts justes.
 - **Non tranché sans toi** : pourquoi deux fichiers Google de ton dossier LaunchAgents n'ont « pas de Label ».
   `plutil -p` sur ces fichiers le dira (ACTIONS_HUMAINES § 8).
+
+**D-46 · Le 2e passage : le budget mémoire tenait de justesse ; le scan quotidien part dans un processus fils.**
+- **Le constat** : sur ton Mac, `mesure_demon.py 600` a donné ✅, mais avec 39,9 Mo pour un budget de 40 Mo. Et
+  cette mesure ne contenait aucun scan, car l'inventaire était préparé avant. Or, dans le conteneur, un scan fait
+  dans le démon lui-même faisait monter sa mémoire de 21 à 38 Mo. Python ne rend pas cette mémoire au système.
+  En vrai, la surveillance scanne chaque jour : elle aurait dépassé le budget.
+- **Le scan quotidien dans un processus fils** (`python -m modules.demarrage.scan_fils`) : il scanne, enregistre
+  en base, puis rend toute sa mémoire en se terminant. Il renvoie en JSON les éléments vus pour la première fois.
+  S'il échoue, le démon scanne sur place : plus de mémoire, mais le scan a lieu. `demarrage scan` (à la main)
+  reste sur place.
+- **Des imports à la demande** : `hashlib` (qui charge OpenSSL, environ 4 Mo), `plistlib`, la pile du scan
+  (collecteurs, signatures, fils d'exécution), l'analyse et le rapport ne sont plus chargés par le démon. Ses
+  imports passent de 13,3 à 8,1 Mo. Un test vérifie qu'ils ne reviennent pas.
+- **Effet mesuré dans le conteneur** : 18,1 Mo avec un scan quotidien compris, contre 22,8 Mo avant sans scan.
+- **`mesure_demon.py`** fait refaire au démon son scan quotidien au début de la mesure : la mémoire maximale le
+  compte. Le processeur de ce scan est compté à part et ramené à la journée (un scan par jour). Le budget de
+  processeur vise le régime normal, et la ligne « régime normal » le montre.
+- **La preuve de relance** : après `kill -9` puis 70 s, la ligne d'état affichait « surveille » même sans relance,
+  car le démon est jugé vivant tant que son dernier battement a moins de 7 minutes. Elle affiche maintenant l'âge
+  du battement, comme `doctor` : moins de 70 s après un `kill`, c'est la preuve d'une relance.
