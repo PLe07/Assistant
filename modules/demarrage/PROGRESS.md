@@ -6,7 +6,7 @@ Porte unique : `modules/demarrage/check.sh` (dans le conteneur : `PYTHON=<venv>/
 | Phase | Statut | Preuve |
 |---|---|---|
 | P0 Reconnaissance, squelette, check.sh | ✅ | ci-dessous |
-| P1 Modèle, plists, collecteurs S1-S4 + S6, signatures | ⏳ | |
+| P1 Modèle, plists, collecteurs S1-S4 + S6, signatures | ✅ | 118 tests, couverture 98 % |
 | P2 Faux Mac + vérité terrain | ⏳ | |
 | P3 Collecteurs S5, S7-S10, modes dégradés | ⏳ | |
 | P4 Mesure (session, croisière, énergie, veille, zsh) | ⏳ | |
@@ -42,7 +42,28 @@ $ PYTHON=…/venv/bin/python modules/demarrage/check.sh
 CHECK OK
 ```
 
+## P1 — Modèle, collecteurs S1-S4 et S6 (✅)
+
+- `modele.py` : la fiche normalisée du §3 (id stable = empreinte source + label), l'inventaire, les collecteurs.
+- `collecteurs/plists.py` : plists XML/binaires/cassés/vides, ProgramArguments vide, KeepAlive en dictionnaire,
+  BundleProgram, WorkingDirectory, interpréteurs (D-12), liens symboliques suivis sous la racine.
+- S1 `agents_utilisateur.py`, S2 `agents_globaux.py`, S3 `apple.py`, S4 `apps_embarquees.py`, S6 `launchd_etat.py`
+  (list, print gui, print-disabled ancien et récent, print system si lisible, print d'un service).
+- `signatures.py` : codesign (Apple, Developer ID, App Store, ad hoc, non signé, invalide), cache par chemin +
+  date + taille, appels en parallèle ; mdls.
+- `scan.py` : chaque collecteur isolé (panne → « indisponible » ou « dégradé »), doublons, « c'est moi », app
+  parente, app désinstallée ou déplacée, relances KeepAlive.
+- `db.py` : SQLite 600, base corrompue mise de côté puis reconstruite, disque plein → DisquePlein.
+
+```
+$ PYTHON=…/venv/bin/python modules/demarrage/check.sh
+▶ ruff check ✅  ▶ ruff format ✅  ▶ mypy ✅
+▶ pytest + couverture ≥ 85 %   118 passed · Total coverage: 98.15%   ✅
+▶ faux Mac ✅  ▶ sécurité ✅  ▶ performance ✅
+CHECK OK
+```
+
 ## Prochaine étape
 
-P1 : `modele.py` (la fiche d'un élément), lecture robuste des plists, collecteurs S1-S4 et S6, signatures
-(`codesign`, `mdls`, cache par chemin + date de modification), base SQLite.
+P2 : `tests/demarrage/faux_mac/construire.py` : un faux Mac complet (≥ 15 éléments Apple, les cas plantés du §9.2,
+les cas tordus) avec ses sorties de commandes et sa vérité terrain ; test du scan contre cette vérité.

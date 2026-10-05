@@ -90,3 +90,48 @@ interdit.
 **D-10 · Où se range la vérité terrain.**
 Le faux Mac de §8 est dans `tests/demarrage/faux_mac/construire.py`, à côté des autres tests du module, et non dans
 `tests/faux_mac/`. Les tests du dépôt sont rangés par module (`tests/corvees`, `tests/demarrage`).
+
+## 2026-10-05 · P1 — Modèle, collecteurs S1-S4 et S6
+
+**D-11 · Les noms de fichiers du §8, dans `modules/demarrage/`.**
+Le paquet ne s'appelle pas `nettoyeur/` mais `modules/demarrage/` (D-02). À l'intérieur, les noms du §8 sont
+gardés : `collecteurs/agents_utilisateur.py`, `agents_globaux.py`, `apple.py`, `apps_embarquees.py`,
+`launchd_etat.py`… Trois fichiers communs s'y ajoutent :
+- `collecteurs/plists.py` : lire un plist sans planter ;
+- `collecteurs/applications.py` : l'index des apps installées ;
+- `scan.py` : l'orchestration.
+`config.example.toml`, `install.sh` et `uninstall.sh` sont remplacés par les mécanismes de l'Assistant :
+`reglages.json` et `service.py installer|desinstaller`.
+
+**D-12 · « Signé Apple » ne suffit pas : il faut une fiche d'Apple.**
+Un plist d'un tiers peut lancer un programme de macOS : `/usr/bin/curl`, `/bin/sh script`, `/usr/bin/open -a`.
+C'est même la persistance classique d'un logiciel indésirable. L'étiqueter 🍎 le rendrait intouchable. La règle :
+- **🍎** : sous `/System` (S3), ou un label `com.apple.*` dont le programme est signé Apple, ou un élément
+  d'ouverture qui est une app signée Apple ;
+- **un interpréteur** (`sh`, `bash`, `zsh`, `python3`, `osascript`, `env`, `nohup`, `open`) : le programme retenu
+  est le script ou l'app qu'il lance, pas l'interpréteur ;
+- **un programme système lancé par la fiche d'un tiers** : il est marqué `programme_systeme`, sans éditeur connu
+  (le verdict en P5 le traitera comme à vérifier) ;
+- **un label `com.apple.*` sans signature Apple** : il est marqué `se_dit_apple`, donc à vérifier.
+
+**D-13 · S3 sans codesign ; S4 actif seulement s'il est enregistré.**
+- Les éléments de `/System` sont sur le volume système scellé : ils sont étiquetés Apple sans lancer `codesign`.
+  C'est des centaines d'appels en moins, et le scan reste sous les 15 s.
+- Un agent embarqué dans une app (S4) n'est qu'une déclaration tant que l'app ne l'a pas enregistré. Il est
+  « actif » s'il est chargé dans launchd ; S5 (Réglages) complétera en P3.
+
+**D-14 · S6 : ce qui est chargé sans fichier connu.**
+Les labels chargés dans ta session sans plist trouvé deviennent des fiches « launchd », avec leur programme lu par
+`launchctl print gui/UID/label`. C'est le cas, par exemple, d'une app hors de `/Applications`.
+Ce qui n'est pas du démarrage est ignoré : les apps ouvertes à la main (`application.*`), les services anonymes et
+`com.apple.*`.
+Il y a au plus 60 appels `launchctl print` par scan.
+Les daemons système ont « chargé » et « désactivé » inconnus (`None`) quand `launchctl print system` est refusé
+sans root : on ne devine pas.
+
+**D-15 · Doublons et apps déplacées.**
+- **Même label à deux endroits** : deux fiches marquées `doublon`. Au sein d'une même source, l'identifiant
+  intègre le chemin du plist pour rester unique.
+- **App déplacée** : si le programme a disparu mais qu'une app du même nom existe ailleurs, la fiche le dit
+  (`app_deplacee_vers`). La fiche pointe vers l'ancien emplacement, elle est donc cassée, mais ce n'est pas une
+  désinstallation.
