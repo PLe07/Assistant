@@ -395,3 +395,23 @@ suite (Claude, propositions, rapport, notification) tournent donc dans un progra
   le PATH du shell.
 - Mise en veille : session coupée, analyse au réveil, notification retenue la nuit.
 - Changement d'heure : une analyse par soir, à 21 h heure de Paris, les deux jours de changement (testé).
+
+## 2026-10-05 · Premier essai sur le Mac
+
+**D-53 · Ce que le Mac a appris.**
+- Installation et démarrage : démon vivant, 8 capteurs sur 9 « ok » (appli, fenêtres, fichiers, zsh,
+  presse-papiers, inactivité), Claude trouvé avec son jeton.
+- Navigateurs : Chrome demande aussi l'« Accès complet au disque » sur ce macOS (pas seulement Safari). La
+  documentation est corrigée.
+- Le test « applis » du bout en bout faisait tourner le démon dans un fil secondaire. Or macOS ne tient à jour
+  l'appli au premier plan que sur le fil principal (la boucle d'événements que le vrai démon fait tourner, D-23).
+  Le test est tombé sur la méthode de secours, qui a pris une fenêtre système (« WindowManager », Stage Manager).
+  Défaut du test, pas du démon : `doctor` montrait « Capteur apps ok », c'est-à-dire la méthode principale.
+  Corrections :
+  - le test reproduit maintenant exactement la boucle du démon (fil principal + `pomper`, activité dans un autre
+    fil) et exige la méthode principale ;
+  - la méthode de secours ignore les fenêtres du système (Stage Manager, Dock, Centre de contrôle…).
+- Nouvelle commande `corvees derniers [n]` : les derniers événements notés, déjà caviardés. Tu vois de tes yeux
+  ce que le détecteur capte, et rien d'autre n'est gardé.
+- Les commandes à coller ne contiennent plus de lignes `# commentaire` : zsh interactif ne les accepte pas, et
+  une parenthèse y était lue comme un motif de fichiers.

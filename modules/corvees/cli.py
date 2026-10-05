@@ -10,6 +10,7 @@ resume                     rallume les capteurs
 analyser --maintenant      analyse tout de suite, sans attendre 21 h
 purge                      efface toutes les données (avec confirmation)
 doctor                     la santé de chaque capteur, les autorisations, la dernière analyse, le coût du mois
+derniers [n]               les n derniers événements notés (20 par défaut) : pour voir ce qu'il voit
 desinstaller ID            défait ce que « accept ID --installer » avait installé
 """
 
@@ -27,7 +28,7 @@ from typing import Any
 from modules.corvees import config, daemon, propositions, rapport, suite
 from modules.corvees.db import Base
 from modules.corvees.detection.moteur import frequence_actuelle
-from modules.corvees.normalize import instant_du_jour, mois_de
+from modules.corvees.normalize import instant_du_jour, local, mois_de
 
 ATTENTE_DEMON_S = 10.0
 
@@ -327,6 +328,22 @@ def _claude() -> tuple[bool | None, str]:
     return True, "Claude : Claude Code trouvé, jeton présent"
 
 
+def derniers(ctx: Contexte, args: argparse.Namespace) -> int:
+    if args.n <= 0:
+        print("⛔ Un nombre positif, par exemple : corvees derniers 20")
+        return 2
+    if ctx.demon_vivant():
+        ctx.demander_au_demon("vider", 3.0)  # les 30 dernières secondes aussi
+    evenements = ctx.base.derniers(args.n)
+    if not evenements:
+        print("Rien de noté pour l'instant.")
+        return 0
+    print(f"🔎 Les {len(evenements)} derniers événements notés (déjà caviardés, rien d'autre n'est gardé) :")
+    for e in evenements:
+        print(f"   {rapport.date_lisible(e.ts)}:{local(e.ts):%S} · {e.source:13s} · {e.token}")
+    return 0
+
+
 def desinstaller(ctx: Contexte, args: argparse.Namespace) -> int:
     try:
         print("↩️ " + propositions.desinstaller(ctx.reglages, args.id, lancer=ctx.lancer))
@@ -374,6 +391,9 @@ def analyseur() -> argparse.ArgumentParser:
     pu.add_argument("--oui", action="store_true", help="sans demander de confirmation")
     pu.set_defaults(faire=purge)
     sous.add_parser("doctor").set_defaults(faire=doctor)
+    de = sous.add_parser("derniers")
+    de.add_argument("n", nargs="?", type=int, default=20)
+    de.set_defaults(faire=derniers)
     sous.add_parser("desinstaller").add_argument("id")
     sous.choices["desinstaller"].set_defaults(faire=desinstaller)
     return p

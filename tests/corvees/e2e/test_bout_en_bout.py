@@ -176,10 +176,20 @@ def test_de_vraies_actions_remontent_jusqu_au_rapport(bac, capsys):
     reason="sur le Mac seulement, à la demande : CORVEES_E2E_MAC=1 (ouvre et referme TextEdit et Calculette)",
 )
 def test_sur_le_mac_les_applis_alternees(bac):  # pragma: no cover - lancé à la main sur le Mac
+    """Comme le vrai démon : sa boucle sur le fil principal, qui laisse macOS tenir à jour l'appli au premier plan
+    (natif.pomper), pendant qu'un autre fil ouvre TextEdit et Calculette à tour de rôle, puis les referme."""
     from modules.corvees.capteurs.natif import natif
 
     reglages, _, _ = bac
-    with DemonEnFil(reglages, natif()) as demon:
+    mac = natif()
+    journal: list[str] = []
+    demon = daemon.Demon(reglages, mac, journal=journal.append)
+    demon.base.ecrire("derniere_analyse", time.time())
+    for c in demon.capteurs:
+        c.intervalle = min(c.intervalle, 0.5)
+    demon.demarrer_capteurs()
+
+    def activite() -> None:
         try:
             for _ in range(3):
                 for appli in ("TextEdit", "Calculator"):
@@ -188,12 +198,21 @@ def test_sur_le_mac_les_applis_alternees(bac):  # pragma: no cover - lancé à l
         finally:
             for appli in ("TextEdit", "Calculator"):
                 subprocess.run(["osascript", "-e", f'quit app "{appli}"'], capture_output=True)
-        time.sleep(1)
-        cli.Contexte(reglages).demander_au_demon("vider", 5)
-    base = daemon.ouvrir(reglages)
+
+    fil = threading.Thread(target=activite)
+    fil.start()
     try:
-        jetons = {e.token for e in base.evenements(0)}
+        while fil.is_alive():
+            demon.tour_protege(time.time())
+            mac.pomper(daemon.PAS_S)
+        demon.tour_protege(time.time())
+        demon.vider(time.time())
+        jetons = [e.token for e in demon.base.evenements(0)]
+        sante = {c.nom: (c.statut, c.detail) for c in demon.capteurs}
     finally:
-        base.fermer()
-    assert "app:TextEdit" in jetons and any(t in jetons for t in ("app:Calculator", "app:Calculette")), jetons
-    assert demon.erreur is None
+        fil.join(30)
+        demon.fermer()
+    print(f"\nApplis vues : {[t for t in jetons if t.startswith('app:')]}\nSanté : {sante}")
+    assert sante["apps"][0] == "ok", sante["apps"]  # la méthode principale, pas celle de secours
+    assert jetons.count("app:TextEdit") >= 2, jetons
+    assert jetons.count("app:Calculator") + jetons.count("app:Calculette") >= 2, jetons

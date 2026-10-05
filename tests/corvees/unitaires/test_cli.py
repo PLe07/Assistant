@@ -302,3 +302,30 @@ def test_les_raccourcis(monkeypatch, tmp_path):
     with mock.patch("core.config.charger", return_value={"modules": {"corvees": {}}}):
         with mock.patch("core.config.module_actif", return_value=False):
             assert cli.main(["status"]) == 0
+
+
+def test_derniers(corvees, capsys):
+    assert corvees("derniers", "3") == 0
+    sortie = capsys.readouterr().out.splitlines()
+    assert sortie[0].startswith("🔎 Les 3 derniers événements notés") and len(sortie) == 4
+    assert all(" · " in ligne and ":" in ligne for ligne in sortie[1:])
+    assert corvees("derniers", "0") == 2
+
+
+def test_derniers_sans_rien(tmp_path, monde, capsys):
+    vide = Monde(tmp_path / "vide", monde)
+    assert vide("derniers") == 0 and "Rien de noté" in capsys.readouterr().out
+
+
+def test_derniers_avec_le_demon_vide_d_abord_son_tampon(dossier, monde, capsys):
+    from modules.corvees.db import Evenement
+
+    corvees = Monde(dossier, monde)
+    demon = daemon.Demon(corvees.reglages, capteurs=[])
+    corvees.demon = demon
+    demon.base.ecrire("battement", corvees.fin)
+    demon.base.ecrire("derniere_analyse", corvees.fin)
+    demon.recevoir(Evenement(corvees.fin + 1, "apps", "app", "app:Tout_nouveau"))
+    assert corvees("derniers", "1") == 0
+    assert "app:Tout_nouveau" in capsys.readouterr().out
+    demon.base.fermer()

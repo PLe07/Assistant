@@ -193,6 +193,15 @@ class Base:
                 session if session is None else sessions.setdefault(session, session),
             )
 
+    def derniers(self, n: int) -> list[Evenement]:
+        """Les n derniers événements, du plus ancien au plus récent (sans leurs attributs)."""
+        lignes = self.db.execute(
+            "SELECT ts, source, kind, token, session_id FROM events ORDER BY ts DESC, id DESC LIMIT ?", (n,)
+        ).fetchall()
+        return [
+            Evenement(ts, source, kind, token, _VIDE, session) for ts, source, kind, token, session in reversed(lignes)
+        ]
+
     def compter(self) -> int:
         return int(self.db.execute("SELECT COUNT(*) FROM events").fetchone()[0])
 

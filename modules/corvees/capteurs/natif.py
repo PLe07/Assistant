@@ -11,6 +11,23 @@ import subprocess
 import sys
 from typing import Any
 
+# Des fenêtres du système, jamais « l'appli devant » (noms anglais et français).
+FENETRES_SYSTEME = {
+    "WindowManager",
+    "Window Server",
+    "Dock",
+    "SystemUIServer",
+    "Control Center",
+    "Centre de contrôle",
+    "Notification Center",
+    "Centre de notifications",
+    "Spotlight",
+    "loginwindow",
+    "screencaptureui",
+    "Wallpaper",
+    "Fond d'écran",
+}
+
 
 class Natif:
     """Les questions posées à macOS par les capteurs."""
@@ -33,12 +50,21 @@ class Natif:
             return None
 
     def appli_devant_secours(self) -> tuple[str, str] | None:
-        """En secours : le propriétaire de la fenêtre la plus en avant (sans autorisation non plus)."""
+        """En secours : le propriétaire de la fenêtre normale la plus en avant (sans autorisation non plus). Les
+        fenêtres du système (Stage Manager, Dock, Centre de contrôle…) ne comptent pas : ce ne sont pas des applis."""
         try:
-            from modules.yeux.capture import fenetre_au_premier_plan
+            import Quartz
 
-            f = fenetre_au_premier_plan()
-            return (f["appli"], f.get("bundle", "")) if f else None
+            options = Quartz.kCGWindowListOptionOnScreenOnly | Quartz.kCGWindowListExcludeDesktopElements
+            for w in Quartz.CGWindowListCopyWindowInfo(options, Quartz.kCGNullWindowID) or []:
+                proprietaire = str(w.get(Quartz.kCGWindowOwnerName, "") or "")
+                if int(w.get(Quartz.kCGWindowLayer, 1)) != 0 or proprietaire in FENETRES_SYSTEME:
+                    continue
+                cadre = w.get(Quartz.kCGWindowBounds) or {}
+                if float(cadre.get("Width", 0)) < 200 or float(cadre.get("Height", 0)) < 120:
+                    continue
+                return proprietaire, ""
+            return None
         except Exception:
             return None
 

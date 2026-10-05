@@ -23,7 +23,7 @@ tombe). Vérifie avec `.venv/bin/python assistant.py corvees doctor` : tu dois l
 | Autorisation | Où | Quoi autoriser | Ce que ça débloque | Sans elle |
 |---|---|---|---|---|
 | **Accessibilité** | Réglages Système → Confidentialité et sécurité → Accessibilité | « Python » (déjà fait si la traduction 🇬🇧 marche chez toi : c'est le même) | les titres de fenêtres (capteur C2), caviardés avant d'être écrits | capteur « fenetres » désactivé, le reste marche |
-| **Accès complet au disque** (facultatif) | Réglages Système → Confidentialité et sécurité → Accès complet au disque → « + » | « Python » (s'il n'est pas dans la liste : « + », puis ⌘⇧G et colle `~/Assistant/.venv/bin/python`) | l'historique de **Safari** (C5) | Safari n'est pas lu ; Chrome, Brave, Arc et Edge le sont quand même |
+| **Accès complet au disque** (facultatif) | Réglages Système → Confidentialité et sécurité → Accès complet au disque → « + » | « Python » (s'il n'est pas dans la liste : « + », puis ⌘⇧G et colle `~/Assistant/.venv/bin/python`) | l'historique des navigateurs (C5) : Safari, et Chrome sur les macOS récents | les sites visités ne sont pas lus ; le reste marche |
 
 Après un changement d'autorisation : `.venv/bin/python service.py redemarrer`.
 
@@ -32,14 +32,23 @@ Après un changement d'autorisation : `.venv/bin/python service.py redemarrer`.
 Ces vérifications ont été faites dans le conteneur de construction (Linux). Elles doivent être refaites sur ton
 Mac, parce que seul le Mac a les vraies applis et l'Apple Silicon.
 
+Bout en bout (de vrais fichiers dans ~/CorveesSandbox, un historique zsh de test, puis TextEdit et Calculette
+ouvertes à tour de rôle et refermées ; le bac à sable est effacé à la fin) :
+
 ```zsh
 cd ~/Assistant
-# Bout en bout : de vrais fichiers rangés dans ~/CorveesSandbox, un historique zsh de test, puis TextEdit et
-# Calculette ouvertes à tour de rôle et refermées. Le bac à sable est effacé à la fin.
-CORVEES_E2E_MAC=1 .venv/bin/python -m pytest tests/corvees/e2e -q
-# CPU, mémoire, taille de la base pendant 10 minutes (le démon doit tourner) :
+CORVEES_E2E_MAC=1 .venv/bin/python -m pytest tests/corvees/e2e -q -s
+```
+
+CPU, mémoire et taille de la base pendant 10 minutes (le démon doit tourner, utilise ton Mac normalement) :
+
+```zsh
 .venv/bin/python tests/corvees/perf/mesure_demon.py 600
-# Relance après un plantage : le superviseur relance le module dans la minute
+```
+
+Relance après un plantage (le superviseur relance le module dans la minute) :
+
+```zsh
 pkill -9 -f 'modules\.corvees$'; sleep 70; .venv/bin/python assistant.py corvees status
 ```
 

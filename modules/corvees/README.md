@@ -48,6 +48,7 @@ simplement `corvees …` avec l'alias de [ACTIONS_HUMAINES.md](ACTIONS_HUMAINES.
 | La revoir plus tard | `corvees snooze ID 7` (dans 7 jours) |
 | Analyser tout de suite | `corvees analyser --maintenant` |
 | Faire le point (capteurs, autorisations, coût) | `corvees doctor` |
+| Voir ce qu'il a noté (déjà caviardé) | `corvees derniers` |
 
 L'**ID** est le petit code à 6 caractères affiché à côté de chaque corvée dans le rapport.
 
@@ -100,7 +101,7 @@ par défaut). Exemples :
 |---|---|
 | `doctor` : « Démon arrêté alors que le module est allumé » | `python service.py installer`, puis attends 1 minute |
 | `doctor` : « Capteur fenetres désactivé » | Réglages Système → Confidentialité et sécurité → Accessibilité → « Python » |
-| `doctor` : « Capteur navigateur dégradé : Accès complet au disque » (Safari) | Réglages Système → Confidentialité et sécurité → Accès complet au disque → « Python » (facultatif) |
+| `doctor` : « Capteur navigateur dégradé : Accès complet au disque » (Safari, Chrome) | Réglages Système → Confidentialité et sécurité → Accès complet au disque → « Python » (facultatif) |
 | « Claude : jeton absent » | `python assistant.py renouveler-jeton` (en attendant, descriptions faites sur place) |
 | Rien dans le rapport après quelques jours | normal au début : il faut une même action sur plusieurs jours. `corvees status` pour voir les événements |
 
