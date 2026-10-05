@@ -5,9 +5,9 @@ le Nettoyeur a été construit et vérifié dans un conteneur Linux, sur un faux
 
 Les commandes se tapent dans le Terminal. Copie chaque bloc tel quel.
 
-**Où tu en es (5 octobre au soir)** : § 1, § 2, § 3 et § 5 faits ; la relance après un plantage est prouvée.
-Il reste seulement le § 9, une mesure de 10 minutes après le dernier allègement (D-47). Les § 4, 6, 7 et 8 sont
-facultatifs.
+**Où tu en es (5 octobre au soir)** : tout l'obligatoire est fait (§ 1, 2, 3, 5 et 9), et tous les critères sont
+✅. Il ne reste que du facultatif : § 4, 6, 7 et 8. Les autres sections restent ici pour refaire une vérification
+plus tard.
 
 ## 1. Mettre à jour et faire le point (1 minute)
 

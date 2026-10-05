@@ -13,10 +13,10 @@ Porte unique : `modules/demarrage/check.sh` (dans le conteneur : `PYTHON=<venv>/
 | P5 Scores, verdicts, connaissances, gains | ✅ | faux Mac n° 1 : 100 % ; 2e faux Mac : 5/5 graines à 100 % |
 | P6 Actions réversibles + sécurité | ✅ | 12 tests d'actions, 18 tests de sécurité |
 | P7 Rapport HTML, CLI, notifications, surveillance | ✅ | 311 tests ; rapport vérifié en clair, sombre et sur mobile |
-| P8 Bout en bout, performance | ✅ bout en bout sur le Mac · ✅ budgets (de justesse, allégé ensuite : D-46) · ⏳ vérification finale | Mac : 1 passed ; scan 3,0 s puis 2,1 s ; démon 0,27 %, 39,9 Mo |
+| P8 Bout en bout, performance | ✅ sur le Mac | 1 passed ; scan 3,0 s puis 2,1 s ; démon 0,067 % sur la journée (0,248 % sur 10 min), 36,0 Mo |
 | P9 Installation | ✅ sur le Mac : allumée, relancée 7 s après un `kill -9` | lancée par le superviseur (D-03) |
 | P10 Revue hostile | ✅ | 6 défauts trouvés et corrigés, chacun avec son test |
-| P11 Diagnostic réel sur le Mac | ✅ 3 passages | défauts réels corrigés, chacun testé (D-42 à D-47) ; top 10 réel ci-dessous |
+| P11 Diagnostic réel sur le Mac | ✅ 4 passages | défauts réels corrigés, chacun testé (D-42 à D-47) ; top 10 réel ci-dessous |
 
 ## P0 — Reconnaissance (✅)
 
@@ -486,6 +486,22 @@ Corrigé après ce passage (D-47), et testé :
 Tests : `test_demon::test_lancement_leger`, `test_scan_a_part::test_moyenne_du_jour_separe_le_ponctuel_du_regime`.
 Dans le conteneur (400 s) : fenêtre brute 0,194 %, régime 0,008 %, moyenne du jour 0,01 %, 18,2 Mo.
 
-## Prochaine étape
+### 4e passage : la mesure finale (avec D-47)
 
-Sur ton Mac : la mesure finale (ACTIONS_HUMAINES § 9), puis le message final.
+```
+mesure_demon.py 600
+{'duree_s': 602, 'cpu_s': 1.49, 'cpu_fenetre_pct': 0.248, 'regime_pct': 0.044, 'ponctuel_s': 1.23, 'jour_pct': 0.067, 'top_s': 0.38, 'ram_max_mo': 36.0}
+   dont Python lui-même ≈ 0.89 s ; python (scan quotidien, fils) 0.34 s ; ps (6 fois) 0.21 s ; pmset (5 fois) 0.03 s ;
+   launchctl list (5 fois) 0.01 s ; sysctl 0.00 s ; plus grosse commande 43.0 Mo
+   fenêtre brute de 602 s (lancement et scan quotidien compris) : 0.248 %
+   régime : 0.044 % · top toutes les 30 min : 0.38 s · ponctuel (lancement + scan, une fois par jour) : 1.23 s
+   → moyenne sur une journée : 0.067 % de processeur
+✅ dans les budgets
+```
+
+Plus de `log` ni de `last` (relancé en pleine session), plus de `top` au lancement. Les budgets sont tenus, même
+sur la fenêtre brute de 10 minutes : 0,248 % pour 0,3 %, et 36,0 Mo pour 40, scan quotidien compris.
+
+## Terminé
+
+Les 10 critères de RAPPORT_FINAL.md sont ✅. Il ne reste que du facultatif (ACTIONS_HUMAINES § 4, 6, 7, 8).
