@@ -339,3 +339,22 @@ def test_analyser_de_bout_en_bout_avec_un_refus():
     refus = {c["signature"]: {"statut": "reject", "frequence_ref": c["frequence_mois"], "tokens": c["tokens"]}}
     assert moteur.analyser(evts, R, refus, maintenant=ts(19, 0)) == []
     assert moteur.frequence_actuelle(evts, R, c["tokens"], ts(19, 0)) > 0
+
+
+def test_le_ramasse_miettes_est_toujours_rallume():
+    import gc
+    from unittest import mock
+
+    assert gc.isenabled()
+    moteur.analyser([], R)
+    assert gc.isenabled()
+    with mock.patch.object(moteur, "_analyser", side_effect=RuntimeError("panne")):
+        with pytest.raises(RuntimeError):
+            moteur.analyser([], R)
+    assert gc.isenabled()
+    gc.disable()
+    try:
+        moteur.analyser([], R)
+        assert not gc.isenabled()  # éteint par quelqu'un d'autre : on le laisse éteint
+    finally:
+        gc.enable()

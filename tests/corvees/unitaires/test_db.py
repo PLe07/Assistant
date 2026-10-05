@@ -28,6 +28,27 @@ def test_base_lisible_par_moi_seul(base):
     assert stat.S_IMODE(os.stat(base.chemin).st_mode) == 0o600
 
 
+def test_ses_fichiers_de_journal_aussi(tmp_path, gardien):
+    """Le journal d'écriture de SQLite (-wal, -shm) contient les mêmes données : lisible par toi seul aussi
+    (trouvé en faisant tourner le vrai démon : il était en 644)."""
+    ancien = os.umask(0o022)
+    try:
+        b = Base(tmp_path / "corvees.db", gardien)
+        b.ajouter([evt()])
+        b.ecrire("battement", 1.0)
+        fichiers = sorted(tmp_path.glob("corvees.db*"))
+        assert {f.name for f in fichiers} >= {"corvees.db", "corvees.db-wal", "corvees.db-shm"}
+        assert {f.name: oct(stat.S_IMODE(f.stat().st_mode)) for f in fichiers} == {f.name: "0o600" for f in fichiers}
+        b.fermer()
+        for f in tmp_path.glob("corvees.db-*"):
+            os.chmod(f, 0o644)  # une base d'avant ce correctif : remise à 600 à l'ouverture
+        b = Base(tmp_path / "corvees.db", gardien)
+        assert all(stat.S_IMODE(f.stat().st_mode) == 0o600 for f in tmp_path.glob("corvees.db*"))
+        b.fermer()
+    finally:
+        os.umask(ancien)
+
+
 def test_rien_d_exclu_ni_de_secret_n_est_ecrit(base):
     n = base.ajouter(
         [

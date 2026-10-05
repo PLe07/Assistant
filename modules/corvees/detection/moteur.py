@@ -3,6 +3,7 @@ corvée, la mémoire de tes décisions, puis le classement."""
 
 from __future__ import annotations
 
+import gc
 import time
 from typing import Any
 
@@ -115,6 +116,25 @@ def analyser(
     fin: float | None = None,
 ) -> list[dict[str, Any]]:
     """Les corvées repérées, de la plus rentable à automatiser à la moins rentable (au plus « top »)."""
+    # Des millions de petits objets, aucun cycle : le ramasse-miettes de Python, déclenché sans cesse, coûtait
+    # 40 % du temps. Il est mis en pause pendant l'analyse (quelques secondes), puis rallumé.
+    actif = gc.isenabled()
+    gc.disable()
+    try:
+        return _analyser(evenements, reglages, decisions, maintenant, debut, fin)
+    finally:
+        if actif:
+            gc.enable()
+
+
+def _analyser(
+    evenements: list[Evenement],
+    reglages: dict[str, Any],
+    decisions: dict[str, dict[str, Any]] | None,
+    maintenant: float | None,
+    debut: float | None,
+    fin: float | None,
+) -> list[dict[str, Any]]:
     maintenant = maintenant or time.time()
     flux = preparer(evenements, reglages["sessions"]["inactivite_min"], debut, fin)
     seqs = sequences.detecter(flux, reglages)

@@ -303,3 +303,46 @@ communs). En mode test, elle est écrite dans `notifications.log`.
 
 **D-42 · Intégration à l'Assistant.** Une ligne « 🔁 Corvées » dans `python assistant.py etat` quand le module est
 allumé ; le module figure dans FICHE.md (tableau des modules, pause).
+
+## 2026-10-05 · P8-P9 — Bout en bout, mesures, relance
+
+**D-43 · Le bout en bout dans le conteneur, et sur le Mac à la demande.**
+- `tests/corvees/e2e` fait tourner un vrai démon (watchdog, lecture de zsh) dans un fil, avec HOME pointé vers un
+  dossier temporaire. Il range 5 vrais fichiers et exécute de vraies commandes dans un sous-shell avec un
+  HISTFILE de test, puis lance `corvees analyser --maintenant`.
+- Toute l'activité tient en quelques secondes : les seuils « sur plusieurs jours » y sont ramenés à 1 (réglages
+  du test, pas du code).
+- La partie « applis » (TextEdit, Calculette) n'a de sens que sur le Mac. Elle ouvre de vraies applis, donc elle
+  ne tourne qu'avec `CORVEES_E2E_MAC=1`, jamais dans `check.sh`.
+- zsh a été installé dans le conteneur de construction (pas sur ton Mac) pour tester ce chemin avec le vrai
+  zsh, et `zsh -n` sur les scripts proposés.
+
+**D-44 · Trois défauts trouvés en conditions réelles, corrigés avec un test qui les reproduit d'abord.**
+1. Deux commandes zsh dans la même seconde : la seconde était perdue (filtre par horodatage). En lecture normale,
+   la position dans le fichier suffit désormais.
+2. zsh sauve son historique par copie (`HIST_SAVE_BY_COPY`, par défaut) : nouveau numéro de fichier, même
+   début. Le capteur y voyait une réécriture et perdait des commandes. On ne parle plus de réécriture que si ce
+   qui précède la position a changé. Pour une vraie réécriture (zsh qui raccourcit son historique), on garde
+   l'empreinte des commandes de la dernière seconde, calculée sur la commande caviardée.
+3. Les fichiers `-wal` et `-shm` de SQLite (le journal, qui contient les mêmes données) étaient en 644. La base est
+   maintenant créée directement en 600, et SQLite donne les mêmes droits à son journal. Ceux d'une ancienne base
+   sont remis à 600 à l'ouverture. Le dossier de données est créé en 700.
+
+**D-45 · Performance : le ramasse-miettes en pause pendant l'analyse.** Sur une machine plus lente, l'analyse
+des 208 534 événements est passée près de la limite (8 à 10 s). Ce n'était pas une régression : la version de P5
+faisait pareil sur cette machine. Le profil montrait trois coûts :
+- la recherche de motifs ;
+- un million de conversions d'heure ;
+- le ramasse-miettes de Python, déclenché sans cesse par des millions de petits tuples, à environ 40 %.
+
+Corrections, sans rien changer aux résultats (identiques sur 6 cas comparés à l'ancienne version) :
+- décalage horaire gardé par quart d'heure (vérifié sur 202 403 instants, changements d'heure compris) ;
+- boucle de recherche resserrée, avec l'élagage classique (un motif n'est fréquent que si sa fin l'est) ;
+- ramasse-miettes en pause pendant l'analyse, toujours rallumé ensuite, même en cas d'erreur.
+
+Résultat : 5,4 à 6,7 s sur cette machine lente.
+
+**D-46 · Relance.** Le détecteur est relancé par le superviseur de l'Assistant (lui-même un LaunchAgent avec
+`KeepAlive` et `ThrottleInterval` de 30 s) : 1 minute après une chute, puis 5, puis 15. C'est la règle de tous les
+modules de l'Assistant, gardée telle quelle plutôt qu'un second LaunchAgent (D-02). Le test de relance a été fait
+avec les délais d'essai de l'Assistant (`ASSISTANT_TEST_DELAIS=5,5,5`).

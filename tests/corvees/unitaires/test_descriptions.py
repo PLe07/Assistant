@@ -196,3 +196,8 @@ def test_le_titre_garde_toujours_l_heure():
         ["app:Microsoft Teams", "app:Google Chrome", "url:outlook.office.com/mail"], "routine", creneau="09:12"
     )
     assert titre(longs) == "Ouvrir Microsoft Teams, Google Chrome… à 09:12"  # le 3e nom ne tient plus
+
+
+def test_le_titre_d_un_rangement_garde_le_dossier_d_arrivee():
+    c = candidat(["fmove:CorveesSandbox/Telechargements→CorveesSandbox/Documents/Devis [pdf, Devis_*]"])
+    assert titre(c) == "Ranger les « Devis_*.pdf » dans Devis"

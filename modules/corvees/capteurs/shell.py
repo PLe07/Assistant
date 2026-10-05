@@ -14,6 +14,7 @@ from pathlib import Path
 
 from modules.corvees.capteurs.base import Capteur
 from modules.corvees.normalize import tok_commande
+from modules.corvees.privacy import caviarder
 
 _ETENDU = re.compile(r"^: (\d+):(\d+);(.*)$", re.S)
 CLE = "curseur.shell"
@@ -51,6 +52,12 @@ def lire_historique(octets: bytes) -> list[tuple[int | None, str]]:
             entrees.append((ts, commande.strip()))
         actuelle = None
     return entrees
+
+
+def _cle(commande: str) -> str:
+    """Une empreinte courte de la commande déjà caviardée : ni la commande, ni un secret qu'elle contiendrait, ne
+    peuvent être retrouvés depuis le curseur."""
+    return hashlib.sha1(caviarder(commande).encode()).hexdigest()[:12]
 
 
 def _empreinte_avant(f, position: int) -> str:
@@ -101,10 +108,10 @@ class Shell(Capteur):
         position = int(curseur.get("position", 0))
         try:
             with open(self.chemin, "rb") as f:
-                reecrit = (
-                    infos.st_ino != curseur.get("inode")
-                    or infos.st_size < position
-                    or _empreinte_avant(f, position) != curseur.get("empreinte", _empreinte_avant(f, position))
+                # zsh sauve souvent par copie (nouveau numéro de fichier, même début) : ce n'est une réécriture que
+                # si ce qui précède notre position a changé.
+                reecrit = infos.st_size < position or _empreinte_avant(f, position) != curseur.get(
+                    "empreinte", _empreinte_avant(f, position)
                 )
                 if reecrit:  # zsh a réécrit le fichier (taille limite, autre shell) : on relit, sans redonner l'ancien
                     position = 0
@@ -116,18 +123,33 @@ class Shell(Capteur):
         self.statut, self.detail = "ok", ""
         complet = brut[: brut.rfind(b"\n") + 1]  # la dernière ligne pas encore finie attend le prochain passage
         dernier = int(curseur.get("dernier_ts", 0))
+        deja_vues = set(curseur.get("vues", [])) if reecrit else set()
+        vues = list(curseur.get("vues", []))  # les commandes déjà lues dans la seconde « dernier »
         for ts, commande in lire_historique(complet):
+            # Lu depuis la position : tout est nouveau, même dans la seconde de la commande précédente (zsh note
+            # l'heure à la seconde). Fichier réécrit : l'horodatage, et les commandes déjà lues dans la dernière
+            # seconde, disent ce qui est nouveau.
             if ts is None:
                 if reecrit:
                     continue  # sans horodatage, impossible de savoir si c'est nouveau : on ne redonne rien
                 ts = int(maintenant)
-            elif ts <= dernier:
+            elif reecrit and (ts < dernier or (ts == dernier and _cle(commande) in deja_vues)):
                 continue
             self.emettre(float(ts), "cmd", tok_commande(commande, self.maison))
-            dernier = max(dernier, ts)
+            if ts > dernier:
+                dernier, vues = ts, []
+            if ts == dernier:
+                vues.append(_cle(commande))
         fin = position + len(complet)
         with open(self.chemin, "rb") as f:
             empreinte = _empreinte_avant(f, fin)
         self.memoire.ecrire(
-            CLE, {"inode": infos.st_ino, "position": fin, "dernier_ts": max(dernier, 0), "empreinte": empreinte}
+            CLE,
+            {
+                "inode": infos.st_ino,
+                "position": fin,
+                "dernier_ts": max(dernier, 0),
+                "empreinte": empreinte,
+                "vues": vues[-50:],
+            },
         )

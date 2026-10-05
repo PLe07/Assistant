@@ -15,11 +15,10 @@ from modules.corvees.detection.flux import Candidat, Flux
 from modules.corvees.normalize import jour_de
 
 SORTES = ("fcreate", "fmove", "fren", "fconv", "fdel")
-LIEN_MAX_S = 1800  # deux étapes d'une même chaîne : à moins de 30 min
 
 
-def chaines(flux: Flux) -> list[list[tuple[float, str]]]:
-    """Les parcours des fichiers : [[(instant, token), …], …]."""
+def chaines(flux: Flux, lien_max_s: float = 1800) -> list[list[tuple[float, str]]]:
+    """Les parcours des fichiers : [[(instant, token), …], …] (deux étapes liées : à moins de lien_max_s)."""
     parcours: list[list[tuple[float, str]]] = []
     dernier: dict[str, int] = {}  # empreinte du fichier → son parcours
     for e in flux.evenements:
@@ -27,7 +26,7 @@ def chaines(flux: Flux) -> list[list[tuple[float, str]]]:
             continue
         precedent = e.attrs.get("avant") or e.attrs.get("source")
         i = dernier.get(precedent) if isinstance(precedent, str) else None
-        if i is not None and e.ts - parcours[i][-1][0] <= LIEN_MAX_S:
+        if i is not None and e.ts - parcours[i][-1][0] <= lien_max_s:
             parcours[i].append((e.ts, e.token))
         else:
             parcours.append([(e.ts, e.token)])
@@ -93,7 +92,7 @@ def detecter(flux: Flux, reglages: dict[str, Any]) -> list[Candidat]:
     p = reglages["detection"]["fichiers"]
     groupes: dict[tuple[str, ...], list[list[tuple[float, str]]]] = defaultdict(list)
     exacts: dict[tuple[str, ...], Counter[tuple[str, ...]]] = defaultdict(Counter)
-    for c in chaines(flux):
+    for c in chaines(flux, p["lien_max_s"]):
         # L'arrivée du fichier (téléchargement) n'est que le contexte : un parcours où elle a échappé au capteur
         # reste la même corvée.
         coeur = tuple(t for _, t in c if not t.startswith("fcreate:"))

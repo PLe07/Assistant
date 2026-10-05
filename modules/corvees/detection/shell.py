@@ -13,8 +13,6 @@ from modules.corvees.detection.flux import Candidat, Flux, Session
 from modules.corvees.detection.sequences import esperance, maximaux, motifs_frequents
 from modules.corvees.normalize import jour_de, sous_commandes
 
-ECART_MAX_S = 300
-
 
 def detecter(flux: Flux, reglages: dict[str, Any]) -> list[Candidat]:
     p = reglages["detection"]["shell"]
@@ -27,7 +25,7 @@ def detecter(flux: Flux, reglages: dict[str, Any]) -> list[Candidat]:
             lignes[e.token].append(e.ts)
     for token, ts in lignes.items():
         jours = {jour_de(t) for t in ts}
-        if len(ts) >= p["occurrences_min"] and len(jours) >= 2:
+        if len(ts) >= p["occurrences_min"] and len(jours) >= p["jours_min"]:
             candidats.append(Candidat("shell", (token,), len(ts), len(jours), ts, [0.0] * len(ts)))
 
     # 2. Les suites de lignes : un flux fait des seules commandes, coupé après 5 minutes sans commande
@@ -39,14 +37,14 @@ def detecter(flux: Flux, reglages: dict[str, Any]) -> list[Candidat]:
             continue
         derniere = commandes.sessions[-1] if commandes.sessions else None
         jour = jour_de(e.ts)
-        if derniere is None or e.ts - derniere.ts[-1] > ECART_MAX_S or jour != derniere.jour:
+        if derniere is None or e.ts - derniere.ts[-1] > p["ecart_max_s"] or jour != derniere.jour:
             derniere = Session([], [], jour)
             commandes.sessions.append(derniere)
         if not derniere.ids or derniere.ids[-1] != t:
             derniere.ids.append(t)
             derniere.ts.append(e.ts)
             commandes.compte[t] += 1
-    motifs = motifs_frequents(commandes, p["longueur_min"], 6, 2, 0)
+    motifs = motifs_frequents(commandes, p["longueur_min"], p["longueur_max"], p["jours_min"], 0)
     for motif in maximaux(commandes, motifs, 0.8):
         occs = motifs[motif]
         if len(occs) < p["occurrences_min"]:

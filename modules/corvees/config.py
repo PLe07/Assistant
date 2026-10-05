@@ -72,13 +72,20 @@ DEFAUTS: dict[str, Any] = {
             "concentration_semaine_min": 0.75,
             "jours_min_sequence": 4,  # pour donner un créneau à une suite d'actions
         },
-        "fichiers": {"occurrences_min": 4, "jours_min": 2},
+        "fichiers": {"occurrences_min": 4, "jours_min": 2, "lien_max_s": 1800},  # 2 étapes d'une chaîne : < 30 min
         "ponts": {
             "occurrences_min": 5,
             "jours_min": 3,
             "alpha": 0.05,
         },  # alpha : risque de prendre le hasard pour un pont
-        "shell": {"longueur_min": 2, "occurrences_min": 4, "lift_min": 3.0},
+        "shell": {
+            "longueur_min": 2,
+            "longueur_max": 6,
+            "occurrences_min": 4,
+            "jours_min": 2,
+            "lift_min": 3.0,
+            "ecart_max_s": 300,  # une suite de commandes est coupée après 5 min sans commande
+        },
     },
     "scoring": {
         # Facteur d'automatisabilité par type de corvée (1 = s'automatise sans peine).

@@ -7,7 +7,8 @@ Les heures sont celles de Paris (Europe/Paris), changement d'heure compris.
 from __future__ import annotations
 
 import re
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
+from functools import lru_cache
 from pathlib import Path
 
 try:
@@ -24,18 +25,39 @@ def local(ts: float) -> datetime:
     return datetime.fromtimestamp(ts, ZONE) if ZONE else datetime.fromtimestamp(ts)
 
 
+# L'analyse pose ces questions des centaines de milliers de fois : le décalage horaire est gardé par quart d'heure
+# (un changement d'heure tombe toujours sur un quart d'heure pile), et le nom du jour par jour.
+_QUART = 900
+
+
+@lru_cache(maxsize=65536)
+def _decalage(quart: int) -> int:
+    """Le décalage de l'heure de Paris (en secondes) pendant ce quart d'heure."""
+    decalage = local(quart * _QUART).utcoffset()
+    return int(decalage.total_seconds()) if decalage is not None else 0
+
+
+def _jour_numero(ts: float) -> int:
+    """Le numéro du jour (heure de Paris) depuis le 1er janvier 1970."""
+    return int((ts + _decalage(int(ts // _QUART))) // 86400)
+
+
+@lru_cache(maxsize=4096)
+def _nom_du_jour(numero: int) -> str:
+    return (date(1970, 1, 1) + timedelta(days=numero)).isoformat()
+
+
 def jour_de(ts: float) -> str:
-    return local(ts).date().isoformat()
+    return _nom_du_jour(_jour_numero(ts))
 
 
 def minute_du_jour(ts: float) -> int:
-    d = local(ts)
-    return d.hour * 60 + d.minute
+    return int((ts + _decalage(int(ts // _QUART))) % 86400) // 60
 
 
 def jour_semaine(ts: float) -> int:
     """0 = lundi … 6 = dimanche."""
-    return local(ts).weekday()
+    return (_jour_numero(ts) + 3) % 7  # le 1er janvier 1970 était un jeudi
 
 
 def semaine(ts: float) -> str:

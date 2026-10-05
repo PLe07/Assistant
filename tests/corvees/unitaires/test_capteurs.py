@@ -264,6 +264,64 @@ def test_c4_lecture_incrementale(tmp_path):
     assert sortie[-1].ts == 1790000400
 
 
+def test_c4_deux_commandes_dans_la_meme_seconde(tmp_path):
+    """zsh note l'heure à la seconde : une commande tapée dans la même seconde que la précédente (déjà lue) n'est
+    pas perdue pour autant (trouvé par le test de bout en bout)."""
+    historique = tmp_path / ".zsh_history"
+    ecrire(historique, b"", "wb")
+    r, _ = config.charger({"shell": {"historique": str(historique)}})
+    sortie = []
+    c = Shell(r, sortie.append, MemoireVive(), None)
+    c.demarrer()
+    c.relever(1790000000)
+    ecrire(historique, b": 1790000000:0;a\n")  # dans la seconde même du premier passage
+    c.relever(1790000000.5)
+    ecrire(historique, b": 1790000000:0;b\n: 1790000000:0;b\n")  # deux fois la même, toujours la même seconde
+    c.relever(1790000000.9)
+    assert [e.token for e in sortie] == ["cmd:a", "cmd:b", "cmd:b"]
+
+
+def test_c4_zsh_sauve_par_copie_rien_ne_se_perd(tmp_path):
+    """zsh (option HIST_SAVE_BY_COPY, par défaut) écrit un nouveau fichier puis le renomme : le numéro du fichier
+    change, mais le début est le même. Ce n'est pas une réécriture : on continue où on en était (trouvé avec un
+    vrai zsh dans le test de bout en bout)."""
+    historique = tmp_path / ".zsh_history"
+    ecrire(historique, b": 1790000000:0;ancien\n", "wb")
+    r, _ = config.charger({"shell": {"historique": str(historique)}})
+    sortie = []
+    c = Shell(r, sortie.append, MemoireVive(), None)
+    c.demarrer()
+    c.relever(1790000000)
+    for commande in (b"a", b"b", b"a"):  # tout dans la même seconde, chaque fois par copie
+        copie = tmp_path / ".zsh_history.new"
+        copie.write_bytes(historique.read_bytes() + b": 1790000000:0;" + commande + b"\n")
+        os.replace(copie, historique)
+        c.relever(1790000000.5)
+    # Un autre terminal, fermé plus tard, ajoute ses commandes plus anciennes : elles comptent aussi
+    copie = tmp_path / ".zsh_history.new"
+    copie.write_bytes(historique.read_bytes() + b": 1789999000:0;depuis l'autre terminal\n")
+    os.replace(copie, historique)
+    c.relever(1790000001)
+    assert [e.token for e in sortie] == ["cmd:a", "cmd:b", "cmd:a", "cmd:depuis l'autre terminal"]
+
+
+def test_c4_vraie_reecriture_dans_la_meme_seconde(tmp_path):
+    """zsh raccourcit son historique (trop long) : tout est réécrit. Seul ce qui est nouveau est redonné, même ce
+    qui a été tapé dans la même seconde que la dernière commande lue."""
+    historique = tmp_path / ".zsh_history"
+    ecrire(historique, b"", "wb")
+    r, _ = config.charger({"shell": {"historique": str(historique)}})
+    sortie = []
+    c = Shell(r, sortie.append, MemoireVive(), None)
+    c.demarrer()
+    c.relever(1790000000)
+    ecrire(historique, b": 1790000000:0;vieux\n: 1790000010:0;a\n")
+    c.relever(1790000011)
+    ecrire(historique, b": 1790000010:0;a\n: 1790000010:0;b\n: 1790000020:0;c\n", "wb")  # « vieux » est parti
+    c.relever(1790000030)
+    assert [e.token for e in sortie] == ["cmd:vieux", "cmd:a", "cmd:b", "cmd:c"]
+
+
 def test_c4_fichier_reecrit_sans_redonner_l_ancien(tmp_path):
     historique = tmp_path / ".zsh_history"
     ecrire(historique, b": 1790000000:0;a\n: 1790000010:0;b\n", "wb")

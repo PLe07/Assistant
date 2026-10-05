@@ -72,13 +72,15 @@ class Base:
         self.chemin = Path(chemin)
         self.gardien = gardien
         self.journal = journal  # fonction(message) : où dire qu'une base a été reconstruite
-        self.chemin.parent.mkdir(parents=True, exist_ok=True)
+        self.chemin.parent.mkdir(mode=0o700, parents=True, exist_ok=True)  # créé : lisible par toi seul
         self.db = self._connecter()
 
     # --- ouverture, réparation -------------------------------------------------------------------------------
 
     def _connecter(self) -> sqlite3.Connection:
         nouveau = not self.chemin.exists()
+        if nouveau:  # créée lisible par toi seul : SQLite donne alors les mêmes droits à son journal (-wal, -shm)
+            os.close(os.open(self.chemin, os.O_WRONLY | os.O_CREAT, 0o600))
         try:
             db = _ouvrir(self.chemin)
             resultat = db.execute("PRAGMA quick_check").fetchone()
@@ -97,11 +99,12 @@ class Base:
                     morceau.rename(Path(str(sauvegarde) + suffixe))
             if self.journal:
                 self.journal(f"Base corrompue ({e}) : mise de côté ({sauvegarde.name}) et reconstruite")
-            nouveau = True
+            os.close(os.open(self.chemin, os.O_WRONLY | os.O_CREAT, 0o600))
             db = _ouvrir(self.chemin)
             db.executescript(SCHEMA)
-        if nouveau or (self.chemin.stat().st_mode & 0o077):
-            os.chmod(self.chemin, 0o600)  # lisible par toi seul
+        for fichier in (self.chemin, Path(f"{self.chemin}-wal"), Path(f"{self.chemin}-shm")):
+            if fichier.exists() and fichier.stat().st_mode & 0o077:
+                os.chmod(fichier, 0o600)  # lisible par toi seul (une base d'avant ce réglage, ou recréée)
         return db
 
     def fermer(self) -> None:

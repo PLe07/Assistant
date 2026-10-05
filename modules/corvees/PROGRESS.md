@@ -13,6 +13,8 @@ Porte unique : `modules/corvees/check.sh` (dans le conteneur : `PYTHON=<venv>/bi
 | P5 Démon, planification, robustesse | ✅ | 20 tests du démon |
 | P6 Couche IA, budget, propositions | ✅ | 116 tests de plus ; fuites cherchées aussi dans ce qui part chez Claude |
 | P7 Rapport HTML, notifications, CLI | ✅ | 52 tests de plus ; rapport vérifié en clair, sombre et sur mobile |
+| P8 Bout en bout, mesures | ✅ conteneur · ⏳ Mac | e2e réel, 3 défauts trouvés et corrigés ; CPU 0,17 %, RAM 29 Mo |
+| P9 Installation, relance après kill | ✅ conteneur · ⏳ Mac | relancé par le superviseur en 7 s ; doctor sans erreur |
 
 ## P0 — Reconnaissance (✅)
 
@@ -192,9 +194,75 @@ $ corvees analyser --maintenant
    …
 ```
 
-**Prochaine étape :** P8-P9. Côté conteneur :
-- bout en bout avec un vrai démon, sur de vrais fichiers, un HISTFILE de test et un bac à sable ;
-- mesure du CPU et de la RAM pendant 10 minutes ;
-- relance par le superviseur après un kill.
+## P8-P9 — Bout en bout, mesures, installation (✅ dans le conteneur ; à refaire sur le Mac)
 
-Puis ACTIONS_HUMAINES.md pour le Mac.
+**Bout en bout réel** (`tests/corvees/e2e`). Un vrai démon, avec ses capteurs watchdog et zsh, tourne dans un bac
+à sable. Il voit 5 fichiers vraiment créés puis rangés, et 5 commandes vraiment exécutées par zsh avec un HISTFILE
+de test (plus un faux mot de passe). Ensuite :
+
+```
+$ corvees analyser --maintenant
+🔎 Analyse des 30 derniers jours…
+   · Descriptions faites sur place : Claude coupé dans les réglages (modules.corvees.ia.actif)
+   2 corvée(s) repérée(s) en 0.0 s :
+   [ugn5ie] Ranger les « Devis_*.pdf » dans Devis · ≈ 7 min/mois
+   [diesag] Commande « cd ~/CorveesSandbox && ls -la » · ≈ 6 min/mois
+(historique écrit par zsh)
+1 passed, 1 skipped
+```
+
+Le test vérifie aussi :
+- les 5 rangements et les 5 commandes sont en base ;
+- le faux mot de passe n'apparaît nulle part dans le dossier (base, propositions, rapport) ;
+- le bac à sable est effacé à la fin.
+
+Il a trouvé 3 défauts réels, corrigés après un test qui les reproduit (D-44) :
+- une commande perdue quand deux tombent dans la même seconde ;
+- la sauvegarde par copie de zsh prise pour une réécriture ;
+- les fichiers -wal et -shm en 644.
+
+**Démon réel sous le superviseur, 10 minutes**, dans une copie isolée de l'Assistant avec seul « corvees »
+allumé, et une activité toutes les 15 s :
+
+```
+$ python tests/corvees/perf/mesure_demon.py 600
+{'pid': 605, 'duree_s': 601, 'cpu_moyen_pct': 0.166, 'ram_max_mo': 29.4, 'base_mo': 0.57}
+✅ dans les budgets (CPU < 1 %, RAM < 120 Mo, base < 200 Mo)
+```
+
+**Relance après kill** (délais d'essai de l'Assistant : 5 s ; en vrai, 1 minute) :
+
+```
+avant : pid 605
+relancé en 7 s : pid 1796
+[superviseur] Module « corvees » tombé (code -9) : code de sortie -9 · relance dans 5 s
+[superviseur] Module « corvees » lancé (pid 1796)
+```
+
+**doctor** dans cette installation (code de sortie 0) :
+
+```
+✅ Module allumé · ✅ Démon vivant · ✅ Capteur fichiers ok · ✅ Capteur shell ok
+⚠️ apps, fenetres, pressepapiers, inactivite : désactivés « pas sur un Mac » (conteneur Linux)
+⚠️ navigateur : aucun historique trouvé · ✅ Base 125 événements, 0,6 Mo, lisible par toi seul
+✅ Dernière analyse · ✅ Claude 0,00 $ sur 2,00 $ · ⚠️ jeton absent (pas de jeton dans le conteneur)
+```
+
+**Performance** après le correctif D-45 : 208 534 événements analysés en 6,7 s (avant : 8 à 10 s sur cette
+machine plus lente).
+
+```
+$ modules/corvees/check.sh
+✅ ruff check · ✅ ruff format · ✅ mypy
+362 passed, 1 skipped · Total coverage: 98.84%
+simulation 16 passed · performance 1 passed
+CHECK OK
+```
+
+**Ce qui reste sur le Mac** (ACTIONS_HUMAINES.md §3) :
+- le bout en bout avec les applis (`CORVEES_E2E_MAC=1`) ;
+- la mesure de 10 minutes avec les capteurs propres au Mac (appli au premier plan, presse-papiers…) ;
+- le kill réel (relance en 1 minute).
+
+**Prochaine étape :** P10, la revue hostile du code. Puis un rapport de démonstration, le README, RAPPORT_FINAL.md
+et la non-régression complète de l'Assistant.

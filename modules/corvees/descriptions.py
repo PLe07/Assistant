@@ -273,6 +273,8 @@ def titre(c: dict[str, Any]) -> str:
     details = c.get("details") or {}
     if m := _FMOVE.match(premier):
         t = f"Ranger les « {_nom(m['motif'], m['ext'])} » dans {_lisible(m['vers'])}"
+        if len(t) > 60:  # le dossier d'arrivée seul, plutôt qu'un chemin coupé
+            t = f"Ranger les « {_nom(m['motif'], m['ext'])} » dans {m['vers'].rstrip('/').split('/')[-1]}"
     elif m := _FREN.match(premier):
         t = f"Renommer les « {_nom(m['avant'], m['ext'])} »"
     elif m := _FCONV.match(premier):

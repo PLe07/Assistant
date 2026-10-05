@@ -42,25 +42,37 @@ def motifs_frequents(
                 niveau[(t,)].append((si, i, i, 0))
 
     resultats: dict[tuple[int, ...], list[Occurrence]] = {}
+    tous_ids = [s.ids for s in flux.sessions]
     for longueur in range(2, longueur_max + 1):
         suivant: dict[tuple[int, ...], list[Occurrence]] = defaultdict(list)
+        # Un motif n'est fréquent que si sa fin (le motif sans son premier élément) l'est aussi : on ne prolonge
+        # un motif que par les éléments qui prolongent déjà sa fin (même résultat, beaucoup moins de calcul).
+        prolongements: dict[tuple[int, ...], set[int]] = defaultdict(set)
+        if longueur > 2:
+            for motif in niveau:
+                prolongements[motif[:-1]].add(motif[-1])
         for motif, occs in niveau.items():
+            permis = prolongements.get(motif[1:]) if longueur > 2 else frequents
+            if not permis:
+                continue
             for si, debut, fin, parasites in occs:
-                ids = flux.sessions[si].ids
-                for saut in (1, 2) if parasites < parasites_max else (1,):
-                    k = fin + saut
-                    if k >= len(ids):
-                        break
-                    t = ids[k]
-                    if t in frequents and t not in motif:
-                        suivant[motif + (t,)].append((si, debut, k, parasites + saut - 1))
+                ids = tous_ids[si]
+                k = fin + 1
+                if k >= len(ids):
+                    continue
+                t = ids[k]
+                if t in permis and t not in motif:
+                    suivant[motif + (t,)].append((si, debut, k, parasites))
+                if parasites < parasites_max and k + 1 < len(ids):
+                    t = ids[k + 1]
+                    if t in permis and t not in motif:
+                        suivant[motif + (t,)].append((si, debut, k + 1, parasites + 1))
         niveau = {}
         for motif, occs in suivant.items():
-            if len(occs) < jours_min:
-                continue
+            if len(occs) < jours_min or len({jours[o[0]] for o in occs}) < jours_min:
+                continue  # trop peu de jours : inutile de dédoublonner
             uniques = {(si, debut): (si, debut, fin, p) for si, debut, fin, p in occs}
-            if len({jours[si] for si, _ in uniques}) >= jours_min:
-                niveau[motif] = list(uniques.values())
+            niveau[motif] = list(uniques.values())
         if longueur >= longueur_min:
             resultats.update(niveau)
         if not niveau:
