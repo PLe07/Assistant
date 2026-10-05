@@ -19,6 +19,7 @@ def test_jeu_a(graine, tmp_path):
     assert not r.refusee_revenue, "la corvée refusée est revenue"
     assert not r.spotify_en_tete, "« ouvrir Spotify » (déjà instantané) est dans le top"
     assert r.fuites == [], f"fuites : {r.fuites}"
+    assert r.messages_claude == 1  # les candidats sont bien partis chez Claude (imité) et ont été fouillés
 
 
 @pytest.mark.parametrize("graine", GRAINES)
@@ -30,3 +31,4 @@ def test_jeu_b_ecrit_apres_le_reglage(graine, tmp_path):
     assert r.rappel >= 0.9, f"manquées : {r.manquees}"
     assert r.precision >= 0.8, f"fausses alertes : {r.fausses}"
     assert not r.refusee_revenue and not r.spotify_en_tete and r.fuites == []
+    assert r.messages_claude == 1

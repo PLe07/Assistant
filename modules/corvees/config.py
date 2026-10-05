@@ -115,9 +115,16 @@ DEFAUTS: dict[str, Any] = {
         "modele": "rapide",  # « rapide » (économique, par défaut) ou « fort » (plus puissant)
         "max_candidats": 8,
         "budget_mensuel_usd": 2.0,
-        # Dollars par million de jetons : sert à estimer le coût de chaque appel.
-        "tarifs": {"rapide": {"entree": 1.0, "sortie": 5.0}, "fort": {"entree": 3.0, "sortie": 15.0}},
+        # Dollars par million de jetons (Haiku 4.5 et Sonnet 5.5) : sert à estimer le coût de chaque appel.
+        "tarifs": {"rapide": {"entree": 1.0, "sortie": 5.0}, "fort": {"entree": 2.0, "sortie": 10.0}},
         "delai_s": 180,
+        "essais": 3,  # sur panne passagère (surcharge, quota, délai dépassé)
+        "attente_s": 20,  # avant le 2e essai ; doublée avant le 3e
+        "attente_max_s": 960,  # l'Assistant fait une pause de 15 min après un quota : on l'attend, sans plus
+    },
+    "installation": {
+        "launchagents": "~/Library/LaunchAgents",
+        "prefixe": "com.assistant.corvee",  # étiquette des tâches launchd installées par « accept --installer »
     },
     "retention_jours": 30,
     "ecriture_groupee_s": 30,

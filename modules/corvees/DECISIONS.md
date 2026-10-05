@@ -208,3 +208,62 @@ Le calcul se fait en heure de Paris (zoneinfo), donc juste les jours de changeme
 **D-31 · Pause.** `corvees pause [heures]` écrit l'heure de fin dans la base (sans durée : jusqu'à
 `corvees resume`). Le démon la voit au tour suivant, en moins d'une seconde, et coupe tous les capteurs ; il les
 rallume à la fin de la pause. La pause générale de l'Assistant arrête aussi le module, via le superviseur.
+
+## 2026-10-05 · P6 — Couche IA, propositions
+
+**D-32 · Modèles et tarifs (vérifiés à la construction).** Claude passe par l'abonnement de l'Assistant
+(`core.cerveau`, voir D-04), donc par les alias de Claude Code. « rapide » = `haiku` → `claude-haiku-4-5`,
+1 $ / 5 $ par million de jetons (entrée / sortie), par défaut. « fort » = `sonnet` → `claude-sonnet-5-5`,
+2 $ / 10 $. Ces tarifs sont dans la config (`ia.tarifs`) et servent à suivre le budget. Avec l'abonnement, le coût
+réel d'un appel est nul ; le suivi garde quand même le plafond de 2 $ par mois, comme demandé. Écarté : le SDK
+`anthropic` avec une clé API, qui ferait un second moyen de payer et un second secret à gérer sous launchd.
+
+**D-33 · « Une demande par jour ».** Une demande regroupe au plus 8 corvées. Elle peut comprendre jusqu'à
+3 lancements de Claude sur panne passagère, plus une relance de correction si le JSON ne colle pas au schéma.
+L'instant de la demande est noté avant l'envoi : même en cas d'échec, pas de deuxième demande le même jour (ni
+via `analyser --maintenant`). Une corvée déjà décrite par Claude garde sa description (même signature) : elle ne
+repart jamais. Celles décrites sur place repartent dès que Claude redevient disponible.
+
+**D-34 · Pannes.** `core.cerveau.demander` reçoit un nouveau paramètre `essais` (par défaut, inchangé pour les
+autres modules) ; le détecteur passe `essais=1` et compte lui-même ses 3 essais : 20 s, puis 40 s d'attente. Sur
+un quota (429), l'Assistant se met en pause 15 min pour tous ses modules : le détecteur attend la fin de cette
+pause (16 min au plus) au lieu d'insister. Ne sont jamais réessayés : jeton absent ou refusé, Claude Code
+introuvable, plafond d'appels de l'Assistant atteint, trop d'étapes, ou une erreur imprévue. La suite du soir tourne
+dans un fil à part : les capteurs continuent pendant l'appel, et une panne ne fait jamais tomber le démon.
+
+**D-35 · Schéma.** Le schéma complet (longueurs, bornes, énumérations : `difficulte` facile / moyen / avancé) est
+vérifié ici avec `jsonschema`. Claude Code reçoit le même schéma sans les bornes de longueur et de valeur,
+qui ne sont pas toujours acceptées par les sorties structurées. Un JSON hors schéma déclenche une seule relance,
+avec la liste des erreurs. En cas de nouvel échec, le lot est noté dans le journal et ses corvées reçoivent une
+description locale : elles restent dans le rapport, marquées « décrite par le détecteur ». Une corvée oubliée par
+Claude est traitée de la même façon. Les textes de Claude sont caviardés avant d'être écrits.
+
+**D-36 · Descriptions locales.** Quand Claude n'est pas utilisé (budget atteint, panne, réglage coupé), le
+détecteur écrit des descriptions au même format, à partir de modèles de phrases. Il en tire aussi de vrais scripts,
+quand c'est faisable sans risque :
+- rangement (`mv -n`, jamais d'écrasement) ;
+- renommage, s'il y a une seule partie variable ;
+- conversion d'images avec `sips` ;
+- alias, ou fonction d'une ligne si seuls des textes entre guillemets changent ;
+- ouverture d'applis et de sites avec `open`.
+
+Jamais de suppression automatique. Les scripts restent compatibles avec bash, pour être testés ici, où zsh manque.
+
+**D-37 · Contrôle et installation.** Chaque script passe :
+- `zsh -n` (ou `bash -n` si zsh manque) ;
+- `shellcheck -S error`, s'il est installé ;
+- une liste de dangers : sudo, rm -rf sous toutes ses formes, curl | sh et variantes, écriture hors de ~, outils
+  système, trousseau, chmod 777.
+
+Un script douteux est marqué « ⚠️ à vérifier » et ne s'installe pas.
+
+`accept --installer` n'installe que deux sortes de solutions, toujours avec une sauvegarde préalable :
+- `alias_zsh` : un bloc dans `donnees/corvees/alias.zsh`. Le `.zshrc` n'est jamais touché : la ligne `source` à
+  ajouter est une action humaine, facultative.
+- `tache_launchd` : `~/Library/LaunchAgents/com.assistant.corvee.<id>.plist`, lancé à l'heure habituelle
+  (`StartCalendarInterval`) ou à l'arrivée d'un fichier (`WatchPaths`). Il est chargé par
+  `launchctl bootstrap gui/<uid>` ; si launchctl refuse, le fichier est retiré et l'ancien remis.
+
+`desinstaller` défait tout, d'après le registre `installations.json`. Les étiquettes ne contiennent aucun nom
+(dépôt public). Elles restent dans le périmètre autorisé : ce sont des tâches utilisateur, créées sur demande
+explicite.

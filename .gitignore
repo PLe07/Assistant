@@ -31,3 +31,7 @@ donnees/
 /reglages.json
 /reglages.json.casse-*
 .reglages.*.tmp
+
+# Mesure de couverture (générée par check.sh)
+.coverage
+.coverage.*

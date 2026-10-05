@@ -125,10 +125,12 @@ def demander(
     effort: str = "low",
     tours: int | None = None,
     delai: int | None = None,
+    essais: int | None = None,
 ) -> Reponse:
     """Pose une question à Claude. modele = "rapide", "fort" ou un nom précis.
     outils : les seuls outils permis, autorisés sans question (ex. ["WebSearch", "WebFetch"]) ;
-    tours : nombre maximal d'allers-retours avec ces outils ; delai : en secondes (par défaut DELAI_SECONDES)."""
+    tours : nombre maximal d'allers-retours avec ces outils ; delai : en secondes (par défaut DELAI_SECONDES) ;
+    essais : lancements de Claude en cas d'erreur passagère (par défaut ESSAIS ; 1 si l'appelant gère lui-même)."""
     reglages = config.charger()
     nom_modele = _nom_modele(modele, reglages)
 
@@ -158,13 +160,14 @@ def demander(
     commande += ["--tools", ",".join(outils or [])]  # en dernier : --tools accepte une liste
 
     config.DONNEES.mkdir(exist_ok=True)
-    for essai in range(1, ESSAIS + 1):
+    essais = essais or ESSAIS
+    for essai in range(1, essais + 1):
         try:
             data = _un_appel(commande, message, env, delai)
             break
         except ClaudeIndisponible as e:
             etat.noter_appel(module, nom_modele, False, erreur=str(e))
-            if getattr(e, "pause", False) or getattr(e, "definitif", False) or essai == ESSAIS:
+            if getattr(e, "pause", False) or getattr(e, "definitif", False) or essai == essais:
                 if getattr(e, "pause", False):
                     etat.ecrire("claude_pause_jusqua", time.time() + PAUSE_APRES_PANNE)
                 log.warning("[%s] %s", module, e)

@@ -41,6 +41,7 @@ CREATE TABLE IF NOT EXISTS couts (
     id INTEGER PRIMARY KEY, quand REAL, mois TEXT, modele TEXT, jetons_entree INTEGER, jetons_sortie INTEGER,
     cout_usd REAL, ok INTEGER
 );
+CREATE TABLE IF NOT EXISTS descriptions (signature TEXT PRIMARY KEY, source TEXT, donnees TEXT, quand REAL);
 CREATE TABLE IF NOT EXISTS etat (cle TEXT PRIMARY KEY, valeur TEXT, maj REAL);
 """
 
@@ -278,12 +279,14 @@ class Base:
 
     # --- coûts de Claude ----------------------------------------------------------------------------------------
 
-    def noter_cout(self, mois: str, modele: str, entree: int, sortie: int, cout: float, ok: bool) -> None:
+    def noter_cout(
+        self, mois: str, modele: str, entree: int, sortie: int, cout: float, ok: bool, quand: float | None = None
+    ) -> None:
         with self.db:
             self.db.execute(
                 "INSERT INTO couts (quand, mois, modele, jetons_entree, jetons_sortie, cout_usd, ok) "
                 "VALUES (?, ?, ?, ?, ?, ?, ?)",
-                (time.time(), mois, modele, entree, sortie, cout, int(ok)),
+                (quand or time.time(), mois, modele, entree, sortie, cout, int(ok)),
             )
 
     def cout_du_mois(self, mois: str) -> float:
@@ -293,3 +296,17 @@ class Base:
 
     def appels_du_jour(self, debut_jour: float) -> int:
         return int(self.db.execute("SELECT COUNT(*) FROM couts WHERE quand >= ?", (debut_jour,)).fetchone()[0])
+
+    # --- descriptions (de Claude, ou faites sur place) ----------------------------------------------------------
+
+    def noter_description(self, signature: str, source: str, description: dict[str, Any], quand: float) -> None:
+        with self.db:
+            self.db.execute(
+                "INSERT OR REPLACE INTO descriptions (signature, source, donnees, quand) VALUES (?, ?, ?, ?)",
+                (signature, source, json.dumps(description, ensure_ascii=False), quand),
+            )
+
+    def descriptions(self) -> dict[str, dict[str, Any]]:
+        """signature → description (avec sa « source » : claude ou locale)."""
+        lignes = self.db.execute("SELECT signature, source, donnees FROM descriptions")
+        return {s: {**json.loads(d), "source": src} for s, src, d in lignes}

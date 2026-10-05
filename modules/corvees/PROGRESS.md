@@ -11,6 +11,7 @@ Porte unique : `modules/corvees/check.sh` (dans le conteneur : `PYTHON=<venv>/bi
 | P3 Détecteurs, score, mémoire | ✅ | 100 % / 100 % sur 5 graines × 2 jeux ; 208 k événements en ~6 s |
 | P4 Capteurs C1-C6 + inactivité | ✅ | 26 tests (vrais fichiers, vraies bases SQLite, vraie surveillance) |
 | P5 Démon, planification, robustesse | ✅ | 20 tests du démon |
+| P6 Couche IA, budget, propositions | ✅ | 116 tests de plus ; fuites cherchées aussi dans ce qui part chez Claude |
 
 ## P0 — Reconnaissance (✅)
 
@@ -126,5 +127,31 @@ $ modules/corvees/check.sh
 simulation 16 passed · performance 1 passed · CHECK OK
 ```
 
-**Prochaine étape :** P6 — couche IA (1 appel par jour au plus, schéma JSON, budget), propositions et vérification
-statique des scripts, accept --installer / desinstaller.
+## P6 — Couche IA, propositions (✅)
+
+- `ia.py` : résumé caviardé des corvées (ni date, ni empreinte, ni exemple), au plus 8 par demande, une demande
+  par jour. Schéma vérifié avec jsonschema, une relance de correction, 3 essais sur panne. Pendant un quota, on
+  attend la pause de l'Assistant. Budget mensuel et coût en base.
+- `descriptions.py` : descriptions locales au même format, avec des scripts réels quand c'est sûr.
+- `propositions.py` : `propositions/<id>/` (README, script, proposition.json). Contrôle statique : zsh/bash -n,
+  shellcheck, liste de dangers. `installer` (alias, tâche launchd) avec sauvegarde, et `desinstaller`.
+- `suite.py` : la suite du soir dans un fil à part.
+
+Le juge de simulation passe aussi la suite du soir avec un « Claude perroquet », qui recopie tout ce qu'il reçoit :
+aucun secret ni élément exclu ne doit apparaître dans la base, le message envoyé, les propositions ou le journal.
+
+```
+$ modules/corvees/check.sh
+✅ ruff check · ✅ ruff format · ✅ mypy
+306 passed, 1 deselected · Total coverage: 98.50%
+simulation 16 passed (5 graines × 2 jeux + fuites, y compris le contenu envoyé à Claude)
+performance 1 passed
+CHECK OK
+```
+
+Non-régression de l'Assistant (après P5) : 931 ✅. Le seul ❌ venait d'une liste de modules figée dans un essai,
+à laquelle il manquait « corvees » ; la fiche FICHE.md sera complétée en P10.
+
+**Prochaine étape :** P7 — rapport HTML autonome (mode sombre), notifications (1 par jour au plus, silence de
+23 h à 8 h, rien s'il n'y a rien de nouveau), CLI complète (status, rapport, accept, reject, snooze, pause, resume,
+analyser --maintenant, purge, doctor, desinstaller).

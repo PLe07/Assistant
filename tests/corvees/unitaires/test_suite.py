@@ -1,0 +1,49 @@
+"""La suite de l'analyse du soir : descriptions puis propositions, dans un fil à part, sans jamais faire tomber."""
+
+import types
+from unittest import mock
+
+from modules.corvees import propositions, suite
+from tests.corvees.unitaires.test_ia import SOIR, FauxClaude, candidat, tout_decrire
+
+
+def test_traiter_decrit_et_ecrit_chaque_proposition(reglages):
+    journal = []
+    cands = [candidat(1), candidat(2, tokens=["clip:Safari→Numbers"], type="pont")]
+    descriptions = suite.traiter(reglages, cands, SOIR, journal.append, demander=FauxClaude(tout_decrire))
+    assert set(descriptions) == {"sig1", "sig2"}
+    for c in cands:
+        assert (propositions.racine(reglages) / c["id"] / "README.md").exists()
+    assert propositions.lire(reglages, "id0001")["description"]["source"] == "claude"
+
+
+def test_le_fil_ne_fait_jamais_tomber_le_demon(reglages):
+    journal = []
+    demon = types.SimpleNamespace(reglages=reglages, journal=journal.append)
+    with mock.patch.object(suite, "traiter", side_effect=RuntimeError("panne")):
+        suite.apres_analyse(demon, [candidat(1)], SOIR)
+        suite.attendre(5)
+    assert journal == ["Suite de l'analyse : RuntimeError : panne"]
+
+
+def test_un_seul_fil_a_la_fois(reglages):
+    journal = []
+    demon = types.SimpleNamespace(reglages=reglages, journal=journal.append)
+    import threading
+
+    libre = threading.Event()
+    with mock.patch.object(suite, "traiter", side_effect=lambda *a, **k: libre.wait(5)):
+        suite.apres_analyse(demon, [], SOIR)
+        suite.apres_analyse(demon, [], SOIR)
+        libre.set()
+        suite.attendre(5)
+    assert journal == ["Suite de l'analyse précédente encore en cours : celle-ci attendra demain"]
+
+
+def test_le_fil_normal_passe_par_traiter(reglages):
+    vu = []
+    demon = types.SimpleNamespace(reglages=reglages, journal=vu.append)
+    with mock.patch.object(suite, "traiter", side_effect=lambda r, c, m, j: vu.append((len(c), m))):
+        suite.apres_analyse(demon, [candidat(1)], SOIR)
+        suite.attendre(5)
+    assert vu == [(1, SOIR)]
