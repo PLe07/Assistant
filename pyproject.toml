@@ -1,0 +1,32 @@
+# Configuration des outils de vérification du module « corvees » (modules/corvees/check.sh).
+# Rien ici n'est nécessaire pour faire tourner l'Assistant.
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+
+[tool.mypy]
+python_version = "3.10"
+ignore_missing_imports = true
+follow_imports = "silent"
+warn_unused_ignores = true
+no_implicit_optional = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests/corvees"]
+pythonpath = ["."]
+markers = ["live: appel réel à Claude (coûte un peu : lancé seulement avec -m live)"]
+addopts = "-m 'not live'"
+
+[tool.coverage.run]
+source = ["modules/corvees"]
+# L'accès natif à macOS est isolé ici et remplacé par des imitations dans les tests ; __main__ ne fait qu'appeler la CLI.
+omit = ["modules/corvees/capteurs/natif.py", "modules/corvees/__main__.py"]
+
+[tool.coverage.report]
+fail_under = 85
+show_missing = true
+skip_covered = true
