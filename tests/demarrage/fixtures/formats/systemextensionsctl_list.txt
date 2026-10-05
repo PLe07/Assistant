@@ -1,0 +1,10 @@
+3 extension(s)
+--- com.apple.system_extension.network_extension
+enabled	active	teamID	bundleID (version)	name	[state]
+*	*	AB12CD34EF	com.exemple.vpn.tunnel (4.2.1/421)	Exemple VPN	[activated enabled]
+--- com.apple.system_extension.driver_extension
+enabled	active	teamID	bundleID (version)	name	[state]
+	*	ZZ99YY88XX	com.exemple.pilote (1.0/1)	Pilote Exemple	[terminated waiting to uninstall on reboot]
+--- com.apple.system_extension.endpoint_security
+enabled	active	teamID	bundleID (version)	name	[state]
+*	*	GUNFMW623Y	com.exemple.securite.extension (7.1/7100)	Sécurité Exemple	[activated enabled]

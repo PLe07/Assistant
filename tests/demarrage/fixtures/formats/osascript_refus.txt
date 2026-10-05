@@ -1,0 +1,1 @@
+47:120: execution error: Not authorized to send Apple events to System Events. (-1743)

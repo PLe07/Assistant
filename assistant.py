@@ -12,6 +12,7 @@
     python assistant.py ecran off         COUPE l'écran tout de suite (ecran on pour le rallumer)
     python assistant.py traduction on     🇬🇧 chaque phrase française finie par un point devient anglaise (off : arrêter)
     python assistant.py corvees rapport   🔁 tes corvées répétées repérées (corvees seul : toutes ses commandes)
+    python assistant.py demarrage rapport 🧹 ce qui se lance tout seul au démarrage, et ce que ça coûte
     python assistant.py activer mails     active un module (il démarre dans les 2 secondes)
     python assistant.py desactiver mails  désactive un module (il s'arrête dans les 2 secondes)
                                           (au bouton aussi : desactiver cine → son bouton ne fait plus rien)
@@ -670,6 +671,10 @@ def main() -> int:
         from modules.corvees.cli import main as corvees
 
         return corvees(sys.argv[2:])
+    if sys.argv[1:2] == ["demarrage"]:  # le Nettoyeur de démarrage a ses propres commandes (scan, mesurer…)
+        from modules.demarrage.cli import main as demarrage
+
+        return demarrage(sys.argv[2:])
     actions = {
         "pause": pause, "reprendre": reprendre, "etat": afficher_etat, "journal": journal,
         "test-notif": test_notif, "test-claude": test_claude, "test-plantage": test_plantage,
@@ -681,7 +686,7 @@ def main() -> int:
                   "cine": cine, "revue": revue, "proactivite": proactivite}
     parser = argparse.ArgumentParser(description="Commandes de l'assistant")
     parser.add_argument("action", choices=[*actions, *avec_texte, "activer", "desactiver", "habitudes", "essai-memoire",
-                                           "corvees"])
+                                           "corvees", "demarrage"])
     parser.add_argument("suite", nargs="*", help="activer / desactiver : le module ; micro, ecran : on ou off ; "
                                                  "noter, demander, memoire, recherche, rediger : ton texte")
     parser.add_argument("--etape", type=int, choices=[1, 2, 3, 4, 5], help="essai-memoire : une seule étape")

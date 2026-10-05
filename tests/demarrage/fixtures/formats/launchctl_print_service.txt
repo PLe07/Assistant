@@ -1,0 +1,41 @@
+gui/501/com.google.keystone.agent = {
+	active count = 1
+	path = /Users/utilisateur/Library/LaunchAgents/com.google.keystone.agent.plist
+	type = LaunchAgent
+	state = running
+
+	program = /Users/utilisateur/Library/Google/GoogleSoftwareUpdate/GoogleSoftwareUpdate.bundle/Contents/Resources/GoogleSoftwareUpdateAgent.app/Contents/MacOS/GoogleSoftwareUpdateAgent
+	arguments = {
+		/Users/utilisateur/Library/Google/GoogleSoftwareUpdate/GoogleSoftwareUpdate.bundle/Contents/Resources/GoogleSoftwareUpdateAgent.app/Contents/MacOS/GoogleSoftwareUpdateAgent
+		-runMode
+		ifneeded
+	}
+
+	default environment = {
+		PATH => /usr/bin:/bin:/usr/sbin:/sbin
+	}
+
+	environment = {
+		XPC_SERVICE_NAME => com.google.keystone.agent
+	}
+
+	domain = gui/501 [100005]
+	asid = 100005
+	minimum runtime = 10
+	exit timeout = 5
+	runs = 3
+	pid = 1234
+	immediate reason = speculative
+	forks = 2
+	execs = 1
+	initialized = 1
+	trampolined = 1
+	started suspended = 0
+	proxy started suspended = 0
+	last exit code = 0
+
+	spawn type = daemon (3)
+	jetsam priority = 40
+	jetsam memory limit (active) = (unlimited)
+	properties = runatload | inferred program
+}

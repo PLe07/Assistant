@@ -1,0 +1,5 @@
+disabled services = {
+	"com.apple.ScreenReaderUIServer" => true
+	"com.microsoft.update.agent" => true
+	"com.docker.helper" => false
+}

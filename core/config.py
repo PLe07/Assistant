@@ -81,6 +81,8 @@ DEFAUTS = {
                        "applis_clavier": []},
         # 🔁 Le détecteur de corvées répétées (détails et seuils : modules/corvees/config.py). Éteint par défaut.
         "corvees": {"actif": False},
+        # 🧹 Le Nettoyeur de démarrage : « actif » = la surveillance en fond (modules/demarrage/config.py). Éteint.
+        "demarrage": {"actif": False},
         # Au bouton (voir AU_BOUTON) : « actif »: false les rend muets.
         **{nom: {"actif": True} for nom in AU_BOUTON},
     },

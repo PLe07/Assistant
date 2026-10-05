@@ -1,0 +1,14 @@
+# Couverture du Nettoyeur de démarrage (modules/demarrage/check.sh).
+[run]
+source = modules/demarrage
+# Le vrai Mac (subprocess) est isolé dans systeme.py et remplacé par le faux Mac dans les tests ;
+# __main__ ne fait qu'appeler la CLI ou le démon ; capturer.py ne tourne que sur le vrai Mac.
+omit =
+    modules/demarrage/systeme.py
+    modules/demarrage/__main__.py
+    modules/demarrage/capturer.py
+
+[report]
+fail_under = 85
+show_missing = True
+skip_covered = True

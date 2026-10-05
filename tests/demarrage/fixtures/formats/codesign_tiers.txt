@@ -1,0 +1,14 @@
+Executable=/Applications/zoom.us.app/Contents/MacOS/zoom.us
+Identifier=us.zoom.xos
+Format=app bundle with Mach-O universal (x86_64 arm64)
+CodeDirectory v=20500 size=1234 flags=0x10000(runtime) hashes=27+7 location=embedded
+Signature size=9046
+Authority=Developer ID Application: Zoom Video Communications, Inc. (BJ4HAAB9B3)
+Authority=Developer ID Certification Authority
+Authority=Apple Root CA
+Timestamp=12 Sep 2026 at 10:01:02
+Info.plist entries=40
+TeamIdentifier=BJ4HAAB9B3
+Runtime Version=14.0.0
+Sealed Resources version=2 rules=13 files=2400
+Internal requirements count=1 size=200

@@ -1,0 +1,5 @@
+Timestamp               Ty Process[PID:TID]
+2026-10-05 06:53:41.120 Df loginwindow[391:1a2b] [com.apple.loginwindow.logging:Standard] -[LWDefaultScreenLockUI canEnableTouchID] | Bio unlock available
+2026-10-05 06:54:12.481 Df loginwindow[391:1a2b] [com.apple.loginwindow.logging:Standard] -[SessionAgentNotificationCenter sendBSDNotification:forUserID:] | sending BSD notification: com.apple.sessionagent.screenIsUnlocked
+2026-10-05 06:54:12.902 Df loginwindow[391:1a2b] [com.apple.loginwindow.logging:Standard] -[LoginWindowController loginSuccess] | login success
+2026-10-05 06:54:13.010 Df loginwindow[391:1a2b] [com.apple.loginwindow.logging:Standard] performAutolaunch | Launching login items

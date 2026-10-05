@@ -1,0 +1,22 @@
+2026-10-05 09:12:01 +0200 
+Assertion status system-wide:
+   BackgroundTask                 0
+   ApplePushServiceTask           0
+   UserIsActive                   1
+   PreventUserIdleDisplaySleep    1
+   PreventSystemSleep             0
+   ExternalMedia                  0
+   PreventUserIdleSystemSleep     1
+   NetworkClientActive            0
+Listed by owning process:
+   pid 391(loginwindow): [0x0000a1b200019a01] 00:00:05 UserIsActive named: "com.apple.loginwindow.user"
+	Timeout will fire in 595 secs Action=TimeoutActionRelease
+   pid 4321(caffeinate): [0x0000a1b20001a002] 00:01:10 PreventUserIdleSystemSleep named: "caffeinate command-line tool"
+	Details: caffeinate asserting on behalf of '/usr/bin/caffeinate -i -t 240' (pid 4320)
+	Localized=THE CAFFEINATE TOOL IS PREVENTING SLEEP.
+   pid 5555(zoom.us): [0x0000a1b20001a003] 00:20:00 PreventUserIdleDisplaySleep named: "Zoom Meeting"
+   pid 1234(GoogleSoftwareUpdateAgent): [0x0000a1b20001a004] 00:00:30 PreventSystemSleep named: "Keystone update in progress"
+   pid 6001(Éditeur Café): [0x0000a1b20001a005] 00:02:00 NoIdleSleepAssertion named: "export en cours"
+Kernel Assertions: 0x4=USB
+   id=500  level=255 0x4=USB mod=05/10/2026 08:00 description=com.apple.usb.externaldevice.14100000 owner=AppleUSBHostDevice
+Idle sleep preventers: IODisplayWrangler

@@ -35,3 +35,7 @@ donnees/
 # Mesure de couverture (générée par check.sh)
 .coverage
 .coverage.*
+
+# Nettoyeur de démarrage : sorties réelles du Mac, anonymisées mais personnelles (liste des logiciels)
+/tests/demarrage/fixtures/reelles/*
+!/tests/demarrage/fixtures/reelles/README.md

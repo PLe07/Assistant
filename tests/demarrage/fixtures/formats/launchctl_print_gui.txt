@@ -1,0 +1,60 @@
+gui/501 = {
+	type = gui
+	handle = 501
+	active count = 412
+	service count = 380
+	active service count = 120
+	creator = loginwindow[391]
+	creator euid = 0
+	auxiliary bootstrapper = com.apple.xpc.otherbsd (complete)
+	security context = {
+		uid unset
+		asid = 100005
+	}
+
+	bringup time = 412 ms
+	death port = 0x5b03
+	subdomains = {
+		pid/1234
+		pid/4512
+	}
+
+	services = {
+		       0      -      com.apple.SafariHistoryServiceAgent
+		     612      -      com.apple.Finder
+		       0      -      com.apple.homed
+		     638      -      com.apple.Dock.agent
+		    1234      -      com.google.keystone.agent
+		       0     78      com.exemple.casse
+		       0 (signal 9)  com.exemple.tue
+		       0      -      com.microsoft.update.agent
+		    4512      -      com.docker.helper
+		       0      -      com.assistant.superviseur
+		    7781      -      us.zoom.updater.login.check
+		       0      -      com.exemple.Étiquette avec espaces
+	}
+
+	unmanaged processes = {
+		com.apple.xpc.launchd.unmanaged.loginwindow.391 = {
+			active count = 3
+			dynamic endpoints = {
+			}
+		}
+	}
+
+	endpoints = {
+		"com.apple.Finder" = {
+			port = 0x12f03
+			active = 1
+			managed = 1
+		}
+	}
+
+	disabled services = {
+		"com.apple.ScreenReaderUIServer" => disabled
+		"com.microsoft.update.agent" => disabled
+		"com.docker.helper" => enabled
+	}
+
+	properties = 
+}

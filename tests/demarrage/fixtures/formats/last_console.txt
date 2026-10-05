@@ -1,0 +1,8 @@
+utilisateur  console                   Mon Oct  5 06:54   still logged in
+utilisateur  ttys000                   Mon Oct  5 08:01   still logged in
+reboot time                                Mon Oct  5 06:53
+shutdown time                              Sun Oct  4 23:10
+utilisateur  console                   Sun Oct  4 07:02 - 23:10  (16:08)
+utilisateur  console                   Sat Oct  3 07:15 - 22:40  (15:25)
+
+wtmp begins Tue Sep  1 09:00:00 2026

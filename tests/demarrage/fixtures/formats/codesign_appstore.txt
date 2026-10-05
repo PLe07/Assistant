@@ -1,0 +1,12 @@
+Executable=/Applications/Exemple Store.app/Contents/MacOS/Exemple Store
+Identifier=com.exemple.store
+Format=app bundle with Mach-O thin (arm64)
+CodeDirectory v=20500 size=800 flags=0x10000(runtime) hashes=14+7 location=embedded
+Signature size=4800
+Authority=Apple Mac OS Application Signing
+Authority=Apple Worldwide Developer Relations Certification Authority
+Authority=Apple Root CA
+Info.plist entries=30
+TeamIdentifier=QQ77RR66SS
+Sealed Resources version=2 rules=13 files=120
+Internal requirements count=1 size=180

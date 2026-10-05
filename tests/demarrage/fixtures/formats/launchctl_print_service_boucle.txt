@@ -1,0 +1,24 @@
+gui/501/com.exemple.boucle = {
+	active count = 0
+	path = /Users/utilisateur/Library/LaunchAgents/com.exemple.boucle.plist
+	type = LaunchAgent
+	state = spawn scheduled
+
+	program = /Applications/Exemple Boucle.app/Contents/MacOS/aide-boucle
+	arguments = {
+		/Applications/Exemple Boucle.app/Contents/MacOS/aide-boucle
+	}
+
+	domain = gui/501 [100005]
+	minimum runtime = 10
+	exit timeout = 5
+	runs = 412
+	last exit code = 1: Operation not permitted
+
+	semaphores = {
+		successful exit => 0
+	}
+
+	spawn type = daemon (3)
+	properties = keepalive | runatload
+}

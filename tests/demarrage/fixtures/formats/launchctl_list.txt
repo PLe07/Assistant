@@ -1,0 +1,15 @@
+PID	Status	Label
+-	0	com.apple.SafariHistoryServiceAgent
+612	0	com.apple.Finder
+-	0	com.apple.homed
+638	0	com.apple.Dock.agent
+1234	0	com.google.keystone.agent
+-	78	com.exemple.casse
+-	-9	com.exemple.tue
+2210	0	application.com.spotify.client.24242424.24242431
+-	0	com.microsoft.update.agent
+4512	0	com.docker.helper
+-	0	com.assistant.superviseur
+7781	0	us.zoom.updater.login.check
+
+-	0	ligne.sans.tabulation  avec  espaces

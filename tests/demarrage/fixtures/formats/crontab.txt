@@ -1,0 +1,6 @@
+# m h dom mon dow command
+MAILTO=""
+*/30 * * * * /Users/utilisateur/bin/sauvegarde.sh >/dev/null 2>&1
+@reboot /opt/homebrew/bin/exemple-au-demarrage
+
+0 9 * * 1 /usr/bin/true

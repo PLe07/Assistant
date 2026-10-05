@@ -1,0 +1,35 @@
+Processes: 512 total, 3 running, 509 sleeping, 2484 threads 
+2026/10/05 09:12:01
+Load Avg: 2.10, 2.30, 2.25 
+CPU usage: 6.12% user, 4.80% sys, 89.6% idle 
+SharedLibs: 512M resident, 98M data, 51M linkedit.
+MemRegions: 210000 total, 5120M resident, 180M private, 2100M shared.
+PhysMem: 15G used (2100M wired, 3000M compressor), 300M unused.
+VM: 250T vsize, 4800M framework vsize, 0(0) swapins, 0(0) swapouts.
+Networks: packets: 1234567/1500M in, 987654/400M out.
+Disks: 2345678/40G read, 1234567/35G written.
+
+PID    COMMAND          %CPU MEM    POWER
+1234   GoogleSoftwareUp 0.0  52M    0.0  
+2210   Spotify          0.0  402M   0.0  
+
+Processes: 512 total, 3 running, 509 sleeping, 2484 threads 
+2026/10/05 09:12:02
+Load Avg: 2.10, 2.30, 2.25 
+CPU usage: 6.12% user, 4.80% sys, 89.6% idle 
+SharedLibs: 512M resident, 98M data, 51M linkedit.
+MemRegions: 210000 total, 5120M resident, 180M private, 2100M shared.
+PhysMem: 15G used (2100M wired, 3000M compressor), 300M unused.
+VM: 250T vsize, 4800M framework vsize, 0(0) swapins, 0(0) swapouts.
+Networks: packets: 1234567/1500M in, 987654/400M out.
+Disks: 2345678/40G read, 1234567/35G written.
+
+PID    COMMAND          %CPU MEM    POWER
+1234   GoogleSoftwareUp 14.1 52M+   18.2 
+2215   Spotify Helper ( 3.4  176M   6.5  
+2210   Spotify          2.2  402M-  4.1  
+5555   zoom.us          1.0  244M   2.0  
+612    Finder           0.3  96M    0.4  
+0      kernel_task      5.0  13M    0.0  
+8888   sh               25.0 2928K  30.5 
+4512   com.docker.helpe 0.0  1.2G   0.0  

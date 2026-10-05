@@ -1,0 +1,93 @@
+========================
+ Records for UID 0 : 00000000-0000-0000-0000-000000000000
+========================
+
+ ServiceManagement migrated: true
+ SharedFileList migrated: true
+
+ Items:
+
+ #1:
+                 UUID: 00000000-0000-0000-0000-000000000001
+                 Name: com.exemple.vpn.daemon.plist
+       Developer Name: Exemple VPN SAS
+      Team Identifier: AB12CD34EF
+                 Type: legacy daemon (0x10010)
+                Flags: [ legacy ] (0x1)
+          Disposition: [enabled, allowed, visible, notified] (0xb)
+           Identifier: 16.com.exemple.vpn.daemon
+                  URL: file:///Library/LaunchDaemons/com.exemple.vpn.daemon.plist
+      Executable Path: /Library/PrivilegedHelperTools/com.exemple.vpn.daemon
+           Generation: 1
+    Parent Identifier: 4.AB12CD34EF
+
+========================
+ Records for UID 501 : 00000000-0000-0000-0000-000000000002
+========================
+
+ ServiceManagement migrated: true
+ SharedFileList migrated: true
+
+ Items:
+
+ #1:
+                 UUID: 00000000-0000-0000-0000-000000000003
+                 Name: Zoom
+       Developer Name: Zoom Video Communications, Inc.
+      Team Identifier: BJ4HAAB9B3
+                 Type: app (0x2)
+                Flags: [  ] (0)
+          Disposition: [enabled, allowed, visible, notified] (0xb)
+           Identifier: 2.us.zoom.xos
+                  URL: file:///Applications/zoom.us.app/
+           Generation: 1
+    Bundle Identifier: us.zoom.xos
+
+ #2:
+                 UUID: 00000000-0000-0000-0000-000000000004
+                 Name: Spotify
+       Developer Name: Spotify AB
+      Team Identifier: 2FNC3A47ZF
+                 Type: login item (0x4)
+                Flags: [  ] (0)
+          Disposition: [disabled, allowed, visible, notified] (0xa)
+           Identifier: 4.com.spotify.client
+                  URL: file:///Applications/Spotify.app/
+           Generation: 2
+    Bundle Identifier: com.spotify.client
+
+ #3:
+                 UUID: 00000000-0000-0000-0000-000000000005
+                 Name: com.google.keystone.agent.plist
+       Developer Name: Google LLC
+      Team Identifier: EQHXZ8M8AV
+                 Type: legacy agent (0x10008)
+                Flags: [ legacy ] (0x1)
+          Disposition: [enabled, allowed, visible, notified] (0xb)
+           Identifier: 16.com.google.keystone.agent
+                  URL: file:///Users/utilisateur/Library/LaunchAgents/com.google.keystone.agent.plist
+      Executable Path: /Users/utilisateur/Library/Google/GoogleSoftwareUpdate/GoogleSoftwareUpdate.bundle/Contents/Resources/GoogleSoftwareUpdateAgent.app/Contents/MacOS/GoogleSoftwareUpdateAgent
+           Generation: 1
+    Parent Identifier: 4.EQHXZ8M8AV
+
+ #4:
+                 UUID: 00000000-0000-0000-0000-000000000006
+                 Name: Éditeur Café
+       Developer Name: (null)
+                 Type: app (0x2)
+                Flags: [  ] (0)
+          Disposition: [enabled, allowed, visible, notified] (0xb)
+           Identifier: 2.com.exemple.editeur-cafe
+                  URL: file:///Applications/%C3%89diteur%20Caf%C3%A9.app/
+           Generation: 1
+    Bundle Identifier: com.exemple.editeur-cafe
+
+ #5:
+                 UUID: 00000000-0000-0000-0000-000000000007
+                 Name: Exemple Groupe
+       Developer Name: Exemple
+                 Type: developer (0x20)
+                Flags: [  ] (0)
+          Disposition: [enabled, allowed, visible, notified] (0xb)
+           Identifier: 4.AB12CD34EF
+           Generation: 1

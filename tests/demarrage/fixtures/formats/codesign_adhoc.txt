@@ -1,0 +1,9 @@
+Executable=/opt/homebrew/Cellar/exemple/1.0/bin/exemple-service
+Identifier=exemple-service
+Format=Mach-O thin (arm64)
+CodeDirectory v=20400 size=500 flags=0x20002(adhoc,linker-signed) hashes=12+0 location=embedded
+Signature=adhoc
+Info.plist=not bound
+TeamIdentifier=not set
+Sealed Resources=none
+Internal requirements=none

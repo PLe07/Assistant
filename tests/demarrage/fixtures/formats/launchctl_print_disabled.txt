@@ -1,0 +1,9 @@
+disabled services = {
+	"com.apple.ScreenReaderUIServer" => disabled
+	"com.microsoft.update.agent" => disabled
+	"com.docker.helper" => enabled
+	"com.exemple.Étiquette avec espaces" => disabled
+}
+login item associations = {
+	"com.exemple.app" => ["com.exemple.app.helper"]
+}
