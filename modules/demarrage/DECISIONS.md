@@ -135,3 +135,26 @@ sans root : on ne devine pas.
 - **App déplacée** : si le programme a disparu mais qu'une app du même nom existe ailleurs, la fiche le dit
   (`app_deplacee_vers`). La fiche pointe vers l'ancien emplacement, elle est donc cassée, mais ce n'est pas une
   désinstallation.
+
+## 2026-10-05 · P3 — Collecteurs S5, S7-S10, modes dégradés
+
+**D-16 · S5 : trois méthodes, et l'honnêteté sur ce qu'on a vu.**
+`sfltool dumpbtm` donne tout : apps d'ouverture, tâches de fond, et l'état activé/désactivé que tu as choisi dans
+les Réglages. Il sert aussi à compléter les fiches déjà connues (S1, S4) au lieu de créer des doublons.
+Ses repli sont moins complets, et S5 est alors marqué « dégradé », avec la raison :
+- System Events ne voit que les apps « Ouvrir à la connexion », pas les tâches de fond ;
+- la déduction prend les apps lancées dans les 2 minutes après l'ouverture de session. Elle peut confondre avec
+  une app que tu as ouverte toi-même tout de suite ; la fiche indique « déduit ».
+L'appel à System Events est en lecture seule (le script ne contient que « get »). Il a un délai de 10 s et n'est
+jamais réessayé dans le même scan.
+
+**D-17 · S8 et S9 : ce qui ne se lance plus, et ce qui ne sort pas.**
+- **S8** : un assistant de `/Library/PrivilegedHelperTools` sans LaunchDaemon qui le lance ne démarre plus. Il est
+  noté `sans_plist`, et le verdict (P5) le traitera en reste d'app.
+- **S9** : la ligne de crontab complète ne sert qu'à calculer l'identifiant, elle n'est jamais gardée. Seuls le
+  programme et l'horaire le sont, car une commande cron peut contenir un mot de passe ou un jeton.
+
+**D-18 · S10 : jamais le texte d'une ligne de ~/.zshrc.**
+On ne garde que le fichier, le numéro de ligne, la cause reconnue (nvm, conda, oh-my-zsh, compinit sans -C,
+pyenv, rbenv, SDKMAN, brew shellenv, thefuck, brew update) et un conseil.
+Un ~/.zshrc contient souvent des `export …_TOKEN=…`.

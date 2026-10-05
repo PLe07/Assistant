@@ -90,7 +90,8 @@ def petit_mac(mac):
 def test_scan_complet(petit_mac, reglages):
     inv = scan.scanner(petit_mac, reglages)
     etats = {c.nom: c.etat for c in inv.collecteurs}
-    assert etats == {"S1": "ok", "S2": "ok", "S3": "ok", "S4": "ok", "S6": "ok"}
+    attendus = {"S1": "ok", "S2": "ok", "S3": "ok", "S4": "ok", "S6": "ok", "S8": "ok", "S10": "ok"}
+    assert etats == {**attendus, "S5": "dégradé", "S7": "dégradé", "S9": "dégradé"}  # rien de préparé pour eux
     f = {(x.source, x.label): x for x in inv.fiches}
     agent = f[("agent_utilisateur", "com.outil.agent")]
     assert agent.charge and agent.pids == [101] and agent.actif and agent.desactive is False

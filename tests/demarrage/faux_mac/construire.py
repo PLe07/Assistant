@@ -228,8 +228,15 @@ def _ecrire_app(mac: FauxMac, chemin: str, bundle_id: str, nom: str) -> str:
 
 
 def assembler(mac: FauxMac, plantes: list[Plante], autres: list[Processus], apps: list[tuple[str, str, str, float | None]],
-              login_items: list[tuple[str, str]] | None = None, systeme_lisible: bool = False) -> Construction:  # fmt: skip
-    """Écrit tout sur le faux Mac et branche les réponses de commandes."""
+              login_items: list[tuple[str, str]] | None = None, systeme_lisible: bool = False,
+              dumpbtm: str | None = None, extensions: str = "0 extension(s)\n", crontab: str | None = None,
+              helpers: list[str] | None = None) -> Construction:  # fmt: skip
+    """Écrit tout sur le faux Mac et branche les réponses de commandes.
+
+    dumpbtm : la sortie de « sfltool dumpbtm » (None : refusé sans root, comme d'habitude) ;
+    login_items : ce que voit System Events ; crontab : None si pas de crontab ; helpers : fichiers à créer dans
+    /Library/PrivilegedHelperTools.
+    """
     c = Construction(mac, plantes, [*autres, *(x for p in plantes for x in p.processus)], apps_installees=apps,
                      login_items=login_items or [])  # fmt: skip
     signatures: dict[str, str] = {}
@@ -285,6 +292,19 @@ def assembler(mac: FauxMac, plantes: list[Plante], autres: list[Processus], apps
     for p in plantes:
         if p.charge:
             mac.repondre(["launchctl", "print", f"gui/{UID}/{p.label}"], sortie_print_service(p))
+    if dumpbtm is None:
+        mac.repondre(["sfltool", "dumpbtm"], "", code=1, erreur="sfltool: dumpbtm must be run as root\n")
+    else:
+        mac.repondre(["sfltool", "dumpbtm"], dumpbtm)
+    lignes_se = "".join(f"{nom}\t{chemin}\tfalse\n" for nom, chemin in c.login_items)
+    mac.repondre_debut(["osascript"], lignes_se)
+    mac.repondre(["systemextensionsctl", "list"], extensions)
+    if crontab is None:
+        mac.repondre(["crontab", "-l"], "", code=1, erreur=f"crontab: no crontab for {mac.utilisateur}\n")
+    else:
+        mac.repondre(["crontab", "-l"], crontab)
+    for nom in helpers or []:
+        mac.fichier(f"/Library/PrivilegedHelperTools/{nom}", b"\xcf\xfa\xed\xfe aide")
     mac.repondre_debut(["ps"], lambda cmd, m: Resultat(0, sortie_ps(c)))
     mac.repondre_debut(["top"], lambda cmd, m: Resultat(0, sortie_top(c)))
     mac.repondre(["pmset", "-g", "assertions"], lambda cmd, m: Resultat(0, sortie_pmset(c)))
@@ -480,4 +500,27 @@ def construire(racine: Path, systeme_lisible: bool = False) -> Construction:
                            signe_par("Zoom Video Communications, Inc.", "BJ4HAAB9B3")},
                app=("/Applications/zoom.us.app", "us.zoom.xos", "zoom.us", 12)),
     ]  # fmt: skip
-    return assembler(mac, plantes, autres, apps=[], systeme_lisible=systeme_lisible)
+    plantes += [
+        # S5 : ouverture à la connexion, lue par System Events (sfltool est refusé sans root).
+        Plante("us.zoom.xos", "ouverture", Attendu("utile", "reglages"),
+               processus=[Processus(3901, "/Applications/zoom.us.app/Contents/MacOS/zoom.us", [(9.0, 0.1), (70.0, 0.003)],
+                                    rss_mo=180, puissance=1.5)]),
+        Plante("Ancienne App", "ouverture", Attendu("orphelin", "reglages")),
+        # S7 : une extension réseau du VPN (même équipe que son daemon).
+        Plante("com.exemple.vpn.tunnel", "extension", Attendu("utile", "instructions")),
+        # S8 : l'assistant du VPN (lancé par son daemon) et un reste sans daemon.
+        Plante("com.exemple.vpn.daemon", "assistant_privilegie", Attendu("utile", "instructions")),
+        Plante("com.ancien.helper", "assistant_privilegie", Attendu("orphelin", "instructions")),
+        # S9 : une tâche cron à toi (script non signé : à vérifier), une autre dont le programme a disparu.
+        Plante("cron : sauvegarde.sh", "cron", Attendu("inconnu", "instructions"), programmes=[f"{MAISON}/bin/sauvegarde.sh"]),
+        Plante("cron : absent", "cron", Attendu("orphelin", "instructions")),
+    ]  # fmt: skip
+    extensions = (
+        "1 extension(s)\n--- com.apple.system_extension.network_extension\n"
+        "enabled\tactive\tteamID\tbundleID (version)\tname\t[state]\n"
+        "*\t*\tAB12CD34EF\tcom.exemple.vpn.tunnel (4.2.1/421)\tExemple VPN\t[activated enabled]\n"
+    )
+    crontab = f'MAILTO=""\n*/30 * * * * {MAISON}/bin/sauvegarde.sh >/dev/null 2>&1\n@reboot /opt/homebrew/bin/absent\n'
+    return assembler(mac, plantes, autres, apps=[], systeme_lisible=systeme_lisible,
+                     login_items=[("zoom.us", "/Applications/zoom.us.app"), ("Ancienne App", "/Applications/Ancienne App.app")],
+                     extensions=extensions, crontab=crontab, helpers=["com.ancien.helper"])  # fmt: skip

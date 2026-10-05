@@ -8,7 +8,7 @@ Porte unique : `modules/demarrage/check.sh` (dans le conteneur : `PYTHON=<venv>/
 | P0 Reconnaissance, squelette, check.sh | ✅ | ci-dessous |
 | P1 Modèle, plists, collecteurs S1-S4 + S6, signatures | ✅ | 118 tests, couverture 98 % |
 | P2 Faux Mac + vérité terrain | ✅ | 36 éléments plantés, tous trouvés |
-| P3 Collecteurs S5, S7-S10, modes dégradés | ⏳ | |
+| P3 Collecteurs S5, S7-S10, modes dégradés | ✅ | 156 tests, couverture 98,4 % |
 | P4 Mesure (session, croisière, énergie, veille, zsh) | ⏳ | |
 | P5 Scores, verdicts, connaissances, gains | ⏳ | |
 | P6 Actions réversibles + sécurité | ⏳ | |
@@ -101,7 +101,27 @@ $ PYTHON=…/venv/bin/python modules/demarrage/check.sh
 CHECK OK
 ```
 
+## P3 — Collecteurs S5, S7 à S10, modes dégradés (✅)
+
+- S5 `ouverture_session.py` : `sfltool dumpbtm` (fiches + état des agents connus) → System Events (10 s,
+  autorisation refusée détectée) → déduction (apps lancées par launchd dans les 2 min). D-16.
+- S7 `extensions.py` (tabulations ou espaces), S8 `helpers.py` (lancé par quel daemon ? sinon `sans_plist`),
+  S9 `planifie.py` (crontab, raccourcis @reboot…, ligne jamais gardée), S10 `shell.py` (causes de lenteur sans le
+  texte des lignes). D-17, D-18.
+- Faux Mac n° 1 complété : 2 apps d'ouverture (dont une désinstallée), 1 extension, 2 assistants (dont un sans
+  daemon), 2 tâches cron (dont une au programme disparu). Le scan les trouve tous ; S5 « dégradé » avec la raison.
+- Défaut du faux Mac corrigé : une réponse au même préfixe remplace maintenant l'ancienne.
+
+```
+$ PYTHON=…/venv/bin/python modules/demarrage/check.sh
+▶ ruff check ✅  ▶ ruff format ✅  ▶ mypy ✅
+▶ pytest + couverture ≥ 85 %   134 passed · Total coverage: 98.39%   ✅
+▶ faux Mac   12 passed   ✅   ▶ sécurité   9 passed   ✅   ▶ performance   1 passed   ✅
+CHECK OK
+```
+
 ## Prochaine étape
 
-P3 : collecteurs S5 (sfltool → osascript → déduction), S7 (extensions), S8 (PrivilegedHelperTools), S9 (cron +
-déclencheurs), S10 (zsh, lecture seule), modes dégradés.
+P4 : la mesure. Analyse de ps/top/pmset, échantillonneur (session toutes les 5 s pendant 5 min, croisière toutes
+les 2 min, énergie toutes les 10 min), temps d'ouverture de session et « temps jusqu'au calme », rattachement
+processus → élément, chronométrage de zsh (+ zprof isolé).

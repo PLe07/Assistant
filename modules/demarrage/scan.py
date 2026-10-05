@@ -17,7 +17,12 @@ from modules.demarrage.collecteurs import (
     apple,
     applications,
     apps_embarquees,
+    extensions,
+    helpers,
     launchd_etat,
+    ouverture_session,
+    planifie,
+    shell,
 )
 from modules.demarrage.collecteurs.applications import Index
 from modules.demarrage.collecteurs.launchd_etat import EtatLaunchd
@@ -189,7 +194,13 @@ def appliquer_relances(systeme: Systeme, fiches: list[Fiche]) -> None:
             f.details["dernier_code"] = d.dernier_code
 
 
-def scanner(systeme: Systeme, reglages: dict[str, Any], cache: CacheSignatures | None = None) -> Inventaire:
+def scanner(
+    systeme: Systeme,
+    reglages: dict[str, Any],
+    cache: CacheSignatures | None = None,
+    apps_vues_au_demarrage: list[str] | None = None,
+) -> Inventaire:
+    """apps_vues_au_demarrage : les apps lancées juste après l'ouverture de session (S5, en dernier recours)."""
     cache = cache if cache is not None else CacheSignatures()
     delais = reglages["delais"]
     inventaire = Inventaire(ts=systeme.maintenant())
@@ -224,6 +235,27 @@ def scanner(systeme: Systeme, reglages: dict[str, Any], cache: CacheSignatures |
     fiches, statut = _proteger("S6", s6)
     inventaire.fiches += fiches
     inventaire.collecteurs.append(statut)
+
+    def s5() -> tuple[list[Fiche], list[str]]:
+        r = ouverture_session.collecter(
+            systeme, index, inventaire.fiches, apps_vues_au_demarrage, delais["osascript_s"]
+        )
+        return r.fiches, r.erreurs
+
+    def s10() -> tuple[list[Fiche], list[str]]:
+        inventaire.shell, erreurs = shell.collecter(systeme)
+        return [], erreurs
+
+    for nom, fn in [
+        ("S5", s5),
+        ("S7", lambda: extensions.collecter(systeme)),
+        ("S8", lambda: helpers.collecter(systeme, inventaire.fiches)),
+        ("S9", lambda: planifie.collecter(systeme)),
+        ("S10", s10),
+    ]:
+        fiches, statut = _proteger(nom, fn)
+        inventaire.fiches += fiches
+        inventaire.collecteurs.append(statut)
 
     for f in inventaire.fiches:
         f.c_est_moi = f.label.startswith(PREFIXE_MOI)

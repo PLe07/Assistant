@@ -21,6 +21,8 @@ def test_reponses_exactes_puis_par_debut(mac):
     assert mac.executer(["launchctl", "print", "gui/501"]).sortie == "long"
     assert mac.executer(["launchctl", "blame", "x"]).sortie == "court"
     assert mac.executer(["ps"]).code == 1  # rien de prévu
+    mac.repondre_debut(["launchctl"], "remplacée")
+    assert mac.executer(["launchctl", "blame", "x"]).sortie == "remplacée"
 
 
 def test_reponse_calculee_et_code(mac):

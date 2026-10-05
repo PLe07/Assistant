@@ -122,6 +122,7 @@ class Inventaire:
     ts: float
     fiches: list[Fiche] = field(default_factory=list)
     collecteurs: list[Collecteur] = field(default_factory=list)
+    shell: dict[str, Any] = field(default_factory=dict)  # S10 : fichiers zsh et ce qui les ralentit
 
     def fiche(self, id_: str) -> Fiche | None:
         return next((f for f in self.fiches if f.id == id_), None)
@@ -134,6 +135,7 @@ class Inventaire:
             "ts": self.ts,
             "fiches": [f.vers_dict() for f in self.fiches],
             "collecteurs": [dataclasses.asdict(c) for c in self.collecteurs],
+            "shell": self.shell,
         }
 
     @classmethod
@@ -142,4 +144,5 @@ class Inventaire:
             ts=float(d["ts"]),
             fiches=[Fiche.depuis_dict(f) for f in d.get("fiches", [])],
             collecteurs=[Collecteur(**c) for c in d.get("collecteurs", [])],
+            shell=d.get("shell", {}),
         )

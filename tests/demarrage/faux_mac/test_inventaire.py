@@ -23,13 +23,11 @@ def fiche(inventaire, source, label):
 
 
 def test_tout_est_trouve_sans_panne(faux, inventaire):
-    assert {c.nom: c.etat for c in inventaire.collecteurs} == {
-        "S1": "ok",
-        "S2": "ok",
-        "S3": "ok",
-        "S4": "ok",
-        "S6": "ok",
-    }
+    etats = {c.nom: c.etat for c in inventaire.collecteurs}
+    attendus = {"S1": "ok", "S2": "ok", "S3": "ok", "S4": "ok", "S5": "dégradé", "S6": "ok", "S7": "ok", "S8": "ok"}
+    assert etats == {**attendus, "S9": "ok", "S10": "ok"}
+    s5 = next(c for c in inventaire.collecteurs if c.nom == "S5")
+    assert "administrateur" in s5.detail and "System Events" in s5.detail
     for source, label in faux.verite:
         fiche(inventaire, source, label)
 

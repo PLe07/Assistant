@@ -42,6 +42,7 @@ class FauxMac:
     def repondre_debut(self, debut: list[str], reponse: Reponse | str, code: int = 0, erreur: str = "") -> None:
         """Réponse à toute commande qui commence ainsi (la plus longue l'emporte)."""
         r = Resultat(code, reponse, erreur) if isinstance(reponse, str) else reponse
+        self.prefixes = [(d, x) for d, x in self.prefixes if d != tuple(debut)]  # la nouvelle remplace l'ancienne
         self.prefixes.append((tuple(debut), r))
         self.prefixes.sort(key=lambda p: len(p[0]), reverse=True)
 
