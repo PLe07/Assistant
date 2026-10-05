@@ -21,7 +21,7 @@ from modules.demarrage.collecteurs import (
 )
 from modules.demarrage.collecteurs.applications import Index
 from modules.demarrage.collecteurs.launchd_etat import EtatLaunchd
-from modules.demarrage.collecteurs.plists import app_contenant, est_systeme
+from modules.demarrage.collecteurs.plists import app_parente, est_systeme
 from modules.demarrage.modele import Collecteur, Fiche, Inventaire, identifiant
 from modules.demarrage.signatures import CacheSignatures, dernieres_utilisations, signer
 from modules.demarrage.systeme import Systeme
@@ -95,7 +95,9 @@ def inconnus_charges(systeme: Systeme, fiches: list[Fiche], etat: EtatLaunchd) -
         f.pids = [service.pid] if service.pid else []
         if d:
             f.programme, f.chemin_plist = d.programme, d.chemin
-            f.app_parente = app_contenant(d.programme) or app_contenant(d.chemin)
+            f.app_parente, aide = app_parente(systeme, d.programme, d.chemin)
+            if aide:
+                f.details["app_aide"] = aide
             if d.relances is not None:
                 f.details["relances"] = d.relances
         nouveaux.append(f)

@@ -7,7 +7,7 @@ Porte unique : `modules/demarrage/check.sh` (dans le conteneur : `PYTHON=<venv>/
 |---|---|---|
 | P0 Reconnaissance, squelette, check.sh | ✅ | ci-dessous |
 | P1 Modèle, plists, collecteurs S1-S4 + S6, signatures | ✅ | 118 tests, couverture 98 % |
-| P2 Faux Mac + vérité terrain | ⏳ | |
+| P2 Faux Mac + vérité terrain | ✅ | 36 éléments plantés, tous trouvés |
 | P3 Collecteurs S5, S7-S10, modes dégradés | ⏳ | |
 | P4 Mesure (session, croisière, énergie, veille, zsh) | ⏳ | |
 | P5 Scores, verdicts, connaissances, gains | ⏳ | |
@@ -63,7 +63,45 @@ $ PYTHON=…/venv/bin/python modules/demarrage/check.sh
 CHECK OK
 ```
 
+## P2 — Faux Mac et vérité terrain (✅)
+
+`tests/demarrage/faux_mac/construire.py` construit une racine « / » simulée :
+- 18 éléments Apple (S3), dont Spotlight très gourmand à l'ouverture de session (il doit rester 🍎) ;
+- les cas du §9.2 :
+  - lourd processeur (Adobe CC, global) ;
+  - lourd mémoire (Docker, via un processus fils de 1,5 Go) ;
+  - empêche la veille ;
+  - KeepAlive en boucle (412 lancements, code 1) ;
+  - 2 orphelins (programme disparu ; app désinstallée selon AssociatedBundleIdentifiers) ;
+  - Google Updater d'un Chrome pas ouvert depuis 90 jours (plist binaire) ;
+  - utile et léger ;
+  - inconnu non signé ;
+  - faux « com.apple » non signé ;
+  - plist corrompu ;
+  - accents et espaces ;
+  - doublon S1/S2 ;
+  - « c'est moi » ;
+  - daemon global ;
+  - daemon embarqué inactif ;
+- les sorties de commandes. Celles qui suivent l'horloge simulée (`ps`, `top`, `pmset`) donnent le temps
+  processeur cumulé exact de chaque processus, selon son profil de charge.
+
+Chaque élément planté porte son attendu (verdict, action, empêche la veille, un des 3 plus lourds). Le scan le
+trouve avec les bons attributs : `tests/demarrage/faux_mac/test_inventaire.py`. Les verdicts seront jugés en P5.
+
+En chemin, un défaut corrigé : une app d'aide rangée dans `~/Library` (GoogleSoftwareUpdateAgent.app) était prise
+pour l'app parente. Sa date de dernière ouverture ne dit rien de ton usage : elle est maintenant notée « app
+d'aide », et seule une app rangée avec les apps compte comme parente.
+
+```
+$ PYTHON=…/venv/bin/python modules/demarrage/check.sh
+▶ ruff check ✅  ▶ ruff format ✅  ▶ mypy ✅
+▶ pytest + couverture ≥ 85 %   118 passed · Total coverage: 97.99%   ✅
+▶ faux Mac   12 passed   ✅   ▶ sécurité ✅   ▶ performance ✅
+CHECK OK
+```
+
 ## Prochaine étape
 
-P2 : `tests/demarrage/faux_mac/construire.py` : un faux Mac complet (≥ 15 éléments Apple, les cas plantés du §9.2,
-les cas tordus) avec ses sorties de commandes et sa vérité terrain ; test du scan contre cette vérité.
+P3 : collecteurs S5 (sfltool → osascript → déduction), S7 (extensions), S8 (PrivilegedHelperTools), S9 (cron +
+déclencheurs), S10 (zsh, lecture seule), modes dégradés.

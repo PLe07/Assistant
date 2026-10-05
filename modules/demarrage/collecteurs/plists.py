@@ -104,6 +104,18 @@ def app_contenant(chemin: str | None) -> str | None:
     return None
 
 
+def app_parente(systeme: Systeme, *chemins: str | None) -> tuple[str | None, str | None]:
+    """(app parente, app d'aide) : l'app qui contient le programme est « parente » si elle est rangée avec les apps
+    (/Applications, ~/Applications) ; ailleurs (~/Library, Application Support), c'est une app d'aide, dont la date
+    de dernière ouverture ne dit rien de ton usage."""
+    dossiers = ("/Applications/", f"{systeme.maison}/Applications/", "/System/Applications/")
+    for chemin in chemins:
+        app = app_contenant(chemin)
+        if app:
+            return (app, None) if app.startswith(dossiers) else (None, app)
+    return None, None
+
+
 def _script(interprete: str, args: list[str]) -> str | None:
     """Ce que lance vraiment un interpréteur : le script, ou la première commande de « sh -c "…" »."""
     nom = PurePosixPath(interprete).name
@@ -191,6 +203,7 @@ def fiche_depuis_plist(systeme: Systeme, chemin_plist: str, source: str) -> Fich
     d = declaration(contenu, reel)
     label = d.label or nom_fichier
     programme = localiser(systeme, d.programme, d.repertoire) if d.programme else None
+    parente, aide = app_parente(systeme, programme or d.programme, reel)
     fiche = Fiche(
         id=identifiant(source, label),
         label=label,
@@ -200,12 +213,14 @@ def fiche_depuis_plist(systeme: Systeme, chemin_plist: str, source: str) -> Fich
         arguments=d.arguments,
         interprete=d.interprete,
         programme_existe=existe(systeme, programme) if d.programme else None,
-        app_parente=app_contenant(programme) or app_contenant(reel),
+        app_parente=parente,
         bundles_associes=d.bundles_associes,
         declencheurs=d.declencheurs,
         desactive=True if d.desactive_plist else None,
         erreurs=d.erreurs,
     )
+    if aide:
+        fiche.details["app_aide"] = aide
     if reel != chemin_plist:
         fiche.details["lien_vers"] = reel
     if d.desactive_plist:
