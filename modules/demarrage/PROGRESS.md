@@ -151,29 +151,66 @@ CHECK OK
 
 ## P5 — Scores, verdicts, connaissances, gains (✅)
 
--  : métriques depuis la base, score d'impact pondéré + bonus veille/boucle, utilité (D-26).
--  : 8 règles dans l'ordre de la config, chacune testée seule (cas positifs et négatifs),
+- `analyse/scores.py` : métriques depuis la base, score d'impact pondéré + bonus veille/boucle, utilité (D-26).
+- `analyse/verdicts.py` : 8 règles dans l'ordre de la config, chacune testée seule (cas positifs et négatifs),
   garde-fous Apple / inconnu, action selon la source (D-23 à D-25).
--  : 82 entrées en français (tous les logiciels demandés au §5), rangées du plus
-  précis au plus général (D-27) ; .
-- ,  (classement, résumé, éditeur affiché, impact estimé).
-- Juge du §9.2 () : scan à la connexion, 5 min d'ouverture de session,
+- `analyse/connaissances.json` : 82 entrées en français (tous les logiciels demandés au §5), rangées du plus
+  précis au plus général (D-27) ; `analyse/connaissances.py`.
+- `analyse/gains.py`, `analyse/__init__.py` (classement, résumé, éditeur affiché, impact estimé).
+- Juge du §9.2 (`tests/demarrage/faux_mac/juge.py`) : scan à la connexion, 5 min d'ouverture de session,
   30 min de croisière, analyse, puis comparaison à la vérité terrain. Critères : 100 % des éléments plantés avec
   le bon verdict et la bonne action, 0 Apple avec une action, 0 inconnu autre que « vérifier », les 3 plus lourds
   en tête, pas de plantage sur un plist corrompu.
 
 Faux Mac n° 1 (éléments non Apple ; les 18 éléments Apple sont tous 🍎 sans action) :
 
-
+```
+   ✅ com.docker.socket                        inutile   desactiver    impact  97.0
+   ✅ com.adobe.AdobeCreativeCloud             inutile   instructions  impact  85.6
+   ✅ com.sauvegarde.express.agent             inutile   desactiver    impact  65.1
+   ✅ com.radioboucle.helper                   inutile   desactiver    impact  32.9
+   ✅ us.zoom.xos                              utile     reglages      impact  20.8
+   ✅ com.notesrapides.agent                   utile     desactiver    impact   4.9
+   ✅ com.assistant.superviseur                utile     aucune        impact   2.7
+   ✅ com.google.keystone.agent                inutile   desactiver    impact   2.4
+   ✅ com.spotify.webhelper                    orphelin  quarantaine   impact   2.3
+   ✅ com.mystere.agent                        inconnu   verifier      impact   1.2
+   ✅ com.apple.mise-a-jour                    inconnu   verifier      impact   1.1
+   ✅ com.exemple.desinstalle.agent            orphelin  quarantaine   impact   0.0
+   ✅ com.exemple.casse                        inconnu   verifier      impact   0.0
+   ✅ com.exemple.Étiquette avec espaces       utile     aucune        impact   0.0
+   ✅ com.exemple.doublon                      utile     desactiver    impact   0.0
+   ✅ com.exemple.doublon                      utile     instructions  impact   0.0
+   ✅ com.exemple.vpn.daemon                   utile     instructions  impact   0.0
+   ✅ us.zoom.ZoomDaemon                       utile     aucune        impact   0.0
+   ✅ Ancienne App                             orphelin  reglages      impact   0.0
+   ✅ com.exemple.vpn.tunnel                   utile     instructions  impact   0.0
+   ✅ com.exemple.vpn.daemon                   utile     instructions  impact   0.0
+   ✅ com.ancien.helper                        orphelin  instructions  impact   0.0
+   ✅ cron : sauvegarde.sh                     inconnu   verifier      impact   0.0
+   ✅ cron : absent                            orphelin  instructions  impact   0.0
+   graine 3 : 53/53 verdicts justes (17 plantés, 36 Apple)
+   graine 17 : 54/54 verdicts justes (17 plantés, 37 Apple)
+   graine 42 : 50/50 verdicts justes (17 plantés, 33 Apple)
+   graine 1789 : 50/50 verdicts justes (18 plantés, 32 Apple)
+   graine 20261005 : 44/44 verdicts justes (20 plantés, 24 Apple)
+6 passed in 1.42s
+```
 
 Le seul écart rencontré pendant le réglage : un daemon embarqué déjà inactif recevait encore des
 « instructions ». L'action d'un élément inactif passe maintenant avant celle de sa source.
 Le 2e faux Mac (aléatoire, 5 graines) a été écrit après ce réglage et a réussi du premier coup.
 
-
+```
+$ PYTHON=…/venv/bin/python modules/demarrage/check.sh
+▶ ruff check ✅  ▶ ruff format ✅  ▶ mypy ✅
+▶ pytest + couverture ≥ 85 %   220 passed · Total coverage: 98.66%   ✅
+▶ faux Mac (+ 2e faux Mac, 5 graines)   22 passed   ✅   ▶ sécurité   9 passed   ✅   ▶ performance   2 passed   ✅
+CHECK OK
+```
 
 ## Prochaine étape
 
-P6 : actions.  (simulation par défaut, ), quarantaine avec manifeste, retrait d'un
-élément d'ouverture, instructions pour les éléments globaux, refus Apple, , journal, vérification de
+P6 : actions. `desactiver ID` (simulation par défaut, `--confirmer`), quarantaine avec manifeste, retrait d'un
+élément d'ouverture, instructions pour les éléments globaux, refus Apple, `restaurer ID`, journal, vérification de
 l'état avant d'agir ; tests de sécurité (subprocess intercepté).
