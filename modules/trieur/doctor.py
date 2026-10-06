@@ -27,6 +27,15 @@ def _ecrivable(dossier: Path) -> bool:
     return os.access(d, os.W_OK)
 
 
+def _a_trier_pas_a_nous(reglages: dict[str, Any], base: Any) -> bool:
+    from modules.trieur.entrees import surveillance
+
+    dossier = config.chemin(reglages, "a_trier")
+    if not dossier.exists() or surveillance.a_trier_du_trieur(reglages, base) is not None:
+        return False
+    return surveillance.contient_des_fichiers(dossier)
+
+
 def _superviseur() -> tuple[bool | None, dict[str, Any] | None]:
     """(le superviseur de l'Assistant tourne-t-il ?, ce qu'il dit du Trieur) : lu dans donnees/etat.db.
     None : impossible à savoir."""
@@ -87,7 +96,10 @@ def verifier(reglages: dict[str, Any], base: Any = None, maintenant: float | Non
     # Les dossiers.
     for cle, nom in (("classes", "Classés"), ("a_trier", "À trier"), ("photos", "Photos de l'iPhone")):
         chemin = config.chemin(reglages, cle)
-        if chemin.is_dir():
+        if cle == "a_trier" and base is not None and _a_trier_pas_a_nous(reglages, base):
+            lignes.append(_ligne("❌", f"À trier : {chemin} contient tes fichiers, le Trieur ne le surveille pas "
+                                       "(pour choisir un autre dossier : ACTIONS_HUMAINES.md)"))  # fmt: skip
+        elif chemin.is_dir():
             lignes.append(_ligne("✅" if _ecrivable(chemin) else "❌", f"{nom} : {chemin}"))
         else:
             lignes.append(_ligne("⚠️", f"{nom} absent ({chemin}) : python trieur.py installer le crée"))

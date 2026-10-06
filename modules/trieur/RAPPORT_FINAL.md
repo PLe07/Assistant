@@ -1,7 +1,7 @@
 # Rapport final — Trieur unifié
 
 Construit le 6 octobre 2026, phases P0 à P11. Chaque preuve ci-dessous est la sortie réelle d'une commande. Le
-détail est dans [PROGRESS.md](PROGRESS.md), les choix dans [DECISIONS.md](DECISIONS.md) (D-01 à D-57), ce qui te
+détail est dans [PROGRESS.md](PROGRESS.md), les choix dans [DECISIONS.md](DECISIONS.md) (D-01 à D-58), ce qui te
 reste dans [ACTIONS_HUMAINES.md](ACTIONS_HUMAINES.md).
 
 Légende : ✅ fait et prouvé ; ⏳ prouvé dans l'environnement de construction (conteneur Linux, Mac imité), à

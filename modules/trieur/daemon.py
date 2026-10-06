@@ -97,8 +97,18 @@ class Demon:
 
     def demarrer(self) -> None:
         from modules.trieur import config
+        from modules.trieur.entrees.surveillance import vus_hors_de_chez_nous
 
-        self.entrees.creer_les_dossiers()
+        etat, message = self.entrees.creer_les_dossiers()
+        if etat != "✅":
+            log.warning("%s", message)
+        sans_action, avec_action = vus_hors_de_chez_nous(self.reglages, self.o.base)
+        if sans_action:  # D-58 : jamais déplacés ni modifiés ; la base les oublie
+            n = self.o.base.oublier([el.id for el in sans_action])
+            log.info("%s fichier(s) vu(s) dans un dossier qui n'est pas au Trieur : oubliés, jamais touchés", n)
+        if avec_action:
+            log.warning("%s fichier(s) d'un dossier qui n'est pas au Trieur ont une action au journal : "
+                        "python trieur.py journal", len(avec_action))  # fmt: skip
         repris = self.o.base.relacher_les_interrompus()
         if repris:
             log.info("%s élément(s) interrompu(s) repris", repris)

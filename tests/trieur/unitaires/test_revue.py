@@ -63,7 +63,7 @@ def test_fantome_icloud_sur_le_bureau(reglages, tmp_path):
     faux = FauxSysteme()
     e = Entrees(reglages, base, faux, lambda: 1_000.0)
     a_trier = config.chemin(reglages, "a_trier")
-    a_trier.mkdir(parents=True)
+    e.creer_les_dossiers()
     (a_trier / ".scan.pdf.icloud").write_bytes(b"bplist")
     e.regarder()
     assert faux.telecharges == [a_trier / "scan.pdf"]

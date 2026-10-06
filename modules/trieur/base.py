@@ -184,6 +184,21 @@ class Base:
                              (limite,)).fetchall()  # fmt: skip
         return [Element(**dict(x)) for x in lignes]
 
+    def venus_de(self, source: str, etats: tuple[str, ...]) -> list[Element]:
+        marques = ",".join("?" * len(etats))
+        lignes = self._x(f"SELECT * FROM elements WHERE source = ? AND etat IN ({marques}) ORDER BY id",
+                         (source, *etats)).fetchall()  # fmt: skip
+        return [Element(**dict(x)) for x in lignes]
+
+    def oublier(self, ids: list[int]) -> int:
+        """Retire ces éléments de la base, sauf ceux qui ont une action au journal (un fichier qui a bougé reste
+        suivi, pour pouvoir l'annuler)."""
+        n = 0
+        for i in ids:
+            n += self._x("DELETE FROM elements WHERE id = ? AND NOT EXISTS (SELECT 1 FROM actions WHERE element = ?)",
+                         (i, i)).rowcount  # fmt: skip
+        return n
+
     def compter(self) -> dict[str, int]:
         return {x["etat"]: int(x["n"]) for x in self._x("SELECT etat, COUNT(*) n FROM elements GROUP BY etat")}
 

@@ -22,7 +22,7 @@ DEFAUTS: dict[str, Any] = {
     "mode_test": False,  # true : notifications vers le journal, rien dans Rappels (liste Trieur-TEST)
     "chemins": {
         "classes": "~/Documents/Classés",
-        "a_trier": "~/Documents/À trier",  # pas de dossier sur le Bureau (D-57)
+        "a_trier": "~/Documents/À trier par l'assistant",  # pas sur le Bureau (D-57), jamais un dossier à toi (D-58)
         "ancien_a_trier": "~/Desktop/À trier",  # l'ancien emplacement : l'installateur le retire s'il est vide
         "photos": "~/Pictures/Depuis l'iPhone",
         "icloud": ICLOUD,

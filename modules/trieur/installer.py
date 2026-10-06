@@ -13,12 +13,13 @@ from __future__ import annotations
 
 import sys
 import time
+from collections import Counter
 from pathlib import Path
 from typing import Any
 
 from modules.trieur import config, pages
 from modules.trieur.base import Base
-from modules.trieur.entrees import finder
+from modules.trieur.entrees import finder, surveillance
 from modules.trieur.garanties.coffre import Coffre
 from modules.trieur.systeme import Systeme
 
@@ -30,11 +31,13 @@ def installer(reglages: dict[str, Any], base: Base, systeme: Systeme, allumer: b
     faits: list[tuple[str, str]] = []
     python = python or Path(sys.executable)
 
-    for cle in ("classes", "a_trier", "photos"):
+    for cle in ("classes", "photos"):
         dossier = config.chemin(reglages, cle)
         dossier.mkdir(parents=True, exist_ok=True)
         faits.append(("✅", f"dossier {dossier}"))
+    faits.append(surveillance.prendre_a_trier(reglages, base))
     faits += _ancien_a_trier(reglages)
+    faits += _vus_hors_de_chez_nous(reglages, base)
     icloud = Path(reglages["chemins"]["icloud"]).expanduser()
     boite = config.chemin(reglages, "boite")
     if icloud.is_dir():
@@ -86,6 +89,23 @@ def _ancien_a_trier(reglages: dict[str, Any]) -> list[tuple[str, str]]:
             reste = [e.name for e in ancien.iterdir()]
     return [("⚠️", f"l'ancien dossier {ancien} contient encore {len(reste)} élément(s) : glisse-les dans "
                    f"{nouveau}, puis supprime-le")]  # fmt: skip
+
+
+def _vus_hors_de_chez_nous(reglages: dict[str, Any], base: Base) -> list[tuple[str, str]]:
+    """D-58 : la preuve, lue dans le journal des actions, que les fichiers d'un dossier à toi n'ont pas bougé.
+    La base ne les oublie qu'au redémarrage du Trieur (l'ancien, encore en marche, les reprendrait sinon)."""
+    sans_action, avec_action = surveillance.vus_hors_de_chez_nous(reglages, base)
+    faits = []
+    if sans_action:
+        dossiers = ", ".join(sorted({str(Path(el.chemin).parent) for el in sans_action}))
+        erreurs = Counter(el.erreur for el in sans_action if el.erreur).most_common(1)
+        faits.append(("✅", f"{len(sans_action)} fichier(s) de ton dossier {dossiers} vus par erreur : aucun déplacé "
+                            "ni modifié (aucune action au journal) ; le Trieur les oublie à son redémarrage"
+                            + (f" · erreur vue : {erreurs[0][0]}" if erreurs else "")))  # fmt: skip
+    if avec_action:
+        faits.append(("⚠️", f"{len(avec_action)} fichier(s) d'un dossier à toi ont une action au journal : "
+                            "python trieur.py journal"))  # fmt: skip
+    return faits
 
 
 def _raccourcis(reglages: dict[str, Any], boite: Path | None) -> list[tuple[str, str]]:

@@ -340,3 +340,17 @@ Nettoyage : rien ne reste
 sinon il le laisse et le dit. 2 tests de plus (`test_l_ancien_a_trier_du_bureau`,
 `test_l_ancien_a_trier_rempli_entre_deux_n_est_pas_touche`).
 
+## Sur ton Mac — après D-57 : ❌ 109 fichiers de ton propre « À trier » examinés → D-58
+
+```
+✅ dossier /Users/…/Documents/À trier          ← il existait déjà, avec tes fichiers
+✅ ancien dossier /Users/…/Desktop/À trier retiré du Bureau (il était vide)
+✅ documents : 109 erreur, 1 laissé à sa place (pas assez sûr pour le déplacer)
+```
+- Aucun fichier rangé (0 classé, 0 à vérifier) : les 109 sont tombés en erreur avant tout déplacement.
+- Corrigé par D-58 : « À trier » doit être un dossier du Trieur ; nouveau nom `~/Documents/À trier par
+  l'assistant` ; ce qui a été vu chez toi est oublié au redémarrage, seulement s'il n'y a aucune action au journal.
+  L'installateur affiche cette preuve.
+- 4 tests de plus (`tests/trieur/unitaires/test_dossier_a_toi.py`), dont ton cas : une vraie facture posée dans un
+  « À trier » à toi n'est ni lue ni déplacée, et son contenu et sa date restent identiques.
+

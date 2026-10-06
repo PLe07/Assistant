@@ -10,6 +10,8 @@ E1 · BoiteMac (les deux dossiers, D-12) :
 - la note de l'iPhone arrive dans « <nom>.meta.json » ({"note": "garantie 3 ans"}) : elle accompagne le document ;
   une note restée seule plus de 10 minutes est traitée comme un document (elle ira dans Notes reçues) ;
 - les pages du Trieur (« Mon coffre.html »…) et les fichiers cachés sont ignorés.
+E2 · « À trier » est un dossier du Trieur : créé par lui, ou vide quand il l'a pris (D-58). Un dossier du même nom
+qui contient déjà tes fichiers n'est jamais surveillé.
 E5 · Téléchargements : seulement les PDF arrivés après l'installation (jamais les fichiers déjà là), jamais un
 téléchargement en cours (.crdownload, .part, .download) ; un fichier reçu par AirDrop (quarantaine « sharingd »)
 est traité comme un envoi de l'iPhone, quel que soit son format.
@@ -26,13 +28,15 @@ from pathlib import Path
 from typing import Any
 
 from modules.trieur import config, pages
-from modules.trieur.base import Base
+from modules.trieur.base import Base, Element
 from modules.trieur.systeme import Systeme
 
 EN_COURS = (".crdownload", ".part", ".download", ".tmp", ".partial", ".opdownload")
 META = ".meta.json"
 META_ORPHELINE_S = 600
 RELANCE_ICLOUD_S = 120
+A_TRIER = "a_trier"  # la clé de la base qui retient le dossier « À trier » du Trieur (D-58)
+JAMAIS_RANGES = ("en_attente", "en_cours", "erreur", "ignore")
 
 
 @dataclass
@@ -60,6 +64,41 @@ def lire_note(meta: Path) -> str | None:
     return str(note).strip()[:500] or None if note else None
 
 
+def a_trier_du_trieur(reglages: dict[str, Any], base: Base) -> Path | None:
+    """Le dossier « À trier » s'il est bien celui du Trieur, sinon None."""
+    dossier = config.chemin(reglages, "a_trier")
+    return dossier if base.lire_meta(A_TRIER) == str(dossier) else None
+
+
+def contient_des_fichiers(dossier: Path) -> bool:
+    try:
+        return any(e.name != ".DS_Store" for e in os.scandir(dossier))
+    except OSError:
+        return True  # illisible : prudence
+
+
+def prendre_a_trier(reglages: dict[str, Any], base: Base) -> tuple[str, str]:
+    """Crée « À trier », ou le prend s'il est vide. S'il contient déjà quoi que ce soit, il est à toi : le Trieur ne le
+    surveille pas et n'y touche jamais (D-58)."""
+    dossier = config.chemin(reglages, "a_trier")
+    if a_trier_du_trieur(reglages, base) is None:
+        if dossier.is_symlink() or (dossier.exists() and (not dossier.is_dir() or contient_des_fichiers(dossier))):
+            return "❌", (f"{dossier} existe déjà et contient tes fichiers : le Trieur ne le surveille pas et n'y "
+                          "touche pas (pour choisir un autre dossier : ACTIONS_HUMAINES.md)")  # fmt: skip
+        base.ecrire_meta(A_TRIER, str(dossier))
+    dossier.mkdir(parents=True, exist_ok=True)
+    return "✅", f"dossier {dossier}"
+
+
+def vus_hors_de_chez_nous(reglages: dict[str, Any], base: Base) -> tuple[list[Element], list[Element]]:
+    """Les fichiers repérés dans un « À trier » qui n'est pas (ou plus) celui du Trieur et jamais rangés :
+    (sans aucune action au journal, donc jamais déplacés ni modifiés ; avec une action)."""
+    garde = a_trier_du_trieur(reglages, base)
+    vus = [el for el in base.venus_de("a_trier", JAMAIS_RANGES) if Path(el.chemin).parent != garde]
+    avec = [el for el in vus if base.actions(el.id, toutes=True)]
+    return [el for el in vus if el not in avec], avec
+
+
 class Entrees:
     def __init__(self, reglages: dict[str, Any], base: Base, systeme: Systeme,
                  horloge: Callable[[], float] = time.time):  # fmt: skip
@@ -74,8 +113,10 @@ class Entrees:
 
     def dossiers(self) -> list[tuple[Path, str]]:
         r = self.reglages
-        sortie = [(config.chemin(r, "boite"), "boite"), (Path(r["chemins"]["boite_raccourcis"]).expanduser(), "boite"),
-                  (config.chemin(r, "a_trier"), "a_trier")]  # fmt: skip
+        sortie = [(config.chemin(r, "boite"), "boite"), (Path(r["chemins"]["boite_raccourcis"]).expanduser(), "boite")]
+        a_trier = a_trier_du_trieur(r, self.base)
+        if a_trier is not None:
+            sortie.append((a_trier, "a_trier"))
         if r["telechargements"]["actif"]:
             sortie.append((config.chemin(r, "telechargements"), "telechargements"))
         return sortie
@@ -166,7 +207,8 @@ class Entrees:
             self.demandes_icloud[vrai] = maintenant
             self.systeme.telecharger_icloud(vrai)
 
-    def creer_les_dossiers(self) -> None:
+    def creer_les_dossiers(self) -> tuple[str, str]:
         for dossier, source in self.dossiers():
-            if source != "telechargements":
+            if source == "boite":
                 dossier.mkdir(parents=True, exist_ok=True)
+        return prendre_a_trier(self.reglages, self.base)

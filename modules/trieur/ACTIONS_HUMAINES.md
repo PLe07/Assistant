@@ -34,7 +34,7 @@ cd ~/Assistant && PYTHON=.venv/bin/python modules/trieur/check.sh
 ```
 cd ~/Assistant && .venv/bin/python trieur.py installer
 ```
-Elle crée `~/Documents/Classés`, `~/Documents/À trier`, `~/Pictures/Depuis l'iPhone`, `iCloud Drive/BoiteMac`,
+Elle crée `~/Documents/Classés`, `~/Documents/À trier par l'assistant`, `~/Pictures/Depuis l'iPhone`, `iCloud Drive/BoiteMac`,
 l'action rapide du Finder, signe les deux raccourcis dans `BoiteMac/Raccourcis`, et allume la surveillance.
 Vérifie ensuite :
 ```
@@ -43,6 +43,15 @@ cd ~/Assistant && .venv/bin/python trieur.py doctor
 et `.venv/bin/python assistant.py etat` doit montrer une ligne 🗂 Trieur. Juste après l'installation, doctor peut
 dire « ⏳ surveillance en train de démarrer » : le superviseur la lance dans les secondes qui suivent ; relance
 doctor une minute plus tard, elle doit être ✅.
+
+### Un autre dossier « À trier » (facultatif)
+
+Le Trieur ne surveille qu'un dossier qu'il a créé lui-même (ou vide quand il l'a pris) : jamais un dossier à toi
+qui contient déjà des fichiers. Pour en choisir un autre, remplace `Trieur` par le nom voulu (un dossier qui
+n'existe pas encore, ou vide) :
+```
+cd ~/Assistant && .venv/bin/python -c 'from core import config; config.regler_module("trieur", "chemins", {"a_trier": "~/Documents/Trieur"})' && .venv/bin/python trieur.py installer && .venv/bin/python service.py redemarrer
+```
 
 ## 4. Ta micro-entreprise (30 s, facultatif)
 

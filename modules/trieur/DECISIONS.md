@@ -20,7 +20,7 @@ Le projet de l'assistant existe : c'est ce dépôt (`~/Assistant` sur ton Mac). 
 - **Réglages** : `reglages.json` → `modules.trieur` (valeurs par défaut dans `modules/trieur/config.py`).
 - **Règles de reconnaissance** : `modules/trieur/regles.toml`. Les règles apprises de tes corrections vont en base.
 - **Tes dossiers** : ceux de la mission (`~/Documents/Classés/`, `~/Desktop/À trier/` devenu
-  `~/Documents/À trier/` par D-57, `~/Pictures/Depuis l'iPhone/`, iCloud Drive `BoiteMac/`). Tous sont réglables :
+  `~/Documents/À trier par l'assistant/` par D-57 et D-58, `~/Pictures/Depuis l'iPhone/`, iCloud Drive `BoiteMac/`). Tous sont réglables :
   le mode test les met dans un bac à sable.
 
 **D-03 · Claude via l'abonnement (`core.cerveau`), pas de clé API.**
@@ -368,4 +368,23 @@ seulement s'il est vide (le `.DS_Store` du Finder mis à part). S'il contient qu
 installer et doctor disent combien d'éléments y restent et où les glisser. Le retrait est un `rmdir`, qui refuse
 de lui-même un dossier qui n'est pas vide. Un fichier arrivé entre le coup d'œil et le retrait reste donc à sa
 place (testé).
+
+**D-58 · « À trier » est un dossier du Trieur, jamais un dossier à toi.**
+Après D-57, ton Mac avait déjà un `~/Documents/À trier` à toi (109 fichiers). L'installateur l'a pris pour le
+sien (il créait le dossier « s'il manquait » sans regarder s'il existait déjà), et le Trieur les a examinés. Les
+109 sont tombés en erreur : aucun n'a été rangé. Si l'un d'eux avait été lisible, il aurait été déplacé. C'est
+exactement l'interdit « ne jamais déplacer un fichier qui existait avant ».
+- Le Trieur ne surveille « À trier » que si ce dossier est le sien : il l'a créé, ou il était vide quand il l'a pris
+  (le `.DS_Store` du Finder mis à part). Il le retient dans sa base. Un dossier du même nom qui contient déjà
+  quoi que ce soit n'est jamais surveillé : installer et doctor disent ❌, et ACTIONS_HUMAINES.md explique comment
+  en choisir un autre.
+- Le nom par défaut devient `~/Documents/À trier par l'assistant` : il ne risque pas de tomber sur un dossier
+  existant, et il rappelle l'action rapide « Trier avec l'assistant ».
+- Ce qui a été vu dans un dossier qui n'est pas au Trieur, et jamais rangé, est oublié par la base au démarrage du
+  démon, avant son premier tour. Seuls les éléments sans action au journal sont oubliés : un fichier qui a bougé
+  reste suivi, pour pouvoir l'annuler.
+- L'oubli se fait au démarrage du nouveau démon et non dans l'installateur. Lancé pendant que l'ancien démon
+  tourne encore, l'installateur aurait effacé la trace « laissé » qui l'empêche de reprendre ces fichiers.
+  L'installateur montre seulement la preuve, lue dans le journal des actions : combien de fichiers, aucun déplacé
+  ni modifié, et l'erreur vue.
 

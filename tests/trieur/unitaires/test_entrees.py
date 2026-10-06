@@ -140,5 +140,7 @@ def test_date_d_installation_gardee(reglages, tmp_path):
     second = Entrees(reglages, base, FauxSysteme(), lambda: 999.0)
     assert premier.installe_le == second.installe_le == 100.0
     reglages["telechargements"]["actif"] = False
+    assert [s for _, s in second.dossiers()] == ["boite", "boite"]  # « À trier » pas encore pris (D-58)
+    second.creer_les_dossiers()
     assert [s for _, s in second.dossiers()] == ["boite", "boite", "a_trier"]
     base.fermer()
