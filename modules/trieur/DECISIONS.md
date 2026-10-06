@@ -19,8 +19,9 @@ Le projet de l'assistant existe : c'est ce dépôt (`~/Assistant` sur ton Mac). 
   `~/Library/Application Support/Trieur/` n'est pas utilisé, pour garder un seul endroit pour les données.
 - **Réglages** : `reglages.json` → `modules.trieur` (valeurs par défaut dans `modules/trieur/config.py`).
 - **Règles de reconnaissance** : `modules/trieur/regles.toml`. Les règles apprises de tes corrections vont en base.
-- **Tes dossiers** : ceux de la mission (`~/Documents/Classés/`, `~/Desktop/À trier/`, `~/Pictures/Depuis
-  l'iPhone/`, iCloud Drive `BoiteMac/`). Tous sont réglables : le mode test les met dans un bac à sable.
+- **Tes dossiers** : ceux de la mission (`~/Documents/Classés/`, `~/Desktop/À trier/` devenu
+  `~/Documents/À trier/` par D-57, `~/Pictures/Depuis l'iPhone/`, iCloud Drive `BoiteMac/`). Tous sont réglables :
+  le mode test les met dans un bac à sable.
 
 **D-03 · Claude via l'abonnement (`core.cerveau`), pas de clé API.**
 L'Assistant passe par Claude Code (`claude -p`) avec le jeton de ton abonnement, lu dans `.env` par le programme
@@ -359,4 +360,12 @@ n'avait pas encore lancé le Trieur, et le battement n'était écrit qu'à la fi
 - doctor affichait « 1 ignore » : c'est un fichier que le Trieur a laissé à sa place (un PDF de Téléchargements pas
   assez sûr pour être déplacé, D-31). Il écrit maintenant « 1 laissé à sa place (pas assez sûr pour le déplacer) »
   et donne la commande qui montre lequel et pourquoi.
+
+**D-57 · « À trier » quitte le Bureau pour Documents.**
+Tu ne veux pas de dossier sur ton Bureau : « À trier » est maintenant `~/Documents/À trier` (remplace le
+`~/Desktop/À trier/` de la mission, D-02). `trieur installer` crée le nouveau et retire l'ancien
+seulement s'il est vide (le `.DS_Store` du Finder mis à part). S'il contient quoi que ce soit, rien n'est touché :
+installer et doctor disent combien d'éléments y restent et où les glisser. Le retrait est un `rmdir`, qui refuse
+de lui-même un dossier qui n'est pas vide. Un fichier arrivé entre le coup d'œil et le retrait reste donc à sa
+place (testé).
 

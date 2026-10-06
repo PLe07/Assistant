@@ -1,7 +1,7 @@
 # Rapport final — Trieur unifié
 
 Construit le 6 octobre 2026, phases P0 à P11. Chaque preuve ci-dessous est la sortie réelle d'une commande. Le
-détail est dans [PROGRESS.md](PROGRESS.md), les choix dans [DECISIONS.md](DECISIONS.md) (D-01 à D-56), ce qui te
+détail est dans [PROGRESS.md](PROGRESS.md), les choix dans [DECISIONS.md](DECISIONS.md) (D-01 à D-57), ce qui te
 reste dans [ACTIONS_HUMAINES.md](ACTIONS_HUMAINES.md).
 
 Légende : ✅ fait et prouvé ; ⏳ prouvé dans l'environnement de construction (conteneur Linux, Mac imité), à
@@ -78,7 +78,7 @@ avec un test (`tests/trieur/unitaires/test_revue.py`) :
 - une garantie ou des tags en échec après le rangement remettaient le document en file (fichier déjà parti)
   → l'état « rangé » est écrit d'abord (D-49) ;
 - sans OCR, une photo de facture partait dans Photos → « À vérifier » (D-50) ;
-- un fichier iCloud pas encore téléchargé sur le Bureau (« À trier ») n'était pas demandé → il l'est (D-50) ;
+- un fichier iCloud pas encore téléchargé dans « À trier » n'était pas demandé → il l'est (D-50) ;
 - un .docx piégé (texte décompressé énorme) → refusé (D-50) ;
 - `annuler` après un déplacement à la main ne retrouvait pas le fichier → il suit le fichier (D-51) ;
 - la réponse à tes envois pouvait être bloquée par la limite horaire de l'Assistant → elle passe, sauf la nuit

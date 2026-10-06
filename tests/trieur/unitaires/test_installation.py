@@ -6,7 +6,7 @@ import time
 from pathlib import Path
 from types import SimpleNamespace
 
-from modules.trieur import doctor, installer, raccourcis
+from modules.trieur import config, doctor, installer, raccourcis
 from modules.trieur.base import Base
 from modules.trieur.notifications import Notifieur
 from tests.trieur.outils import FauxSysteme
@@ -112,3 +112,39 @@ def test_doctor_lit_le_superviseur(monkeypatch):
     assert doctor._superviseur() == (False, None)
     monkeypatch.setattr(core.etat, "lire", lambda cle, defaut=None: 1 / 0)
     assert doctor._superviseur() == (None, None)
+
+
+def test_l_ancien_a_trier_du_bureau(reglages, monkeypatch):
+    """D-57 : « À trier » est dans Documents ; l'ancien, sur le Bureau, n'est retiré que s'il est vide."""
+    ancien = Path(reglages["chemins"]["ancien_a_trier"])
+    assert config.chemin(reglages, "a_trier").parent.name == "Documents" and ancien.parent.name == "Bureau"
+    assert installer._ancien_a_trier(reglages) == []  # absent : rien à dire
+    monkeypatch.setattr("modules.trieur.extraction.ocr.choisir", lambda *a: None)
+    monkeypatch.setattr(doctor, "_superviseur", lambda: (None, None))
+
+    ancien.mkdir(parents=True)
+    (ancien / "facture.pdf").write_bytes(b"%PDF mien")
+    (ancien / ".DS_Store").write_bytes(b"finder")
+    assert any("encore sur le Bureau" in t for _, t in doctor.verifier(reglages, None, mac=False))
+    [(etat, texte)] = installer._ancien_a_trier(reglages)
+    assert etat == "⚠️" and "1 élément(s)" in texte
+    assert (ancien / "facture.pdf").read_bytes() == b"%PDF mien" and (ancien / ".DS_Store").exists()
+
+    (ancien / "facture.pdf").unlink()  # toi, en le vidant
+    [(etat, texte)] = installer._ancien_a_trier(reglages)
+    assert etat == "✅" and not ancien.exists()
+    assert not any("encore sur le Bureau" in t for _, t in doctor.verifier(reglages, None, mac=False))
+
+
+def test_l_ancien_a_trier_rempli_entre_deux_n_est_pas_touche(reglages, monkeypatch):
+    ancien = Path(reglages["chemins"]["ancien_a_trier"])
+    ancien.mkdir(parents=True)
+    vrai_rmdir = Path.rmdir
+
+    def arrive_juste_avant(self):  # un fichier déposé entre le coup d'œil et le retrait
+        (self / "arrivé.pdf").write_bytes(b"%PDF")
+        vrai_rmdir(self)
+
+    monkeypatch.setattr(Path, "rmdir", arrive_juste_avant)
+    [(etat, _)] = installer._ancien_a_trier(reglages)
+    assert etat == "⚠️" and (ancien / "arrivé.pdf").exists()

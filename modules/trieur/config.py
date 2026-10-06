@@ -22,7 +22,8 @@ DEFAUTS: dict[str, Any] = {
     "mode_test": False,  # true : notifications vers le journal, rien dans Rappels (liste Trieur-TEST)
     "chemins": {
         "classes": "~/Documents/Classés",
-        "a_trier": "~/Desktop/À trier",
+        "a_trier": "~/Documents/À trier",  # pas de dossier sur le Bureau (D-57)
+        "ancien_a_trier": "~/Desktop/À trier",  # l'ancien emplacement : l'installateur le retire s'il est vide
         "photos": "~/Pictures/Depuis l'iPhone",
         "icloud": ICLOUD,
         "boite": "BoiteMac",  # sous iCloud Drive : l'entrée de l'iPhone
@@ -161,7 +162,8 @@ def pour_le_bac_a_sable(racine: Path, perso: dict[str, Any] | None = None) -> di
         "mode_test": True,
         "chemins": {
             "classes": str(racine / "Documents" / "Classés"),
-            "a_trier": str(racine / "Bureau" / "À trier"),
+            "a_trier": str(racine / "Documents" / "À trier"),
+            "ancien_a_trier": str(racine / "Bureau" / "À trier"),
             "photos": str(racine / "Images" / "Depuis l'iPhone"),
             "icloud": str(racine / "iCloud"),
             "boite": "BoiteMac",

@@ -34,7 +34,7 @@ cd ~/Assistant && PYTHON=.venv/bin/python modules/trieur/check.sh
 ```
 cd ~/Assistant && .venv/bin/python trieur.py installer
 ```
-Elle crée `~/Documents/Classés`, `~/Desktop/À trier`, `~/Pictures/Depuis l'iPhone`, `iCloud Drive/BoiteMac`,
+Elle crée `~/Documents/Classés`, `~/Documents/À trier`, `~/Pictures/Depuis l'iPhone`, `iCloud Drive/BoiteMac`,
 l'action rapide du Finder, signe les deux raccourcis dans `BoiteMac/Raccourcis`, et allume la surveillance.
 Vérifie ensuite :
 ```

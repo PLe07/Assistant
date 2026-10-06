@@ -334,3 +334,9 @@ Nettoyage : rien ne reste
 - « Superviseur : ARRÊTÉ » dans `etat`, lancé juste après `redemarrer` : faux, il redémarrait (D-56).
 - « 1 ignore » : un fichier laissé à sa place, écrit maintenant en clair (D-56).
 
+## Ta demande : pas de dossier sur le Bureau (D-57)
+
+« À trier » est maintenant `~/Documents/À trier`. L'installateur retire l'ancien dossier du Bureau s'il est vide,
+sinon il le laisse et le dit. 2 tests de plus (`test_l_ancien_a_trier_du_bureau`,
+`test_l_ancien_a_trier_rempli_entre_deux_n_est_pas_touche`).
+

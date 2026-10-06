@@ -91,6 +91,10 @@ def verifier(reglages: dict[str, Any], base: Any = None, maintenant: float | Non
             lignes.append(_ligne("✅" if _ecrivable(chemin) else "❌", f"{nom} : {chemin}"))
         else:
             lignes.append(_ligne("⚠️", f"{nom} absent ({chemin}) : python trieur.py installer le crée"))
+    ancien = Path(reglages["chemins"]["ancien_a_trier"]).expanduser()
+    if ancien.is_dir() and ancien != config.chemin(reglages, "a_trier"):
+        lignes.append(_ligne("⚠️", f"l'ancien « À trier » est encore sur le Bureau ({ancien}) : "
+                                   "python trieur.py installer le retire s'il est vide"))  # fmt: skip
     icloud = Path(reglages["chemins"]["icloud"]).expanduser()
     boite = config.chemin(reglages, "boite")
     if not icloud.is_dir():

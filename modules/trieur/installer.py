@@ -1,6 +1,7 @@
 """« trieur installer » (D-08) : tout ce qu'il faut pour que le Trieur marche seul, sans rien écraser.
 
-1. les dossiers (Classés, À trier, Photos de l'iPhone, la boîte iCloud BoiteMac) ;
+1. les dossiers (Classés, À trier dans Documents, Photos de l'iPhone, la boîte iCloud BoiteMac), et l'ancien
+   « À trier » du Bureau retiré s'il est vide (D-57) ;
 2. l'action rapide du Finder (~/Library/Services) ;
 3. les deux raccourcis de l'iPhone, signés, dans BoiteMac/Raccourcis (à ouvrir depuis l'app Fichiers) ;
 4. la date d'installation (Téléchargements : seuls les PDF arrivés après seront regardés) ;
@@ -33,6 +34,7 @@ def installer(reglages: dict[str, Any], base: Base, systeme: Systeme, allumer: b
         dossier = config.chemin(reglages, cle)
         dossier.mkdir(parents=True, exist_ok=True)
         faits.append(("✅", f"dossier {dossier}"))
+    faits += _ancien_a_trier(reglages)
     icloud = Path(reglages["chemins"]["icloud"]).expanduser()
     boite = config.chemin(reglages, "boite")
     if icloud.is_dir():
@@ -65,6 +67,25 @@ def installer(reglages: dict[str, Any], base: Base, systeme: Systeme, allumer: b
         config_assistant.activer_module("trieur", True)
         faits.append(("✅", "surveillance allumée (le superviseur la lance dans la minute)"))
     return faits
+
+
+def _ancien_a_trier(reglages: dict[str, Any]) -> list[tuple[str, str]]:
+    """« À trier » a quitté le Bureau pour Documents (D-57). L'ancien dossier est retiré s'il est vide (le
+    « .DS_Store » du Finder mis à part) ; s'il contient quoi que ce soit, rien n'est touché."""
+    ancien = Path(reglages["chemins"]["ancien_a_trier"]).expanduser()
+    nouveau = config.chemin(reglages, "a_trier")
+    if ancien.is_symlink() or not ancien.is_dir() or ancien == nouveau:
+        return []
+    reste = [e.name for e in ancien.iterdir() if e.name != ".DS_Store"]
+    if not reste:
+        try:
+            (ancien / ".DS_Store").unlink(missing_ok=True)
+            ancien.rmdir()  # refuse d'elle-même un dossier qui n'est pas vide
+            return [("✅", f"ancien dossier {ancien} retiré du Bureau (il était vide)")]
+        except OSError:
+            reste = [e.name for e in ancien.iterdir()]
+    return [("⚠️", f"l'ancien dossier {ancien} contient encore {len(reste)} élément(s) : glisse-les dans "
+                   f"{nouveau}, puis supprime-le")]  # fmt: skip
 
 
 def _raccourcis(reglages: dict[str, Any], boite: Path | None) -> list[tuple[str, str]]:

@@ -6,7 +6,7 @@ Une facture d'un objet durable ouvre sa fiche de garantie, avec des rappels avan
 ## Envoyer un document
 
 - **iPhone** : Partager → « Envoie au Mac » (ou « Envoie au Mac + note » : « garantie 3 ans »).
-- **Mac** : glisser dans `~/Desktop/À trier`, ou clic droit → Actions rapides → « Trier avec l'assistant ».
+- **Mac** : glisser dans `~/Documents/À trier`, ou clic droit → Actions rapides → « Trier avec l'assistant ».
 - **Téléchargements** : un PDF téléchargé est rangé tout seul si le Trieur est sûr de lui (sinon il ne bouge pas).
 - **Terminal** : `python trieur.py ajouter facture.pdf`.
 

@@ -1,4 +1,5 @@
-"""Les entrées surveillées (§2) : la boîte iCloud (E1), « À trier » sur le Bureau (E2), Téléchargements (E5).
+"""Les entrées surveillées (§2) : la boîte iCloud (E1), « À trier » dans Documents (E2, D-57),
+Téléchargements (E5).
 
 Un fichier n'est pris que lorsqu'il ne bouge plus : même taille et même date sur 3 mesures à 1 s d'intervalle
 (2 minutes dans Téléchargements : un navigateur écrit par morceaux).
@@ -109,7 +110,7 @@ class Entrees:
     def _examiner(self, e: os.DirEntry[str], chemin: Path, source: str, noms: set[str],
                   maintenant: float) -> Pret | None:  # fmt: skip
         nom = e.name
-        if source in ("boite", "a_trier") and nom.startswith(".") and nom.endswith(".icloud"):  # Bureau dans iCloud
+        if source in ("boite", "a_trier") and nom.startswith(".") and nom.endswith(".icloud"):  # Documents dans iCloud
             self._demander_a_icloud(chemin.parent / nom[1:-7], maintenant)
             return None
         if nom.startswith((".", "~$")) or nom.endswith(EN_COURS) or nom in (pages.COFFRE, pages.DERNIERS):
