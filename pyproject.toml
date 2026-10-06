@@ -12,6 +12,10 @@ select = ["E", "F", "W", "I", "B", "UP"]
 # Une table de données (chemins macOS complets, un élément planté par bloc) : la couper la rendrait illisible.
 "tests/demarrage/faux_mac/construire.py" = ["E501"]
 "tests/demarrage/faux_mac/aleatoire.py" = ["E501"]
+# Le corpus du Trieur : des documents fictifs écrits comme des tables de données (un document par bloc).
+"tests/trieur/corpus/contenu.py" = ["E501"]
+"tests/trieur/corpus/donnees.py" = ["E501"]
+"tests/trieur/corpus/generer.py" = ["E501"]
 
 [tool.mypy]
 python_version = "3.10"
