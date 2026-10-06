@@ -178,3 +178,15 @@ signalé (la Fiche médicale de l'app Santé est faite pour ça). Sorties : HTML
 image d'écran verrouillé 1179 × 2556 (iPhone 14 Pro à 16) seulement si tu as donné un texte ou un contact, copie du
 PDF dans iCloud `Bouclier/`. Rappel « relis ta fiche » tous les 6 mois. pypdf rejoint les dépendances de test
 (lecture du texte des PDF).
+
+**D-24 · Raccourcis et entrées du Mac : la mécanique éprouvée du Trieur, avec nos propres noms.**
+« Arnaque ? » donne à l'élément partagé un nom unique (`arnaque-<date>-<nombre>`), l'enregistre dans
+`Bouclier/entree/`, puis lit `Bouclier/reponses/<nom>.txt` toutes les 3 s pendant 60 s ; sans réponse, il affiche les
+5 réflexes de base écrits dans le raccourci. Un chemin relatif d'un raccourci désignant le dossier iCloud de l'app
+Raccourcis (leçon du Trieur, D-12), le Mac surveille `iCloud Drive/Bouclier` ET `iCloud Drive/Shortcuts/Bouclier` et
+répond dans le même dossier que l'entrée. « Envoyer sans traces » ne parle jamais au Mac (Convertir l'image en JPEG,
+« Conserver les métadonnées » désactivé, puis Partager). Les actions rapides et le service « texte sélectionné »
+reprennent la structure Automator de l'action du Trieur, avec l'identifiant `fr.bouclier.*` ; un paquet du même nom
+qui n'est pas à Bouclier n'est jamais touché. Les copies déposées pour Bouclier (entrées, réponses) de plus de 30
+jours sont retirées (les originaux restent dans Messages ou Photos). La structure exacte des actions d'un raccourci
+ne peut pas être vérifiée sans iPhone : la recette manuelle (noms d'actions en français) est le plan B.

@@ -46,33 +46,41 @@ def cmd_verifier(args: argparse.Namespace, env: Environnement) -> int:
     from bouclier.arnaque import analyse, extraction
 
     outils = analyse.outils_reels(env.chemins, env.reglages, env.base, env.systeme)
+    quoi = list(args.quoi or [])
+    messages: list[tuple[extraction.Message, str]] = []
     if args.presse_papiers:
         texte = env.systeme.presse_papiers()
         if not texte.strip():
-            _ecrire("Le presse-papiers est vide : copie d'abord le message (⌘C), puis relance.")
-            return 1
-        message, source = extraction.depuis_texte(texte, "texte"), "presse-papiers"
-    elif args.quoi and Path(args.quoi).expanduser().is_file():
-        chemin = Path(args.quoi).expanduser()
-        try:
-            message = extraction.depuis_fichier(chemin, outils.lire_image)
-        except (OSError, ValueError) as e:
-            _ecrire(f"Je ne peux pas lire {chemin.name} : {e}.")
-            return 1
-        source = "fichier"
-    elif args.quoi:
-        message, source = extraction.depuis_texte(args.quoi, "texte"), "mac"
-    elif not sys.stdin.isatty():
-        message, source = extraction.depuis_texte(sys.stdin.read(), "texte"), "mac"
+            return _repondre(args, env, "Le presse-papiers est vide : copie d'abord le message (⌘C), puis relance.", 1)
+        messages.append((extraction.depuis_texte(texte, "texte"), "presse-papiers"))
+    elif args.stdin or (not quoi and not sys.stdin.isatty()):
+        messages.append((extraction.depuis_texte(sys.stdin.read(), "texte"), "mac"))
+    elif quoi and all(Path(q).expanduser().is_file() for q in quoi):
+        for q in quoi:
+            chemin = Path(q).expanduser()
+            try:
+                messages.append((extraction.depuis_fichier(chemin, outils.lire_image), "fichier"))
+            except (OSError, ValueError) as e:
+                return _repondre(args, env, f"Je ne peux pas lire {chemin.name} : {e}.", 1)
+    elif quoi:
+        messages.append((extraction.depuis_texte(" ".join(quoi), "texte"), "mac"))
     else:
-        _ecrire('Donne-moi le message : bouclier verifier "le texte"  (ou un fichier, ou --presse-papiers)')
-        return 1
-    if not message.texte.strip() and not message.avertissements:
-        _ecrire("Le message est vide.")
-        return 1
-    resultat = analyse.verifier(message, outils, source, demande_ia=args.ia)
-    _ecrire(resultat.reponse.texte())
-    return 0
+        return _repondre(args, env, 'Donne-moi le message : bouclier verifier "le texte"  (ou un fichier, ou'
+                                    " --presse-papiers)", 1)  # fmt: skip
+    textes = []
+    for message, source in messages:
+        if not message.texte.strip() and not message.avertissements:
+            textes.append("Le message est vide.")
+            continue
+        textes.append(analyse.verifier(message, outils, source, demande_ia=args.ia).reponse.texte())
+    return _repondre(args, env, "\n\n".join(textes), 0)
+
+
+def _repondre(args: argparse.Namespace, env: Environnement, texte: str, code: int) -> int:
+    _ecrire(texte)
+    if getattr(args, "fenetre", False):
+        env.systeme.dialogue("Bouclier", texte)
+    return code
 
 
 def cmd_historique(args: argparse.Namespace, env: Environnement) -> int:
@@ -188,14 +196,14 @@ def cmd_fuites(args: argparse.Namespace, env: Environnement) -> int:
 def cmd_nettoyer(args: argparse.Namespace, env: Environnement) -> int:
     from bouclier.metadonnees import nettoyeur
 
-    code = 0
+    code, textes = 0, []
     for fichier in args.fichiers:
         r = nettoyeur.nettoyer(Path(fichier), remplacer=args.remplacer, garder_date=args.garder_date,
                                systeme=env.systeme)  # fmt: skip
-        _ecrire(r.texte())
+        textes.append(r.texte())
         if r.erreur or r.restants:
             code = 1
-    return code
+    return _repondre(args, env, "\n".join(textes), code)
 
 
 # --- Fiche urgence (n°22) ------------------------------------------------------------------------------------------
@@ -248,8 +256,10 @@ def analyseur() -> argparse.ArgumentParser:
     sous = p.add_subparsers(dest="commande", metavar="commande")
 
     v = sous.add_parser("verifier", help="est-ce une arnaque ? (texte, fichier .eml / .txt / capture, presse-papiers)")
-    v.add_argument("quoi", nargs="?", help="le texte du message, ou le chemin d'un fichier")
+    v.add_argument("quoi", nargs="*", help="le texte du message, ou le chemin d'un ou plusieurs fichiers")
     v.add_argument("--presse-papiers", action="store_true", help="vérifier le texte copié")
+    v.add_argument("--stdin", action="store_true", help="lire le message sur l'entrée standard (service macOS)")
+    v.add_argument("--fenetre", action="store_true", help="montrer aussi la réponse dans une fenêtre")
     v.add_argument("--ia", action="store_true", help="demander aussi l'avis de Claude, même si les règles sont sûres")
     v.set_defaults(fonction=cmd_verifier)
 
@@ -280,6 +290,7 @@ def analyseur() -> argparse.ArgumentParser:
     n.add_argument("fichiers", nargs="+")
     n.add_argument("--remplacer", action="store_true", help="mettre l'original à la Corbeille (récupérable)")
     n.add_argument("--garder-date", action="store_true", help="garder la date de prise de vue")
+    n.add_argument("--fenetre", action="store_true", help="montrer aussi le résultat dans une fenêtre")
     n.set_defaults(fonction=cmd_nettoyer)
 
     u = sous.add_parser("urgence", help="la fiche urgence hors-ligne (numéros vérifiés, réflexes, tes contacts)")

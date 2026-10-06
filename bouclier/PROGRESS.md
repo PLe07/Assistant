@@ -12,7 +12,7 @@ Reprise après coupure : lire ce fichier et DECISIONS.md, puis reprendre à la p
 | P5 Fuites n°19 | ✅ | croisement, date, une notification par fuite, ci-dessous |
 | P6 Métadonnées n°21 | ✅ | 7 formats + vidéo, SSIM ≥ 0,99, ICC gardé, ci-dessous |
 | P7 Fiche urgence n°22 | ✅ | numéros sourcés, PDF lu, A6 une page, ci-dessous |
-| P8 Raccourcis, actions rapides, iCloud | ⏳ | |
+| P8 Raccourcis, actions rapides, iCloud | ✅ | plists valides, entrée/réponse iCloud testées, ci-dessous |
 | P9 Démon, tableau de bord, doctor, bout en bout | ⏳ | |
 | P10 Installation réelle | ⏳ | |
 | P11 Revue hostile (2 passes) | ⏳ | |
@@ -280,6 +280,41 @@ INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 455 fichiers, 0 Laun
 30 passed in 1.98s
   ✅ sécurité, réseau, vie privée
 TOTAL                                     4230    159    96%
+  ✅ couverture ≥ 90 % sur bouclier/
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 455 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
+  ✅ intégrité des autres projets (fin)
+CHECK OK
+```
+
+## P8 — Raccourcis iPhone, actions rapides, entrée iCloud (✅)
+
+- `raccourcis/generer.py` : « Arnaque ? » (nom unique, `Bouclier/entree/`, 20 × 3 s, réponse affichée, 5 réflexes
+  embarqués) et « Envoyer sans traces » (100 % iPhone) ; plists binaires, `plutil -lint`, `shortcuts sign --mode
+  anyone` (sur le Mac) ; `raccourcis/recettes_manuelles.md` (plan B, noms d'actions en français).
+- `raccourcis/actions_rapides.py` : « Est-ce une arnaque ? » (Finder et texte sélectionné), « Nettoyer les
+  métadonnées » ; `bouclier verifier --stdin --fenetre`, `bouclier nettoyer --fenetre`.
+- `entree_icloud.py` : fichiers fantômes iCloud demandés (`brctl download`, relance toutes les 2 min), taille stable,
+  traitement unique, réponse écrite d'un coup dans le même dossier iCloud, notification même la nuit (ta demande),
+  purge des copies de plus de 30 jours.
+
+```
+$ ./check.sh
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 455 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
+  ✅ intégrité des autres projets (début)
+  ✅ ruff check
+  ✅ ruff format
+  ✅ mypy
+146 passed in 4.32s
+  ✅ pytest : unitaires et intégrité
+14 passed in 10.70s
+  ✅ corpus d'arnaques (principal + 2e corpus inédit)
+35 passed in 1.59s
+  ✅ inventaire des comptes et fuites
+25 passed in 2.63s
+  ✅ métadonnées et fiche urgence
+30 passed in 2.31s
+  ✅ sécurité, réseau, vie privée
+TOTAL                                     4494    169    96%
   ✅ couverture ≥ 90 % sur bouclier/
 INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 455 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
   ✅ intégrité des autres projets (fin)
