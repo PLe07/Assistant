@@ -7,7 +7,7 @@ Reprise après coupure : lire ce fichier et DECISIONS.md, puis reprendre à la p
 | P0 Environnement, intégrité, squelette, check.sh, liste blanche | ✅ | ci-dessous |
 | P1 Corpus d'arnaques | ✅ | 225 + 80 messages, ci-dessous |
 | P2 Analyse locale n°20 | ✅ | 100 % / 0 % sur les deux corpus, ci-dessous |
-| P3 IA, caviardage, veto, budget, réflexes | ⏳ | |
+| P3 IA, caviardage, veto, budget, réflexes | ✅ | veto 1 220/1 220, ci-dessous |
 | P4 Inventaire n°18 | ⏳ | |
 | P5 Fuites n°19 | ⏳ | |
 | P6 Métadonnées n°21 | ⏳ | |
@@ -98,3 +98,48 @@ Analyse locale seule, sans IA (`tests/.cache/scores.md`) :
 Arnaques 🟠/🔴 : 100 % (cible ≥ 95 %) · arnaques ⚪ : 0 · légitimes 🔴 : 0 % (≤ 2 %) · légitimes 🟠 : 0 % (≤ 10 %).
 Injections : les 10 du corpus en 🟠/🔴 ; 10 injections greffées sur chacune des 135 arnaques ne font jamais baisser
 le score.
+
+## P3 — IA, caviardage, injection, veto, budget, réflexes (✅)
+
+- `arnaque/ia.py` : client SDK (clé API : environnement ou trousseau `bouclier-anthropic`) ou `claude -p` (jeton
+  `bouclier-claude`), demande caviardée dans une balise à nombre aléatoire, JSON pydantic (pas de niveau « sûr »),
+  un seul nouvel essai si JSON invalide, 2 s puis 4 s sur 429/529/5xx, budget 2 $/mois estimé avant et compté après.
+- `arnaque/veto.py` : l'IA monte librement, descend d'un niveau au plus (confiance ≥ 0,6), jamais sous 🟠 avec un
+  indice critique ; ses phrases rassurantes, ses liens, ses numéros et son jargon sont écartés.
+- `arnaque/reponse.py` + `reflexes.json` : la réponse au format du §3.4, gestes tirés de la base (33700,
+  signal-spam.fr, opposition, THESEE, Perceval, 17Cyber, Info Escroqueries), 5 réflexes de base pour le raccourci.
+- `urgence/sources.json` : chaque numéro et site avec ses pages officielles (D-14) ; revérification en ligne sur le Mac.
+- `arnaque/historique.py` (caviardé, 90 jours), `arnaque/analyse.py` (l'enchaînement), `cli.py` (`verifier`,
+  `historique`), `arnaque/ocr.py` + `ocr_vision.py` (Apple Vision sur le Mac).
+- Veto avec IA imitée contradictoire : 305 messages × 4 avis = 1 220 cas, 0 violation, aucune réponse « sûr ».
+- Caviardage de bout en bout : nom, téléphone, adresse, e-mail, IBAN et carte plantés absents de la demande à l'IA,
+  du journal et de l'historique.
+- Test réel avec l'IA (`-m reel`, 6 messages dont 2 injections, < 0,03 $) : prévu sur le Mac (P10).
+
+```
+$ ./check.sh
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 455 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
+  ✅ intégrité des autres projets (début)
+  ✅ ruff check
+  ✅ ruff format
+  ✅ mypy
+136 passed in 3.99s
+  ✅ pytest : unitaires et intégrité
+14 passed in 10.36s
+  ✅ corpus d'arnaques (principal + 2e corpus inédit)
+30 passed in 2.17s
+  ✅ sécurité, réseau, vie privée
+TOTAL                             2246     48    98%
+  ✅ couverture ≥ 90 % sur bouclier/
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 455 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
+  ✅ intégrité des autres projets (fin)
+CHECK OK
+
+$ bouclier verifier "Colissimo : votre colis est en attente. Payez 1,99 € : https://colissimo-suivi-frais.top/p"
+🔴 Arnaque très probable — faux message « Colissimo »
+• Le lien mène à « colissimo-suivi-frais.top », pas au site officiel de Colissimo (laposte.fr).
+• Il te demande de payer 1,99 € pour un colis : La Poste et les transporteurs ne font jamais ça par SMS ou par mail.
+• Le site se termine par « .top », une extension très utilisée par les arnaques.
+👉 Ne clique pas. Signale le SMS au 33700. Supprime-le.
+Déjà payé ou donné ta carte ? Opposition tout de suite au 0 892 705 705, puis plainte en ligne (THESEE).
+```

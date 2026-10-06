@@ -1,0 +1,132 @@
+{
+  "_lisez_moi": "Chaque numéro et chaque site cité par Bouclier (réponses du détecteur, fiche urgence) est ici, avec les pages officielles où il est écrit. Un numéro absent de ce fichier n'est jamais affiché. `bouclier urgence verifier` retélécharge chaque page sur le Mac et vérifie que le numéro y figure toujours : sinon, notification et numéro retiré de la fiche.",
+  "verifie_le": "2026-10-06",
+  "methode": "Pages officielles lues le 2026-10-06 par un moteur de recherche limité aux domaines officiels (le conteneur de construction n'accède pas directement à ces sites) ; chaque page est retéléchargée et relue sur le Mac par `bouclier urgence verifier` à l'installation, puis tous les 6 mois.",
+  "sources": {
+    "ms-numeros-nationaux": {
+      "url": "https://www.masecurite.interieur.gouv.fr/fr/fiches-pratiques/famille-et-aides-aux-victimes/numeros-utiles-nationaux",
+      "editeur": "Ministère de l'Intérieur (Ma Sécurité)"
+    },
+    "fc-numeros-urgence": {
+      "url": "https://formation-civique.interieur.gouv.fr/fiches-par-thematiques/vivre-dans-la-societe-fran%C3%A7aise/demarches-administratives/annexe-les-numeros-durgence/",
+      "editeur": "Ministère de l'Intérieur (Formation civique)"
+    },
+    "gn-numeros-urgence": {
+      "url": "https://www.gendarmerie.interieur.gouv.fr/contact/les-numeros-d-urgence",
+      "editeur": "Gendarmerie nationale"
+    },
+    "cm-spam-telephonique": {
+      "url": "https://www.cybermalveillance.gouv.fr/tous-nos-contenus/fiches-reflexes/spam-telephonique",
+      "editeur": "Cybermalveillance.gouv.fr"
+    },
+    "sp-demarchage-spam": {
+      "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F36525",
+      "editeur": "Service-Public"
+    },
+    "sp-annuaire-opposition": {
+      "url": "https://lannuaire.service-public.gouv.fr/centres-contact/R86",
+      "editeur": "Service-Public (annuaire)"
+    },
+    "eco-fraude-carte": {
+      "url": "https://www.economie.gouv.fr/particuliers/mes-droits-conso/eviter-les-arnaques/que-faire-en-cas-de-fraude-de-perte-ou-de-vol-de-votre-carte-bancaire",
+      "editeur": "Ministère de l'Économie"
+    },
+    "sp-fraude-carte": {
+      "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F31324",
+      "editeur": "Service-Public"
+    },
+    "sp-thesee": {
+      "url": "https://www.service-public.gouv.fr/P10100",
+      "editeur": "Service-Public"
+    },
+    "ms-thesee": {
+      "url": "https://www.masecurite.interieur.gouv.fr/fr/demarches-en-ligne/thesee-arnaques-internet-plainte-en-ligne",
+      "editeur": "Ministère de l'Intérieur (Ma Sécurité)"
+    },
+    "gn-partenaires": {
+      "url": "https://www.gendarmerie.interieur.gouv.fr/conseils/numerique/les-partenaires-pour-lutter-contre-les-cybermenaces",
+      "editeur": "Gendarmerie nationale"
+    },
+    "ms-perceval": {
+      "url": "https://www.masecurite.interieur.gouv.fr/fr/demarches-en-ligne/signaler-fraude-carte-bancaire-perceval",
+      "editeur": "Ministère de l'Intérieur (Ma Sécurité)"
+    },
+    "sp-perceval": {
+      "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/R46526",
+      "editeur": "Service-Public"
+    },
+    "cm-17cyber": {
+      "url": "https://www.cybermalveillance.gouv.fr/tous-nos-contenus/actualites/lancement-17cyber",
+      "editeur": "Cybermalveillance.gouv.fr"
+    },
+    "sp-17cyber": {
+      "url": "https://www.service-public.fr/particuliers/actualites/A18024",
+      "editeur": "Service-Public"
+    },
+    "sp-signal-spam": {
+      "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F47157/5_0?idFicheParent=N31138",
+      "editeur": "Service-Public"
+    },
+    "cm-signaler-mail": {
+      "url": "https://www.cybermalveillance.gouv.fr/tous-nos-contenus/actualites/comment-signaler-un-mail-de-phishing",
+      "editeur": "Cybermalveillance.gouv.fr"
+    },
+    "cm-hameconnage": {
+      "url": "https://www.cybermalveillance.gouv.fr/tous-nos-contenus/fiches-reflexes/hameconnage-phishing/2e844784-f440-418c-8d8e-ed5556bb2376",
+      "editeur": "Cybermalveillance.gouv.fr"
+    },
+    "cm-piratage-compte": {
+      "url": "https://www.cybermalveillance.gouv.fr/tous-nos-contenus/fiches-reflexes/piratage-de-compte",
+      "editeur": "Cybermalveillance.gouv.fr"
+    },
+    "sp-vol-telephone": {
+      "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F34123",
+      "editeur": "Service-Public"
+    },
+    "sp-perte-telephone": {
+      "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F19066",
+      "editeur": "Service-Public"
+    },
+    "sp-vol-papiers": {
+      "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F10774",
+      "editeur": "Service-Public"
+    },
+    "sp-vol-cni": {
+      "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F1759",
+      "editeur": "Service-Public"
+    },
+    "chu-numeros-utiles": {
+      "url": "https://www.chu-bordeaux.fr/Urgences-et-num%C3%A9ros-utiles/",
+      "editeur": "CHU de Bordeaux"
+    },
+    "cap-bordeaux": {
+      "url": "https://centres-antipoison.net/capbordeaux",
+      "editeur": "Association des centres antipoison et de toxicovigilance"
+    },
+    "ars-pharmacies-garde": {
+      "url": "https://www.nouvelle-aquitaine.ars.sante.fr/pharmacies-de-garde-de-nuits-dimanches-et-jours-feries",
+      "editeur": "ARS Nouvelle-Aquitaine"
+    }
+  },
+  "numeros": [
+    {"id": "samu", "numero": "15", "libelle": "SAMU : urgence médicale", "gratuit": true, "mots": ["samu"], "sources": ["ms-numeros-nationaux", "fc-numeros-urgence", "gn-numeros-urgence"]},
+    {"id": "police", "numero": "17", "libelle": "Police secours, gendarmerie", "gratuit": true, "mots": ["police"], "sources": ["ms-numeros-nationaux", "fc-numeros-urgence", "gn-numeros-urgence"]},
+    {"id": "pompiers", "numero": "18", "libelle": "Pompiers", "gratuit": true, "mots": ["pompiers"], "sources": ["ms-numeros-nationaux", "fc-numeros-urgence", "gn-numeros-urgence"]},
+    {"id": "urgence-europe", "numero": "112", "libelle": "Numéro d'urgence européen", "gratuit": true, "mots": ["europ"], "sources": ["ms-numeros-nationaux", "fc-numeros-urgence", "gn-numeros-urgence"]},
+    {"id": "urgence-sms", "numero": "114", "libelle": "Urgence par SMS, tchat ou visio (si tu ne peux pas parler)", "gratuit": true, "mots": ["sourd"], "sources": ["ms-numeros-nationaux", "fc-numeros-urgence", "gn-numeros-urgence"]},
+    {"id": "33700", "numero": "33700", "libelle": "Signaler un SMS ou un appel indésirable (transférer le SMS)", "gratuit": true, "mots": ["spam"], "sources": ["cm-spam-telephonique", "sp-demarchage-spam"]},
+    {"id": "opposition", "numero": "0 892 705 705", "libelle": "Opposition carte bancaire (serveur interbancaire, 7j/7 24h/24)", "gratuit": false, "mots": ["opposition"], "sources": ["sp-annuaire-opposition", "eco-fraude-carte"]},
+    {"id": "info-escroqueries", "numero": "0 805 805 817", "libelle": "Info Escroqueries : conseils de policiers et gendarmes (lun.–ven.)", "gratuit": true, "mots": ["escroquerie"], "sources": ["sp-thesee", "gn-partenaires"]},
+    {"id": "antipoison-bordeaux", "numero": "05 56 96 40 80", "libelle": "Centre antipoison de Bordeaux (24h/24)", "gratuit": false, "mots": ["poison"], "sources": ["chu-numeros-utiles", "cap-bordeaux"]},
+    {"id": "chu-bordeaux", "numero": "05 56 79 56 79", "libelle": "CHU de Bordeaux (standard)", "gratuit": false, "mots": ["chu"], "sources": ["chu-numeros-utiles"]},
+    {"id": "pharmacie-garde", "numero": "3237", "libelle": "Pharmacie de garde (service payant)", "gratuit": false, "mots": ["pharmacie"], "sources": ["ars-pharmacies-garde"]}
+  ],
+  "ressources": [
+    {"id": "17cyber", "adresse": "17cyber.gouv.fr", "libelle": "17Cyber : diagnostic et aide en ligne si tu es victime (24h/24)", "mots": ["17cyber"], "sources": ["cm-17cyber", "sp-17cyber"]},
+    {"id": "cybermalveillance", "adresse": "cybermalveillance.gouv.fr", "libelle": "Cybermalveillance.gouv.fr : fiches réflexes et assistance", "mots": ["cybermalveillance"], "sources": ["cm-hameconnage", "cm-17cyber"]},
+    {"id": "signal-spam", "adresse": "signal-spam.fr", "libelle": "Signal Spam : signaler un mail douteux", "mots": ["signal-spam"], "sources": ["sp-signal-spam", "cm-signaler-mail"]},
+    {"id": "thesee", "adresse": "THESEE (service-public.fr)", "libelle": "THESEE : porter plainte en ligne pour une arnaque sur Internet", "mots": ["thesee"], "sources": ["sp-thesee", "ms-thesee"]},
+    {"id": "perceval", "adresse": "Perceval (service-public.fr)", "libelle": "Perceval : signaler un paiement frauduleux avec ta carte (après l'opposition)", "mots": ["perceval"], "sources": ["ms-perceval", "sp-perceval"]},
+    {"id": "imei", "adresse": "*#06#", "libelle": "Taper *#06# affiche le code IMEI du téléphone (à noter avant une perte ou un vol)", "mots": ["imei"], "sources": ["sp-vol-telephone", "sp-perte-telephone"]}
+  ]
+}

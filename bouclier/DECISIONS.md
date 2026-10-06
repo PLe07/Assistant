@@ -102,3 +102,33 @@ chacune avec ses sites officiels ; tout `*.gouv.fr` est officiel pour les admini
 marque, la « déforme » d'une ou deux lettres (nom enregistré seulement, mots courants exclus : « email » n'imite pas
 « gmail », « party » n'imite pas « darty »), ou la copie avec des « caractères » trompeurs (cyrillique, accent,
 « rn » pour « m », chiffres).
+
+**D-14 · Numéros et sites officiels : un registre unique, vérifié deux fois.** (2026-10-06)
+`bouclier/urgence/sources.json` liste chaque numéro (15, 17, 18, 112, 114, 33700, opposition 0 892 705 705,
+Info Escroqueries, centre antipoison et CHU de Bordeaux, 3237) et chaque site (17Cyber, signal-spam.fr, THESEE,
+Perceval…) avec ses pages officielles. Le conteneur de construction n'accède pas à ces sites (proxy) : les pages ont
+été lues le 2026-10-06 par un moteur de recherche limité aux domaines officiels (aucun numéro tiré de la mémoire).
+Sur le Mac, `bouclier urgence verifier` retélécharge chaque page et vérifie que le numéro (et un mot-clé) y figure :
+un numéro qu'aucune page ne mentionne plus est signalé puis retiré. SOS Médecins Bordeaux est **exclu** : aucune page
+d'un site officiel permis ne le donne. Les ARS (`*.ars.sante.fr`, pharmacies de garde) rejoignent la liste blanche.
+Un numéro officiel payant (0 892 705 705) n'est pas compté comme « numéro surtaxé piège » par le détecteur.
+
+**D-15 · L'IA : JSON validé, nombre aléatoire dans les balises, phrases filtrées.**
+Le message part caviardé dans `<message_non_fiable_XXXX>` où XXXX est tiré au hasard à chaque appel : un escroc ne
+peut pas fermer la balise. Toute balise de ce nom présente dans le message est retirée. Le texte caché d'un mail
+n'est jamais envoyé. Le schéma pydantic n'a pas de niveau « sûr ». Les phrases de l'IA ne sont affichées que si
+elles ne rassurent pas, ne contiennent ni lien ni numéro, ni jargon ; les gestes viennent toujours de
+`reflexes.json`, jamais de l'IA. Texte limité à 4 000 caractères, 400 jetons de réponse : environ 0,003 $ l'appel.
+
+**D-16 · Le veto : l'IA monte librement, descend d'un niveau au plus.**
+Sans indice critique, l'IA peut baisser d'un seul niveau, et seulement si elle est sûre d'elle (confiance ≥ 0,6).
+Avec un indice critique, jamais sous 🟠. Alternative écartée : laisser l'IA trancher (une IA trompée par une
+injection non repérée rendrait « Pas de signe »). Vérifié sur les 305 messages × 4 avis contradictoires.
+
+**D-17 · `claude -p` comme l'assistant, et jamais dans les tests.**
+Même ligne de commande que l'assistant (éprouvée sur ton Mac) : sans outil, sans session gardée, dans un dossier
+vide, clé API retirée de l'environnement. Les tests remplacent la recherche du programme `claude` ; le test réel
+(`-m reel`) ne tourne que sur macOS (il a tenté une fois le Claude du conteneur de construction : corrigé).
+
+**D-18 · Les raisons affichées : les indices critiques d'abord, puis les plus lourds.**
+Ainsi « Il te demande de payer 1,99 € » passe avant « .top », comme dans l'exemple du §3.4.

@@ -15,9 +15,11 @@ from dataclasses import dataclass, field
 
 from bouclier.arnaque import entetes, familles, liens, pression
 from bouclier.arnaque.extraction import Message
-from bouclier.arnaque.signaux import Niveau, Signal, niveau_du_score
+from bouclier.arnaque.score import evaluer
+from bouclier.arnaque.signaux import Niveau, Signal
 from bouclier.arnaque.sosies import MARQUES, Marque, decoder_idn, est_officiel, marques_citees, sosie
-from bouclier.arnaque.texte import est_surtaxe, montants, normaliser, telephones
+from bouclier.arnaque.texte import chiffres, est_surtaxe, montants, normaliser, telephones
+from bouclier.urgence import sources
 
 PLAFOND_PRESSION = 20
 _FOURRE_TOUT = frozenset({"banque", "support", "regularisation"})
@@ -47,7 +49,8 @@ class AnalyseLocale:
 
     def raisons(self, n: int = 3) -> list[str]:
         positifs = [s for s in self.signaux if s.poids > 0]
-        positifs.sort(key=lambda s: (not s.critique, not s.technique, -s.poids))
+        # Les indices critiques d'abord, puis les plus lourds (« il te demande de payer » avant « .top »).
+        positifs.sort(key=lambda s: (not s.critique, -s.poids))
         vues: list[str] = []
         for s in positifs:
             if s.phrase not in vues:
@@ -248,7 +251,9 @@ def analyser(message: Message, ctx: Contexte | None = None) -> AnalyseLocale:
         break
 
     # --- Téléphones ------------------------------------------------------------------------------------------------
-    surtaxes = [n for n in numeros if est_surtaxe(n)]
+    # Un numéro officiel payant (opposition bancaire 0 892 705 705) n'est pas un piège.
+    officiels = sources.charger().chiffres_officiels()
+    surtaxes = [n for n in numeros if est_surtaxe(n) and chiffres(n) not in officiels]
     if surtaxes:
         c.ajouter(
             Signal("telephone:surtaxe", 45, f"Le numéro {surtaxes[0]} est surtaxé : l'appel peut coûter très cher.")
@@ -311,21 +316,9 @@ def analyser(message: Message, ctx: Contexte | None = None) -> AnalyseLocale:
         c.signaux["lien:sosie"] = Signal(ancien.code, ancien.poids, ancien.phrase, critique=True)
 
     signaux = list(c.signaux.values())
-    score = _score(signaux)
-    niveau = niveau_du_score(score)
-    critiques = {s.code for s in signaux if s.critique}
-    if critiques and niveau.value < Niveau.TRES_SUSPECT.value:
-        niveau, score = Niveau.TRES_SUSPECT, max(score, 45)
-    if len(critiques) >= 2 and niveau != Niveau.ARNAQUE:
-        niveau, score = Niveau.ARNAQUE, max(score, 70)
+    score, niveau = evaluer(signaux)
     principale = next(iter(sosies_vus.values()), None) or (revendiquees[0] if revendiquees else None)
     return AnalyseLocale(message, signaux, score, niveau, principale, famille_principale)
-
-
-def _score(signaux: list[Signal]) -> int:
-    positif = min(100, sum(s.poids for s in signaux if s.poids > 0))
-    negatif = sum(s.poids for s in signaux if s.poids < 0 and s.technique)
-    return max(0, min(100, positif + negatif))
 
 
 _RELATIF = re.compile(

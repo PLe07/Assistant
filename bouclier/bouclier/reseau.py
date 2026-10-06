@@ -49,6 +49,7 @@ DOMAINES_OFFICIELS = (
     "gouvernement.fr",
     "chu-bordeaux.fr",
     "centres-antipoison.net",
+    "ars.sante.fr",  # agences régionales de santé (pharmacies de garde)
 )
 
 # Hors processus (installation seulement) : les paquets Python.

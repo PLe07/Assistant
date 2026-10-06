@@ -41,12 +41,29 @@ def maison(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
 
 
 @pytest.fixture(autouse=True)
-def espion_reseau(monkeypatch: pytest.MonkeyPatch) -> Any:
+def sans_vraie_ia(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Aucun test n'appelle le vrai Claude Code de la machine (les tests `reel` le font exprès, sur le Mac)."""
+    from bouclier.arnaque import ia
+
+    monkeypatch.setattr(ia, "trouver_claude", lambda: "/introuvable/claude")
+
+
+@pytest.fixture(autouse=True)
+def espion_reseau(monkeypatch: pytest.MonkeyPatch, request: pytest.FixtureRequest) -> Any:
+    """Réseau coupé. Les tests `reel` (sur le Mac, à la demande) passent vers les hôtes de la liste blanche
+    seulement : tout autre hôte est refusé et fait échouer le test."""
     espion = EspionReseau()
+    reel = request.node.get_closest_marker("reel") is not None
+    getaddrinfo_origine = socket.getaddrinfo
+    resolues: set[str] = set()
 
     def getaddrinfo(host: Any, *args: Any, **kwargs: Any) -> Any:
         nom = host.decode() if isinstance(host, bytes) else str(host or "")
         espion.noter(nom)
+        if reel and (reseau.hote_autorise(nom) or reseau.est_local(nom)):
+            reponse = getaddrinfo_origine(host, *args, **kwargs)
+            resolues.update(str(r[4][0]) for r in reponse)
+            return reponse
         raise OSError(f"réseau coupé pendant les tests ({nom})")
 
     connect_origine = socket.socket.connect
@@ -54,9 +71,10 @@ def espion_reseau(monkeypatch: pytest.MonkeyPatch) -> Any:
     def connect(self: socket.socket, adresse: Any) -> Any:
         if self.family in (socket.AF_INET, socket.AF_INET6):
             hote = str(adresse[0])
-            espion.noter(hote)
-            if not reseau.est_local(hote):
-                raise OSError(f"réseau coupé pendant les tests ({hote})")
+            if not (reel and hote in resolues):
+                espion.noter(hote)
+                if not reseau.est_local(hote):
+                    raise OSError(f"réseau coupé pendant les tests ({hote})")
         return connect_origine(self, adresse)
 
     monkeypatch.setattr(socket, "getaddrinfo", getaddrinfo)

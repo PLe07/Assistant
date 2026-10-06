@@ -1,0 +1,73 @@
+{
+  "_lisez_moi": "Les gestes conseillés par Bouclier. Tout numéro ou site cité ici figure dans urgence/sources.json avec ses pages officielles (un test le vérifie). « base » : les 5 réflexes embarqués dans le raccourci iPhone, affichés si le Mac ne répond pas.",
+  "gestes": {
+    "pas_de_clic": {"court": "Ne clique pas.", "long": "Ne clique sur aucun lien et ne rappelle aucun numéro donné dans le message.", "sources": ["cm-hameconnage"]},
+    "supprimer": {"court": "Supprime-le.", "long": "Supprime le message.", "sources": ["cm-hameconnage"]},
+    "signaler_sms": {"court": "Signale le SMS au 33700.", "long": "Transfère le SMS douteux au 33700 (gratuit), puis supprime-le.", "sources": ["cm-spam-telephonique", "sp-demarchage-spam"]},
+    "signaler_mail": {"court": "Signale le mail sur signal-spam.fr.", "long": "Signale le mail douteux sur signal-spam.fr, puis supprime-le.", "sources": ["sp-signal-spam", "cm-signaler-mail"]},
+    "pas_de_code": {"court": "Ne donne aucun code reçu par SMS.", "long": "Ne donne jamais un code reçu par SMS, ni les numéros de ta carte, à personne : ni au téléphone, ni sur un site.", "sources": ["cm-hameconnage"]},
+    "rappeler_banque": {"court": "Appelle ta banque au numéro au dos de ta carte.", "long": "Raccroche et appelle toi-même ta banque au numéro écrit au dos de ta carte.", "sources": ["sp-fraude-carte"]},
+    "verifier_soi_meme": {"court": "Vérifie toi-même sur l'appli ou le site officiels.", "long": "En cas de doute, va toi-même sur l'appli ou le site officiels, ou appelle le numéro que tu connais déjà.", "sources": ["cm-hameconnage"]},
+    "appeler_proche": {"court": "Appelle ton proche sur son numéro habituel.", "long": "Avant tout, appelle ton proche sur son numéro habituel pour vérifier que c'est bien lui.", "sources": ["cm-hameconnage"]},
+    "ne_pas_payer": {"court": "Ne paie pas et ne réponds pas.", "long": "Ne paie pas et ne réponds pas : ces menaces sont envoyées en masse.", "sources": ["cm-hameconnage"]},
+    "deja_paye": {"court": "Déjà payé ou donné ta carte ? Opposition tout de suite au 0 892 705 705, puis plainte en ligne (THESEE).", "long": "Si tu as déjà payé ou donné ta carte : fais opposition tout de suite (ta banque, ou le 0 892 705 705, payant), signale la fraude sur Perceval, puis porte plainte en ligne sur THESEE.", "sources": ["sp-annuaire-opposition", "eco-fraude-carte", "ms-perceval", "sp-thesee"]},
+    "aide": {"court": "Besoin d'aide : 17cyber.gouv.fr ou Info Escroqueries au 0 805 805 817 (gratuit).", "long": "Pour être aidé : 17cyber.gouv.fr (24h/24) ou Info Escroqueries au 0 805 805 817 (gratuit, du lundi au vendredi).", "sources": ["cm-17cyber", "sp-17cyber", "sp-thesee", "gn-partenaires"]}
+  },
+  "base": ["pas_de_clic", "pas_de_code", "verifier_soi_meme", "signaler_sms", "deja_paye"],
+  "situations": {
+    "telephone": {
+      "titre": "Téléphone perdu ou volé",
+      "etapes": [
+        "Localise-le ou efface-le à distance avec l'app « Localiser » d'un autre appareil Apple.",
+        "Appelle ton opérateur pour suspendre la ligne et bloquer le téléphone grâce à son code IMEI (tape *#06# dès aujourd'hui pour le noter).",
+        "En cas de vol : porte plainte au commissariat ou à la gendarmerie, avec le code IMEI."
+      ],
+      "sources": ["sp-vol-telephone", "sp-perte-telephone"]
+    },
+    "carte": {
+      "titre": "Carte bancaire perdue, volée ou piratée",
+      "etapes": [
+        "Fais opposition tout de suite : ta banque, ou le 0 892 705 705 (7j/7, 24h/24, payant). Garde le numéro d'opposition.",
+        "Si des paiements sur Internet ne viennent pas de toi : signale-les sur Perceval (service-public.fr).",
+        "Conteste les paiements auprès de ta banque."
+      ],
+      "sources": ["sp-annuaire-opposition", "eco-fraude-carte", "sp-fraude-carte", "ms-perceval", "sp-perceval"]
+    },
+    "papiers": {
+      "titre": "Papiers d'identité perdus ou volés",
+      "etapes": [
+        "Vol : déclare-le au commissariat ou à la gendarmerie.",
+        "Perte : déclare-la à la mairie au moment de refaire la carte, ou au commissariat ou à la gendarmerie.",
+        "Une pièce déclarée perdue ou volée est annulée définitivement, même si tu la retrouves."
+      ],
+      "sources": ["sp-vol-papiers", "sp-vol-cni"]
+    },
+    "compte": {
+      "titre": "Compte en ligne piraté",
+      "etapes": [
+        "Change tout de suite le mot de passe, puis partout où tu utilisais le même.",
+        "Vérifie l'adresse mail et le numéro de secours du compte, et déconnecte les appareils inconnus.",
+        "Active la double authentification et préviens tes contacts ; si ta carte était enregistrée, préviens ta banque."
+      ],
+      "sources": ["cm-piratage-compte"]
+    },
+    "fuite": {
+      "titre": "Un de tes services a subi une fuite",
+      "etapes": [
+        "Change le mot de passe de ce service, et partout où tu utilisais le même.",
+        "Active la double authentification si le service la propose.",
+        "Méfie-toi des messages qui citent tes informations : les escrocs s'en servent pour paraître crédibles."
+      ],
+      "sources": ["cm-piratage-compte", "cm-hameconnage"]
+    },
+    "arnaque": {
+      "titre": "J'ai été victime d'une arnaque",
+      "etapes": [
+        "Si tu as payé ou donné ta carte : opposition tout de suite (ta banque ou le 0 892 705 705).",
+        "Porte plainte en ligne sur THESEE (arnaques sur Internet) ou au commissariat.",
+        "Fais-toi aider : 17cyber.gouv.fr, ou Info Escroqueries au 0 805 805 817 (gratuit)."
+      ],
+      "sources": ["sp-annuaire-opposition", "sp-thesee", "ms-thesee", "cm-17cyber", "gn-partenaires"]
+    }
+  }
+}

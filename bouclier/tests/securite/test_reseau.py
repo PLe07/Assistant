@@ -28,6 +28,7 @@ from bouclier import reseau
         "www.gouvernement.fr",
         "www.chu-bordeaux.fr",
         "www.centres-antipoison.net",
+        "www.nouvelle-aquitaine.ars.sante.fr",
     ],
 )
 def test_hotes_permis(hote: str) -> None:
