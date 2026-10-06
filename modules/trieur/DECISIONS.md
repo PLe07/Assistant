@@ -173,3 +173,80 @@ est refait dès qu'un fichier du générateur change (empreinte).
 **D-25 · L'organisation du module diffère un peu du §11.**
 `classement/` (texte, dates, montants, émetteurs, règles, champs, nommage), `extraction/`, `garanties/` ;
 `regles.toml` est à la racine du module, pour être facile à trouver et à modifier.
+
+## 2026-10-06 · P4-P6 — File, coffre, Claude
+
+**D-26 · La file d'attente.**
+- SQLite dans `donnees/trieur/trieur.db` : les éléments, le journal des actions, ce qui a été appris, le coffre et
+  les dépenses de Claude.
+- Un même fichier ajouté deux fois (pas encore traité) reste un seul élément.
+- Un élément est « pris » par une mise à jour conditionnelle : le démon et une commande ne le traitent jamais à deux.
+- En cas d'erreur, l'original ne bouge pas ; 3 essais, puis « erreur ». Au démarrage, ce qui était « en cours »
+  (Mac éteint en route) repart dans la file.
+
+**D-27 · Les doublons (même empreinte SHA-256 qu'un document déjà rangé).**
+- Arrivé par la boîte iCloud ou « À trier » : il va dans `À vérifier/Doublons` (jamais effacé).
+- Pièce jointe d'un courriel (une copie faite par le Trieur) : effacée.
+- Donné à la main (Finder, commande, API) ou dans Téléchargements : il ne bouge pas, le journal dit où est l'autre.
+
+**D-28 · Le déplacement sûr et l'annulation.**
+- Copie en mode exclusif (O_EXCL : jamais sur un fichier existant, même pris entre-temps), empreinte vérifiée,
+  puis suppression de l'original seulement s'il n'a pas changé.
+- `annuler` défait dans l'ordre inverse : fichier remis à sa place (ou « -2 » à côté si la place est prise), PDF
+  fabriqué retiré (s'il n'a pas été modifié), fiche, alias et rappels retirés.
+- Un fichier revenu dans la boîte par une annulation n'est pas repris tout seul (même empreinte qu'un élément
+  annulé) ; le redonner à la main reste possible.
+
+**D-29 · Une photo de document devient un PDF cherchable.**
+L'image recadrée (en JPEG, plus léger) avec le texte reconnu en calque invisible. La photo d'origine est gardée dans
+`Classés/Originaux/AAAA`. Une photo sans texte de document (moins de 12 mots, ni date ni montant) va dans
+`~/Pictures/Depuis l'iPhone`.
+
+**D-30 · Ce que le Trieur apprend.**
+- Une correction (`trieur corriger`) ou un déplacement à la main vers le dossier d'un autre type donne +8 points à
+  ce type pour cet émetteur (plafond 20).
+- Pas de points en moins pour l'ancien type : un même émetteur envoie souvent plusieurs types (factures et
+  courriers d'EDF).
+- `--emetteur` retient le nom corrigé dans `emetteurs_perso.json` (avec ce qui avait été lu en haut).
+- Un dossier partagé par plusieurs types (« Factures/AAAA ») n'apprend rien : il est ambigu.
+
+**D-31 · Téléchargements : seuil 0,85 (au lieu de 0,9).**
+Une facture nette obtient entre 0,85 et 0,95 de confiance ; à 0,9, la moitié des factures téléchargées seraient
+restées dans Téléchargements. En dessous du seuil, le fichier ne bouge pas.
+
+**D-32 · Les autres destinations.**
+Liens (`.url`, `.webloc`, adresse seule) → `Classés/Liens` (aucune page n'est téléchargée : pas de réseau) ;
+format inconnu → `Classés/Fichiers/<extension>` ; une note texte → `Classés/Notes reçues`.
+
+**D-33 · Le coffre à garanties.**
+- Une fiche par bien durable ; un alias du Finder de la facture dans `Classés/Garanties` (un lien symbolique si
+  l'alias échoue).
+- Deux rappels dans l'app Rappels (30 et 7 jours avant la fin, à 9 h), liste « Garanties » (« Trieur-TEST » en mode
+  test) ; une échéance déjà passée ne crée pas de rappel.
+- Achat en ligne : un rappel de rétractation (livraison + 11 jours, 3 jours avant la fin des 14).
+- Le Trieur crée et supprime ses rappels lui-même (AppleScript, valeurs passées en arguments) : `core.rappels` ne
+  sait qu'en ajouter.
+- `trieur garantie ajouter|modifier|supprimer` pour un bien sans facture passée par le Trieur.
+
+**D-34 · Les pages HTML de la boîte.**
+`Mon coffre.html` et `Derniers classements.html` : autonomes (pas de script ni de ressource externe), mode sombre
+automatique, lisibles sur l'iPhone. Une page n'est remplacée que si elle porte la marque du Trieur ; un fichier à
+toi du même nom n'est jamais touché (la page s'appelle alors « … (Trieur).html »).
+
+**D-35 · Ce qui part chez Claude.**
+- Seulement si le classement local hésite (< 0,75), seulement le texte, caviardé, 3000 caractères au plus.
+- Caviardés : courriels, IBAN, cartes (Luhn), n° de sécurité sociale, tout numéro de 9 chiffres ou plus (fiscal,
+  client, contrat), téléphones, rues, codes postaux et villes, la valeur après « Titulaire : », « Patient : »…, la
+  ligne au-dessus d'une adresse si elle ressemble à un nom, ton nom de session macOS (lu sur le Mac, jamais écrit
+  dans le dépôt) et les mots de `ia.mots_masques`.
+- Jamais envoyé : un type sensible (santé, identité, impôts, paie) ou le moindre indice sérieux de l'un d'eux
+  (2 points de règles, n° de sécurité sociale, « patient », « numéro fiscal »…). Ces documents vont dans
+  « À vérifier » si les règles hésitent.
+- Réponse en JSON vérifiée par un schéma ; une relance si elle ne colle pas ; 3 essais sur panne passagère
+  (attente 2 s puis 4 s) ; budget de 1 $ par mois sur une estimation prudente du coût.
+- Les dates, montants et garanties restent lus sur place pour le type donné par Claude : Claude ne fait que
+  compléter ce que le texte ne donne pas.
+
+**D-36 · Le test réel de Claude.**
+Comme pour les corvées : `@pytest.mark.live`, écarté par défaut (`-m 'not live'` dans pyproject), lancé à la main
+sur le Mac : `python -m pytest -m live tests/trieur/ia/test_ia.py` (moins d'un centime).

@@ -6,9 +6,9 @@
 | P1 Corpus + vérité terrain | ✅ | 124 documents, 19 types, 11 pièges ; 5 tests |
 | P2 Extraction | ✅ | 18 tests ; temps mesurés ci-dessous |
 | P3 Classement, champs, nommage | ✅ | corpus 1 : 100 % des types ; corpus 2 inédit : 97 % / 90 % |
-| P4 File, doublons, déplacement sûr, annulation, apprentissage | ⏳ | |
-| P5 Coffre à garanties, Rappels, rétractation, pages HTML | ⏳ | |
-| P6 Couche IA | ⏳ | |
+| P4 File, doublons, déplacement sûr, annulation, apprentissage | ✅ | 17 tests de la chaîne + 5 de l'interface Mac |
+| P5 Coffre à garanties, Rappels, rétractation, pages HTML | ✅ | 5 tests |
+| P6 Couche IA | ✅ | 9 tests + espion sur tout le corpus : 0 fuite |
 | P7 Entrées, action rapide, raccourcis | ⏳ | |
 | P8 Démon, notifications, doctor, CLI | ⏳ | |
 | P9 Bout en bout réel, performance | ⏳ | |
@@ -136,6 +136,57 @@ $ PYTHON=…/venv/bin/python modules/trieur/check.sh
   ✅ ruff format
   ✅ mypy
 Required test coverage of 85.0% reached. Total coverage: 96.19%
+  ✅ pytest + couverture ≥ 85 %
+  ✅ corpus (principal + 2e corpus inédit)
+  ✅ sécurité et vie privée
+  ✅ performance
+CHECK OK
+```
+
+## P4 — File, doublons, déplacement sûr, annulation, apprentissage (✅)
+
+- `base.py` (SQLite), `rangement.py` (copie exclusive, empreinte, suppression de l'original), `traitement.py` (la
+  chaîne, `annuler`, `corriger`, `apprendre_deplacement`), `systeme.py` (le Mac derrière une interface), `api.py`
+  (`modules.trieur.ajouter`).
+- Testé : file idempotente ; facture rangée et original supprimé ; un fichier déjà au nom visé jamais écrasé
+  (« -2 ») ; doublons selon la source ; erreurs réessayées 3 fois, original intact ; copie fausse ou fichier modifié
+  pendant le traitement → rien ne bouge ; photo de facture → PDF cherchable + original archivé, puis annulation
+  complète ; photo → Pictures ; PDF protégé → À vérifier ; lien, zip, note ; courriel et sa pièce jointe ;
+  Téléchargements seulement si sûr ; corriger (et le suivant du même émetteur est reconnu), corriger l'émetteur,
+  déplacement à la main ; API.
+
+## P5 — Coffre à garanties (✅)
+
+- `garanties/coffre.py`, `pages.py`.
+- Testé : facture en ligne → fiche, alias, 2 rappels (30 et 7 jours, 9 h) + rétractation (livraison + 11 j) dans
+  « Trieur-TEST » ; annuler retire tout ; vieux document : pas de rappel passé ; corriger retire la garantie ;
+  garanties à la main, modifier, supprimer, échéances du jour ; Rappels en panne : la fiche reste ; pages HTML
+  (échappement, mode sombre, aucun lien externe, une page à toi jamais remplacée).
+
+## P6 — Couche IA (✅)
+
+- `ia/caviardage.py`, `ia/__init__.py`.
+- Testé avec un Claude imité : caviardage des données d'une personne fictive ; documents sensibles retenus ;
+  réponse valide ; relance unique sur format faux ; pannes 529/429 (attente 2 s puis 4 s), panne définitive sans
+  relance ; budget ; IA coupée ; Claude qui voit un document sensible ; dans la chaîne.
+- L'espion sur tout le corpus 1 (seuil forcé pour tout envoyer à Claude) :
+
+```
+$ pytest tests/trieur/securite -s
+89 messages, 18 documents sensibles retenus
+5 passed in 39.22s
+```
+  Aucun des 18 documents sensibles n'est parti ; aucun message ne contient l'IBAN, la carte, le n° de sécurité
+  sociale, le courriel, le téléphone, l'adresse, la ville, le nom ou le prénom de la personne fictive ; aucun
+  numéro de 13 chiffres ou plus ; chaque extrait fait 3000 caractères au plus ; aucun fichier perdu.
+
+```
+$ PYTHON=…/venv/bin/python modules/trieur/check.sh          (après P4-P6)
+  ✅ ruff check
+  ✅ ruff format
+  ✅ mypy
+Required test coverage of 85.0% reached. Total coverage: 96.28%
+96 passed, 1 deselected in 5.12s
   ✅ pytest + couverture ≥ 85 %
   ✅ corpus (principal + 2e corpus inédit)
   ✅ sécurité et vie privée

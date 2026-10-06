@@ -91,15 +91,19 @@ def _cp1252(texte: str) -> str:
 def pdf_cherchable(image: Path, morceaux: list[Morceau], sortie: Path) -> None:
     """Une page A4 avec l'image, et chaque morceau de texte reconnu à sa place, invisible : le PDF se cherche dans
     Spotlight et dans Aperçu comme un document numérique."""
+    import io
+
     import pymupdf
 
     with Image.open(image) as img:
         largeur_px, hauteur_px = img.size
+        jpeg = io.BytesIO()
+        img.convert("RGB").save(jpeg, "JPEG", quality=85)  # bien plus léger qu'un PNG pour une photo
     largeur = 595.0
     hauteur = largeur * hauteur_px / largeur_px
     doc = pymupdf.open()
     page = doc.new_page(width=largeur, height=hauteur)
-    page.insert_image(page.rect, filename=str(image))
+    page.insert_image(page.rect, stream=jpeg.getvalue())
     for m in morceaux:
         taille = max(4.0, min(40.0, m.hauteur * hauteur * 0.8))
         try:

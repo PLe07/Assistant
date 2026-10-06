@@ -66,7 +66,8 @@ DEFAUTS: dict[str, Any] = {
     },
     # Ta micro-entreprise : une facture où tu es l'émetteur est « émise ». Vide : seul l'indice « 293 B » joue.
     "identite": {"nom": "", "siret": ""},
-    "telechargements": {"actif": True, "confiance_min": 0.9, "stabilite_s": 120},
+    # Un PDF téléchargé n'est rangé que si la confiance est élevée (une facture nette est entre 0,85 et 0,95).
+    "telechargements": {"actif": True, "confiance_min": 0.85, "stabilite_s": 120},
     "stabilite": {"mesures": 3, "pas_s": 1.0, "delai_max_s": 300},
     "paralleles": 2,
     "ia": {
@@ -78,6 +79,8 @@ DEFAUTS: dict[str, Any] = {
         "delai_s": 60,
         "essais": 3,
         "types_sensibles": ["sante", "identite", "avis_imposition", "bulletin_paie"],
+        "mots_masques": [],  # toujours masqués avant Claude : ton adresse, un surnom… (en plus du caviardage)
+        "masquer_nom_du_compte": True,  # ton nom complet de session macOS est masqué lui aussi
     },
     "garanties": {
         "liste_rappels": "Garanties",
