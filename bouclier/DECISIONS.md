@@ -168,3 +168,13 @@ sont réenregistrés à partir des pixels. Le profil ICC est toujours recopié. 
 leurs propres EXIF) sont jetées. Vidéos : `ffmpeg -map_metadata -1 -c copy` si ffmpeg est installé, sinon rien
 n'est modifié et Bouclier le dit. Commentaires et révisions suivies d'un document Office : signalés, pas retirés.
 Le lieu du rapport (« Bordeaux ») vient d'une petite liste de villes, sans réseau.
+
+**D-23 · Fiche urgence : seulement des numéros sourcés, SOS Médecins exclu, rien de santé.**
+Chaque numéro de la fiche vient du registre `sources.json` (D-14) ; un numéro que la dernière revérification n'a
+retrouvé sur aucune de ses pages est retiré (notification une seule fois). SOS Médecins Bordeaux est exclu : aucune
+page d'un site officiel permis ne le donne. Tes infos (`mes_infos_urgence.toml`) sont facultatives ; un champ vide
+n'apparaît pas ; un texte qui ressemble à une donnée de santé (allergie, traitement, groupe sanguin…) est écarté et
+signalé (la Fiche médicale de l'app Santé est faite pour ça). Sorties : HTML autonome, PDF A4, carte A6 d'une page,
+image d'écran verrouillé 1179 × 2556 (iPhone 14 Pro à 16) seulement si tu as donné un texte ou un contact, copie du
+PDF dans iCloud `Bouclier/`. Rappel « relis ta fiche » tous les 6 mois. pypdf rejoint les dépendances de test
+(lecture du texte des PDF).

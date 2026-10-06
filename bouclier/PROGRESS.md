@@ -11,7 +11,7 @@ Reprise après coupure : lire ce fichier et DECISIONS.md, puis reprendre à la p
 | P4 Inventaire n°18 | ✅ | précision 100 %, rappel 100 % sur 60 services, ci-dessous |
 | P5 Fuites n°19 | ✅ | croisement, date, une notification par fuite, ci-dessous |
 | P6 Métadonnées n°21 | ✅ | 7 formats + vidéo, SSIM ≥ 0,99, ICC gardé, ci-dessous |
-| P7 Fiche urgence n°22 | ⏳ | |
+| P7 Fiche urgence n°22 | ✅ | numéros sourcés, PDF lu, A6 une page, ci-dessous |
 | P8 Raccourcis, actions rapides, iCloud | ⏳ | |
 | P9 Démon, tableau de bord, doctor, bout en bout | ⏳ | |
 | P10 Installation réelle | ⏳ | |
@@ -245,6 +245,41 @@ INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 455 fichiers, 0 Laun
 30 passed in 2.06s
   ✅ sécurité, réseau, vie privée
 TOTAL                                     3758    139    96%
+  ✅ couverture ≥ 90 % sur bouclier/
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 455 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
+  ✅ intégrité des autres projets (fin)
+CHECK OK
+```
+
+## P7 — Fiche urgence hors-ligne n°22 (✅)
+
+- `urgence/fiche.py` (contenu et HTML autonome), `pdf.py` (A4), `carte_a6.py` (une page), `ecran_verrouille.py`
+  (1179 × 2556), `infos.py` (`mes_infos_urgence.toml` commenté, sans santé), `service.py` (génération, copie
+  iCloud, revérification en ligne, rappel des 6 mois), `bouclier urgence [generer|editer|verifier|ouvrir]`.
+- Tests : chaque numéro affiché est dans `sources.json` avec des pages officielles et une date ; le texte du PDF
+  (pypdf) contient tous les numéros ; le HTML n'a ni `src`, ni feuille de style, ni police extérieure ; la carte A6
+  fait 1 page au format A6 ; une ligne vide n'apparaît pas ; « allergique… », « O+ » écartés ; un numéro disparu de
+  sa page est retiré et signalé une seule fois ; rappel à 6 mois, pas avant.
+- Rendus regardés (carte, écran verrouillé) : deux défauts de mise en page corrigés (nom coupé, ligne qui débordait).
+
+```
+$ ./check.sh
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 455 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
+  ✅ intégrité des autres projets (début)
+  ✅ ruff check
+  ✅ ruff format
+  ✅ mypy
+136 passed in 4.48s
+  ✅ pytest : unitaires et intégrité
+14 passed in 10.64s
+  ✅ corpus d'arnaques (principal + 2e corpus inédit)
+35 passed in 1.72s
+  ✅ inventaire des comptes et fuites
+25 passed in 2.80s
+  ✅ métadonnées et fiche urgence
+30 passed in 1.98s
+  ✅ sécurité, réseau, vie privée
+TOTAL                                     4230    159    96%
   ✅ couverture ≥ 90 % sur bouclier/
 INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 455 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
   ✅ intégrité des autres projets (fin)

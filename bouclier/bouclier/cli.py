@@ -198,6 +198,44 @@ def cmd_nettoyer(args: argparse.Namespace, env: Environnement) -> int:
     return code
 
 
+# --- Fiche urgence (n°22) ------------------------------------------------------------------------------------------
+
+
+def cmd_urgence(args: argparse.Namespace, env: Environnement) -> int:
+    from bouclier.notifier import Notifieur
+    from bouclier.urgence import infos, service
+
+    if args.action == "editer":
+        cree = infos.ecrire_modele_si_absent(env.chemins.infos_urgence)
+        env.systeme.ouvrir_editeur(env.chemins.infos_urgence)
+        _ecrire(("Fichier créé et ouvert : " if cree else "Fichier ouvert : ") + str(env.chemins.infos_urgence))
+        _ecrire("Remplis ce que tu veux (tout est facultatif), enregistre, puis : bouclier urgence generer")
+        return 0
+    if args.action == "verifier":
+        r = service.verifier(env.chemins, env.base, Notifieur(env.base, env.systeme, env.reglages))
+        v = r.reverif
+        if not v.pages_lues:
+            _ecrire("Les sites officiels ne répondent pas : dernière vérification gardée, nouvel essai plus tard.")
+            return 1
+        _ecrire(f"✅ {len(v.confirmes)} numéros et sites confirmés sur leurs pages officielles ({v.pages_lues} pages).")
+        if v.absents:
+            _ecrire(f"⚠️ Plus trouvés sur leur page officielle (retirés de la fiche) : {', '.join(v.absents)}")
+        if v.injoignables:
+            _ecrire(f"Pages injoignables (dernière vérification gardée) : {', '.join(v.injoignables)}")
+        return 0
+    s = service.generer(env.chemins, env.base)
+    _ecrire(f"🆘 Fiche urgence prête :\n   {s.html}\n   {s.pdf}\n   {s.carte}  (carte A6 à imprimer)")
+    if s.ecran:
+        _ecrire(f"   {s.ecran}  (image pour l'écran verrouillé de l'iPhone)")
+    if s.icloud:
+        _ecrire(f"Copiée sur iCloud : {s.icloud} (garde-la téléchargée dans l'app Fichiers, voir ACTIONS_HUMAINES.md)")
+    for a in s.avertissements:
+        _ecrire(f"⚠️ {a}")
+    if args.action == "ouvrir":
+        env.systeme.ouvrir(s.html)
+    return 0
+
+
 # --- Analyse des arguments -----------------------------------------------------------------------------------------
 
 Commande = Callable[[argparse.Namespace, Environnement], int]
@@ -243,6 +281,10 @@ def analyseur() -> argparse.ArgumentParser:
     n.add_argument("--remplacer", action="store_true", help="mettre l'original à la Corbeille (récupérable)")
     n.add_argument("--garder-date", action="store_true", help="garder la date de prise de vue")
     n.set_defaults(fonction=cmd_nettoyer)
+
+    u = sous.add_parser("urgence", help="la fiche urgence hors-ligne (numéros vérifiés, réflexes, tes contacts)")
+    u.add_argument("action", nargs="?", default="generer", choices=["generer", "editer", "verifier", "ouvrir"])
+    u.set_defaults(fonction=cmd_urgence)
 
     g = sous.add_parser("gmail-relier", help="ranger le mot de passe d'application Gmail dans le trousseau")
     g.add_argument("adresse")

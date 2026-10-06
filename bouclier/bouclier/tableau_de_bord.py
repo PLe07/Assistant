@@ -71,7 +71,30 @@ def _section_fuites(base: Base) -> str:
     return rapport.section(correspondances, quand)
 
 
-SECTIONS: list[Section] = [_section_arnaques, _section_fuites, _section_comptes]
+def _section_urgence(base: Base) -> str:
+    from bouclier import config
+    from bouclier.urgence import service
+
+    c = config.chemins()
+    generee = base.lire_meta("fiche_generee_le")
+    verifiee = base.lire_meta("sources_verifiees_le")
+    morceaux = ["<h2>Fiche urgence</h2>"]
+    if generee is None:
+        morceaux.append("<p>Pas encore générée : <code>bouclier urgence editer</code> puis <code>bouclier urgence"
+                        " generer</code>.</p>")  # fmt: skip
+    else:
+        quand = time.strftime("%d/%m/%Y", time.localtime(float(generee)))
+        icloud = " — copiée sur iCloud." if (c.icloud / service.NOM_PDF).exists() else "."
+        morceaux.append(
+            f"<p>Générée le {quand} : <code>{escape(str(c.sorties / 'Fiche urgence.html'))}</code>{icloud}</p>"
+        )
+    if verifiee:
+        morceaux.append(f"<p class=\"doux\">Numéros revérifiés sur les sites officiels le "
+                        f"{time.strftime('%d/%m/%Y', time.localtime(float(verifiee)))}.</p>")  # fmt: skip
+    return "\n".join(morceaux)
+
+
+SECTIONS: list[Section] = [_section_arnaques, _section_fuites, _section_comptes, _section_urgence]
 
 
 def construire(base: Base, sections: list[Section] | None = None) -> str:
