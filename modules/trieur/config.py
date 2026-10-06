@@ -47,7 +47,7 @@ DEFAUTS: dict[str, Any] = {
         "reservation": "Transport & voyages/{annee}",
         "sante": "Santé",
         "identite": "Identité",
-        "devis": "Micro-entreprise/Devis/{annee}",
+        "devis": "Devis/{annee}",
         "facture_emise": "Micro-entreprise/Factures émises/{annee}",
         "garantie_notice": "Garanties/Notices",
         "courrier_admin": "Administratif",

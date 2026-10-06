@@ -39,3 +39,7 @@ donnees/
 # Nettoyeur de démarrage : sorties réelles du Mac, anonymisées mais personnelles (liste des logiciels)
 /tests/demarrage/fixtures/reelles/*
 !/tests/demarrage/fixtures/reelles/README.md
+
+# --- Trieur : cache de l'OCR des tests (rejoué à chaque check) ---
+tests/trieur/.cache-ocr/
+tests/trieur/.cache-corpus/

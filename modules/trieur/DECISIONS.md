@@ -96,3 +96,80 @@ traite. Le tri des mails pourra y envoyer ses pièces jointes.
 Le raccourci généré vise le premier. Le format des dossiers iCloud dans un `.shortcut` ne peut pas être vérifié
 sans Mac, donc la surveillance des deux évite une panne silencieuse si l'import le ramène au dossier par défaut.
 La recette manuelle vise le premier.
+
+## 2026-10-06 · P2-P3 — Extraction et classement
+
+**D-13 · La durée d'une garantie.**
+- La note envoyée avec le document l'emporte (« garantie 3 ans ») : c'est toi qui sais.
+- Sinon, la plus longue entre la mention du document et la garantie légale de conformité : 24 mois neuf, 12 mois
+  d'occasion chez un professionnel. La garantie légale s'applique toujours : une « garantie constructeur 12 mois »
+  ne la raccourcit pas.
+- Elle part de la date du document (achat, sinon facture), pas de la livraison : le rappel arrive un peu plus tôt,
+  jamais trop tard.
+- Seuls les achats (facture d'achat, ticket) créent une garantie, pour un bien durable d'au moins 30 €.
+
+**D-14 · Comment le juge compte (§10.1).**
+- Type : juste si le type final est le bon. « À vérifier » compte faux, sauf pour un document « autre » (il n'y a
+  rien à reconnaître) et pour le piège santé illisible.
+- Date et montant : égaux à la vérité, absence comprise (un relevé n'a pas de montant : en trouver un est faux).
+- Garantie : les dates de fin trouvées = celles attendues ; une garantie sur un document qui n'en a pas est une
+  « fausse garantie » (il en faut 0).
+
+**D-15 · Achat en ligne.**
+La date du document est celle de la facture. Le rappel de rétractation tombe 11 jours après la livraison (sinon
+après la commande) : il reste 3 jours sur les 14.
+
+**D-16 · Un classeur à règles pondérées, lisibles.**
+- Chaque type a des indices (expression, poids) dans `regles.toml` ; l'émetteur ajoute des points selon sa
+  catégorie (une banque → relevé) ; tes corrections en ajoutent (P4).
+- Confiance = (1 − e^(−avance/4)) × min(1, score/7) : deux types proches donnent une confiance basse.
+- Un espace dans un indice accepte zéro espace (l'OCR en perd : « BULLETINDEPAIE ») ; les étiquettes de date sont
+  comparées sans espaces (« FaitaLyon,le »).
+*Écarté :* un modèle appris (bayésien, etc.) : il faudrait des centaines d'exemples réels, et on ne pourrait plus
+lire ni corriger une règle.
+
+**D-17 · La base des émetteurs.**
+- 166 émetteurs français, avec leur catégorie et leurs sites.
+- Un nom courant (« orange », « free », « but ») ne compte qu'en haut du document ou par son site.
+- « République française » ne gagne que s'il n'y a rien d'autre.
+- Tu peux en ajouter dans `donnees/trieur/emetteurs_perso.json` (même format).
+- Sans émetteur connu : la première ligne du haut qui ressemble à un nom (pas un titre, une adresse, une date).
+
+**D-18 · L'OCR des tests : RapidOCR sans retournement, et pages redressées.**
+- Le classifieur d'orientation de RapidOCR lisait « 699,00 » à l'envers (« 00'669 »). Il est coupé : les images
+  arrivent déjà droites (EXIF appliqué), et Vision ne fait pas cette erreur.
+- Sur un scan de travers, les morceaux de deux lignes se mélangeaient. L'inclinaison est mesurée sur les boîtes
+  (RapidOCR et Vision donnent les coins) et chaque morceau est redressé avant de former les lignes.
+- Le cache de l'OCR est versionné : un réglage changé n'est jamais relu depuis un ancien cache.
+
+**D-19 · Le logo d'un PDF texte est lu par l'OCR.**
+Beaucoup de factures n'écrivent le nom de l'émetteur que dans leur logo. Les images du haut de la 1re page (le
+tiers supérieur) sont lues par l'OCR (≈ 0,2 s) et placées en tête du texte.
+
+**D-20 · Les colonnes sont gardées pour lire les prix.**
+« Qté 1 », puis « 249,99 € » dans la colonne suivante, devenaient « 1 249,99 ». Deux espaces ou plus marquent
+une colonne : un groupe de milliers n'a qu'un espace.
+
+**D-21 · Une correction du générateur du corpus 1.**
+Le logo dessiné avait une largeur fixe : les noms longs étaient coupés dans l'image (« Société Exemple S »), ce
+qu'aucun vrai logo ne fait. Sa largeur suit maintenant le nom. La vérité terrain ne change pas.
+
+**D-22 · Le 2e corpus, écrit après le réglage.**
+- 60 documents, une autre graine ; émetteurs nouveaux, dont 4 absents de la base ; mises en page en colonnes,
+  compacte, à empattements ; d'autres titres.
+- Pour cela, le contenu accepte d'autres émetteurs (reconditionneur, transporteurs) ; le corpus 1 reste identique
+  (`verite.json` comparé octet par octet).
+- Sa 1re mesure est la mesure officielle : les règles n'ont pas été retouchées après.
+
+**D-23 · Dossiers et noms.**
+- Les devis vont dans `Devis/{annee}` : ce sont surtout des devis reçus (artisans), pas ceux de ta micro-entreprise.
+- Sans date : « sans-date » en tête du nom. Les accents restent (forme NFC) ; « & » devient « et » ; espaces et
+  apostrophes deviennent « - ».
+
+**D-24 · Le corpus et l'OCR des tests sont gardés en cache.**
+`tests/trieur/.cache-corpus/` et `.cache-ocr/` (non versionnés) : le check passe de ≈ 6 à ≈ 2 minutes. Le corpus
+est refait dès qu'un fichier du générateur change (empreinte).
+
+**D-25 · L'organisation du module diffère un peu du §11.**
+`classement/` (texte, dates, montants, émetteurs, règles, champs, nommage), `extraction/`, `garanties/` ;
+`regles.toml` est à la racine du module, pour être facile à trouver et à modifier.

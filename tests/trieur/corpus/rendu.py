@@ -29,7 +29,8 @@ def _logo_png(texte: str, couleur: tuple[float, float, float]) -> bytes:
     import pymupdf
 
     doc = pymupdf.open()
-    page = doc.new_page(width=260, height=60)
+    largeur = max(260.0, pymupdf.get_text_length(texte, fontname="hebo", fontsize=26) + 28)
+    page = doc.new_page(width=largeur, height=60)
     page.draw_rect(page.rect, color=couleur, fill=couleur)
     page.insert_text((14, 40), texte, fontsize=26, fontname="hebo", color=(1, 1, 1))
     png = page.get_pixmap(dpi=150).tobytes("png")
@@ -76,7 +77,9 @@ def pdf_texte(doc: Doc, chemin: Path, mise_en_page: str, r: random.Random) -> No
             c.setFillColorRGB(0, 0, 0)
             y = hauteur - 110
         elif mise_en_page == "logo":
-            c.drawImage(ImageReader(io.BytesIO(_logo_png(_propre(doc.entete[0]), couleur))), 40, hauteur - 100, 200, 46)
+            logo = ImageReader(io.BytesIO(_logo_png(_propre(doc.entete[0]), couleur)))
+            lw, lh = logo.getSize()
+            c.drawImage(logo, 40, hauteur - 100, 46 * lw / lh, 46)
             y = hauteur - 115
             for t in doc.entete[1:]:
                 ligne(t, 40, 8)

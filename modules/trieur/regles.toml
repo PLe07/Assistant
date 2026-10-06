@@ -1,0 +1,259 @@
+# Les règles de reconnaissance du Trieur (§5), lues à chaque démarrage.
+#
+# Chaque type a des indices : une expression cherchée dans le texte mis à plat (minuscules, sans accents) et un
+# poids. Un indice compte une fois. « haut = true » : seulement dans le haut du document (le titre), ailleurs il
+# compte pour moitié. Un poids négatif éloigne le type (« devis » sur une facture).
+# Le type gagnant est celui qui a le plus de points ; la confiance dépend de son avance sur le deuxième.
+# Les catégories d'émetteurs (emetteurs.json) ajoutent des points : un relevé vient d'une banque.
+#
+# Pour ajouter un indice : une ligne { re = '…', poids = 3 }, puis `python trieur.py doctor` vérifie le fichier.
+
+[reglages]
+lignes_haut = 14          # le « haut » du document : ses 14 premières lignes non vides
+confiance_echelle = 4.0   # l'avance (en points) qui donne une confiance de 63 % ; 2 × → 86 %, 3 × → 95 %
+score_plein = 7.0         # en dessous, la confiance baisse en proportion (peu d'indices = peu sûr)
+score_min = 4.0           # en dessous, le document est « autre »
+
+[categories]  # catégorie de l'émetteur → points ajoutés aux types
+commerce = { facture_achat = 2.0, ticket_caisse = 1.5, garantie_notice = 1.0 }
+ecommerce = { facture_achat = 3.0 }
+supermarche = { ticket_caisse = 3.0 }
+energie = { facture_service = 3.0 }
+telecom = { facture_service = 3.0 }
+abonnement = { facture_service = 3.0 }
+banque = { releve_bancaire = 3.0 }
+impots = { avis_imposition = 4.0 }
+social = { attestation = 1.0, courrier_admin = 1.5 }
+sante = { sante = 3.0 }
+assurance = { assurance = 2.5, attestation = 0.5 }
+transport = { billet_transport = 3.0 }
+hebergement = { reservation = 3.0 }
+immobilier = { quittance_loyer = 1.5, bail_contrat = 1.5 }
+administration = { courrier_admin = 1.0, identite = 1.0 }
+marque = { garantie_notice = 2.0 }
+
+[types.facture_achat]
+libelle = "Facture"
+indices = [
+  { re = '\bfacture\b', poids = 3.0 },
+  { re = 'facture d.?achat|facture client', poids = 2.0, haut = true },
+  { re = '\bdesignation\b|\barticles?\b|\breference\b', poids = 1.0 },
+  { re = '\bqte\b|\bquantite\b|\bqty\b', poids = 1.0 },
+  { re = 'prix unitaire|p\.u\.|\bpu\b', poids = 1.5 },
+  { re = 'total ttc|montant ttc|net a payer|total a payer', poids = 1.0 },
+  { re = '\btva\b', poids = 0.5 },
+  { re = 'commande (?:n|no|numero)|date de (?:la )?commande|n° de commande', poids = 1.5 },
+  { re = 'livre[e]? le|livraison', poids = 1.0 },
+  { re = 'carte bancaire|paye par|paiement (?:en ligne|par carte|accepte)|reglement', poids = 1.0 },
+  { re = 'garantie|reconditionn|extension de garantie', poids = 0.5 },
+  { re = '\bdevis\b|bon pour accord', poids = -4.0 },
+  { re = '\bticket\b|\bcaisse\b', poids = -1.5 },
+  { re = 'abonnement|consommation|\bkwh\b|forfait|n° client|reference pdl', poids = -1.5 },
+  { re = 'tva non applicable|293 ?b', poids = -1.0 },
+]
+
+[types.ticket_caisse]
+libelle = "Ticket"
+indices = [
+  { re = 'ticket de caisse|ticket client', poids = 5.0 },
+  { re = '\bticket\b', poids = 1.5 },
+  { re = '\bcaisse\b', poids = 2.5 },
+  { re = 'merci de votre visite|merci de votre achat|a bientot|bonne journee', poids = 3.0 },
+  { re = 'preuve d.achat|conservez ce ticket', poids = 1.5 },
+  { re = '^cb\b|\bcb\s+\d|carte bancaire\s+\d|\bespeces\b|rendu monnaie|sans contact', poids = 1.5 },
+  { re = '^article\b|\barticles?\s*:?\s*\d|nb articles', poids = 1.0 },
+  { re = '\d{1,2}[:h]\d{2}', poids = 0.5 },
+  { re = '\bfacture\b', poids = -2.0 },
+]
+
+[types.facture_service]
+libelle = "Facture"
+indices = [
+  { re = '\bfacture\b', poids = 2.0 },
+  { re = 'votre facture', poids = 2.0 },
+  { re = '\babonnement\b', poids = 2.0 },
+  { re = '\bconsommation\b|\bkwh\b|\bm3\b|releve de compteur|index', poids = 2.0 },
+  { re = '\bforfait\b|\bbox\b|\bfibre\b|\bmobile\b|\bligne\b|\bgo\b', poids = 1.5 },
+  { re = '(?:n°|numero|no) (?:de )?client|reference client|compte client', poids = 1.5 },
+  { re = '\bperiode\b|du \d{2}/\d{2}/\d{2,4} au', poids = 1.0 },
+  { re = 'preleve|prelevement', poids = 1.5 },
+  { re = 'reference pdl|\bpdl\b|\bpce\b|point de livraison|contrat electricite|contrat gaz', poids = 2.0 },
+  { re = 'taxes et contributions|acheminement|cta|cspe', poids = 1.0 },
+  { re = 'designation|prix unitaire|\bqte\b', poids = -1.0 },
+]
+
+[types.releve_bancaire]
+libelle = "Relevé"
+indices = [
+  { re = 'releve de (?:votre )?compte|extrait de compte|releve de compte courant|releve d.operations', poids = 6.0 },
+  { re = 'ancien solde|nouveau solde|solde (?:au|crediteur|debiteur|precedent)', poids = 3.0 },
+  { re = '\biban\b', poids = 1.0 },
+  { re = '\bbic\b', poids = 1.0 },
+  { re = '\bdebit\b', poids = 1.0 },
+  { re = '\bcredit\b', poids = 0.5 },
+  { re = '\bprlv\b|\bvir\b|\bcb [a-z]|retrait dab|prelevement sepa', poids = 2.0 },
+  { re = '\btitulaire\b', poids = 1.0 },
+  { re = 'remboursement|soins|assurance maladie|mutuelle', poids = -2.0 },
+]
+
+[types.avis_imposition]
+libelle = "Avis d'impôt"
+indices = [
+  { re = 'avis d.impot|impot sur le revenu|avis de taxe|taxe fonciere|taxe d.habitation|prelevement a la source', poids = 6.0 },
+  { re = 'numero fiscal|n° fiscal|identifiant fiscal', poids = 3.0 },
+  { re = 'revenu fiscal de reference|nombre de parts|revenus de l.annee', poids = 3.0 },
+  { re = 'mise en recouvrement|date d.etablissement', poids = 2.5 },
+  { re = 'finances publiques|dgfip|impots\.gouv', poids = 2.0 },
+  { re = 'reference de l.avis|montant de votre impot', poids = 2.0 },
+]
+
+[types.quittance_loyer]
+libelle = "Quittance"
+indices = [
+  { re = 'quittance', poids = 6.0 },
+  { re = '\bloyer\b', poids = 2.0 },
+  { re = '\bcharges\b', poids = 1.0 },
+  { re = '\blocataire\b', poids = 1.0 },
+  { re = '\bbailleur\b', poids = 1.0 },
+  { re = 'en donne quittance|declare avoir recu', poids = 3.0 },
+  { re = 'adresse du logement|\blogement\b', poids = 1.0 },
+  { re = 'article \d|il a ete convenu|duree', poids = -1.5 },
+]
+
+[types.bail_contrat]
+libelle = "Contrat"
+indices = [
+  { re = 'contrat de (?:location|bail|prestation|travail|services?)|bail d.habitation|\bbail\b', poids = 5.0, haut = true },
+  { re = '\bcontrat\b', poids = 1.5 },
+  { re = 'entre les soussignes|entre les parties|il a ete convenu|ci-apres denomme', poids = 3.0 },
+  { re = 'article \d|article premier', poids = 2.0 },
+  { re = 'resiliation|\bduree\b|prise d.effet|prend effet', poids = 1.5 },
+  { re = 'paraphe|signature|lu et approuve|en deux exemplaires', poids = 1.5 },
+  { re = 'quittance|avis d.echeance|cotisation|garanties souscrites', poids = -2.0 },
+]
+
+[types.attestation]
+libelle = "Attestation"
+indices = [
+  { re = '\battestation\b|\bcertificat de (?:scolarite|travail|residence)', poids = 5.0, haut = true },
+  { re = '\batteste\b|\bcertifie\b|attestons|certifions', poids = 3.0 },
+  { re = 'pour servir et valoir|valoir ce que de droit', poids = 3.0 },
+  { re = 'regulierement inscrit|scolarite|employe\(?e?\)? au sein|en qualite de|allocataire', poids = 1.5 },
+  { re = 'certificat de garantie|notice d.utilisation', poids = -4.0 },
+]
+
+[types.bulletin_paie]
+libelle = "Bulletin de paie"
+indices = [
+  { re = 'bulletin de (?:paie|salaire)|fiche de paie', poids = 6.0 },
+  { re = 'salaire (?:de base|brut)|\bbrut\b', poids = 2.0 },
+  { re = 'net a payer|net paye|net imposable|net avant impot', poids = 2.0 },
+  { re = 'cotisations?|csg|crds|securite sociale plafonnee|retraite complementaire', poids = 2.0 },
+  { re = 'code naf|convention collective|\bemploi\b|\bcoefficient\b|\bsalarie\b', poids = 1.5 },
+  { re = 'conservez ce bulletin|sans limitation de duree', poids = 2.0 },
+]
+
+[types.assurance]
+libelle = "Assurance"
+indices = [
+  { re = 'avis d.echeance|conditions particulieres|conditions generales|appel de cotisation|echeancier', poids = 5.0, haut = true },
+  { re = '\bcotisation\b', poids = 2.0 },
+  { re = 'contrat d.assurance|votre contrat|\bcontrat\b', poids = 1.0 },
+  { re = 'garanties souscrites|responsabilite civile|bris de glace|franchise|sinistre', poids = 2.0 },
+  { re = 'assurance (?:auto|habitation|multirisque)|\bauto\b|\bhabitation\b', poids = 1.0 },
+  { re = 'attestation|atteste', poids = -2.0 },
+]
+
+[types.billet_transport]
+libelle = "Billet"
+indices = [
+  { re = 'e-billet|billet (?:de train|electronique)|carte d.embarquement|boarding pass|confirmation de trajet|titre de transport', poids = 6.0 },
+  { re = '\bpassager\b|\bvoyageur\b', poids = 2.0 },
+  { re = '\btrajet\b|\bvoyage\b|\bvol\b|\bgare\b|\bembarquement\b', poids = 2.0 },
+  { re = 'aller le|depart le|date du voyage|\baller\b|\bretour\b', poids = 1.5 },
+  { re = 'reference (?:du )?dossier|\bpnr\b|\bsiege\b|\bvoiture\b|\bplace\b', poids = 1.0 },
+  { re = 'non echangeable|bon voyage|non remboursable', poids = 1.0 },
+  { re = '\bnuits?\b|etablissement|check-?in|arrivee', poids = -1.0 },
+]
+
+[types.reservation]
+libelle = "Réservation"
+indices = [
+  { re = 'reservation|reserve le', poids = 4.0 },
+  { re = 'confirmation de reservation|votre reservation est confirmee|numero de confirmation', poids = 3.0 },
+  { re = '\barrivee\b|check-?in', poids = 2.0 },
+  { re = '\bnuits?\b|\bsejour\b|\bchambre\b|\bhote\b|\bhotel\b|residence|appartement', poids = 1.5 },
+  { re = '\betablissement\b', poids = 1.5 },
+  { re = 'annulation gratuite|politique d.annulation', poids = 2.0 },
+  { re = '\bpassager\b|\btrajet\b|e-billet', poids = -1.5 },
+]
+
+[types.sante]
+libelle = "Santé"
+indices = [
+  { re = '\bordonnance\b', poids = 6.0, haut = true },
+  { re = 'releve de remboursements?|decompte de (?:remboursement|prestations)|feuille de soins', poids = 6.0 },
+  { re = 'rembourse|remboursement', poids = 2.0 },
+  { re = 'assurance maladie|\bcpam\b|\bmutuelle\b|complementaire sante', poids = 2.0 },
+  { re = '\bsoins\b|\bpatient\b|\bmedecin\b|\bdocteur\b|\bdr\b|\bpharmacie\b|consultation|optique|dentaire', poids = 2.0 },
+  { re = '\bmg\b|comprime|gelule|\bfois par jour\b|posologie', poids = 2.0 },
+  { re = '\badherent\b|part (?:securite sociale|mutuelle|obligatoire|complementaire)', poids = 1.5 },
+  { re = 'bulletin de (?:paie|salaire)|salaire|cotisations', poids = -3.0 },
+]
+
+[types.identite]
+libelle = "Identité"
+indices = [
+  { re = 'carte nationale d.identite|\bpasseport\b|permis de conduire|titre de sejour|identity card', poids = 7.0, haut = true },
+  { re = '\bprenoms?\b', poids = 1.5 },
+  { re = 'ne\(?e?\)? le|date de naissance|lieu de naissance', poids = 2.0 },
+  { re = 'date de delivrance|delivre(?:e)? le|delivre par', poids = 2.5 },
+  { re = 'date d.expiration|valable jusqu|expire le', poids = 1.5 },
+  { re = 'n° du document|numero du document|\bnationalite\b|\bsexe\b|\btaille\b', poids = 1.5 },
+  { re = 'republique francaise', poids = 1.0 },
+]
+
+[types.devis]
+libelle = "Devis"
+indices = [
+  { re = '\bdevis\b', poids = 6.0 },
+  { re = 'bon pour accord|lu et approuve', poids = 3.0 },
+  { re = 'valable jusqu|validite de l.offre|offre valable|duree de validite', poids = 2.5 },
+  { re = 'acompte|a la commande', poids = 1.0 },
+  { re = 'main-d.oeuvre|\bpose\b|fourniture', poids = 1.0 },
+]
+
+[types.facture_emise]
+libelle = "Facture émise"
+indices = [
+  { re = '\bfacture\b', poids = 2.0 },
+  { re = 'tva non applicable|art(?:icle)?\.? 293 ?b', poids = 2.0 },
+  { re = 'micro-?entrepr|auto-?entrepr|entreprise individuelle|\bei\b', poids = 1.5 },
+  { re = 'paiement a \d+ jours|par virement|penalites de retard|indemnite forfaitaire', poids = 1.0 },
+  { re = '(?:^|\s)client\s*:\s*[a-z]', poids = 1.0 },
+  { re = '\bdevis\b', poids = -3.0 },
+]
+
+[types.garantie_notice]
+libelle = "Garantie"
+indices = [
+  { re = 'certificat de garantie|bon de garantie|carte de garantie|conditions de garantie', poids = 6.0, haut = true },
+  { re = 'notice d.utilisation|mode d.emploi|manuel d.utilisation|guide d.utilisation|user manual', poids = 6.0, haut = true },
+  { re = 'consignes de securite|mise en service|\bentretien\b|avant la premiere utilisation', poids = 2.0 },
+  { re = 'n° de serie|numero de serie|serial', poids = 2.0 },
+  { re = 'est garanti|garanti \d|pieces et main', poids = 1.5 },
+  { re = 'service (?:consommateurs|apres-vente)|\bsav\b', poids = 1.0 },
+  { re = 'total ttc|net a payer|prix unitaire', poids = -3.0 },
+]
+
+[types.courrier_admin]
+libelle = "Courrier"
+indices = [
+  { re = '^objet\s*:|\bobjet\s*:', poids = 3.0 },
+  { re = 'madame, monsieur|^madame|^monsieur', poids = 2.0 },
+  { re = 'salutations distinguees|veuillez agreer|nous vous prions d.agreer|l.expression de', poids = 3.0 },
+  { re = 'votre dossier|votre demande|pieces (?:justificatives|complementaires)|nous accusons reception|instruction', poids = 1.5 },
+  { re = '\bmairie\b|prefecture|\burssaf\b|tribunal|\bcaf\b|ministere|conseil departemental', poids = 1.5 },
+  { re = 'vos droits|reexamen|notification|decision', poids = 1.0 },
+  { re = '\battestation\b|\batteste\b|\bcertifie\b', poids = -2.0 },
+]

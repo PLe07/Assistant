@@ -81,7 +81,7 @@ def facture_achat(c: Contexte, variante: str) -> tuple[Doc, dict[str, Any]]:
     r = c.r
     en_ligne = variante in ("en_ligne", "occasion", "occasion_mention")
     if variante.startswith("occasion"):
-        e = next(x for x in c.emetteurs["ecommerce"] if x.nom == "Back Market")
+        e = (c.emetteurs.get("reconditionne") or [x for x in c.emetteurs["ecommerce"] if x.nom == "Back Market"])[0]
     else:
         e = c.de("ecommerce") if en_ligne else c.de("commerce")
     achat = date(2024, 2, 29) if variante == "29fevrier" else c.jour()
@@ -106,7 +106,7 @@ def facture_achat(c: Contexte, variante: str) -> tuple[Doc, dict[str, Any]]:
         mentions.append("Garantie constructeur 12 mois.")
         mention_mois = 12
     elif variante == "occasion_mention":
-        mentions.append("Garantie Back Market : 24 mois.")
+        mentions.append(f"Garantie {e.nom} : 24 mois.")
         mention_mois = 24
     elif variante == "occasion":
         mentions.append("Produit reconditionné. Garantie commerciale 12 mois.")
@@ -167,7 +167,10 @@ def ticket_caisse(c: Contexte, variante: str) -> tuple[Doc, dict[str, Any]]:
     heure = f"{r.randint(8, 20):02d}:{r.randint(0, 59):02d}"
     garanties: list[dict[str, str]] = []
     if variante == "durable_magasin":
-        e = r.choice([x for x in c.emetteurs["commerce"] if x.nom in ("Fnac", "Darty", "Boulanger", "Decathlon")])
+        e = r.choice(
+            [x for x in c.emetteurs["commerce"] if x.nom in ("Fnac", "Darty", "Boulanger", "Decathlon")]
+            or c.emetteurs["commerce"]
+        )
         p = r.choice([x for x in DURABLES if x.prix < 700])
         lignes = [(p.libelle.upper()[:30], p.prix)]
         garanties = _garanties([p], jour, 0, None)
@@ -445,7 +448,8 @@ def billet_transport(c: Contexte, variante: str) -> tuple[Doc, dict[str, Any]]:
     emis = depart - timedelta(days=r.randint(3, 40))
     de, a = r.choice(TRAJETS)
     prix = round(r.uniform(19, 189), 2)
-    titre = {"SNCF": "E-BILLET", "Air France": "CARTE D'EMBARQUEMENT", "BlaBlaCar": "Confirmation de trajet"}[e.nom]
+    titre = {"SNCF": "E-BILLET", "Air France": "CARTE D'EMBARQUEMENT", "BlaBlaCar": "Confirmation de trajet",
+             "easyJet": "CARTE D'EMBARQUEMENT", "FlixBus": "Votre billet de bus", "Ouigo": "Votre billet"}[e.nom]  # fmt: skip
     meta = [("Référence dossier", "".join(r.choice("ABCDEFGHJKLMNPQRSTUVWXYZ") for _ in range(6))),
             ("Passager", f"{c.moi.prenom} {c.moi.nom}"), ("Trajet", f"{de} → {a}"),
             (r.choice(["Aller le", "Départ le", "Date du voyage"]), f"{date_fr(depart, r, ['num', 'long'])} à {r.randint(6, 21):02d}:{r.choice(['04', '12', '37', '50'])}"),
