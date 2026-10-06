@@ -102,6 +102,9 @@ class Demon:
         etat, message = self.entrees.creer_les_dossiers()
         if etat != "✅":
             log.warning("%s", message)
+        doubles = self.o.base.dedoublonner_erreurs()
+        if doubles:
+            log.info("%s ligne(s) d'erreur en double retirée(s) (un fichier repris en boucle, D-59)", doubles)
         sans_action, avec_action = vus_hors_de_chez_nous(self.reglages, self.o.base)
         if sans_action:  # D-58 : jamais déplacés ni modifiés ; la base les oublie
             n = self.o.base.oublier([el.id for el in sans_action])

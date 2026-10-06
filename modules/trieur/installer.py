@@ -36,7 +36,7 @@ def installer(reglages: dict[str, Any], base: Base, systeme: Systeme, allumer: b
         dossier.mkdir(parents=True, exist_ok=True)
         faits.append(("✅", f"dossier {dossier}"))
     faits.append(surveillance.prendre_a_trier(reglages, base))
-    faits += _ancien_a_trier(reglages)
+    faits += _anciens_a_trier(reglages, base)
     faits += _vus_hors_de_chez_nous(reglages, base)
     icloud = Path(reglages["chemins"]["icloud"]).expanduser()
     boite = config.chemin(reglages, "boite")
@@ -72,23 +72,25 @@ def installer(reglages: dict[str, Any], base: Base, systeme: Systeme, allumer: b
     return faits
 
 
-def _ancien_a_trier(reglages: dict[str, Any]) -> list[tuple[str, str]]:
-    """« À trier » a quitté le Bureau pour Documents (D-57). L'ancien dossier est retiré s'il est vide (le
-    « .DS_Store » du Finder mis à part) ; s'il contient quoi que ce soit, rien n'est touché."""
-    ancien = Path(reglages["chemins"]["ancien_a_trier"]).expanduser()
+def _anciens_a_trier(reglages: dict[str, Any], base: Base) -> list[tuple[str, str]]:
+    """Les anciens « À trier » créés par le Trieur (D-57, D-59) : retirés s'ils sont vides (le « .DS_Store » du
+    Finder mis à part) ; s'ils contiennent quoi que ce soit, rien n'est touché. Un dossier né avant l'arrivée du
+    Trieur est à toi : jamais regardé."""
     nouveau = config.chemin(reglages, "a_trier")
-    if ancien.is_symlink() or not ancien.is_dir() or ancien == nouveau:
-        return []
-    reste = [e.name for e in ancien.iterdir() if e.name != ".DS_Store"]
-    if not reste:
-        try:
-            (ancien / ".DS_Store").unlink(missing_ok=True)
-            ancien.rmdir()  # refuse d'elle-même un dossier qui n'est pas vide
-            return [("✅", f"ancien dossier {ancien} retiré du Bureau (il était vide)")]
-        except OSError:
-            reste = [e.name for e in ancien.iterdir()]
-    return [("⚠️", f"l'ancien dossier {ancien} contient encore {len(reste)} élément(s) : glisse-les dans "
-                   f"{nouveau}, puis supprime-le")]  # fmt: skip
+    faits = []
+    for ancien in surveillance.anciens_du_trieur(reglages, base):
+        reste = [e.name for e in ancien.iterdir() if e.name != ".DS_Store"]
+        if not reste:
+            try:
+                (ancien / ".DS_Store").unlink(missing_ok=True)
+                ancien.rmdir()  # refuse d'elle-même un dossier qui n'est pas vide
+                faits.append(("✅", f"ancien dossier {ancien} retiré (il était vide)"))
+                continue
+            except OSError:
+                reste = [e.name for e in ancien.iterdir()]
+        faits.append(("⚠️", f"l'ancien dossier {ancien} contient encore {len(reste)} élément(s) : glisse-les dans "
+                            f"{nouveau}, puis supprime-le"))  # fmt: skip
+    return faits
 
 
 def _vus_hors_de_chez_nous(reglages: dict[str, Any], base: Base) -> list[tuple[str, str]]:

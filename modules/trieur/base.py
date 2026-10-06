@@ -199,6 +199,16 @@ class Base:
                          (i, i)).rowcount  # fmt: skip
         return n
 
+    def dedoublonner_erreurs(self) -> int:
+        """Un fichier repris en boucle (avant D-59) a laissé une ligne d'erreur par passage : seule la dernière reste
+        (jamais une ligne qui a une action au journal)."""
+        return self._x("DELETE FROM elements WHERE etat = 'erreur' AND id NOT IN (SELECT MAX(id) FROM elements "
+                       "WHERE etat = 'erreur' GROUP BY chemin) AND NOT EXISTS (SELECT 1 FROM actions "
+                       "WHERE actions.element = elements.id)").rowcount  # fmt: skip
+
+    def erreurs(self) -> list[Element]:
+        return [Element(**dict(x)) for x in self._x("SELECT * FROM elements WHERE etat = 'erreur' ORDER BY id")]
+
     def compter(self) -> dict[str, int]:
         return {x["etat"]: int(x["n"]) for x in self._x("SELECT etat, COUNT(*) n FROM elements GROUP BY etat")}
 

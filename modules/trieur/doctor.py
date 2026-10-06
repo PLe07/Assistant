@@ -10,6 +10,7 @@ import os
 import shutil
 import sys
 import time
+from collections import Counter
 from pathlib import Path
 from typing import Any
 
@@ -34,6 +35,18 @@ def _a_trier_pas_a_nous(reglages: dict[str, Any], base: Any) -> bool:
     if not dossier.exists() or surveillance.a_trier_du_trieur(reglages, base) is not None:
         return False
     return surveillance.contient_des_fichiers(dossier)
+
+
+def _erreurs_par_dossier(base: Any) -> list[tuple[str, str]]:
+    """D'où viennent les erreurs : les 3 dossiers qui en ont le plus, avec le message le plus fréquent."""
+    par_dossier: dict[str, list[str]] = {}
+    for el in base.erreurs():
+        par_dossier.setdefault(str(Path(el.chemin).parent), []).append(el.erreur or "?")
+    sortie = []
+    for dossier, messages in sorted(par_dossier.items(), key=lambda x: -len(x[1]))[:3]:
+        message, _ = Counter(messages).most_common(1)[0]
+        sortie.append(_ligne("⚠️", f"   {len(messages)} dans {dossier} · {message}"))
+    return sortie
 
 
 def _superviseur() -> tuple[bool | None, dict[str, Any] | None]:
@@ -103,10 +116,12 @@ def verifier(reglages: dict[str, Any], base: Any = None, maintenant: float | Non
             lignes.append(_ligne("✅" if _ecrivable(chemin) else "❌", f"{nom} : {chemin}"))
         else:
             lignes.append(_ligne("⚠️", f"{nom} absent ({chemin}) : python trieur.py installer le crée"))
-    ancien = Path(reglages["chemins"]["ancien_a_trier"]).expanduser()
-    if ancien.is_dir() and ancien != config.chemin(reglages, "a_trier"):
-        lignes.append(_ligne("⚠️", f"l'ancien « À trier » est encore sur le Bureau ({ancien}) : "
-                                   "python trieur.py installer le retire s'il est vide"))  # fmt: skip
+    if base is not None:
+        from modules.trieur.entrees import surveillance
+
+        for ancien in surveillance.anciens_du_trieur(reglages, base):
+            lignes.append(_ligne("⚠️", f"l'ancien « À trier » {ancien} est encore là : "
+                                       "python trieur.py installer le retire s'il est vide"))  # fmt: skip
     icloud = Path(reglages["chemins"]["icloud"]).expanduser()
     boite = config.chemin(reglages, "boite")
     if not icloud.is_dir():
@@ -170,6 +185,7 @@ def verifier(reglages: dict[str, Any], base: Any = None, maintenant: float | Non
             lignes.append(_ligne("✅", "les fichiers laissés et pourquoi : python trieur.py statut"))
         if comptes.get("erreur"):
             lignes.append(_ligne("⚠️", f"{comptes['erreur']} en erreur : python trieur.py journal"))
+            lignes += _erreurs_par_dossier(base)
         if comptes.get("a_verifier"):
             lignes.append(_ligne("⚠️", f"{comptes['a_verifier']} à vérifier dans Classés/À vérifier"))
         from modules.trieur.ia import CoucheIA

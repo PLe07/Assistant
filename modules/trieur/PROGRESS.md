@@ -340,7 +340,7 @@ Nettoyage : rien ne reste
 sinon il le laisse et le dit. 2 tests de plus (`test_l_ancien_a_trier_du_bureau`,
 `test_l_ancien_a_trier_rempli_entre_deux_n_est_pas_touche`).
 
-## Sur ton Mac — après D-57 : ❌ 109 fichiers de ton propre « À trier » examinés → D-58
+## Sur ton Mac — après D-57 : 109 erreurs → D-58 (constat corrigé par D-59)
 
 ```
 ✅ dossier /Users/…/Documents/À trier          ← il existait déjà, avec tes fichiers
@@ -354,3 +354,16 @@ sinon il le laisse et le dit. 2 tests de plus (`test_l_ancien_a_trier_du_bureau`
 - 4 tests de plus (`tests/trieur/unitaires/test_dossier_a_toi.py`), dont ton cas : une vraie facture posée dans un
   « À trier » à toi n'est ni lue ni déplacée, et son contenu et sa date restent identiques.
 
+## Sur ton Mac — après D-58 : 235 erreurs, aucune venue d'un « À trier » → D-59
+
+```
+✅ dossier /Users/…/Documents/À trier par l'assistant
+                                  ← aucune ligne « vus par erreur » : rien ne venait d'un « À trier »
+✅ documents : 235 erreur, 1 laissé à sa place
+```
+- Le constat de D-58 était faux. Les erreurs grossissaient d'environ 10 par minute : un fichier illisible était
+  repris à chaque passage (bug de la taille enregistrée après la lecture). Reproduit par un test : avec l'ancien
+  code, 13 lignes en 80 s.
+- Corrigé par D-59 : une seule ligne par fichier illisible, les doublons retirés au démarrage, les fichiers iCloud
+  pas encore téléchargés attendus au lieu d'être lus, et doctor qui affiche le dossier et le message.
+- 4 tests de plus (`tests/trieur/unitaires/test_boucle_icloud.py`).

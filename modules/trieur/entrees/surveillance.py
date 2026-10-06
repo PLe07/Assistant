@@ -6,7 +6,7 @@ Un fichier n'est pris que lorsqu'il ne bouge plus : même taille et même date s
 
 E1 · BoiteMac (les deux dossiers, D-12) :
 - un fichier « fantôme » d'iCloud (« .facture.pdf.icloud ») est demandé à iCloud (brctl download), puis pris quand
-  le vrai fichier arrive ;
+  le vrai fichier arrive ; de même un fichier présent mais encore sans contenu sur le Mac (macOS récents, D-59) ;
 - la note de l'iPhone arrive dans « <nom>.meta.json » ({"note": "garantie 3 ans"}) : elle accompagne le document ;
   une note restée seule plus de 10 minutes est traitée comme un document (elle ira dans Notes reçues) ;
 - les pages du Trieur (« Mon coffre.html »…) et les fichiers cachés sont ignorés.
@@ -37,6 +37,11 @@ META_ORPHELINE_S = 600
 RELANCE_ICLOUD_S = 120
 A_TRIER = "a_trier"  # la clé de la base qui retient le dossier « À trier » du Trieur (D-58)
 JAMAIS_RANGES = ("en_attente", "en_cours", "erreur", "ignore")
+SF_DATALESS = 0x40000000  # sys/stat.h : un fichier iCloud dont le contenu n'est pas encore sur le Mac
+
+
+def sans_contenu(st: os.stat_result) -> bool:
+    return bool(getattr(st, "st_flags", 0) & SF_DATALESS)
 
 
 @dataclass
@@ -88,6 +93,27 @@ def prendre_a_trier(reglages: dict[str, Any], base: Base) -> tuple[str, str]:
         base.ecrire_meta(A_TRIER, str(dossier))
     dossier.mkdir(parents=True, exist_ok=True)
     return "✅", f"dossier {dossier}"
+
+
+def anciens_du_trieur(reglages: dict[str, Any], base: Base) -> list[Path]:
+    """Les anciens « À trier » (D-57, D-59) que le Trieur a créés : nés après son installation. Un dossier plus
+    ancien, même vide, est à toi : il n'en fait jamais partie."""
+    installe = base.lire_meta("installe_le")
+    actuel = config.chemin(reglages, "a_trier")
+    sortie = []
+    for brut in reglages["chemins"]["anciens_a_trier"]:
+        ancien = Path(brut).expanduser()
+        if installe is None or ancien == actuel or ancien.is_symlink() or not ancien.is_dir():
+            continue
+        if ne_le(ancien) >= float(installe):
+            sortie.append(ancien)
+    return sortie
+
+
+def ne_le(chemin: Path) -> float:
+    """La date de création (macOS) ; ailleurs, le dernier changement d'inode."""
+    st = chemin.stat()
+    return float(getattr(st, "st_birthtime", st.st_ctime))
 
 
 def vus_hors_de_chez_nous(reglages: dict[str, Any], base: Base) -> tuple[list[Element], list[Element]]:
@@ -169,6 +195,9 @@ class Entrees:
                 return None  # elle partira avec son document
         if source == "telechargements" and max(st.st_mtime, getattr(st, "st_birthtime", 0.0)) < self.installe_le:
             return None  # déjà là avant l'installation : jamais touché
+        if sans_contenu(st):  # le lire maintenant échouerait : on le demande à iCloud, et on attend
+            self._relancer_icloud(chemin, maintenant)
+            return None
         if self.base.deja_laisse(chemin, st.st_size):
             return None  # déjà examiné et laissé (pas sûr, doublon, erreur) : repris seulement s'il change
         vu = self.vus.get(chemin)
@@ -201,11 +230,13 @@ class Entrees:
         return None
 
     def _demander_a_icloud(self, vrai: Path, maintenant: float) -> None:
-        if vrai.exists():
-            return
-        if maintenant - self.demandes_icloud.get(vrai, 0.0) >= RELANCE_ICLOUD_S:
-            self.demandes_icloud[vrai] = maintenant
-            self.systeme.telecharger_icloud(vrai)
+        if not vrai.exists():
+            self._relancer_icloud(vrai, maintenant)
+
+    def _relancer_icloud(self, chemin: Path, maintenant: float) -> None:
+        if maintenant - self.demandes_icloud.get(chemin, 0.0) >= RELANCE_ICLOUD_S:
+            self.demandes_icloud[chemin] = maintenant
+            self.systeme.telecharger_icloud(chemin)
 
     def creer_les_dossiers(self) -> tuple[str, str]:
         for dossier, source in self.dossiers():

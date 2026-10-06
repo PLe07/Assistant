@@ -370,7 +370,7 @@ de lui-même un dossier qui n'est pas vide. Un fichier arrivé entre le coup d'�
 place (testé).
 
 **D-58 · « À trier » est un dossier du Trieur, jamais un dossier à toi.**
-Après D-57, ton Mac avait déjà un `~/Documents/À trier` à toi (109 fichiers). L'installateur l'a pris pour le
+(Le constat ci-dessous était faux, voir D-59 ; la règle reste.) Après D-57, ton Mac avait déjà un `~/Documents/À trier` à toi (109 fichiers). L'installateur l'a pris pour le
 sien (il créait le dossier « s'il manquait » sans regarder s'il existait déjà), et le Trieur les a examinés. Les
 109 sont tombés en erreur : aucun n'a été rangé. Si l'un d'eux avait été lisible, il aurait été déplacé. C'est
 exactement l'interdit « ne jamais déplacer un fichier qui existait avant ».
@@ -387,4 +387,24 @@ exactement l'interdit « ne jamais déplacer un fichier qui existait avant ».
   tourne encore, l'installateur aurait effacé la trace « laissé » qui l'empêche de reprendre ces fichiers.
   L'installateur montre seulement la preuve, lue dans le journal des actions : combien de fichiers, aucun déplacé
   ni modifié, et l'erreur vue.
+
+**D-59 · Un fichier illisible n'est plus repris en boucle ; les fichiers iCloud sans contenu sont attendus.**
+Après D-58, le compteur est passé de 109 à 235 erreurs, et l'installateur n'a trouvé aucun fichier venu d'un
+dossier « À trier ». Le constat de D-58 était donc faux : ces erreurs ne venaient pas de ton `~/Documents/À trier`.
+Elles grossissaient d'environ 10 par minute, et c'est un vrai bug, reproduit par un test :
+- quand la lecture d'un fichier échouait, sa taille n'était pas encore enregistrée. Il n'était donc jamais
+  reconnu comme « déjà laissé », et chaque passage le reprenait (3 essais, puis une nouvelle ligne « erreur ») ;
+- avec l'ancien code, le test produit 13 lignes en 80 s, le rythme vu sur ton Mac. C'est très probablement un
+  seul fichier ;
+- la taille est maintenant enregistrée avant la lecture : un fichier illisible donne une seule ligne, et il n'est
+  repris que s'il change ;
+- au démarrage, le démon ne garde que la dernière ligne d'erreur de chaque fichier (jamais une ligne qui a une
+  action au journal) ;
+- sur les macOS récents, un fichier iCloud pas encore téléchargé n'a plus de « .nom.icloud » : il est là, mais
+  vide (drapeau `SF_DATALESS`), et le lire échoue souvent (« Resource deadlock avoided »). Le Trieur le demande à
+  iCloud (`brctl download`, toutes les 2 minutes au plus) et attend qu'il soit là. C'est la cause la plus
+  probable pour la boîte iCloud, à confirmer par le message que doctor affiche maintenant ;
+- doctor dit d'où viennent les erreurs : les 3 dossiers qui en ont le plus, avec le message le plus fréquent ;
+- le `~/Documents/À trier` laissé par D-57 est retiré s'il est vide et né après l'installation du Trieur. Un
+  dossier plus ancien est forcément à toi : il n'est jamais regardé.
 

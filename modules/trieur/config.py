@@ -23,7 +23,8 @@ DEFAUTS: dict[str, Any] = {
     "chemins": {
         "classes": "~/Documents/Classés",
         "a_trier": "~/Documents/À trier par l'assistant",  # pas sur le Bureau (D-57), jamais un dossier à toi (D-58)
-        "ancien_a_trier": "~/Desktop/À trier",  # l'ancien emplacement : l'installateur le retire s'il est vide
+        # Les anciens emplacements : retirés par l'installateur s'ils sont vides et nés après l'arrivée du Trieur.
+        "anciens_a_trier": ["~/Desktop/À trier", "~/Documents/À trier"],
         "photos": "~/Pictures/Depuis l'iPhone",
         "icloud": ICLOUD,
         "boite": "BoiteMac",  # sous iCloud Drive : l'entrée de l'iPhone
@@ -163,7 +164,7 @@ def pour_le_bac_a_sable(racine: Path, perso: dict[str, Any] | None = None) -> di
         "chemins": {
             "classes": str(racine / "Documents" / "Classés"),
             "a_trier": str(racine / "Documents" / "À trier"),
-            "ancien_a_trier": str(racine / "Bureau" / "À trier"),
+            "anciens_a_trier": [str(racine / "Bureau" / "À trier")],
             "photos": str(racine / "Images" / "Depuis l'iPhone"),
             "icloud": str(racine / "iCloud"),
             "boite": "BoiteMac",

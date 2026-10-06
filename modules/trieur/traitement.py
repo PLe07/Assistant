@@ -108,8 +108,11 @@ def _traiter(o: Outils, el: base_.Element) -> None:
     if not source.exists():
         o.base.mettre_a_jour(el.id, etat="erreur", erreur="fichier introuvable", traite=time.time())
         return
+    # La taille avant de lire : si la lecture échoue, le fichier reste « laissé » (même chemin, même taille) et
+    # n'est plus repris à chaque passage (D-59).
+    o.base.mettre_a_jour(el.id, taille=source.stat().st_size)
     empreinte = rangement.empreinte(source)
-    o.base.mettre_a_jour(el.id, empreinte=empreinte, taille=source.stat().st_size)
+    o.base.mettre_a_jour(el.id, empreinte=empreinte)
     if el.source in AUTOMATIQUES and o.base.annule_avec(empreinte):
         # Un document que tu as fait annuler, revenu à sa place : on ne le reprend pas tout seul.
         o.base.mettre_a_jour(el.id, etat="ignore", erreur="annulé auparavant", traite=time.time())
