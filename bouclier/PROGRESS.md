@@ -9,7 +9,7 @@ Reprise après coupure : lire ce fichier et DECISIONS.md, puis reprendre à la p
 | P2 Analyse locale n°20 | ✅ | 100 % / 0 % sur les deux corpus, ci-dessous |
 | P3 IA, caviardage, veto, budget, réflexes | ✅ | veto 1 220/1 220, ci-dessous |
 | P4 Inventaire n°18 | ✅ | précision 100 %, rappel 100 % sur 60 services, ci-dessous |
-| P5 Fuites n°19 | ⏳ | |
+| P5 Fuites n°19 | ✅ | croisement, date, une notification par fuite, ci-dessous |
 | P6 Métadonnées n°21 | ⏳ | |
 | P7 Fiche urgence n°22 | ⏳ | |
 | P8 Raccourcis, actions rapides, iCloud | ⏳ | |
@@ -173,6 +173,39 @@ INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 455 fichiers, 0 Laun
 30 passed in 2.04s
   ✅ sécurité, réseau, vie privée
 TOTAL                                     2936     86    97%
+  ✅ couverture ≥ 90 % sur bouclier/
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 455 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
+  ✅ intégrité des autres projets (fin)
+CHECK OK
+```
+
+## P5 — Alerte fuites n°19 (✅)
+
+- `fuites/hibp.py` : liste publique Have I Been Pwned (sans clé), cache du jour, copie gardée en cas de panne,
+  option payante par adresse (clé dans config.toml, désactivée par défaut).
+- `fuites/croisement.py` : correspondance par service (sous-domaines, alias de marque) ou domaine, filtre de date
+  (fuite antérieure au compte écartée), une seule notification par fuite (résumé unique au premier passage).
+- `fuites/traductions.py` : les données exposées en français ; `fuites/rapport.py` : partie du tableau de bord
+  avec « que faire » et l'attribution CC BY 4.0 ; `bouclier fuites [--mettre-a-jour]`.
+- Fixture HIBP de 7 fuites (dont spam, fabriquée, sans domaine, antérieure au compte, site inconnu) : seules les
+  2 bonnes ressortent ; une nouvelle fuite → 1 notification, jamais 2.
+
+```
+$ ./check.sh
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 455 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
+  ✅ intégrité des autres projets (début)
+  ✅ ruff check
+  ✅ ruff format
+  ✅ mypy
+136 passed in 4.73s
+  ✅ pytest : unitaires et intégrité
+14 passed in 11.00s
+  ✅ corpus d'arnaques (principal + 2e corpus inédit)
+35 passed in 1.62s
+  ✅ inventaire des comptes et fuites
+30 passed in 2.05s
+  ✅ sécurité, réseau, vie privée
+TOTAL                                     3165     93    97%
   ✅ couverture ≥ 90 % sur bouclier/
 INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 455 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
   ✅ intégrité des autres projets (fin)

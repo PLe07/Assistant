@@ -148,3 +148,12 @@ propre domaine n'est jamais un « service ». Les en-têtes en UTF-8 brut (RFC 6
 le test des 60 services (rappel 62 % → 100 %). Le lecteur IMAP n'envoie que LIST, EXAMINE, UID SEARCH et UID FETCH
 avec des éléments qui ne marquent rien (BODY.PEEK, FLAGS…) : tout le reste est refusé avant envoi.
 Le trousseau n'est lu que pour nos propres éléments `bouclier-…` (vérifié par un test).
+
+**D-21 · Fuites : liste publique HIBP une fois par jour, croisée en local, une notification par fuite.**
+La liste `/api/v3/breaches` (sans clé, User-Agent identifiable, attribution CC BY 4.0 affichée) est retéléchargée au
+plus une fois toutes les 23 h ; une panne garde la copie précédente. Les fuites retirées, fabriquées ou de simples
+listes de spam sont écartées. Correspondance par le service de l'inventaire (alias de marque compris :
+forum.google.com → Google) ou par le domaine enregistrable. Filtre de date : une fuite antérieure au mail de
+bienvenue du compte est écartée (date de création inconnue : la fuite est gardée, par prudence). Premier passage :
+les fuites anciennes sont notées et résumées en **une** notification ; ensuite, une notification par nouvelle
+fuite, jamais deux fois. Option payante (ta clé HIBP) : marque les fuites où ton adresse figure exactement.

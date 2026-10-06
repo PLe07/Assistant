@@ -60,7 +60,18 @@ def _section_arnaques(base: Base) -> str:
     return "\n".join(morceaux)
 
 
-SECTIONS: list[Section] = [_section_arnaques, _section_comptes]
+def _section_fuites(base: Base) -> str:
+    from bouclier import config
+    from bouclier.fuites import croisement, hibp, rapport
+
+    liste = hibp.ListeFuites(config.chemins().caches)
+    date = liste.date()
+    quand = time.strftime("%d/%m/%Y", time.localtime(date)) if date else None
+    correspondances = croisement.croiser(liste.fuites(), croisement.comptes_surveilles(base))
+    return rapport.section(correspondances, quand)
+
+
+SECTIONS: list[Section] = [_section_arnaques, _section_fuites, _section_comptes]
 
 
 def construire(base: Base, sections: list[Section] | None = None) -> str:

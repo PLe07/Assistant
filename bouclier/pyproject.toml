@@ -43,6 +43,7 @@ select = ["E", "F", "W", "I", "B", "UP", "S102", "S307"]
 # Des tables de données (un message, un service ou une marque par ligne) : les couper les rendrait illisibles.
 "tests/corpus_arnaques/*.py" = ["E501"]
 "bouclier/arnaque/sosies.py" = ["E501"]
+"bouclier/fuites/traductions.py" = ["E501"]
 
 [tool.mypy]
 python_version = "3.11"

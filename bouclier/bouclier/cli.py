@@ -157,6 +157,31 @@ def cmd_gmail_relier(args: argparse.Namespace, env: Environnement) -> int:
     return 0 if ok else 1
 
 
+# --- Fuites (n°19) -------------------------------------------------------------------------------------------------
+
+
+def cmd_fuites(args: argparse.Namespace, env: Environnement) -> int:
+    from bouclier import tableau_de_bord
+    from bouclier.fuites import rapport, traductions
+    from bouclier.notifier import Notifieur
+
+    r = rapport.verifier(env.chemins, env.reglages, env.base, Notifieur(env.base, env.systeme, env.reglages),
+                         forcer=args.mettre_a_jour)  # fmt: skip
+    _ecrire(f"{r.liste.capitalize()}.")
+    if not r.bilan.toutes:
+        _ecrire("Aucune fuite connue ne touche les services de ton inventaire (lance aussi : bouclier inventaire).")
+    for c in r.bilan.toutes:
+        quand = c.fuite.date.strftime("%m/%Y") if c.fuite.date else "?"
+        nouveau = "  🆕" if c in r.bilan.nouvelles and not r.bilan.premier_passage else ""
+        _ecrire(f"⚠️ {c.compte.nom} ({quand}){nouveau} : {', '.join(traductions.traduire(list(c.fuite.donnees))[:5])}")
+    if r.bilan.toutes:
+        _ecrire(f"👉 {r.bilan.toutes[0].que_faire}")
+    if not r.adresse_verifiee:
+        _ecrire("Pour vérifier exactement ton adresse, gratuitement : Mozilla Monitor (voir le README).")
+    tableau_de_bord.ecrire(env.base, env.chemins.tableau_de_bord)
+    return 0
+
+
 # --- Analyse des arguments -----------------------------------------------------------------------------------------
 
 Commande = Callable[[argparse.Namespace, Environnement], int]
@@ -192,6 +217,10 @@ def analyseur() -> argparse.ArgumentParser:
     s.add_argument("service")
     s.add_argument("statut", choices=["garder", "supprimer", "supprime", "a_trier"])
     s.set_defaults(fonction=cmd_compte)
+
+    f = sous.add_parser("fuites", help="les fuites de données connues qui touchent tes comptes")
+    f.add_argument("--mettre-a-jour", action="store_true", help="retélécharger la liste publique maintenant")
+    f.set_defaults(fonction=cmd_fuites)
 
     g = sous.add_parser("gmail-relier", help="ranger le mot de passe d'application Gmail dans le trousseau")
     g.add_argument("adresse")
