@@ -8,7 +8,7 @@ Reprise après coupure : lire ce fichier et DECISIONS.md, puis reprendre à la p
 | P1 Corpus d'arnaques | ✅ | 225 + 80 messages, ci-dessous |
 | P2 Analyse locale n°20 | ✅ | 100 % / 0 % sur les deux corpus, ci-dessous |
 | P3 IA, caviardage, veto, budget, réflexes | ✅ | veto 1 220/1 220, ci-dessous |
-| P4 Inventaire n°18 | ⏳ | |
+| P4 Inventaire n°18 | ✅ | précision 100 %, rappel 100 % sur 60 services, ci-dessous |
 | P5 Fuites n°19 | ⏳ | |
 | P6 Métadonnées n°21 | ⏳ | |
 | P7 Fiche urgence n°22 | ⏳ | |
@@ -142,4 +142,39 @@ $ bouclier verifier "Colissimo : votre colis est en attente. Payez 1,99 € : ht
 • Le site se termine par « .top », une extension très utilisée par les arnaques.
 👉 Ne clique pas. Signale le SMS au 33700. Supprime-le.
 Déjà payé ou donné ta carte ? Opposition tout de suite au 0 892 705 705, puis plainte en ligne (THESEE).
+```
+
+## P4 — Inventaire des comptes n°18 (✅)
+
+- `comptes/imap_lecture_seule.py` : Gmail en EXAMINE, UID SEARCH, UID FETCH avec BODY.PEEK/FLAGS seulement ; tout
+  le reste est refusé avant envoi. Dossier « Tous les messages » trouvé par l'attribut \All.
+- `comptes/navigateurs.py` : Chrome, Brave, Edge, Arc (copie de `Login Data`, une seule requête
+  `origin_url, username_value`), Firefox (`logins.json`, champs « password » écartés à la lecture).
+- `comptes/services.json` : 2 814 services, dont 163 courants en France avec un lien direct de suppression (D-19).
+- `comptes/inventaire.py` + `lancer.py` + `rapport.py` + `tableau_de_bord.py` : classement compte / abonnement,
+  dernière activité, statuts posés par toi (`bouclier compte vinted supprimer`), rapport local `Bouclier.html`.
+- Boîte imitée de 60 services (40 comptes, 20 abonnements, 25 mails de personnes, sujets en UTF-8 brut et encodés) :
+  **précision 100 %, rappel 100 %**, drapeaux de 20 messages identiques avant et après, 0 commande interdite.
+- Base `Login Data` de test avec une colonne mot de passe remplie de leurres : jamais lue (requêtes espionnées).
+
+```
+$ ./check.sh
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 455 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
+  ✅ intégrité des autres projets (début)
+  ✅ ruff check
+  ✅ ruff format
+  ✅ mypy
+136 passed in 4.21s
+  ✅ pytest : unitaires et intégrité
+14 passed in 10.84s
+  ✅ corpus d'arnaques (principal + 2e corpus inédit)
+27 passed in 1.40s
+  ✅ inventaire des comptes et fuites
+30 passed in 2.04s
+  ✅ sécurité, réseau, vie privée
+TOTAL                                     2936     86    97%
+  ✅ couverture ≥ 90 % sur bouclier/
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 455 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
+  ✅ intégrité des autres projets (fin)
+CHECK OK
 ```

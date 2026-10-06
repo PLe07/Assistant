@@ -19,11 +19,12 @@ tests() {  # un groupe de tests, la couverture s'additionne d'un groupe à l'aut
 
 rm -f .coverage
 etape "intégrité des autres projets (début)" ./integrite/verifier.sh
-etape "ruff check" "$PY" -m ruff check bouclier tests integrite
-etape "ruff format" "$PY" -m ruff format --check bouclier tests integrite
+etape "ruff check" "$PY" -m ruff check bouclier tests integrite outils
+etape "ruff format" "$PY" -m ruff format --check bouclier tests integrite outils
 etape "mypy" "$PY" -m mypy bouclier
 etape "pytest : unitaires et intégrité" tests tests/unitaires tests/integrite
 etape "corpus d'arnaques (principal + 2e corpus inédit)" tests tests/corpus_arnaques
+etape "inventaire des comptes et fuites" tests tests/comptes tests/fuites
 etape "sécurité, réseau, vie privée" tests tests/securite
 etape "couverture ≥ 90 % sur bouclier/" "$PY" -m coverage report --fail-under=90
 etape "intégrité des autres projets (fin)" ./integrite/verifier.sh

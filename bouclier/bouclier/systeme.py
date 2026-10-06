@@ -88,7 +88,8 @@ class Systeme:
 
     # --- Trousseau (lecture ; écriture seulement de nos propres éléments) ----------------------------------------
     def trousseau_lire(self, service: str, compte: str | None = None) -> str | None:
-        if not self.mac:
+        """Seulement nos propres éléments (bouclier-…) : aucun autre secret du trousseau n'est jamais lu."""
+        if not self.mac or not service.startswith("bouclier-"):
             return None
         commande = ["security", "find-generic-password", "-s", service]
         if compte:

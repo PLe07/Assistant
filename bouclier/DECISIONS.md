@@ -132,3 +132,19 @@ vide, clé API retirée de l'environnement. Les tests remplacent la recherche du
 
 **D-18 · Les raisons affichées : les indices critiques d'abord, puis les plus lourds.**
 Ainsi « Il te demande de payer 1,99 € » passe avant « .top », comme dans l'exemple du §3.4.
+
+**D-19 · La base des services vient de deux bases ouvertes, avec une liste française par-dessus.** (2026-10-06)
+Plutôt que d'écrire des liens de suppression de mémoire (risque d'erreur), `outils/importer_bases.py` fusionne :
+JustDeleteMe (liens de suppression, difficulté ; licence MIT) et 2factorauth (double authentification, catégories ;
+licence MIT), avec 278 services courants en France choisis à la main (nom, catégorie, domaines). Résultat :
+2 814 services, dont 326 courants en France et **163 avec un lien direct de suppression** (≥ 150 demandés).
+Les comptes de services publics sont marqués « ne se supprime pas ». Licences et versions dans CREDITS.md.
+Alternative écartée : télécharger ces bases sur le Mac (hors liste blanche du réseau).
+
+**D-20 · Inventaire : en-têtes seulement, les personnes exclues, ton statut jamais touché.**
+Seuls FROM, SUBJECT, DATE et LIST-UNSUBSCRIBE sont lus (par lots de 500, en reprenant au dernier message vu ; un
+changement d'UIDVALIDITY fait tout reprendre). Une adresse de messagerie personnelle (gmail.com, orange.fr…) ou ton
+propre domaine n'est jamais un « service ». Les en-têtes en UTF-8 brut (RFC 6532) sont décodés : bogue trouvé par
+le test des 60 services (rappel 62 % → 100 %). Le lecteur IMAP n'envoie que LIST, EXAMINE, UID SEARCH et UID FETCH
+avec des éléments qui ne marquent rien (BODY.PEEK, FLAGS…) : tout le reste est refusé avant envoi.
+Le trousseau n'est lu que pour nos propres éléments `bouclier-…` (vérifié par un test).
