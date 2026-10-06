@@ -20,10 +20,10 @@ confirmer sur ton Mac par les commandes d'ACTIONS_HUMAINES.md.
 | Fichiers perdus | 0 | ✅ 0 (bout en bout : 124 déposés, tous retrouvés, puis tous rendus intacts) | |
 | Écrasements | 0 | ✅ 0 (fichiers placés d'avance aux noms visés : intacts) | |
 | Fuites vers Claude | 0 | ✅ 0 sur 89 messages espionnés ; 18 documents sensibles jamais envoyés | |
-| PDF texte | < 3 s | ✅ 0,81 s max (RapidOCR) · ⏳ Vision | |
-| Photo de ticket | < 8 s | ✅ 1,64 s max (RapidOCR) · ⏳ Vision | |
+| PDF texte | < 3 s | ✅ 0,81 s max (RapidOCR) · ✅ 0,02 s avec Vision sur ton Mac | |
+| Photo de ticket | < 8 s | ✅ 1,64 s max (RapidOCR) · ✅ 0,22 s avec Vision sur ton Mac | |
 | Démon | < 0,5 % CPU, < 150 Mo | ✅ 0,34 % (400 fichiers dans Téléchargements), 64 Mo, pic 70 Mo · ⏳ Mac | |
-| Tags, alias, Rappels, iCloud, HEIC, raccourcis signés | | ⏳ `tests/trieur/e2e_mac` (imités ici) | |
+| Tags, alias, Rappels, iCloud, HEIC, raccourcis signés | | ✅ sur ton Mac (`e2e_mac`, 2e passage : 10/10 types, 16 rappels, signature ✅, rien ne reste) | |
 
 ## 1. check.sh
 
@@ -63,8 +63,8 @@ CHECK OK
 
 - **Ici, l'OCR est RapidOCR**, pas Vision (pas de Mac dans le conteneur, D-05) : il perd des espaces et des accents.
   Les scores ci-dessus sont donc prudents ; Vision est mesuré par `e2e_mac` et par `check.sh` sur ton Mac.
-- **Les tags, alias, Rappels, brctl, sips, shortcuts** sont imités ici ; leur vrai fonctionnement est vérifié par
-  `tests/trieur/e2e_mac` (bac à sable, nettoyage garanti).
+- **Les tags, alias, Rappels, brctl, sips, shortcuts** sont imités ici ; sur ton Mac, `tests/trieur/e2e_mac` les a
+  vérifiés pour de vrai au 2e passage (le 1er avait trouvé le mot réservé `note` dans le script des Rappels, D-54).
 - **Le format des raccourcis** (`.shortcut`) n'a pas pu être importé sur un iPhone : la recette manuelle en 6 étapes
   est prête si l'import échoue (D-41).
 - Sur le 2e corpus, 4 documents vont dans « À vérifier » au lieu d'être rangés (titre collé par l'OCR, notice d'une

@@ -292,3 +292,23 @@ WARNING Rappels a refusé : 94:95: syntax error: Il est impossible de régler no
   `sips` ; tags du Finder ; alias ; nettoyage complet.
 - ❌ Rappels : `note` est un mot réservé d'AppleScript → corrigé (D-54). Les étapes suivantes du test (plutil,
   signature, annulation) n'ont pas encore tourné : 2e passage à faire.
+
+## Sur ton Mac — 2e passage de `tests/trieur/e2e_mac` (après D-54) : ✅
+
+```
+pdf_texte : 0.02 s → facture_achat (0.90), attendu facture_achat
+photo_ticket : 0.22 s → ticket_caisse (0.95), attendu ticket_caisse
+  … 11 documents rangés (dont photo-test.heic → ticket_caisse 0.95)
+types justes : 10/10
+tags Finder : ['Facture', 'Garantie']
+garanties : 9, rappels dans Trieur-TEST : 16
+signature du raccourci : ✅
+
+Nettoyage : rien ne reste
+1 passed, 5 warnings in 62.09s (0:01:02)
+```
+- 16 rappels pour 9 garanties : 2 par garantie, sauf celle d'un MacBook reconditionné déjà expirée (aucun rappel
+  dans le passé, D-33).
+- plutil a validé l'action rapide et les deux raccourcis ; la signature « anyone » marche ; l'annulation a rendu
+  les 11 fichiers intacts ; il ne reste ni bac à sable, ni BoiteMac-TEST, ni liste Trieur-TEST.
+- Les 5 avertissements viennent de PyMuPDF sous Python 3.14 (« SwigPyPacked has no __module__ ») : sans effet.
