@@ -119,3 +119,13 @@ def test_deplacement_cas_limites(tmp_path, monkeypatch):
         rangement.ramener(cible, tmp_path / "retour" / "a.pdf", base, 1)
     assert cible.exists()
     base.fermer()
+
+
+def test_applescript_sans_mot_reserve():
+    """Sur le vrai Mac, « set note to … » échouait : « note » est réservé en AppleScript. Toute variable des scripts
+    commence donc par « v »."""
+    import re
+
+    for script in (systeme._RAPPEL_CREER, systeme._RAPPEL_SUPPRIMER):
+        variables = re.findall(r"\bset (\w+) to\b", script) + re.findall(r"\brepeat with (\w+) in\b", script)
+        assert variables and all(v.startswith("v") and v[1].isupper() for v in variables), variables

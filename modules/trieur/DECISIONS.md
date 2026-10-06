@@ -331,3 +331,11 @@ Tu viens d'envoyer un document : savoir qu'il est rangé fait partie de la deman
 `tests/trieur/e2e_mac` travaille dans `~/TrieurSandbox`, `iCloud Drive/BoiteMac-TEST` et la liste « Trieur-TEST »,
 qui ne doivent pas exister avant (sinon il s'arrête sans rien toucher), et les supprime dans un `finally`, puis
 vérifie qu'il ne reste rien. Il n'est pas dans check.sh (il faut le vrai Mac) ; ailleurs, il échoue franchement.
+
+## 2026-10-06 · Sur ton Mac — 1er passage
+
+**D-54 · Les variables AppleScript des Rappels commencent par « v ».**
+Sur ton Mac, chaque création de rappel échouait : « Il est impossible de régler note à item 3 of argv. Accès non
+autorisé (-10003) ». En AppleScript, `note` est un mot réservé (l'icône « note » des boîtes de dialogue), tout comme
+`an` (un article). Toutes les variables des deux scripts s'appellent maintenant `vListe`, `vTitre`, `vCorps`… ; un
+test l'impose. Les fiches de garantie, elles, étaient bien créées (D-33 : Rappels en panne, la fiche reste).

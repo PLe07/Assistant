@@ -78,33 +78,42 @@ class Simple:
 
 
 # Le script AppleScript des Rappels : les valeurs passent en arguments (jamais collées dans le code du script).
+# Toutes les variables commencent par « v » : des mots comme « note » (une icône de Standard Additions) ou « an »
+# (un article) sont réservés en AppleScript, et « set note to … » échoue (« Accès non autorisé », -10003).
 _RAPPEL_CREER = """on run argv
-  set nomListe to item 1 of argv
-  set titre to item 2 of argv
-  set note to item 3 of argv
-  set {an, mo, jo, he, mi} to {item 4 of argv as integer, item 5 of argv as integer, item 6 of argv as integer, ¬
-    item 7 of argv as integer, item 8 of argv as integer}
-  set d to current date
-  set day of d to 1
-  set year of d to an
-  set month of d to mo
-  set day of d to jo
-  set hours of d to he
-  set minutes of d to mi
-  set seconds of d to 0
+  set vListe to item 1 of argv
+  set vTitre to item 2 of argv
+  set vCorps to item 3 of argv
+  set vAnnee to (item 4 of argv) as integer
+  set vMois to (item 5 of argv) as integer
+  set vJour to (item 6 of argv) as integer
+  set vHeure to (item 7 of argv) as integer
+  set vMinute to (item 8 of argv) as integer
+  set vDate to current date
+  set day of vDate to 1
+  set year of vDate to vAnnee
+  set month of vDate to vMois
+  set day of vDate to vJour
+  set hours of vDate to vHeure
+  set minutes of vDate to vMinute
+  set seconds of vDate to 0
   tell application "Reminders"
-    if not (exists list nomListe) then make new list with properties {name:nomListe}
-    set r to make new reminder at end of list nomListe with properties {name:titre, body:note, remind me date:d}
-    return id of r
+    if not (exists list vListe) then make new list with properties {name:vListe}
+    set vProprietes to {name:vTitre, body:vCorps, remind me date:vDate}
+    set vRappel to make new reminder at end of list vListe with properties vProprietes
+    return id of vRappel
   end tell
 end run"""
 _RAPPEL_SUPPRIMER = """on run argv
+  set vListe to item 1 of argv
+  set vIdentifiant to item 2 of argv
   tell application "Reminders"
-    set trouves to (every reminder of list (item 1 of argv) whose id is (item 2 of argv))
-    repeat with r in trouves
-      delete r
+    if not (exists list vListe) then return "0"
+    set vTrouves to (every reminder of list vListe whose id is vIdentifiant)
+    repeat with vRappel in vTrouves
+      delete vRappel
     end repeat
-    return (count of trouves) as text
+    return (count of vTrouves) as text
   end tell
 end run"""
 

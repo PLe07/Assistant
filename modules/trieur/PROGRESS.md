@@ -272,3 +272,23 @@ Required test coverage of 85.0% reached. Total coverage: 96.26%
   ✅ performance
 CHECK OK
 ```
+
+## Sur ton Mac — 1er passage de `tests/trieur/e2e_mac` (macOS 27.0.1, Python 3.14.4)
+
+```
+pdf_texte : 0.02 s → facture_achat (0.90), attendu facture_achat
+photo_ticket : 0.29 s → ticket_caisse (0.95), attendu ticket_caisse
+  n°4 photo-test.heic → classe ticket_caisse 0.95 2025-10-16_Carrefour_Ticket_22,22€.pdf
+  … (11 documents : 10 PDF, scans et photos + 1 HEIC, tous rangés)
+types justes : 10/10
+tags Finder : ['Facture', 'Garantie']
+garanties : 9, rappels dans Trieur-TEST : 0
+Nettoyage : rien ne reste
+FAILED … assert ([])        ← les rappels
+WARNING Rappels a refusé : 94:95: syntax error: Il est impossible de régler note à item 3 of argv.
+        Accès non autorisé. (-10003)
+```
+- ✅ Vision : PDF texte 0,02 s, photo de ticket 0,29 s (budgets 3 s et 8 s) ; 10 types justes sur 10 ; HEIC par
+  `sips` ; tags du Finder ; alias ; nettoyage complet.
+- ❌ Rappels : `note` est un mot réservé d'AppleScript → corrigé (D-54). Les étapes suivantes du test (plutil,
+  signature, annulation) n'ont pas encore tourné : 2e passage à faire.
