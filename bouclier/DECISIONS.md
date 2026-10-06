@@ -34,9 +34,9 @@ Les comparer donnerait de fausses alertes. Sont comparés : chaque fichier de co
   GitHub : il contient des noms de LaunchAgents) et le compare à la fin. `verifier.sh` choisit le bon fichier.
 
 **D-04 · Le dépôt est public : aucun prénom écrit dedans.**
-La mission nomme le LaunchAgent `com.thibaut.bouclier`. Le prénom ne doit pas apparaître dans ce dépôt public
+La mission nomme le LaunchAgent avec ton prénom. Le prénom ne doit pas apparaître dans ce dépôt public
 (même règle que le Trieur, D-01). `install.sh` construit le label à partir de ton **nom de session macOS** :
-`com.<session>.bouclier`, ce qui donne exactement `com.thibaut.bouclier` si ta session s'appelle ainsi. Réglable
+`com.<session>.bouclier`, ce qui donne exactement le nom demandé si ta session porte ton prénom. Réglable
 dans `config.toml` (`[installation] prefixe_label`).
 
 **D-05 · Construit dans un conteneur Linux (constat du 2026-10-06).**
@@ -82,3 +82,23 @@ Bouclier se connecte donc en IMAP avec **son** mot de passe d'application, rang�
 refuse toute résolution de nom hors liste dans tout le processus (bibliothèques comprises). Les tests coupent le
 réseau et échouent si un hôte hors liste est seulement tenté. RDAP : seul le serveur désigné par une redirection
 de rdap.org, en HTTPS, pour l'adresse `…/domain/<le domaine demandé>`, est permis.
+
+**D-11 · Analyse locale : des indices pondérés et expliqués, le texte ne peut qu'ajouter des points.**
+Chaque indice (`Signal`) a un poids et une phrase en français simple. Seuls des faits techniques vérifiés
+(expéditeur authentifié par le serveur qui a reçu le mail, site ancien) retirent des points : un message ne peut pas
+« se blanchir » en parlant. Score 0–100 → 🔴 ≥ 70, 🟠 ≥ 45, 🟡 ≥ 20, ⚪ sinon. Un indice critique (lien déjà
+signalé, lien déguisé par « @ », sosie qui demande de payer, demande de code, de valider une opération, coursier,
+injection) tient le verdict à 🟠 au moins ; deux indices critiques donnent 🔴. La pression psychologique est
+plafonnée à 20 points (elle existe aussi dans les vrais messages).
+
+**D-12 · Une famille d'arnaque demande un thème, une accroche ET un moyen d'agir.**
+Un vrai SMS de livraison sans demande d'argent, une vraie alerte bancaire sans lien ni numéro restent ⚪. Une accroche
+dans une phrase négative (« ne communiquez jamais ce code ») est une mise en garde et ne compte pas. À égalité, une
+famille précise (colis, annonce…) l'emporte sur une famille fourre-tout (banque, support, impayé) pour l'explication.
+
+**D-13 · Les marques : une liste fermée de sites officiels, et trois manières d'imiter.**
+56 marques visées en France (livraison, administrations, banques, annonces, abonnements, énergie, santé, commerce),
+chacune avec ses sites officiels ; tout `*.gouv.fr` est officiel pour les administrations. Un sosie « contient » la
+marque, la « déforme » d'une ou deux lettres (nom enregistré seulement, mots courants exclus : « email » n'imite pas
+« gmail », « party » n'imite pas « darty »), ou la copie avec des « caractères » trompeurs (cyrillique, accent,
+« rn » pour « m », chiffres).
