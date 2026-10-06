@@ -157,3 +157,14 @@ forum.google.com → Google) ou par le domaine enregistrable. Filtre de date : u
 bienvenue du compte est écartée (date de création inconnue : la fuite est gardée, par prudence). Premier passage :
 les fuites anciennes sont notées et résumées en **une** notification ; ensuite, une notification par nouvelle
 fuite, jamais deux fois. Option payante (ta clé HIBP) : marque les fuites où ton adresse figure exactement.
+
+**D-22 · Métadonnées : sans perte quand c'est possible, Python plutôt qu'exiftool.**
+exiftool n'est pas sur ce Mac de construction et son archive officielle n'est pas sur la liste blanche du réseau :
+Bouclier nettoie avec des bibliothèques Python (Pillow, pillow-heif, pikepdf, zip) et n'utilise exiftool, s'il est
+déjà installé sur ton Mac, que pour **relire** le résultat (relecture indépendante). JPEG, PNG et WebP sans rotation
+à appliquer sont nettoyés segment par segment, sans recompression (pixels identiques, vérifié) ; une photo tournée
+(orientation ≠ 1) est remise à l'endroit puis réenregistrée en qualité 95 (SSIM ≥ 0,99, vérifié) ; TIFF et HEIC
+sont réenregistrés à partir des pixels. Le profil ICC est toujours recopié. Les images annexes d'un JPEG (MPF, avec
+leurs propres EXIF) sont jetées. Vidéos : `ffmpeg -map_metadata -1 -c copy` si ffmpeg est installé, sinon rien
+n'est modifié et Bouclier le dit. Commentaires et révisions suivies d'un document Office : signalés, pas retirés.
+Le lieu du rapport (« Bordeaux ») vient d'une petite liste de villes, sans réseau.

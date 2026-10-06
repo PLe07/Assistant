@@ -182,6 +182,22 @@ def cmd_fuites(args: argparse.Namespace, env: Environnement) -> int:
     return 0
 
 
+# --- Métadonnées (n°21) --------------------------------------------------------------------------------------------
+
+
+def cmd_nettoyer(args: argparse.Namespace, env: Environnement) -> int:
+    from bouclier.metadonnees import nettoyeur
+
+    code = 0
+    for fichier in args.fichiers:
+        r = nettoyeur.nettoyer(Path(fichier), remplacer=args.remplacer, garder_date=args.garder_date,
+                               systeme=env.systeme)  # fmt: skip
+        _ecrire(r.texte())
+        if r.erreur or r.restants:
+            code = 1
+    return code
+
+
 # --- Analyse des arguments -----------------------------------------------------------------------------------------
 
 Commande = Callable[[argparse.Namespace, Environnement], int]
@@ -221,6 +237,12 @@ def analyseur() -> argparse.ArgumentParser:
     f = sous.add_parser("fuites", help="les fuites de données connues qui touchent tes comptes")
     f.add_argument("--mettre-a-jour", action="store_true", help="retélécharger la liste publique maintenant")
     f.set_defaults(fonction=cmd_fuites)
+
+    n = sous.add_parser("nettoyer", help="enlever position GPS, appareil, auteur… (copie « (propre) »)")
+    n.add_argument("fichiers", nargs="+")
+    n.add_argument("--remplacer", action="store_true", help="mettre l'original à la Corbeille (récupérable)")
+    n.add_argument("--garder-date", action="store_true", help="garder la date de prise de vue")
+    n.set_defaults(fonction=cmd_nettoyer)
 
     g = sous.add_parser("gmail-relier", help="ranger le mot de passe d'application Gmail dans le trousseau")
     g.add_argument("adresse")

@@ -10,7 +10,7 @@ Reprise après coupure : lire ce fichier et DECISIONS.md, puis reprendre à la p
 | P3 IA, caviardage, veto, budget, réflexes | ✅ | veto 1 220/1 220, ci-dessous |
 | P4 Inventaire n°18 | ✅ | précision 100 %, rappel 100 % sur 60 services, ci-dessous |
 | P5 Fuites n°19 | ✅ | croisement, date, une notification par fuite, ci-dessous |
-| P6 Métadonnées n°21 | ⏳ | |
+| P6 Métadonnées n°21 | ✅ | 7 formats + vidéo, SSIM ≥ 0,99, ICC gardé, ci-dessous |
 | P7 Fiche urgence n°22 | ⏳ | |
 | P8 Raccourcis, actions rapides, iCloud | ⏳ | |
 | P9 Démon, tableau de bord, doctor, bout en bout | ⏳ | |
@@ -206,6 +206,45 @@ INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 455 fichiers, 0 Laun
 30 passed in 2.05s
   ✅ sécurité, réseau, vie privée
 TOTAL                                     3165     93    97%
+  ✅ couverture ≥ 90 % sur bouclier/
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 455 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
+  ✅ intégrité des autres projets (fin)
+CHECK OK
+```
+
+## P6 — Nettoyeur de métadonnées n°21 (✅)
+
+- `metadonnees/formats/` : image (JPEG, PNG, WebP sans perte ; TIFF, HEIC ; orientation appliquée ; ICC gardé ;
+  option date), pdf (informations, XMP, PieceInfo, auteurs d'annotations), office (core/app/custom ; commentaires et
+  révisions signalés), video (ffmpeg).
+- `metadonnees/lecture.py` (le rapport : « position GPS (Bordeaux), appareil (Apple iPhone 15), numéro de série,
+  auteur… »), `verif.py` (relecture indépendante + exiftool s'il est là), `nettoyeur.py` (copie « (propre) »,
+  original jamais modifié, `--remplacer` par la Corbeille du Finder), `bouclier nettoyer`.
+- Fixtures générées avec GPS, appareil, numéro de série, auteur, XMP, IPTC, profil ICC « Display P3 » (un vrai
+  profil v2) ; JPEG avec image annexe ; photo en orientation 6.
+- Résultats : 0 métadonnée sensible restante (octets bruts + Pillow + pikepdf + zip), pixels identiques pour
+  JPEG/PNG/WebP, SSIM ≥ 0,99 après rotation, ICC « Display P3 » conservé, empreinte de l'original identique.
+  Les tests ont trouvé deux vrais défauts, corrigés : Pillow recopiait le commentaire JPEG et pillow-heif le XMP de
+  l'original lors d'un réenregistrement.
+
+```
+$ ./check.sh
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 455 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
+  ✅ intégrité des autres projets (début)
+  ✅ ruff check
+  ✅ ruff format
+  ✅ mypy
+136 passed in 4.45s
+  ✅ pytest : unitaires et intégrité
+14 passed in 12.13s
+  ✅ corpus d'arnaques (principal + 2e corpus inédit)
+35 passed in 1.48s
+  ✅ inventaire des comptes et fuites
+18 passed in 1.11s
+  ✅ métadonnées et fiche urgence
+30 passed in 2.06s
+  ✅ sécurité, réseau, vie privée
+TOTAL                                     3758    139    96%
   ✅ couverture ≥ 90 % sur bouclier/
 INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 455 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
   ✅ intégrité des autres projets (fin)
