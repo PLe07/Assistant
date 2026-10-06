@@ -61,6 +61,7 @@ CREATE TABLE IF NOT EXISTS garanties (
     retractation TEXT,             -- la date du rappel de rétractation (achat en ligne)
     cree REAL NOT NULL, supprimee REAL
 );
+CREATE TABLE IF NOT EXISTS meta (cle TEXT PRIMARY KEY, valeur TEXT);
 CREATE TABLE IF NOT EXISTS depenses_ia (
     id INTEGER PRIMARY KEY, quand REAL NOT NULL, mois TEXT NOT NULL, element INTEGER,
     entree INTEGER, sortie INTEGER, cout_usd REAL NOT NULL, resultat TEXT
@@ -185,6 +186,21 @@ class Base:
 
     def compter(self) -> dict[str, int]:
         return {x["etat"]: int(x["n"]) for x in self._x("SELECT etat, COUNT(*) n FROM elements GROUP BY etat")}
+
+    def deja_laisse(self, chemin: Path, taille: int) -> bool:
+        """Ce fichier (même chemin, même taille) a déjà été examiné et laissé à sa place : pas assez sûr
+        (Téléchargements), doublon, ou en erreur. Il n'est repris que s'il change."""
+        sql = "SELECT 1 FROM elements WHERE chemin = ? AND taille = ? AND etat IN ('ignore', 'doublon', 'erreur')"
+        x = self._x(sql + " LIMIT 1", (str(chemin), taille)).fetchone()
+        return x is not None
+
+    def lire_meta(self, cle: str) -> str | None:
+        x = self._x("SELECT valeur FROM meta WHERE cle = ?", (cle,)).fetchone()
+        return str(x["valeur"]) if x else None
+
+    def ecrire_meta(self, cle: str, valeur: str) -> None:
+        self._x("INSERT INTO meta (cle, valeur) VALUES (?, ?) ON CONFLICT(cle) DO UPDATE SET valeur = excluded.valeur",
+                (cle, valeur))  # fmt: skip
 
     # --- le journal des actions ------------------------------------------------------------------------------------
 

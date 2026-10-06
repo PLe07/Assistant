@@ -6,7 +6,8 @@ Nom : AAAA-MM-JJ_Emetteur_Type_Detail_Montant.ext, 120 caractères au plus.
 - trop long : le détail est raccourci d'abord, puis l'émetteur ;
 - un nom déjà pris reçoit « -2 », « -3 »… : rien n'est jamais écrasé (le déplacement vérifie encore, D-xx).
 
-Dossier : le modèle de reglages["arborescence"][type], sous « Classés » ({annee}, {banque}, {emetteur}).
+Dossier : le modèle de reglages["arborescence"][type], sous « Classés » ({annee}, {banque}, {emetteur}) ; un
+modèle qui commence par « ~/ » désigne un de tes dossiers (D-10).
 """
 
 from __future__ import annotations
@@ -72,10 +73,15 @@ def dossier(c: Classement, reglages: dict[str, Any], cle: str | None = None) -> 
     modele = reglages["arborescence"].get(cle or c.type) or reglages["arborescence"]["autre"]
     valeurs = {"annee": str(c.date.year) if c.date else "Sans date", "banque": c.emetteur or "Autre banque",
                "emetteur": c.emetteur or "Inconnu", "extension": ""}  # fmt: skip
+    racine = ""
+    if modele.startswith(("~/", "/")):  # aligné sur un dossier à toi (« trieur arborescence --appliquer »)
+        racine, modele = ("~" if modele.startswith("~") else "/"), modele.lstrip("~/")
     morceaux = []
     for partie in modele.split("/"):
         rempli = re.sub(r"\{(\w+)\}", lambda m: valeurs.get(m.group(1), ""), partie)
         rempli = unicodedata.normalize("NFC", _INTERDITS.sub(" ", rempli)).strip(" .")
         if rempli and rempli not in (".", ".."):
             morceaux.append(rempli)
-    return Path(*morceaux) if morceaux else Path("Divers")
+    if not morceaux:
+        return Path("Divers")
+    return Path(racine, *morceaux).expanduser() if racine else Path(*morceaux)

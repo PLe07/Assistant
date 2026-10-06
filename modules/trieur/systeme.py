@@ -36,6 +36,8 @@ class Systeme(Protocol):
 
     def telecharger_icloud(self, chemin: Path) -> bool: ...
 
+    def quarantaine(self, chemin: Path) -> str: ...
+
 
 def _lien(cible: Path, alias: Path) -> bool:
     try:
@@ -70,6 +72,9 @@ class Simple:
 
     def telecharger_icloud(self, chemin: Path) -> bool:
         return False
+
+    def quarantaine(self, chemin: Path) -> str:
+        return ""
 
 
 # Le script AppleScript des Rappels : les valeurs passent en arguments (jamais collées dans le code du script).
@@ -162,6 +167,15 @@ class Mac(Simple):
         except (OSError, subprocess.TimeoutExpired):
             return False
         return r.returncode == 0
+
+    def quarantaine(self, chemin: Path) -> str:
+        """L'attribut de quarantaine (qui a apporté le fichier : « sharingd » pour AirDrop, un navigateur…)."""
+        try:
+            r = subprocess.run(["xattr", "-p", "com.apple.quarantine", str(chemin)], capture_output=True, text=True,
+                               timeout=5)  # fmt: skip
+        except (OSError, subprocess.TimeoutExpired):
+            return ""
+        return r.stdout.strip() if r.returncode == 0 else ""
 
 
 def choisir() -> Systeme:

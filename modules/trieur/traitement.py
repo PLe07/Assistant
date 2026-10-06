@@ -26,7 +26,7 @@ ESSAIS_MAX = 3
 # Une correction (ou un déplacement à la main) vaut un indice fort pour cet émetteur. Pas de points en moins pour
 # l'ancien type : un même émetteur envoie souvent plusieurs types (factures et courriers d'EDF).
 POINTS_APPRIS = 8.0
-AUTOMATIQUES = ("boite", "a_trier", "telechargements")  # les entrées surveillées (pas une demande explicite)
+AUTOMATIQUES = ("boite", "a_trier", "telechargements", "airdrop")  # les entrées surveillées (pas une demande)
 TYPE_DES_CATEGORIES = {"facture_service": "abonnement", "releve_bancaire": "banque", "sante": "sante",
                        "assurance": "assurance", "billet_transport": "transport", "reservation": "hebergement",
                        "ticket_caisse": "supermarche", "facture_achat": "commerce"}  # fmt: skip

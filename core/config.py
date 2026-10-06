@@ -83,6 +83,8 @@ DEFAUTS = {
         "corvees": {"actif": False},
         # 🧹 Le Nettoyeur de démarrage : « actif » = la surveillance en fond (modules/demarrage/config.py). Éteint.
         "demarrage": {"actif": False},
+        # 🗂 Le Trieur de documents (modules/trieur/config.py) : allumé par « python trieur.py installer ».
+        "trieur": {"actif": False},
         # Au bouton (voir AU_BOUTON) : « actif »: false les rend muets.
         **{nom: {"actif": True} for nom in AU_BOUTON},
     },

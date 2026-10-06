@@ -250,3 +250,56 @@ toi du même nom n'est jamais touché (la page s'appelle alors « … (Trieur).h
 **D-36 · Le test réel de Claude.**
 Comme pour les corvées : `@pytest.mark.live`, écarté par défaut (`-m 'not live'` dans pyproject), lancé à la main
 sur le Mac : `python -m pytest -m live tests/trieur/ia/test_ia.py` (moins d'un centime).
+
+## 2026-10-06 · P7-P8 — Entrées, raccourcis, démon, commandes
+
+**D-37 · Les entrées sont relues toutes les 2 secondes, pas surveillées par FSEvents.**
+Les fichiers fantômes d'iCloud et les fichiers écrits par morceaux se gèrent mieux en relisant les dossiers (une
+liste rapide de 4 dossiers). Mesuré avec 400 fichiers dans Téléchargements : 0,26 à 0,34 % de processeur.
+FSEvents (watchdog) ne sert qu'à suivre tes déplacements à la main dans « Classés » (D-30).
+
+**D-38 · Un fichier laissé n'est pas repris en boucle.**
+Pas assez sûr (Téléchargements), doublon ou en erreur : il n'est réexaminé que s'il change de taille.
+
+**D-39 · La note de l'iPhone.**
+Le raccourci écrit `<nom>.meta.json` ({"note": …}) AVANT le document, pour qu'elle soit là quand le Mac le voit.
+Elle est effacée quand son document est rangé ; restée seule plus de 10 minutes, elle est traitée comme un document.
+
+**D-40 · AirDrop.**
+Un fichier de Téléchargements dont la quarantaine dit « sharingd » vient d'AirDrop : c'est un envoi voulu, il est
+traité comme ceux de la boîte (tout format, seuil normal). Les autres téléchargements : PDF seulement, confiance
+≥ 0,85 (D-31), arrivés après l'installation.
+
+**D-41 · Les raccourcis de l'iPhone.**
+Deux raccourcis de la feuille de partage, écrits en plist par le Trieur, signés à l'installation
+(`shortcuts sign --mode anyone`) et déposés dans `BoiteMac/Raccourcis/` : ce sous-dossier n'est pas surveillé (seuls
+les fichiers du haut de la boîte le sont). Un raccourci déjà là n'est jamais remplacé. Sans signature possible,
+la recette manuelle (6 étapes) est dans ACTIONS_HUMAINES.md.
+
+**D-42 · L'action rapide du Finder.**
+Un paquet Automator « Trier avec l'assistant » dans `~/Library/Services`, marqué comme celui du Trieur : une
+nouvelle installation ne remplace que le sien, jamais un paquet étranger du même nom.
+
+**D-43 · Les notifications.**
+5 secondes d'attente pour regrouper une rafale ; au-delà de 3 documents, un seul résumé. Heures silencieuses et
+limite par heure : celles de l'Assistant (`core.notifications`). En mode test, le journal seulement.
+
+**D-44 · Chaque matin à 9 h.**
+Une notification pour chaque garantie qui finit dans 30 ou 7 jours (en plus des rappels de l'app Rappels), une
+fois par jour, et les pages HTML refaites.
+
+**D-45 · `ranger-existant`.**
+Sans `--confirmer`, le plan seul : rien ne bouge. Avec, chaque fichier passe par la chaîne normale (un doublon d'un
+document déjà rangé reste à sa place).
+
+**D-46 · Les logos très allongés sont complétés de blanc (2:1) avant l'OCR.**
+RapidOCR agrandit le petit côté jusqu'à 736 pixels : un bandeau de 600 × 120 devenait 3 200 × 736 (2,5 s). Avec la
+marge : 0,5 à 0,9 s, même texte. Sans effet gênant pour Vision.
+
+**D-47 · Mesurer la mémoire du démon.**
+Sous Linux, `ru_maxrss` d'un programme lancé par pytest garde le pic de pytest d'avant le lancement (l'OCR chargé :
+668 Mo). Le test lit `VmHWM`, propre au programme mesuré : 64 Mo au repos, 70 Mo en rangeant un PDF.
+
+**D-48 · Branchement dans l'Assistant.**
+`trieur` est déclaré (éteint) dans les réglages par défaut de l'Assistant, pour que le superviseur le connaisse ;
+`python assistant.py etat` affiche une ligne 🗂 ; `python assistant.py trieur …` lance la commande.

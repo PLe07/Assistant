@@ -9,8 +9,8 @@
 | P4 File, doublons, déplacement sûr, annulation, apprentissage | ✅ | 17 tests de la chaîne + 5 de l'interface Mac |
 | P5 Coffre à garanties, Rappels, rétractation, pages HTML | ✅ | 5 tests |
 | P6 Couche IA | ✅ | 9 tests + espion sur tout le corpus : 0 fuite |
-| P7 Entrées, action rapide, raccourcis | ⏳ | |
-| P8 Démon, notifications, doctor, CLI | ⏳ | |
+| P7 Entrées, action rapide, raccourcis | ✅ | 8 tests (horloge imitée) |
+| P8 Démon, notifications, doctor, CLI | ✅ | 17 tests ; démon 0,3 % de processeur, 64 Mo |
 | P9 Bout en bout réel, performance | ⏳ | |
 | P10 Installation réelle | ⏳ | |
 | P11 Revue hostile | ⏳ | |
@@ -189,6 +189,45 @@ Required test coverage of 85.0% reached. Total coverage: 96.28%
 96 passed, 1 deselected in 5.12s
   ✅ pytest + couverture ≥ 85 %
   ✅ corpus (principal + 2e corpus inédit)
+  ✅ sécurité et vie privée
+  ✅ performance
+CHECK OK
+```
+
+## P7 — Entrées, action rapide du Finder, raccourcis (✅)
+
+- `entrees/surveillance.py` (E1 boîte iCloud et fantômes, E2 À trier, E5 Téléchargements et AirDrop),
+  `entrees/finder.py` (E3), `raccourcis/` (§8), E4 = `trieur ajouter` et `modules.trieur.ajouter`.
+- Testé avec une horloge imitée : 3 mesures stables avant de prendre un fichier ; fichier qui grossit attendu ;
+  fichiers cachés, pages du Trieur, téléchargements en cours ignorés ; fantôme iCloud demandé une fois (relancé
+  après 2 min) ; note de l'iPhone ; note orpheline ; Téléchargements : seulement les PDF arrivés après
+  l'installation, 2 min de calme ; fichier laissé jamais repris en boucle ; AirDrop ; action rapide (plist valide,
+  jamais par-dessus un paquet étranger) ; raccourcis (note enregistrée avant le document) ; signature imitée.
+
+## P8 — Démon, notifications, doctor, commandes (✅)
+
+- `daemon.py`, `notifications.py`, `doctor.py`, `cli.py`, `arborescence.py`, `installer.py` ; ligne 🗂 dans
+  `python assistant.py etat` et `python assistant.py trieur …`.
+- Testé : de la boîte au classement avec la note « garantie 3 ans » (fiche à 36 mois, note effacée, page du coffre
+  écrite, notification) ; 5 documents → un seul résumé ; le matin, la garantie qui finit dans 30 jours (une fois) ;
+  déplacement à la main suivi ; la boucle du superviseur ; toutes les commandes (ajouter, journal, statut, coffre,
+  garantie, annuler, corriger, ranger-existant, arborescence, pages, doctor, installer).
+
+```
+$ pytest tests/trieur/perf -s           (moteur RapidOCR, sans cache ; Vision est plus rapide sur le Mac)
+PDF texte : max 0.81 s · photo de ticket : max 1.64 s (rapidocr)
+démon : 6.7 ms par tour de 2 s = 0.335 % de processeur ; mémoire au repos 64 Mo, pic 70 Mo
+```
+
+```
+$ PYTHON=…/venv/bin/python modules/trieur/check.sh          (après P7-P8)
+  ✅ ruff check
+  ✅ ruff format
+  ✅ mypy
+Required test coverage of 85.0% reached. Total coverage: 95.93%
+121 passed, 1 deselected in 10.27s
+  ✅ pytest + couverture ≥ 85 %
+  ✅ corpus (principal + 2e corpus inédit)         (corpus 1 : émetteur 116/117 après D-46, le reste inchangé)
   ✅ sécurité et vie privée
   ✅ performance
 CHECK OK

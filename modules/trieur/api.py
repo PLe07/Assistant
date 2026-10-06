@@ -9,7 +9,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-SOURCES = ("boite", "a_trier", "finder", "cli", "api", "telechargements", "courriel", "existant")
+SOURCES = ("boite", "a_trier", "finder", "cli", "api", "telechargements", "airdrop", "courriel", "existant")
 
 
 def ajouter(chemin: str | Path, source: str = "api", note: str | None = None,

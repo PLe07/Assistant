@@ -52,6 +52,9 @@ class FauxSysteme:
         self.telecharges.append(chemin)
         return True
 
+    def quarantaine(self, chemin: Path) -> str:
+        return ""
+
 
 class FauxOCR:
     """Lit dans chaque image le texte qu'on lui a donné pour elle (par la taille de l'image), sinon rien."""

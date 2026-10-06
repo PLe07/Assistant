@@ -1,0 +1,77 @@
+"""Les notifications de chaque sorte, l'installation dans les cas difficiles, et doctor."""
+
+from __future__ import annotations
+
+import time
+from pathlib import Path
+from types import SimpleNamespace
+
+from modules.trieur import doctor, installer, raccourcis
+from modules.trieur.base import Base
+from modules.trieur.notifications import Notifieur
+from tests.trieur.outils import FauxSysteme
+
+
+def _el(etat, **k):
+    valeurs = {"id": 1, "nom": "a.pdf", "destination": "/C/Factures/2026/x.pdf", "erreur": None}
+    valeurs.update(k)
+    return SimpleNamespace(etat=etat, **valeurs)
+
+
+def test_chaque_sorte_de_notification(reglages):
+    reglages["mode_test"] = False
+    envoyees = []
+    h = [0.0]
+    n = Notifieur(reglages, envoyer=lambda t, m: envoyees.append((t, m)), horloge=lambda: h[0])
+    for etat in ("a_verifier", "photos", "doublon", "en_attente"):
+        n.element(_el(etat))
+    assert n.vider() == 0  # trop tôt : on attend la rafale
+    h[0] = 10
+    assert n.vider() == 3 and [t for t, _ in envoyees] == ["🗂 À vérifier", "📷 Photo rangée", "🗂 Déjà rangé"]
+    n.element(_el("erreur", erreur="panne"))
+    assert n.vider(forcer=True) == 1 and envoyees[3] == ("⚠️ Trieur", "a.pdf : panne") and n.vider() == 0
+    n.echeance("Four", 7, "13/10/2026")
+    assert envoyees[-1] == ("🛡 Garantie", "Four : fin dans 7 jours (13/10/2026)")
+
+
+def test_installation_sans_icloud_et_finder_occupe(reglages, tmp_path, monkeypatch):
+    base = Base(tmp_path / "t.db")
+    monkeypatch.setattr(installer.finder, "installer", lambda *a: (_ for _ in ()).throw(FileExistsError("occupé")))
+    faits = installer.installer(reglages, base, FauxSysteme(), allumer=False)
+    textes = " ".join(t for _, t in faits)
+    assert "iCloud Drive introuvable" in textes and "occupé" in textes and "pas d'iCloud" in textes
+    assert base.lire_meta("installe_le") is not None
+    allumes = []
+    monkeypatch.setattr("core.config.activer_module", lambda nom, actif: allumes.append((nom, actif)))
+    installer.installer(reglages, base, FauxSysteme(), allumer=True)
+    assert allumes == [("trieur", True)]
+    base.fermer()
+
+
+def test_raccourcis_signes_puis_gardes(reglages, tmp_path, monkeypatch):
+    boite = tmp_path / "boite"
+    boite.mkdir()
+    monkeypatch.setattr(raccourcis, "signer", lambda src, dst: (dst.write_bytes(b"signe"), (True, ""))[1])
+    faits = installer._raccourcis(reglages, boite)
+    assert [e for e, _ in faits] == ["✅", "✅"] and (boite / "Raccourcis" / "Envoie au Mac.shortcut").exists()
+    assert all("déjà prêt" in t for _, t in installer._raccourcis(reglages, boite))
+
+
+def test_doctor_branches(reglages, tmp_path, monkeypatch):
+    base = Base(tmp_path / "t.db")
+    for cle in ("classes", "a_trier", "photos"):
+        Path(reglages["chemins"][cle]).mkdir(parents=True)
+    (Path(reglages["chemins"]["icloud"]) / "BoiteMac").mkdir(parents=True)
+    monkeypatch.setattr("modules.trieur.extraction.ocr.choisir", lambda *a: None)
+    reglages["actif"] = True
+    lignes = dict((t, e) for e, t in doctor.verifier(reglages, base, mac=False))
+    assert lignes["aucun OCR : photos et scans iront dans « À vérifier »"] == "⚠️"
+    assert any("muette" in t for t in lignes)
+    base.ecrire_meta("battement", str(time.time()))
+    base.mettre_a_jour(base.ajouter(tmp_path / "x.pdf", "cli"), etat="erreur")
+    base.mettre_a_jour(base.ajouter(tmp_path / "y.pdf", "cli"), etat="a_verifier")
+    textes = " ".join(t for _, t in doctor.verifier(reglages, base, mac=False))
+    assert "surveillance active" in textes and "1 en erreur" in textes and "1 à vérifier" in textes
+    monkeypatch.setattr("modules.trieur.extraction.ocr.choisir", lambda *a: SimpleNamespace(nom="vision"))
+    assert any("Apple Vision" in t for _, t in doctor.verifier(reglages, None, mac=False))
+    base.fermer()

@@ -91,8 +91,23 @@ def _logos(page: Any, travail: Path, nom: str) -> list[Path]:
         travail.mkdir(parents=True, exist_ok=True)
         cible = travail / f"{nom}-logo{i + 1}.png"
         page.get_pixmap(dpi=200, clip=pymupdf.Rect(x0, y0, x1, y1)).save(cible)
+        _pas_trop_allonge(cible)
         sortie.append(cible)
     return sortie
+
+
+def _pas_trop_allonge(png: Path) -> None:
+    """Un bandeau très allongé (600 × 120) est agrandi démesurément par certains OCR : une marge blanche en
+    haut et en bas le ramène à 2:1 (même texte, 3 à 4 fois moins de calcul)."""
+    from PIL import Image
+
+    with Image.open(png) as img:
+        largeur, hauteur = img.size
+        if largeur <= 2 * hauteur:
+            return
+        fond = Image.new("RGB", (largeur, largeur // 2), "white")
+        fond.paste(img.convert("RGB"), (0, (largeur // 2 - hauteur) // 2))
+    fond.save(png)
 
 
 def _pdftotext(chemin: Path, debut: int) -> str:

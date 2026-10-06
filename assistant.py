@@ -13,6 +13,7 @@
     python assistant.py traduction on     🇬🇧 chaque phrase française finie par un point devient anglaise (off : arrêter)
     python assistant.py corvees rapport   🔁 tes corvées répétées repérées (corvees seul : toutes ses commandes)
     python assistant.py demarrage rapport 🧹 ce qui se lance tout seul au démarrage, et ce que ça coûte
+    python assistant.py trieur statut     🗂 tes documents rangés, à vérifier, tes garanties (trieur seul : l'aide)
     python assistant.py activer mails     active un module (il démarre dans les 2 secondes)
     python assistant.py desactiver mails  désactive un module (il s'arrête dans les 2 secondes)
                                           (au bouton aussi : desactiver cine → son bouton ne fait plus rien)
@@ -148,6 +149,23 @@ def afficher_etat() -> int:
                   + f" · {s['sessions']} ouverture(s) mesurée(s) (python assistant.py demarrage rapport)")
         except Exception as e:
             print(f"   🧹 Démarrage : ⚠️ {e}")
+    if config.module_actif("trieur"):
+        try:
+            from modules.trieur import base as trieur_base
+            from modules.trieur import config as trieur_config
+            from modules.trieur import daemon as trieur
+
+            reglages_trieur, _ = trieur_config.charger()
+            b = trieur_base.ouvrir(reglages_trieur)
+            try:
+                s = trieur.status(reglages_trieur, b, time.time())
+            finally:
+                b.fermer()
+            age = f" (battement il y a {int(s['battement_age'])} s)" if s["vivant"] else ""
+            print("   🗂 Trieur : " + ("surveille" + age if s["vivant"] else "démarrage…")
+                  + f" · {s['ranges']} rangé(s), {s['a_verifier']} à vérifier (python assistant.py trieur statut)")
+        except Exception as e:
+            print(f"   🗂 Trieur : ⚠️ {e}")
     if r["aides"]:
         print(f"   💡 {len(r['aides'])} aide(s) t'attendent dans le menu de l'icône")
     vue = r["icone_vue"]
@@ -686,6 +704,10 @@ def main() -> int:
         from modules.demarrage.cli import main as demarrage
 
         return demarrage(sys.argv[2:])
+    if sys.argv[1:2] == ["trieur"]:  # le Trieur a ses propres commandes (ajouter, coffre, corriger…)
+        from modules.trieur.cli import main as trieur
+
+        return trieur(sys.argv[2:])
     actions = {
         "pause": pause, "reprendre": reprendre, "etat": afficher_etat, "journal": journal,
         "test-notif": test_notif, "test-claude": test_claude, "test-plantage": test_plantage,
@@ -697,7 +719,7 @@ def main() -> int:
                   "cine": cine, "revue": revue, "proactivite": proactivite}
     parser = argparse.ArgumentParser(description="Commandes de l'assistant")
     parser.add_argument("action", choices=[*actions, *avec_texte, "activer", "desactiver", "habitudes", "essai-memoire",
-                                           "corvees", "demarrage"])
+                                           "corvees", "demarrage", "trieur"])
     parser.add_argument("suite", nargs="*", help="activer / desactiver : le module ; micro, ecran : on ou off ; "
                                                  "noter, demander, memoire, recherche, rediger : ton texte")
     parser.add_argument("--etape", type=int, choices=[1, 2, 3, 4, 5], help="essai-memoire : une seule étape")
