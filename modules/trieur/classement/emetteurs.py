@@ -4,7 +4,8 @@ Où le nom compte :
 - en haut du document (les premières lignes : l'en-tête, le logo lu par l'OCR) ;
 - son site web (« www.fnac.com », « amazon.fr »), où qu'il soit ;
 - ailleurs dans le texte, un peu (un relevé cite « CB CARREFOUR », une facture « Casque Sony » : l'en-tête gagne).
-Un nom courant (« orange », « free », « but ») ne compte qu'en haut ou par son site (« strict »).
+Un nom courant (« orange », « free », « but ») ne compte qu'en haut ou par son site (« strict »). Une mention
+obligatoire ne fait pas l'émetteur : « www.service-public.fr » en bas d'un bulletin de paie (« en_haut_seulement_si »).
 
 Sans émetteur connu, c'est la première ligne de l'en-tête qui ressemble à un nom (pas un titre, une adresse, une
 date ni un numéro).
@@ -33,6 +34,7 @@ class Emetteur:
     domaines: tuple[str, ...] = ()
     strict: bool = False
     poids: float = 1.0
+    en_haut_seulement_si: tuple[str, ...] = ()
     motif: re.Pattern[str] = field(default=re.compile("(?!)"), compare=False)
 
 
@@ -63,6 +65,7 @@ def _depuis(d: dict[str, Any]) -> Emetteur:
         domaines=tuple(x.lower() for x in d.get("domaines", [])),
         strict=bool(d.get("strict", False)),
         poids=float(d.get("poids", 1.0)),
+        en_haut_seulement_si=tuple(normaliser(x) for x in d.get("en_haut_seulement_si", [])),
         motif=_motif(motifs),
     )
 
@@ -100,9 +103,10 @@ def trouver(texte: str, base: tuple[Emetteur, ...] | None = None, moi: str = "")
             if e.motif.search(ligne):
                 score, source = 10.0 - i, "en-tête"
                 break
-        if _domaine(e, plat):
+        mention = any(phrase in plat for phrase in e.en_haut_seulement_si)  # une mention obligatoire : l'en-tête seul
+        if _domaine(e, plat) and not mention:
             score, source = max(score, 6.0) + 1.0, source or "site"
-        if not e.strict:
+        if not e.strict and not mention:
             reste = sum(1 for ligne in lignes[HAUT:] if e.motif.search(ligne))
             if reste:
                 score += min(reste, 3)

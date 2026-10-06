@@ -381,3 +381,16 @@ sinon il le laisse et le dit. 2 tests de plus (`test_l_ancien_a_trier_du_bureau`
 - D-60 : le démon demande le droit de faire venir les fichiers iCloud. S'ils ne sont pas encore là : `brctl
   download`, attente sans notification, nouvel essai toutes les 2 minutes sur la même ligne. 3 tests de plus.
 
+## Sur ton Mac — après D-60 : ✅ la photo envoyée de l'iPhone est rangée
+
+```
+✅ documents : 1 rangé, 1 erreur, 1 laissé à sa place
+✅ n°662 IMG_7892.jpg → Classés/Administratif/Salaire/2026/…_Service-Public_Bulletin-de-paie_Salaire_….pdf
+                        (bulletin_paie, 91%)
+⚠️ n°661 IMG_7892.jpg → —  (OSError : [Errno 11] Resource deadlock avoided)
+```
+- ✅ Le trajet complet marche sur ton Mac : raccourci de l'iPhone → iCloud → démon → Vision → PDF cherchable →
+  `Classés`. Bon type, bon dossier.
+- ❌ Émetteur « Service-Public » : c'est la mention obligatoire en bas des bulletins → D-61.
+- ❌ La ligne d'erreur n°661, périmée, restait affichée → D-61. 2 tests de plus.
+

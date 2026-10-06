@@ -213,11 +213,11 @@ class Base:
         return n
 
     def dedoublonner_erreurs(self) -> int:
-        """Un fichier repris en boucle (avant D-59) a laissé une ligne d'erreur par passage : seule la dernière reste
-        (jamais une ligne qui a une action au journal)."""
-        return self._x("DELETE FROM elements WHERE etat = 'erreur' AND id NOT IN (SELECT MAX(id) FROM elements "
-                       "WHERE etat = 'erreur' GROUP BY chemin) AND NOT EXISTS (SELECT 1 FROM actions "
-                       "WHERE actions.element = elements.id)").rowcount  # fmt: skip
+        """Une ligne d'erreur qu'une ligne plus récente du même fichier remplace (repris en boucle avant D-59, ou
+        rangé ensuite, D-61) disparaît ; jamais une ligne qui a une action au journal."""
+        return self._x("DELETE FROM elements WHERE etat = 'erreur' AND EXISTS (SELECT 1 FROM elements AS apres "
+                       "WHERE apres.chemin = elements.chemin AND apres.id > elements.id) AND NOT EXISTS "
+                       "(SELECT 1 FROM actions WHERE actions.element = elements.id)").rowcount  # fmt: skip
 
     def erreurs(self) -> list[Element]:
         return [Element(**dict(x)) for x in self._x("SELECT * FROM elements WHERE etat = 'erreur' ORDER BY id")]

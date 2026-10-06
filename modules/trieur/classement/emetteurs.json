@@ -1,5 +1,5 @@
 {
- "_lisez_moi": "La base des émetteurs du Trieur. motifs : comment le nom s'écrit, en minuscules sans accents (comparés mot à mot). strict : un nom courant (orange, free…) ne compte qu'en haut du document ou par son site. poids < 1 : un émetteur générique, choisi seulement si aucun autre n'est trouvé. Ajoute les tiens dans emetteurs_perso.json (même format), à côté de la base de données du Trieur.",
+ "_lisez_moi": "La base des émetteurs du Trieur. motifs : comment le nom s'écrit, en minuscules sans accents (comparés mot à mot). strict : un nom courant (orange, free…) ne compte qu'en haut du document ou par son site. en_haut_seulement_si : si le document contient l'une de ces phrases, l'émetteur ne compte qu'en haut (le « www.service-public.fr » obligatoire en bas de tout bulletin de paie n'en fait pas l'émetteur). poids < 1 : un émetteur générique, choisi seulement si aucun autre n'est trouvé. Ajoute les tiens dans emetteurs_perso.json (même format), à côté de la base de données du Trieur.",
  "emetteurs": [
   {"nom": "Fnac", "categorie": "commerce", "motifs": ["fnac"], "domaines": ["fnac.com"]},
   {"nom": "Darty", "categorie": "commerce", "motifs": ["darty"], "domaines": ["darty.com"]},
@@ -97,7 +97,7 @@
   {"nom": "Monabanq", "categorie": "banque", "motifs": ["monabanq"], "domaines": ["monabanq.com"]},
   {"nom": "HSBC", "categorie": "banque", "motifs": ["hsbc"], "domaines": ["hsbc.fr"]},
   {"nom": "Nickel", "categorie": "banque", "motifs": ["nickel", "compte-nickel"], "domaines": ["nickel.eu"], "strict": true},
-  {"nom": "Impôts", "categorie": "impots", "motifs": ["direction generale des finances publiques", "finances publiques", "dgfip", "centre des finances publiques", "service des impots"], "domaines": ["impots.gouv.fr"]},
+  {"nom": "Impôts", "categorie": "impots", "motifs": ["direction generale des finances publiques", "finances publiques", "dgfip", "centre des finances publiques", "service des impots"], "domaines": ["impots.gouv.fr"], "en_haut_seulement_si": ["bulletin de paie"]},
   {"nom": "CAF", "categorie": "social", "motifs": ["caisse d'allocations familiales", "caf"], "domaines": ["caf.fr"], "strict": true},
   {"nom": "URSSAF", "categorie": "social", "motifs": ["urssaf"], "domaines": ["urssaf.fr", "autoentrepreneur.urssaf.fr"]},
   {"nom": "France Travail", "categorie": "social", "motifs": ["france travail", "pole emploi"], "domaines": ["francetravail.fr", "pole-emploi.fr"]},
@@ -153,7 +153,7 @@
   {"nom": "Guy Hoquet", "categorie": "immobilier", "motifs": ["guy hoquet"], "domaines": ["guy-hoquet.com"]},
   {"nom": "La Poste", "categorie": "administration", "motifs": ["la poste"], "domaines": ["laposte.fr"]},
   {"nom": "ANTS", "categorie": "administration", "motifs": ["agence nationale des titres securises", "ants"], "domaines": ["ants.gouv.fr"], "strict": true},
-  {"nom": "Service-Public", "categorie": "administration", "motifs": ["service-public.fr"], "domaines": ["service-public.fr"]},
+  {"nom": "Service-Public", "categorie": "administration", "motifs": ["service-public.fr"], "domaines": ["service-public.fr"], "en_haut_seulement_si": ["bulletin de paie"]},
   {"nom": "République française", "categorie": "administration", "motifs": ["republique francaise", "republique francais"], "domaines": [], "poids": 0.3},
   {"nom": "Sony", "categorie": "marque", "motifs": ["sony"], "domaines": ["sony.fr"], "strict": true},
   {"nom": "Samsung", "categorie": "marque", "motifs": ["samsung"], "domaines": ["samsung.com"], "strict": true},

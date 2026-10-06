@@ -126,6 +126,21 @@ def test_emetteur_inconnu_lu_en_haut():
     assert emetteurs.cle("Leroy-Merlin") == emetteurs.cle("LEROY MERLIN")
 
 
+def test_une_mention_obligatoire_ne_fait_pas_l_emetteur():
+    """Ta photo de bulletin de paie : « www.service-public.fr », obligatoire en bas de tout bulletin, avait gagné
+    sur ton employeur."""
+    bulletin = ("BULLETIN DE PAIE\nBoulangerie Artisanale Morel\n12 rue du Four 44000 Nantes\nPériode du 01/08/2026 au "
+                "31/08/2026\nSalaire de base 2 300,00\n" + "ligne\n" * 8 + "Net à payer 1 800,00 €\nDans votre intérêt "
+                "et pour vous aider à faire valoir vos droits, conservez ce bulletin de paie sans limitation "
+                "de durée.\n"
+                "Rubrique dédiée au bulletin de paie sur le portail www.service-public.fr\n"
+                "Prélèvement à la source : impots.gouv.fr")  # fmt: skip
+    trouve = emetteurs.trouver(bulletin)
+    assert trouve is not None and trouve.nom == "Boulangerie Artisanale Morel" and not trouve.connu
+    assert emetteurs.trouver("Service-Public.fr\nDemande d'acte de naissance\n").nom == "Service-Public"
+    assert emetteurs.trouver("Avis d'impôt\nwww.impots.gouv.fr\n").nom == "Impôts"
+
+
 def test_emetteurs_perso(tmp_path):
     perso = tmp_path / "emetteurs_perso.json"
     perso.write_text(json.dumps({"emetteurs": [{"nom": "Fnac", "categorie": "ecommerce", "motifs": ["fnac"]},

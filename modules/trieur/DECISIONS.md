@@ -422,3 +422,16 @@ comme le superviseur. Le drapeau `SF_DATALESS` de D-59 ne suffit donc pas.
 - Un fichier qui revient (laissé, en erreur, ou attendu d'iCloud) reprend sa ligne au lieu d'en créer une
   nouvelle : une seule ligne par fichier, sauf si une action au journal montre qu'il a déjà bougé.
 
+**D-61 · Une mention obligatoire ne fait pas l'émetteur ; une erreur périmée disparaît.**
+Après D-60, ta photo envoyée de l'iPhone a été lue et rangée : bulletin de paie à 91 %, dans
+`Administratif/Salaire/2026`. Deux défauts restaient :
+- l'émetteur trouvé était « Service-Public ». Tout bulletin de paie porte en bas « Rubrique dédiée au bulletin de
+  paie sur le portail www.service-public.fr », et ce site comptait plus que ton employeur lu en haut.
+  `emetteurs.json` reçoit un champ `en_haut_seulement_si` : si le document contient l'une de ces phrases
+  (« bulletin de paie »), l'émetteur ne compte qu'en en-tête, ni par son site ni dans le texte. Il s'applique à
+  Service-Public et aux Impôts (« impots.gouv.fr » pour le prélèvement à la source). Un formulaire de
+  service-public.fr ou un avis d'impôt restent reconnus ;
+- l'ancienne ligne « erreur » de ta photo restait affichée alors que la photo était rangée. Une ligne d'erreur
+  qu'une ligne plus récente du même fichier remplace est retirée, au démarrage et après chaque rangement, jamais
+  si elle a une action au journal.
+

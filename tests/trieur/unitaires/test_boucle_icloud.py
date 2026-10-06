@@ -88,6 +88,13 @@ def test_les_lignes_d_erreur_en_double_sont_retirees_au_demarrage(reglages):
     b.mettre_a_jour(derniere, etat="erreur", erreur="OSError : x")
     d.demarrer()
     assert sorted(el.id for el in b.erreurs()) == sorted([garde, autre, derniere])
+    range_ensuite = b.ajouter(Path("/boite/scan.pdf"), "boite")  # ta photo : reprise, puis rangée (D-61)
+    assert range_ensuite == derniere
+    b.mettre_a_jour(b.ajouter(Path("/boite/photo.jpg"), "boite"), etat="erreur")
+    b.mettre_a_jour(b._x("INSERT INTO elements (chemin, nom, source, etat, ajoute) VALUES ('/boite/photo.jpg', "
+                         "'photo.jpg', 'boite', 'classe', 0)").lastrowid, etat="classe")  # fmt: skip
+    assert b.dedoublonner_erreurs() == 1
+    assert sorted(el.id for el in b.erreurs()) == sorted([garde, autre])
     d.arreter()
 
 

@@ -139,6 +139,7 @@ class Demon:
             except Exception as e:
                 log.warning("déplacement non suivi (%s) : %s", nouveau.name, e)
         if faits:
+            self.o.base.dedoublonner_erreurs()  # un fichier enfin rangé efface ses anciennes erreurs (D-61)
             self._pages()
         self.notifieur.vider()
         self._chaque_matin()
