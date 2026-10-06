@@ -16,3 +16,4 @@ tests/corpus_arnaques/genere/
 sorties/
 *.db
 *.log
+*.egg-info/
