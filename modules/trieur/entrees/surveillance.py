@@ -109,7 +109,7 @@ class Entrees:
     def _examiner(self, e: os.DirEntry[str], chemin: Path, source: str, noms: set[str],
                   maintenant: float) -> Pret | None:  # fmt: skip
         nom = e.name
-        if source == "boite" and nom.startswith(".") and nom.endswith(".icloud"):
+        if source in ("boite", "a_trier") and nom.startswith(".") and nom.endswith(".icloud"):  # Bureau dans iCloud
             self._demander_a_icloud(chemin.parent / nom[1:-7], maintenant)
             return None
         if nom.startswith((".", "~$")) or nom.endswith(EN_COURS) or nom in (pages.COFFRE, pages.DERNIERS):

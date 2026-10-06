@@ -303,3 +303,31 @@ Sous Linux, `ru_maxrss` d'un programme lancé par pytest garde le pic de pytest 
 **D-48 · Branchement dans l'Assistant.**
 `trieur` est déclaré (éteint) dans les réglages par défaut de l'Assistant, pour que le superviseur le connaisse ;
 `python assistant.py etat` affiche une ligne 🗂 ; `python assistant.py trieur …` lance la commande.
+
+## 2026-10-06 · P9-P11 — Bout en bout, installation, revue hostile
+
+**D-49 · Après le rangement, plus rien ne peut défaire l'état « rangé ».**
+- L'état est écrit dès que le fichier est en place ; les tags et la garantie viennent après, et leur échec est
+  seulement noté (le document reste rangé, il n'est pas remis en file).
+- Une photo de facture dont l'archive de l'original échoue : le PDF fabriqué est retiré aussitôt (sinon chaque
+  nouvel essai en ajoutait un).
+
+**D-50 · Trois garde-fous de plus.**
+- Sans OCR (ou OCR en panne), une image va dans « À vérifier », jamais dans Photos : on ne peut pas savoir si c'est
+  une facture.
+- Les fichiers iCloud pas encore téléchargés sont aussi demandés dans « À trier » (le Bureau est souvent dans
+  iCloud).
+- Un .docx dont le texte décompressé dépasse 50 Mo est refusé (archive piégée).
+
+**D-51 · `annuler` suit un fichier déplacé à la main.**
+Si le fichier rangé a été déplacé depuis (et suivi, D-30), l'annulation le prend à sa nouvelle place, après avoir
+vérifié son empreinte.
+
+**D-52 · La réponse à tes envois passe la limite horaire de l'Assistant, pas les heures silencieuses.**
+Tu viens d'envoyer un document : savoir qu'il est rangé fait partie de la demande. Les notifications du matin
+(garanties) suivent, elles, la règle commune.
+
+**D-53 · Le bout en bout du Mac.**
+`tests/trieur/e2e_mac` travaille dans `~/TrieurSandbox`, `iCloud Drive/BoiteMac-TEST` et la liste « Trieur-TEST »,
+qui ne doivent pas exister avant (sinon il s'arrête sans rien toucher), et les supprime dans un `finally`, puis
+vérifie qu'il ne reste rien. Il n'est pas dans check.sh (il faut le vrai Mac) ; ailleurs, il échoue franchement.

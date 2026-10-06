@@ -15,8 +15,13 @@ from pathlib import Path
 LIEN = re.compile(r"^\s*(https?://\S+)\s*$", re.IGNORECASE)
 
 
+TAILLE_MAX_XML = 50_000_000  # un .docx dont le texte décompressé dépasse 50 Mo est refusé (archive piégée)
+
+
 def docx(chemin: Path) -> str:
     with zipfile.ZipFile(chemin) as z:
+        if z.getinfo("word/document.xml").file_size > TAILLE_MAX_XML:
+            raise ValueError("document.xml trop gros")
         xml = z.read("word/document.xml").decode("utf-8", "replace")
     paragraphes = []
     for p in re.findall(r"<w:p[ >].*?</w:p>", xml, flags=re.S):

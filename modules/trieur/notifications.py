@@ -29,10 +29,14 @@ class Evenement:
     message: str
 
 
-def _envoyer_vraiment(titre: str, message: str) -> None:
-    from core.notifications import notifier
+def _envoyer_vraiment(titre: str, message: str, reponse: bool = True) -> None:
+    """Un document que tu viens d'envoyer mérite sa réponse : elle passe la limite par heure de l'Assistant (c'est
+    toi qui l'as demandée), mais jamais les heures silencieuses. Les rappels du matin suivent la règle commune."""
+    from core import config
+    from core.notifications import en_heures_silencieuses, notifier
 
-    notifier(titre, message, module="trieur")
+    urgent = reponse and not en_heures_silencieuses(config.charger())
+    notifier(titre, message, module="trieur", urgent=urgent)
 
 
 class Notifieur:
@@ -48,9 +52,20 @@ class Notifieur:
             return
         self._envoyer(titre, message)
 
+    def _dossier(self, destination: Path) -> str:
+        """« Factures/2026 » plutôt que « 2026 » : le chemin depuis Classés (ou depuis ton dossier personnel)."""
+        from modules.trieur import config
+
+        for racine in (config.chemin(self.reglages, "classes"), Path.home()):
+            try:
+                return str(destination.parent.relative_to(racine)) or racine.name
+            except ValueError:
+                continue
+        return destination.parent.name
+
     def element(self, el: Element, garantie: str | None = None) -> None:
         nom = Path(el.destination).name if el.destination else el.nom
-        dossier = Path(el.destination).parent.name if el.destination else ""
+        dossier = self._dossier(Path(el.destination)) if el.destination else ""
         if el.etat == "classe":
             message = f"{nom} → {dossier}" + (f" · garantie jusqu'au {garantie}" if garantie else "")
             e = Evenement(self.horloge(), "classe", "🗂 Rangé", message)
@@ -83,4 +98,9 @@ class Notifieur:
         return len(lot)
 
     def echeance(self, produit: str, jours: int, fin: str) -> None:
-        self.envoyer("🛡 Garantie", f"{produit} : fin dans {jours} jours ({fin})")
+        if self.reglages.get("mode_test"):
+            log.info("(mode test) garantie : %s, fin dans %s jours", produit, jours)
+        elif self._envoyer is _envoyer_vraiment:
+            _envoyer_vraiment("🛡 Garantie", f"{produit} : fin dans {jours} jours ({fin})", reponse=False)
+        else:
+            self._envoyer("🛡 Garantie", f"{produit} : fin dans {jours} jours ({fin})")

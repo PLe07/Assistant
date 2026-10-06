@@ -11,9 +11,9 @@
 | P6 Couche IA | ✅ | 9 tests + espion sur tout le corpus : 0 fuite |
 | P7 Entrées, action rapide, raccourcis | ✅ | 8 tests (horloge imitée) |
 | P8 Démon, notifications, doctor, CLI | ✅ | 17 tests ; démon 0,3 % de processeur, 64 Mo |
-| P9 Bout en bout réel, performance | ⏳ | |
-| P10 Installation réelle | ⏳ | |
-| P11 Revue hostile | ⏳ | |
+| P9 Bout en bout réel, performance | ✅ ici · ⏳ Mac | bac à sable : 124 documents, 0 perdu, 0 écrasé, tout annulé intact |
+| P10 Installation réelle | ⏳ Mac | `trieur installer` testé en bac à sable ; ACTIONS_HUMAINES.md |
+| P11 Revue hostile | ✅ | 8 défauts corrigés, chacun testé ; RAPPORT_FINAL.md |
 
 ## P0 — Reconnaissance (✅)
 
@@ -229,6 +229,46 @@ Required test coverage of 85.0% reached. Total coverage: 95.93%
   ✅ pytest + couverture ≥ 85 %
   ✅ corpus (principal + 2e corpus inédit)         (corpus 1 : émetteur 116/117 après D-46, le reste inchangé)
   ✅ sécurité et vie privée
+  ✅ performance
+CHECK OK
+```
+
+## P9 — Bout en bout et performance (✅ ici, ⏳ sur le Mac)
+
+- `tests/trieur/e2e/test_bout_en_bout.py` : tout le corpus 1 déposé dans la boîte iCloud et « À trier » d'un bac à
+  sable, le démon tourne (OCR de la machine, Claude imité) :
+  - chaque fichier déposé est retrouvé (rangé, photos, À vérifier) ; aucun ne reste dans les entrées ;
+  - deux fichiers placés d'avance aux noms que le Trieur choisit sont intacts (le sien reçoit « -2 ») ;
+  - plus de 110 rangés, 2 photos, 1 doublon, 0 erreur ; plus de 32 garanties, alias, rappels dans Trieur-TEST ;
+    pages HTML ; notifications regroupées ; le fantôme iCloud demandé ;
+  - puis **tout est annulé** : chaque fichier revient à sa place, octet pour octet ; rien ne reste dans Classés.
+- `tests/trieur/e2e_mac/test_bout_en_bout_mac.py` : le même chemin sur ton Mac (Vision, tags, alias, Rappels,
+  iCloud, sips, plutil, signature d'un raccourci), avec nettoyage garanti (D-53). Hors Mac, il échoue franchement.
+- `tests/trieur/perf` : voir P8 (PDF 0,81 s, photo 1,64 s, démon 0,34 %, 64 Mo).
+
+## P10 — Installation (⏳ sur le Mac)
+
+`python trieur.py installer` (testé en bac à sable : dossiers, action rapide, raccourcis, date d'installation,
+pages, allumage) ; les étapes sur le Mac et l'iPhone sont dans ACTIONS_HUMAINES.md.
+
+## P11 — Revue hostile (✅)
+
+Voir RAPPORT_FINAL.md § 4 et D-49 à D-52 : 8 défauts trouvés et corrigés, chacun avec son test ; aucun `sudo`,
+réseau, shell ni `rm -rf` dans le code (test automatique).
+
+```
+$ PYTHON=…/venv/bin/python modules/trieur/check.sh          (final)
+  ✅ ruff check
+  ✅ ruff format
+  ✅ mypy
+Required test coverage of 85.0% reached. Total coverage: 96.26%
+128 passed, 1 deselected in 61.99s (0:01:01)
+  ✅ pytest + couverture ≥ 85 %
+7 passed in 111.47s (0:01:51)
+  ✅ corpus (principal + 2e corpus inédit)
+6 passed in 47.24s
+  ✅ sécurité et vie privée
+2 passed in 14.12s
   ✅ performance
 CHECK OK
 ```

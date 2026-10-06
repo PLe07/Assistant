@@ -139,15 +139,20 @@ def _traiter(o: Outils, el: base_.Element) -> None:
     if c is not None and etat != "photos":
         infos.update(numero=c.numero, detail=c.detail, raisons=c.raisons[:8], scores=c.scores,
                      emetteur_connu=c.emetteur_connu, en_ligne=c.en_ligne)  # fmt: skip
-    _tags(o, el, fichier, etat, c)
+    # Le fichier est rangé : c'est écrit tout de suite. Ce qui suit (tags, garantie) peut échouer sans rien défaire.
     o.base.mettre_a_jour(
         el.id, etat=etat, traite=time.time(), destination=str(fichier), infos=infos, erreur=None,
         type=c.type if c else None, confiance=c.confiance if c else None, emetteur=c.emetteur if c else None,
         date=c.date.isoformat() if c and c.date else None, par=c.source if c else None,
         montant=str(c.montant) if c and c.montant is not None else None,
     )  # fmt: skip
-    if etat == "classe" and c is not None and o.coffre is not None:
-        o.coffre.enregistrer(el.id, c, fichier)
+    try:
+        _tags(o, el, fichier, etat, c)
+        if etat == "classe" and c is not None and o.coffre is not None:
+            o.coffre.enregistrer(el.id, c, fichier)
+    except Exception as erreur:
+        log.warning("%s : rangé, mais tags ou garantie en échec (%s)", el.nom, erreur)
+        o.base.mettre_a_jour(el.id, erreur=f"après le rangement : {erreur}"[:300])
     log.info("%s → %s/%s (%s, %.2f)", el.nom, fichier.parent.name, fichier.name, c.type if c else sortie,
              c.confiance if c else 0.0)  # fmt: skip
 
@@ -209,8 +214,16 @@ def _ranger_une_photo_de_document(o: Outils, el: base_.Element, c: Classement, e
     image.pdf_cherchable(e.image, e.morceaux, pdf)
     fichier = rangement.creer(pdf, dossier, nom, o.base, el.id)
     originaux = nommage.dossier(c, o.reglages, "originaux")
-    archive = rangement.deplacer(source, o.classes / originaux, Path(nom).stem + Path(el.nom).suffix.lower(), o.base,
-                                 el.id, genre="archive", attendue=empreinte)  # fmt: skip
+    try:
+        archive = rangement.deplacer(source, o.classes / originaux, Path(nom).stem + Path(el.nom).suffix.lower(),
+                                     o.base, el.id, genre="archive", attendue=empreinte)  # fmt: skip
+    except Exception:
+        # L'original n'a pas bougé : le PDF fabriqué est retiré, sinon chaque nouvel essai en ajouterait un.
+        for a in o.base.actions(el.id):
+            if a["genre"] == "cree" and a["cible"] == str(fichier):
+                fichier.unlink(missing_ok=True)
+                o.base.defaire(a["id"])
+        raise
     infos["original"] = str(archive)
     return fichier
 
@@ -272,6 +285,10 @@ def annuler(o: Outils, element: int) -> list[str]:
         faits += o.coffre.oublier(element)
     for a in reversed(actions):
         genre, cible = a["genre"], Path(a["cible"]) if a["cible"] else None
+        if genre == "range" and cible is not None and not cible.exists() and el.destination:
+            suivi = Path(el.destination)  # déplacé à la main depuis : le Trieur l'a suivi (apprendre_deplacement)
+            if suivi.exists() and rangement.empreinte(suivi) == a["empreinte"]:
+                cible = suivi
         if genre in ("range", "archive") and cible is not None:
             if not cible.exists():
                 faits.append(f"introuvable : {cible} (déplacé à la main ?)")

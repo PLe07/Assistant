@@ -50,7 +50,7 @@ def test_de_la_boite_au_classement(reglages):
     assert (boite / "Mon coffre.html").exists() and "Casque" in (boite / "Mon coffre.html").read_text()
     h.t += 10
     d.tour()
-    assert envoyees == [("🗂 Rangé", f"{Path(el.destination).name} → 2026 · garantie jusqu'au 03/10/2029")]
+    assert envoyees == [("🗂 Rangé", f"{Path(el.destination).name} → Factures/2026 · garantie jusqu'au 03/10/2029")]
     s = daemon.status(reglages, d.o.base, h())
     assert s["vivant"] and s["ranges"] == 1
     d.arreter()

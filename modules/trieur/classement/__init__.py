@@ -131,8 +131,8 @@ def remplir(c: Classement, texte: str, reglages: dict[str, Any], note: str | Non
 def issue(c: Classement | None, nature: str, mots: int, erreur: str | None, reglages: dict[str, Any]) -> str:
     """Où va le document, sans Claude : « classe », « photos » (une vraie photo) ou « a_verifier ».
     Claude (§6) n'intervient qu'entre les deux, pour un document lisible sous le seuil de confiance."""
-    if erreur in ("protege", "abime", "vide"):
-        return "a_verifier"
+    if erreur in ("protege", "abime", "vide", "sans_ocr", "illisible"):
+        return "a_verifier"  # sans OCR, une photo de facture ne doit pas finir dans Photos
     if nature == "image" and (c is None or (c.date is None and c.montant is None)):
         if mots < int(reglages["classement"]["photo_mots_min"]):
             return "photos"
