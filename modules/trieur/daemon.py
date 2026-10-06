@@ -170,11 +170,13 @@ class Demon:
 
 
 def boucle(ctx: Any) -> None:
-    from modules.trieur import config
+    from modules.trieur import config, natif
 
     reglages, erreurs = config.charger()
     for e in erreurs:
         log.warning("%s", e)
+    if natif.permettre_icloud():  # D-60 : lire un fichier iCloud le fait venir, au lieu d'échouer
+        log.info("fichiers iCloud : téléchargés à la lecture")
     demon = Demon(reglages)
     demon.demarrer()
     relu = time.time()

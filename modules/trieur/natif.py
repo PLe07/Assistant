@@ -1,7 +1,8 @@
 """Tout ce qui parle directement à macOS par PyObjC, isolé ici (D-04) :
 - Vision : le texte d'une image, avec la position de chaque ligne (VNRecognizeTextRequest) ;
 - Vision : les quatre coins d'un document photographié (VNDetectDocumentSegmentationRequest) ;
-- Finder : les tags d'un fichier, et un vrai alias (un « signet » qui suit le fichier s'il est déplacé).
+- Finder : les tags d'un fichier, et un vrai alias (un « signet » qui suit le fichier s'il est déplacé) ;
+- iCloud : autoriser ce processus à faire venir les fichiers pas encore téléchargés qu'il lit (D-60).
 
 Ce fichier n'est pas compté dans la couverture des tests du conteneur : il est vérifié sur ton Mac par
 tests/trieur/e2e_mac. Ailleurs que sur macOS, chaque fonction échoue proprement (exception ou False).
@@ -109,3 +110,22 @@ def creer_alias(cible: Path, alias: Path) -> bool:
         return False
     ok, _ = NSURL.writeBookmarkData_toURL_options_error_(donnees, NSURL.fileURLWithPath_(str(alias)), adaptee, None)
     return bool(ok)
+
+
+# sys/resource.h : setiopolicy_np(IOPOL_TYPE_VFS_MATERIALIZE_DATALESS_FILES, IOPOL_SCOPE_PROCESS, …_ON)
+IOPOL_TYPE_VFS_MATERIALIZE_DATALESS_FILES, IOPOL_SCOPE_PROCESS, IOPOL_MATERIALIZE_DATALESS_FILES_ON = 3, 0, 2
+
+
+def permettre_icloud() -> bool:
+    """Un programme lancé par launchd peut se voir refuser la lecture d'un fichier iCloud pas encore téléchargé
+    (« Resource deadlock avoided ») : on demande à macOS de le faire venir quand on le lit. Ce processus seulement."""
+    if sys.platform != "darwin":
+        return False
+    try:
+        import ctypes
+
+        libc = ctypes.CDLL("/usr/lib/libSystem.B.dylib", use_errno=True)
+        return bool(libc.setiopolicy_np(IOPOL_TYPE_VFS_MATERIALIZE_DATALESS_FILES, IOPOL_SCOPE_PROCESS,
+                                        IOPOL_MATERIALIZE_DATALESS_FILES_ON) == 0)  # fmt: skip
+    except (OSError, AttributeError):
+        return False

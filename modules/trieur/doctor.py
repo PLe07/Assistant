@@ -177,12 +177,16 @@ def verifier(reglages: dict[str, Any], base: Any = None, maintenant: float | Non
         comptes = base.compter()
         from modules.trieur.pages import LIBELLES
 
-        libelles = {**LIBELLES, "ignore": "laissé à sa place (pas assez sûr pour le déplacer)"}
+        libelles = {**LIBELLES, "ignore": "laissé à sa place"}
         lignes.append(_ligne("✅", "documents : " + (", ".join(f"{n} {libelles.get(e, e)}"
                                                               for e, n in sorted(comptes.items()))
                                                     or "aucun pour l'instant")))  # fmt: skip
         if comptes.get("ignore"):
             lignes.append(_ligne("✅", "les fichiers laissés et pourquoi : python trieur.py statut"))
+        attendus = base.attendus_d_icloud()
+        if attendus:
+            lignes.append(_ligne("⏳", f"{attendus} attendu(s) d'iCloud : téléchargement demandé, nouvel essai toutes "
+                                      "les 2 minutes"))  # fmt: skip
         if comptes.get("erreur"):
             lignes.append(_ligne("⚠️", f"{comptes['erreur']} en erreur : python trieur.py journal"))
             lignes += _erreurs_par_dossier(base)

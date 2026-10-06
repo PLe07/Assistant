@@ -408,3 +408,17 @@ Elles grossissaient d'environ 10 par minute, et c'est un vrai bug, reproduit par
 - le `~/Documents/À trier` laissé par D-57 est retiré s'il est vide et né après l'installation du Trieur. Un
   dossier plus ancien est forcément à toi : il n'est jamais regardé.
 
+**D-60 · Ta photo envoyée de l'iPhone : « Resource deadlock avoided » veut dire « pas encore là ».**
+Après D-59, doctor a montré la cause : un seul fichier, `IMG_7892.jpg`, arrivé par le raccourci dans la boîte
+de l'app Raccourcis (iCloud). Le lire échouait (`OSError [Errno 11] Resource deadlock avoided`), et chaque passage
+le reprenait (235 lignes, ramenées à 1 par D-59). macOS renvoie cette erreur quand un programme lit un fichier
+iCloud pas encore téléchargé sans avoir le droit de le faire venir. C'est le cas des programmes lancés par launchd
+comme le superviseur. Le drapeau `SF_DATALESS` de D-59 ne suffit donc pas.
+- Au lancement, le démon demande à macOS de faire venir les fichiers iCloud qu'il lit (`setiopolicy_np`,
+  « materialize dataless files », pour ce processus seulement). Le journal dit si macOS a accepté.
+- Si l'erreur revient quand même, ce n'est plus une erreur. Le fichier est demandé à iCloud (`brctl download`),
+  laissé sans notification, puis réessayé toutes les 2 minutes jusqu'à son arrivée. doctor l'affiche :
+  « ⏳ N attendu(s) d'iCloud ».
+- Un fichier qui revient (laissé, en erreur, ou attendu d'iCloud) reprend sa ligne au lieu d'en créer une
+  nouvelle : une seule ligne par fichier, sauf si une action au journal montre qu'il a déjà bougé.
+

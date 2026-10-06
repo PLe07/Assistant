@@ -367,3 +367,17 @@ sinon il le laisse et le dit. 2 tests de plus (`test_l_ancien_a_trier_du_bureau`
 - Corrigé par D-59 : une seule ligne par fichier illisible, les doublons retirés au démarrage, les fichiers iCloud
   pas encore téléchargés attendus au lieu d'être lus, et doctor qui affiche le dossier et le message.
 - 4 tests de plus (`tests/trieur/unitaires/test_boucle_icloud.py`).
+
+## Sur ton Mac — après D-59 : la cause, une photo envoyée de l'iPhone → D-60
+
+```
+✅ ancien dossier /Users/…/Documents/À trier retiré (il était vide)
+✅ documents : 1 erreur, 1 laissé à sa place
+⚠️    1 dans …/iCloud~is~workflow~my~workflows/Documents/BoiteMac · OSError : [Errno 11] Resource deadlock avoided
+06/10 16:24  ⚠️ n°661 IMG_7892.jpg → —
+```
+- Les 235 lignes ramenées à 1 : un seul fichier, ta photo envoyée par le raccourci. Le raccourci marche jusqu'au
+  Mac ; c'est la lecture du fichier iCloud par le démon qui échouait.
+- D-60 : le démon demande le droit de faire venir les fichiers iCloud. S'ils ne sont pas encore là : `brctl
+  download`, attente sans notification, nouvel essai toutes les 2 minutes sur la même ligne. 3 tests de plus.
+

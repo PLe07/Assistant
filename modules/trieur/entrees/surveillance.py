@@ -198,7 +198,7 @@ class Entrees:
         if sans_contenu(st):  # le lire maintenant échouerait : on le demande à iCloud, et on attend
             self._relancer_icloud(chemin, maintenant)
             return None
-        if self.base.deja_laisse(chemin, st.st_size):
+        if self.base.deja_laisse(chemin, st.st_size, maintenant):
             return None  # déjà examiné et laissé (pas sûr, doublon, erreur) : repris seulement s'il change
         vu = self.vus.get(chemin)
         if vu is None or (vu.taille, vu.date) != (st.st_size, st.st_mtime):

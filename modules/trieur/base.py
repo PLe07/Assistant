@@ -15,6 +15,10 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+# Un fichier iCloud que macOS n'a pas encore apporté : laissé, puis réessayé toutes les 2 minutes (D-60).
+ATTENTE_ICLOUD = "iCloud : pas encore téléchargé (demandé)"
+RELANCE_ICLOUD_S = 120.0
+
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS elements (
     id INTEGER PRIMARY KEY,
@@ -123,7 +127,8 @@ class Base:
     # --- la file ---------------------------------------------------------------------------------------------------
 
     def ajouter(self, chemin: Path, source: str, note: str | None = None, parent: int | None = None) -> int:
-        """L'identifiant de l'élément : le même si ce fichier attend déjà (ou est en cours)."""
+        """L'identifiant de l'élément : le même si ce fichier attend déjà (ou est en cours). Un fichier laissé ou en
+        erreur qui revient reprend sa ligne (une seule ligne par fichier, D-60)."""
         with self.verrou:
             deja = self.db.execute("SELECT id FROM elements WHERE chemin = ? AND etat IN ('en_attente', 'en_cours')",
                                    (str(chemin),)).fetchone()  # fmt: skip
@@ -131,6 +136,14 @@ class Base:
                 if note:
                     self.db.execute("UPDATE elements SET note = ? WHERE id = ?", (note, deja["id"]))
                 return int(deja["id"])
+            reprise = self.db.execute("SELECT id FROM elements WHERE chemin = ? AND etat IN ('erreur', 'ignore') AND "
+                                      "NOT EXISTS (SELECT 1 FROM actions WHERE actions.element = elements.id) "
+                                      "ORDER BY id DESC LIMIT 1", (str(chemin),)).fetchone()  # fmt: skip
+            if reprise:
+                self.db.execute("UPDATE elements SET etat = 'en_attente', essais = 0, erreur = NULL, traite = NULL, "
+                                "source = ?, note = COALESCE(?, note), ajoute = ? WHERE id = ?",
+                                (source, note, time.time(), reprise["id"]))  # fmt: skip
+                return int(reprise["id"])
             c = self.db.execute("INSERT INTO elements (chemin, nom, source, note, parent, etat, ajoute) "
                                 "VALUES (?, ?, ?, ?, ?, 'en_attente', ?)",
                                 (str(chemin), chemin.name, source, note, parent, time.time()))  # fmt: skip
@@ -212,12 +225,21 @@ class Base:
     def compter(self) -> dict[str, int]:
         return {x["etat"]: int(x["n"]) for x in self._x("SELECT etat, COUNT(*) n FROM elements GROUP BY etat")}
 
-    def deja_laisse(self, chemin: Path, taille: int) -> bool:
+    def deja_laisse(self, chemin: Path, taille: int, maintenant: float | None = None) -> bool:
         """Ce fichier (même chemin, même taille) a déjà été examiné et laissé à sa place : pas assez sûr
-        (Téléchargements), doublon, ou en erreur. Il n'est repris que s'il change."""
-        sql = "SELECT 1 FROM elements WHERE chemin = ? AND taille = ? AND etat IN ('ignore', 'doublon', 'erreur')"
-        x = self._x(sql + " LIMIT 1", (str(chemin), taille)).fetchone()
-        return x is not None
+        (Téléchargements), doublon, ou en erreur. Il n'est repris que s'il change, sauf un fichier qu'iCloud n'avait
+        pas encore apporté : réessayé toutes les 2 minutes (D-60)."""
+        sql = "SELECT erreur, traite FROM elements WHERE chemin = ? AND taille = ? AND etat IN ('ignore', 'doublon', "
+        x = self._x(sql + "'erreur') ORDER BY id DESC LIMIT 1", (str(chemin), taille)).fetchone()
+        if x is None:
+            return False
+        if x["erreur"] == ATTENTE_ICLOUD and maintenant is not None:
+            return bool(maintenant - float(x["traite"] or 0) < RELANCE_ICLOUD_S)
+        return True
+
+    def attendus_d_icloud(self) -> int:
+        return int(self._x("SELECT COUNT(*) FROM elements WHERE etat = 'ignore' AND erreur = ?",
+                           (ATTENTE_ICLOUD,)).fetchone()[0])  # fmt: skip
 
     def lire_meta(self, cle: str) -> str | None:
         x = self._x("SELECT valeur FROM meta WHERE cle = ?", (cle,)).fetchone()

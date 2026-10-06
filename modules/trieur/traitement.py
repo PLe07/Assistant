@@ -7,6 +7,7 @@ Rien n'est perdu : en cas d'erreur, l'original reste où il est (3 essais, puis 
 
 from __future__ import annotations
 
+import errno
 import re
 import shutil
 import time
@@ -91,16 +92,28 @@ def traiter(o: Outils, element: int) -> base_.Element | None:
     assert el is not None
     try:
         _traiter(o, el)
-    except Exception as e:  # l'original n'a pas bougé : il sera repris, 3 fois au plus
-        etat = "erreur" if el.essais >= ESSAIS_MAX else "en_attente"
-        o.base.mettre_a_jour(el.id, etat=etat, erreur=f"{e.__class__.__name__} : {e}"[:300], traite=time.time())
-        log.warning("%s : %s (%s)", el.nom, e, "abandon" if etat == "erreur" else "nouvel essai")
+    except OSError as e:
+        if e.errno != errno.EDEADLK:
+            _echec(o, el, e)
+        else:  # un fichier iCloud que macOS n'a pas encore apporté (D-60) : demandé, puis réessayé dans 2 minutes
+            o.systeme.telecharger_icloud(Path(el.chemin))
+            o.base.mettre_a_jour(el.id, etat="ignore", erreur=base_.ATTENTE_ICLOUD, traite=time.time())
+            log.info("%s : pas encore téléchargé d'iCloud, demandé (nouvel essai dans 2 minutes)", el.nom)
+    except Exception as e:
+        _echec(o, el, e)
     finally:
         shutil.rmtree(o.travail(el.id), ignore_errors=True)
     fini = o.base.element(element)
     if fini is not None and o.avertir and fini.etat not in ("en_attente", "ignore"):
         o.avertir(fini)
     return fini
+
+
+def _echec(o: Outils, el: base_.Element, e: Exception) -> None:
+    """L'original n'a pas bougé : il sera repris, 3 fois au plus."""
+    etat = "erreur" if el.essais >= ESSAIS_MAX else "en_attente"
+    o.base.mettre_a_jour(el.id, etat=etat, erreur=f"{e.__class__.__name__} : {e}"[:300], traite=time.time())
+    log.warning("%s : %s (%s)", el.nom, e, "abandon" if etat == "erreur" else "nouvel essai")
 
 
 def _traiter(o: Outils, el: base_.Element) -> None:

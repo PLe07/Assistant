@@ -3,9 +3,11 @@ encore sans contenu est attendu au lieu d'être lu, et doctor dit d'où viennent
 
 from __future__ import annotations
 
+import errno
+import time
 from pathlib import Path
 
-from modules.trieur import config, daemon, doctor, rangement, traitement
+from modules.trieur import base, config, daemon, doctor, rangement, traitement
 from modules.trieur.entrees import surveillance
 from tests.trieur.outils import FACTURE, FauxOCR, FauxSysteme, pdf
 
@@ -102,4 +104,64 @@ def test_doctor_dit_d_ou_viennent_les_erreurs(reglages, monkeypatch):
     i = textes.index("4 en erreur : python trieur.py journal")
     assert textes[i + 1 : i + 3] == ["   3 dans /iCloud/BoiteMac · OSError : [Errno 11] Resource deadlock avoided",
                                      "   1 dans /Téléchargements · vide"]  # fmt: skip
+    b.fermer()
+
+
+def test_resource_deadlock_avoided_demande_a_icloud_puis_reessaie(reglages, monkeypatch):
+    """D-60 : ta photo IMG_7892.jpg. La lire échouait (« Resource deadlock avoided ») : elle est demandée à iCloud,
+    laissée sans notification, puis réessayée toutes les 2 minutes sur la même ligne, et rangée quand elle arrive."""
+    d, h, faux = _demon(reglages)
+    h.t = time.time()
+    envoyees: list[str] = []
+    d.notifieur.envoyer = lambda t, m: envoyees.append(t)  # type: ignore[method-assign]
+    reglages["mode_test"] = False
+    d.demarrer()
+    envoi = pdf(Path(reglages["chemins"]["boite_raccourcis"]) / "envoi.pdf", FACTURE)
+    vraie, pas_la = rangement.empreinte, {envoi}
+
+    def empreinte(chemin):
+        if Path(chemin) in pas_la:
+            raise OSError(errno.EDEADLK, "Resource deadlock avoided")
+        return vraie(chemin)
+
+    monkeypatch.setattr(rangement, "empreinte", empreinte)
+    _tours(d, h, 20)
+    [el] = d.o.base.derniers(10)
+    assert (el.etat, el.erreur) == ("ignore", base.ATTENTE_ICLOUD) and faux.telecharges == [envoi]
+    assert d.o.base.attendus_d_icloud() == 1 and envoyees == [] and envoi.exists()
+    monkeypatch.setattr(time, "time", lambda: h.t)
+    h.t += base.RELANCE_ICLOUD_S
+    _tours(d, h, 4)
+    assert faux.telecharges == [envoi, envoi] and [e.id for e in d.o.base.derniers(10)] == [el.id]
+    pas_la.clear()  # iCloud l'a apportée
+    h.t += base.RELANCE_ICLOUD_S
+    _tours(d, h, 8)
+    [fini] = d.o.base.derniers(10)
+    assert fini.id == el.id and fini.etat == "classe" and not envoi.exists() and envoyees == ["🗂 Rangé"]
+    d.arreter()
+
+
+def test_un_fichier_qui_revient_reprend_sa_ligne(reglages):
+    d, _, _ = _demon(reglages)
+    b = d.o.base
+    a = b.ajouter(Path("/boite/a.pdf"), "boite")
+    b.mettre_a_jour(a, etat="erreur", erreur="x", essais=3)
+    assert b.ajouter(Path("/boite/a.pdf"), "boite", note="garantie") == a
+    el = b.element(a)
+    assert el is not None and (el.etat, el.essais, el.erreur, el.note) == ("en_attente", 0, None, "garantie")
+    b.mettre_a_jour(a, etat="erreur")
+    b.noter_action(a, "range", "/boite/a.pdf", "/Classés/a.pdf", "h")
+    assert b.ajouter(Path("/boite/a.pdf"), "boite") != a  # une ligne qui a bougé un fichier garde son histoire
+    b.fermer()
+
+
+def test_doctor_montre_ce_qu_icloud_doit_apporter(reglages, monkeypatch):
+    d, _, _ = _demon(reglages)
+    b = d.o.base
+    b.mettre_a_jour(b.ajouter(Path("/r/IMG.jpg"), "boite"), etat="ignore", erreur=base.ATTENTE_ICLOUD)
+    monkeypatch.setattr("modules.trieur.extraction.ocr.choisir", lambda *a: None)
+    monkeypatch.setattr(doctor, "_superviseur", lambda: (None, None))
+    lignes = doctor.verifier(reglages, b, mac=False)
+    assert ("⏳", "1 attendu(s) d'iCloud : téléchargement demandé, nouvel essai toutes les 2 minutes") in lignes
+    assert ("✅", "documents : 1 laissé à sa place") in lignes
     b.fermer()
