@@ -71,8 +71,10 @@ def test_doctor_branches(reglages, tmp_path, monkeypatch):
     base.ecrire_meta("battement", str(time.time()))
     base.mettre_a_jour(base.ajouter(tmp_path / "x.pdf", "cli"), etat="erreur")
     base.mettre_a_jour(base.ajouter(tmp_path / "y.pdf", "cli"), etat="a_verifier")
+    base.mettre_a_jour(base.ajouter(tmp_path / "z.pdf", "telechargements"), etat="ignore")
     textes = " ".join(t for _, t in doctor.verifier(reglages, base, mac=False))
     assert "surveillance active" in textes and "1 en erreur" in textes and "1 à vérifier" in textes
+    assert "1 laissé à sa place" in textes and "trieur.py statut" in textes and "ignore" not in textes
     monkeypatch.setattr("modules.trieur.extraction.ocr.choisir", lambda *a: SimpleNamespace(nom="vision"))
     assert any("Apple Vision" in t for _, t in doctor.verifier(reglages, None, mac=False))
     base.fermer()

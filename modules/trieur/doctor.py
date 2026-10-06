@@ -144,8 +144,14 @@ def verifier(reglages: dict[str, Any], base: Any = None, maintenant: float | Non
         else:
             lignes.append(_pourquoi_muette())
         comptes = base.compter()
-        lignes.append(_ligne("✅", "documents : " + (", ".join(f"{n} {e}" for e, n in sorted(comptes.items()))
+        from modules.trieur.pages import LIBELLES
+
+        libelles = {**LIBELLES, "ignore": "laissé à sa place (pas assez sûr pour le déplacer)"}
+        lignes.append(_ligne("✅", "documents : " + (", ".join(f"{n} {libelles.get(e, e)}"
+                                                              for e, n in sorted(comptes.items()))
                                                     or "aucun pour l'instant")))  # fmt: skip
+        if comptes.get("ignore"):
+            lignes.append(_ligne("✅", "les fichiers laissés et pourquoi : python trieur.py statut"))
         if comptes.get("erreur"):
             lignes.append(_ligne("⚠️", f"{comptes['erreur']} en erreur : python trieur.py journal"))
         if comptes.get("a_verifier"):

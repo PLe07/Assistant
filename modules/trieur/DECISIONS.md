@@ -352,3 +352,11 @@ n'avait pas encore lancé le Trieur, et le battement n'était écrit qu'à la fi
   avec la commande qui le relance, ❌ « elle plante » avec le nombre de relances et la commande du journal,
   ⚠️ en pause globale. ⏳ ne compte pas comme une erreur.
 
+**D-56 · « redemarrer » attend le nouveau superviseur ; doctor parle français pour les fichiers laissés.**
+- Sur ton Mac, `assistant.py etat` lancé juste après `service.py redemarrer` affichait « Superviseur : ARRÊTÉ »
+  alors que tout tournait : l'ancien superviseur efface son battement en partant, le nouveau ne l'avait pas encore
+  écrit. `redemarrer` attend maintenant ce battement (15 s au plus) avant de rendre la main.
+- doctor affichait « 1 ignore » : c'est un fichier que le Trieur a laissé à sa place (un PDF de Téléchargements pas
+  assez sûr pour être déplacé, D-31). Il écrit maintenant « 1 laissé à sa place (pas assez sûr pour le déplacer) »
+  et donne la commande qui montre lequel et pourquoi.
+

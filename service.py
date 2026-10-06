@@ -144,9 +144,28 @@ def redemarrer() -> int:
     if not _charge(label):
         print("⛔ Le superviseur n'est pas installé : python service.py installer")
         return 1
+    depuis = time.time()
     _launchctl("kickstart", "-k", f"{_cible()}/{label}")  # arrêt propre puis relance
-    print("🔄 Superviseur relancé : ses modules redémarrent avec la dernière version du code.")
+    if _attendre_le_superviseur(depuis):
+        print("🔄 Superviseur relancé : ses modules redémarrent avec la dernière version du code.")
+    else:
+        print("🔄 Superviseur relancé, mais il ne répond pas encore : vérifie dans 10 secondes avec"
+              "  python assistant.py etat")
     return 0
+
+
+def _attendre_le_superviseur(depuis: float, delai: float = 15.0) -> bool:
+    """Vrai dès que le superviseur relancé a donné signe de vie. Sans cette attente, « assistant.py etat » lancé
+    juste après le disait ARRÊTÉ : l'ancien efface son battement en partant, le nouveau ne l'a pas encore écrit."""
+    from core import etat
+
+    fin = time.time() + delai
+    while time.time() < fin:
+        vu = etat.lire("superviseur_vivant")
+        if vu is not None and float(vu) >= depuis:
+            return True
+        time.sleep(0.5)
+    return False
 
 
 def desinstaller() -> int:

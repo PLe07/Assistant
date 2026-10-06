@@ -323,3 +323,14 @@ Nettoyage : rien ne reste
   arrêté et plantage (2 tests de plus : `test_doctor_dit_pourquoi_la_surveillance_est_muette`,
   `test_le_battement_des_le_premier_tour_et_pendant_une_longue_file`).
 
+## Sur ton Mac — après D-55 : ✅ surveillance active
+
+```
+🗂 Trieur : surveille (battement il y a 17 s) · 0 rangé(s), 0 à vérifier
+✅ surveillance active (battement il y a 0 s)
+✅ documents : 1 ignore
+```
+- Le Trieur tourne sous le superviseur, avec le nouveau code (battement dès le premier tour).
+- « Superviseur : ARRÊTÉ » dans `etat`, lancé juste après `redemarrer` : faux, il redémarrait (D-56).
+- « 1 ignore » : un fichier laissé à sa place, écrit maintenant en clair (D-56).
+
