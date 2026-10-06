@@ -40,7 +40,9 @@ Vérifie ensuite :
 ```
 cd ~/Assistant && .venv/bin/python trieur.py doctor
 ```
-et `.venv/bin/python assistant.py etat` doit montrer une ligne 🗂 Trieur.
+et `.venv/bin/python assistant.py etat` doit montrer une ligne 🗂 Trieur. Juste après l'installation, doctor peut
+dire « ⏳ surveillance en train de démarrer » : le superviseur la lance dans les secondes qui suivent ; relance
+doctor une minute plus tard, elle doit être ✅.
 
 ## 4. Ta micro-entreprise (30 s, facultatif)
 

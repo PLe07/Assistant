@@ -27,6 +27,37 @@ def _ecrivable(dossier: Path) -> bool:
     return os.access(d, os.W_OK)
 
 
+def _superviseur() -> tuple[bool | None, dict[str, Any] | None]:
+    """(le superviseur de l'Assistant tourne-t-il ?, ce qu'il dit du Trieur) : lu dans donnees/etat.db.
+    None : impossible à savoir."""
+    try:
+        from core import etat
+
+        vu = etat.lire("superviseur_vivant")
+        vivant = vu is not None and time.time() - float(vu) < etat.SUPERVISEUR_SILENCIEUX_APRES
+        return vivant, next((m for m in etat.modules() if m["nom"] == "trieur"), None) if vivant else None
+    except Exception:
+        return None, None
+
+
+def _pourquoi_muette() -> tuple[str, str]:
+    """Allumée mais sans battement : juste lancée (le cas d'après l'installation), superviseur arrêté, ou plantage."""
+    vivant, ligne = _superviseur()
+    if vivant is None:
+        return _ligne("❌", "surveillance allumée mais muette : python assistant.py etat")
+    if not vivant:
+        return _ligne("❌", "surveillance allumée mais le superviseur de l'Assistant est arrêté : "
+                            "python service.py installer")  # fmt: skip
+    if ligne is None or ligne["statut"] == "démarrage" or (ligne["statut"] == "actif" and not ligne["relances"]):
+        return _ligne("⏳", "surveillance en train de démarrer : relance doctor dans une minute "
+                            "(si ça dure, python assistant.py journal)")  # fmt: skip
+    if ligne["statut"] == "en pause":
+        return _ligne("⚠️", "surveillance en pause (pause globale de l'Assistant)")
+    detail = f" ({ligne['detail']})" if ligne.get("detail") else ""
+    return _ligne("❌", f"surveillance allumée mais elle plante : {ligne['statut']}{detail}, "
+                        f"{ligne['relances']} relance(s) : python assistant.py journal")  # fmt: skip
+
+
 def verifier(reglages: dict[str, Any], base: Any = None, maintenant: float | None = None,
              mac: bool | None = None) -> list[tuple[str, str]]:  # fmt: skip
     maintenant = maintenant or time.time()
@@ -111,7 +142,7 @@ def verifier(reglages: dict[str, Any], base: Any = None, maintenant: float | Non
         elif s["vivant"]:
             lignes.append(_ligne("✅", f"surveillance active (battement il y a {int(s['battement_age'])} s)"))
         else:
-            lignes.append(_ligne("❌", "surveillance allumée mais muette : python assistant.py etat"))
+            lignes.append(_pourquoi_muette())
         comptes = base.compter()
         lignes.append(_ligne("✅", "documents : " + (", ".join(f"{n} {e}" for e, n in sorted(comptes.items()))
                                                     or "aucun pour l'instant")))  # fmt: skip

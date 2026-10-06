@@ -64,6 +64,7 @@ def test_doctor_branches(reglages, tmp_path, monkeypatch):
     (Path(reglages["chemins"]["icloud"]) / "BoiteMac").mkdir(parents=True)
     monkeypatch.setattr("modules.trieur.extraction.ocr.choisir", lambda *a: None)
     reglages["actif"] = True
+    monkeypatch.setattr(doctor, "_superviseur", lambda: (None, None))
     lignes = dict((t, e) for e, t in doctor.verifier(reglages, base, mac=False))
     assert lignes["aucun OCR : photos et scans iront dans « À vérifier »"] == "⚠️"
     assert any("muette" in t for t in lignes)
@@ -75,3 +76,37 @@ def test_doctor_branches(reglages, tmp_path, monkeypatch):
     monkeypatch.setattr("modules.trieur.extraction.ocr.choisir", lambda *a: SimpleNamespace(nom="vision"))
     assert any("Apple Vision" in t for _, t in doctor.verifier(reglages, None, mac=False))
     base.fermer()
+
+
+def test_doctor_dit_pourquoi_la_surveillance_est_muette(monkeypatch):
+    """Juste après l'installation, le superviseur n'a pas encore lancé le Trieur : ⏳, pas ❌."""
+
+    def cas(vivant, ligne=None):
+        monkeypatch.setattr(doctor, "_superviseur", lambda: (vivant, ligne))
+        return doctor._pourquoi_muette()
+
+    def trieur(statut, relances=0, detail=""):
+        return {"nom": "trieur", "statut": statut, "detail": detail, "pid": None, "relances": relances}
+
+    assert cas(None)[0] == "❌" and "assistant.py etat" in cas(None)[1]
+    assert cas(False) == ("❌", "surveillance allumée mais le superviseur de l'Assistant est arrêté : "
+                                "python service.py installer")  # fmt: skip
+    for ligne in (None, trieur("démarrage"), trieur("actif")):
+        assert cas(True, ligne)[0] == "⏳"
+    assert cas(True, trieur("en pause"))[0] == "⚠️"
+    etat, texte = cas(True, trieur("relance", 2, "dans 50 s · ImportError"))
+    assert etat == "❌" and "relance (dans 50 s · ImportError), 2 relance(s)" in texte and "journal" in texte
+    assert cas(True, trieur("actif", 1))[0] == "❌"  # relancé après une chute, et toujours muet
+    assert doctor.afficher([("✅", "a"), ("⏳", "b")]) == 0
+
+
+def test_doctor_lit_le_superviseur(monkeypatch):
+    import core.etat
+
+    monkeypatch.setattr(core.etat, "lire", lambda cle, defaut=None: str(time.time()))
+    monkeypatch.setattr(core.etat, "modules", lambda: [{"nom": "trieur", "statut": "actif", "relances": 0}])
+    assert doctor._superviseur() == (True, {"nom": "trieur", "statut": "actif", "relances": 0})
+    monkeypatch.setattr(core.etat, "lire", lambda cle, defaut=None: str(time.time() - 60))
+    assert doctor._superviseur() == (False, None)
+    monkeypatch.setattr(core.etat, "lire", lambda cle, defaut=None: 1 / 0)
+    assert doctor._superviseur() == (None, None)

@@ -120,3 +120,19 @@ def test_mode_test_et_boucle(reglages, monkeypatch, tmp_path):
     tours = iter([False, False, True])
     ctx = SimpleNamespace(attendre=lambda s: next(tours))
     daemon.boucle(ctx)
+
+
+def test_le_battement_des_le_premier_tour_et_pendant_une_longue_file(reglages):
+    """« doctor » juste après l'installation : le battement est écrit au début du premier tour, et chaque document
+    d'une longue file le renouvelle (un gros envoi ne fait pas passer le démon pour muet)."""
+    d, h, _, _ = _demon(reglages, datetime(2026, 10, 6, 8, 0).timestamp())
+    d.demarrer()
+    assert d.o.base.lire_meta("battement") is None
+    debut = h()
+    d.tour()
+    assert d.o.base.lire_meta("battement") == str(debut)
+    h.t += 100  # un document traité longtemps après : le battement suit
+    d._avertir(SimpleNamespace(etat="doublon", nom="x.pdf", destination=None, id=0, erreur=None))
+    assert d.o.base.lire_meta("battement") == str(h())
+    assert daemon.status(reglages, d.o.base, h())["vivant"]
+    d.arreter()

@@ -339,3 +339,16 @@ Sur ton Mac, chaque création de rappel échouait : « Il est impossible de rég
 autorisé (-10003) ». En AppleScript, `note` est un mot réservé (l'icône « note » des boîtes de dialogue), tout comme
 `an` (un article). Toutes les variables des deux scripts s'appellent maintenant `vListe`, `vTitre`, `vCorps`… ; un
 test l'impose. Les fiches de garantie, elles, étaient bien créées (D-33 : Rappels en panne, la fiche reste).
+
+## 2026-10-06 · Sur ton Mac — l'installation
+
+**D-55 · Le battement dès le premier tour, et un doctor qui dit pourquoi la surveillance se tait.**
+Sur ton Mac, doctor lancé juste après l'installation a dit « ❌ surveillance allumée mais muette » : le superviseur
+n'avait pas encore lancé le Trieur, et le battement n'était écrit qu'à la fin du premier tour.
+- Le démon bat au début de chaque tour (le premier dès son lancement) et après chaque document d'une longue file :
+  un gros envoi ne le fait plus passer pour muet.
+- Sans battement, doctor lit ce que le superviseur de l'Assistant écrit dans `donnees/etat.db` (il ne modifie
+  rien) : ⏳ « en train de démarrer » si le Trieur vient d'être lancé ou va l'être, ❌ « superviseur arrêté »
+  avec la commande qui le relance, ❌ « elle plante » avec le nombre de relances et la commande du journal,
+  ⚠️ en pause globale. ⏳ ne compte pas comme une erreur.
+

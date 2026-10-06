@@ -79,7 +79,16 @@ class Demon:
         self.demenagements = Demenagements()
         self.dernier_battement = 0.0
 
+    def _battre(self) -> None:
+        """Le battement lu par doctor et « assistant.py etat » : au début de chaque tour (le premier dès le
+        lancement), et après chaque document d'une longue file (un gros envoi ne passe pas pour un démon muet)."""
+        maintenant = self.horloge()
+        if maintenant - self.dernier_battement >= BATTEMENT_S:
+            self.o.base.ecrire_meta("battement", str(maintenant))
+            self.dernier_battement = maintenant
+
     def _avertir(self, el: Any) -> None:
+        self._battre()
         garantie = None
         if el.etat == "classe" and self.o.coffre is not None:
             fiches = [f for f in self.o.coffre.fiches() if f.element == el.id]
@@ -101,6 +110,7 @@ class Demon:
         from modules.trieur import traitement
         from modules.trieur.base import FINIS
 
+        self._battre()
         for pret in self.entrees.regarder():
             element = self.o.base.ajouter(pret.chemin, pret.source, pret.note)
             if pret.meta is not None:
@@ -119,10 +129,6 @@ class Demon:
             self._pages()
         self.notifieur.vider()
         self._chaque_matin()
-        maintenant = self.horloge()
-        if maintenant - self.dernier_battement >= BATTEMENT_S:
-            self.o.base.ecrire_meta("battement", str(maintenant))
-            self.dernier_battement = maintenant
         return len(faits)
 
     def _pages(self) -> None:

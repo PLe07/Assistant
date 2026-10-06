@@ -312,3 +312,14 @@ Nettoyage : rien ne reste
 - plutil a validé l'action rapide et les deux raccourcis ; la signature « anyone » marche ; l'annulation a rendu
   les 11 fichiers intacts ; il ne reste ni bac à sable, ni BoiteMac-TEST, ni liste Trieur-TEST.
 - Les 5 avertissements viennent de PyMuPDF sous Python 3.14 (« SwigPyPacked has no __module__ ») : sans effet.
+
+## Sur ton Mac — l'installation : ✅ (doctor : 1 faux ❌, corrigé par D-55)
+
+- `trieur.py installer` : tout ✅ (dossiers, boîte iCloud, action rapide, deux raccourcis signés, Téléchargements,
+  pages, surveillance allumée).
+- `trieur.py doctor` juste après : tout ✅ (bibliothèques, Vision, outils du Mac, 136 indices, 166 émetteurs,
+  budget Claude 0,000 $ sur 1,00 $) sauf « ❌ surveillance allumée mais muette » : lancé avant que le superviseur
+  ait démarré le Trieur. D-55 : battement dès le premier tour, et doctor qui distingue ⏳ démarrage, superviseur
+  arrêté et plantage (2 tests de plus : `test_doctor_dit_pourquoi_la_surveillance_est_muette`,
+  `test_le_battement_des_le_premier_tour_et_pendant_une_longue_file`).
+
