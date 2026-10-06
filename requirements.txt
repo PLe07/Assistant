@@ -19,3 +19,5 @@ pyobjc-framework-ApplicationServices>=12,<13 ; sys_platform == "darwin"  # tradu
 pyobjc-framework-NaturalLanguage>=12,<13 ; sys_platform == "darwin"      # traduction : reconnaître le français
 watchdog>=4,<7              # corvées : voit les fichiers rangés, renommés, créés (FSEvents sur le Mac)
 jsonschema>=4.17,<5         # corvées : vérifie les propositions renvoyées par Claude
+pymupdf>=1.24,<2            # trieur : texte des PDF, PDF cherchable (texte reconnu en calque invisible)
+Pillow>=10,<13              # trieur : photos de documents (orientation, recadrage, PDF)

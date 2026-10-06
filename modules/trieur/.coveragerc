@@ -1,0 +1,12 @@
+[run]
+source = modules/trieur
+# L'accès natif à macOS (Vision, Rappels, Finder, AppleScript) est isolé ici et remplacé par des imitations dans les
+# tests ; il est vérifié sur le Mac par tests/trieur/e2e_mac. __main__ ne fait qu'appeler la CLI ou le démon.
+omit =
+    modules/trieur/__main__.py
+    modules/trieur/natif.py
+
+[report]
+fail_under = 85
+show_missing = true
+skip_covered = true
