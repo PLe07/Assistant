@@ -23,6 +23,7 @@ etape "ruff check" "$PY" -m ruff check bouclier tests integrite
 etape "ruff format" "$PY" -m ruff format --check bouclier tests integrite
 etape "mypy" "$PY" -m mypy bouclier
 etape "pytest : unitaires et intégrité" tests tests/unitaires tests/integrite
+etape "corpus d'arnaques (principal + 2e corpus inédit)" tests tests/corpus_arnaques
 etape "sécurité, réseau, vie privée" tests tests/securite
 etape "couverture ≥ 90 % sur bouclier/" "$PY" -m coverage report --fail-under=90
 etape "intégrité des autres projets (fin)" ./integrite/verifier.sh
