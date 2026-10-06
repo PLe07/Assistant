@@ -1,0 +1,2 @@
+[console_scripts]
+bouclier = bouclier.cli:main

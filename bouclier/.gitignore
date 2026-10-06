@@ -1,0 +1,18 @@
+# Bouclier : tout ce qui est local, personnel ou régénéré.
+.venv/
+__pycache__/
+*.pyc
+.coverage
+.coverage.*
+htmlcov/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+# Empreinte prise sur ton Mac (chemins et noms personnels) : jamais sur GitHub.
+integrite/mac/
+# Sorties de test et caches régénérés
+tests/.cache/
+tests/corpus_arnaques/genere/
+sorties/
+*.db
+*.log

@@ -1,0 +1,73 @@
+[project]
+name = "bouclier"
+version = "1.0.0"
+description = "Bouclier : détecteur d'arnaques, inventaire des comptes, alerte fuites, nettoyeur de métadonnées, fiche urgence."
+requires-python = ">=3.11"
+dependencies = [
+  "anthropic>=1.0,<2",       # avis de l'IA (seulement si les règles locales doutent)
+  "pydantic>=2.6,<3",        # schéma de la réponse de l'IA
+  "pikepdf>=9,<11",          # métadonnées des PDF
+  "Pillow>=10.1,<13",        # images : orientation, profil couleur, écran verrouillé
+  "pillow-heif>=0.16,<2",    # photos HEIC de l'iPhone
+  "reportlab>=4,<6",         # fiche urgence en PDF et carte A6
+  "watchdog>=4,<7",          # surveillance du dossier iCloud (FSEvents sur le Mac)
+  "numpy>=1.26,<3",          # comparaison d'images (tests de l'orientation)
+  "pyobjc-framework-Vision>=10 ; sys_platform == 'darwin'",  # lecture des captures d'écran, en local
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "pytest-cov>=5", "ruff>=0.6", "mypy>=1.10"]
+
+[project.scripts]
+bouclier = "bouclier.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["bouclier*"]
+
+[tool.setuptools.package-data]
+"*" = ["*.json", "*.md", "*.toml"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+extend-exclude = [".venv"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S102", "S307"]
+
+[tool.ruff.lint.per-file-ignores]
+# Des tables de données (un message, un service ou une marque par ligne) : les couper les rendrait illisibles.
+"tests/corpus_arnaques/*.py" = ["E501"]
+"bouclier/arnaque/sosies.py" = ["E501"]
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
+follow_imports = "silent"
+warn_unused_ignores = true
+no_implicit_optional = true
+check_untyped_defs = true
+exclude = ["^\\.venv/", "^tests/"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+markers = [
+  "reel: appel réel (IA, Gmail) : lancé seulement avec -m reel, quand une clé ou un accès existe",
+]
+addopts = "-m 'not reel' -p no:cacheprovider"
+
+[tool.coverage.run]
+source = ["bouclier"]
+branch = false
+# Seul l'appel natif à Apple Vision (pyobjc, Mac seulement) est exclu : il est vérifié par tests/e2e_mac sur le Mac.
+omit = ["bouclier/arnaque/ocr_vision.py", "bouclier/__main__.py"]
+
+[tool.coverage.report]
+fail_under = 90
+show_missing = true
+skip_covered = true
