@@ -1,0 +1,16 @@
+# Tes proches, pour les anniversaires (facultatif). À copier dans
+# ~/Library/Application Support/Quotidien/proches.toml et à remplir.
+# - Quelqu'un qui n'est pas dans tes Contacts : donne sa date.
+# - Quelqu'un qui y est déjà : la fiche (relation, ton, notes) s'y relie par le prénom et le nom ; la date est
+#   facultative.
+# Seuls le prénom, la relation, le ton, l'âge et tes notes peuvent être envoyés à l'IA pour rédiger le message :
+# jamais le nom de famille ni le numéro.
+
+[[personne]]
+prenom = "Camille"
+nom = "Exemple"                 # facultatif : sert à relier la fiche au bon contact
+anniversaire = "14/03/2001"     # ou "14/03" sans l'année (pas d'âge alors)
+relation = "ami_proche"         # famille, couple, ami_proche, ami, collegue ou professeur
+ton = "drole"                   # tendre, drole, sobre ou formel
+notes = ["souvenir : voyage à Lisbonne", "adore le foot"]
+# telephone = "06 00 00 00 00"  # facultatif : prérempli dans Messages (jamais envoyé à l'IA)

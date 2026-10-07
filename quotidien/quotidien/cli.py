@@ -12,6 +12,10 @@ quotidien frigo vider               oublie tout ce que tu m'as dit avoir
 quotidien anniversaires             les prochains anniversaires (demande l'accès aux Contacts la première fois)
 quotidien anniversaires message Léa les 3 messages prêts pour Léa
 quotidien anniversaires ouvrir Léa 2  ouvre Messages avec le message n°2 (c'est toi qui appuies sur Envoyer)
+quotidien brief                     le brief du jour, tout de suite (et la page « Ma journée »)
+quotidien doctor                    l'état de chaque brique, les autorisations, le budget IA, les prochaines tâches
+quotidien demon                     la boucle du démon (lancée par launchd ; --une-fois pour un seul tour)
+quotidien installation …            ce que install.sh et uninstall.sh utilisent
 """
 
 from __future__ import annotations
@@ -23,6 +27,7 @@ from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from datetime import date, datetime
 from pathlib import Path
+from typing import Any
 
 from quotidien import __version__, config, reseau
 from quotidien.db import Base
@@ -75,7 +80,17 @@ def cmd_menu(args: argparse.Namespace, env: Environnement) -> int:
         resultat = service.produire(env.db, env.reglages, debut, regenerer=args.regenerer, base=base,
                                     maintenant=env.horloge())  # fmt: skip
     _ecrire(service.resume(resultat, base))
+    _synchroniser_courses(env, resultat.liste, base)
     return 0
+
+
+def _synchroniser_courses(env: Environnement, liste: Any, base: Any) -> None:
+    """Ta liste « Courses (menu) » dans Rappels suit chaque changement du menu (mode dégradé : rien)."""
+    from quotidien import rappels_apple
+
+    ajoutes = rappels_apple.synchroniser_courses(env.db, env.systeme, env.reglages.reglages, liste, base)
+    if ajoutes:
+        _ecrire(f"📝 Rappels « Courses (menu) » : {ajoutes} article(s) ajouté(s).")
 
 
 def cmd_noter(args: argparse.Namespace, env: Environnement) -> int:
@@ -104,21 +119,13 @@ def cmd_noter(args: argparse.Namespace, env: Environnement) -> int:
 
 
 def cmd_envie(args: argparse.Namespace, env: Environnement) -> int:
-    from quotidien.repas import envies
-    from quotidien.repas import planificateur as pl
+    from quotidien.repas import service
 
     texte = " ".join(args.texte).strip()
-    if not texte:
-        _ecrire('Écris ton envie : quotidien envie "mexicain et léger"')
-        return 2
-    criteres = envies.comprendre(env.db, env.reglages.reglages, texte, lire_trousseau=env.systeme.trousseau_lire)
-    if criteres.vide():
-        _ecrire("🤔 Je n'ai pas compris cette envie (essaie « italien », « léger », « pas de poisson »…).")
-        return 1
-    pl.ajouter_envie(env.db, criteres, env.horloge())
-    _ecrire(f"✅ Envie notée pour le prochain menu : « {texte} »"
-            + (" (comprise par l'IA)" if criteres.par_ia else ""))  # fmt: skip
-    return 0
+    ok, message = service.noter_envie(env.db, env.reglages, texte, env.horloge(),
+                                      lire_trousseau=env.systeme.trousseau_lire)  # fmt: skip
+    _ecrire(message)
+    return 0 if ok else (2 if not texte else 1)
 
 
 # --- Vide-frigo (n°35) ------------------------------------------------------------------------------------------
@@ -144,6 +151,13 @@ def cmd_frigo(args: argparse.Namespace, env: Environnement) -> int:
             _ecrire(f"❌ {e}")
             return 1
         _ecrire(f"✅ Au menu ce soir : {base.recettes[repas.recette].nom}. La liste de courses suit.")
+        from quotidien.repas import planificateur as pl
+        from quotidien.repas import service as menus
+
+        menu = pl.menu_couvrant(env.db, env.aujourdhui())
+        if menu is not None:  # la page du menu et la liste de Rappels suivent le changement
+            resultat = menus.produire(env.db, env.reglages, date.fromisoformat(menu.debut), base=base)
+            _synchroniser_courses(env, resultat.liste, base)
         return 0
     if mots == ["vider"]:
         service.vider(env.db)
@@ -225,6 +239,87 @@ def cmd_anniversaires(args: argparse.Namespace, env: Environnement) -> int:
     return 0
 
 
+# --- Brief, doctor, démon, installation (§7) ----------------------------------------------------------------------
+
+
+def cmd_brief(args: argparse.Namespace, env: Environnement) -> int:
+    from quotidien import brief, daemon
+    from quotidien.anniversaires import service as anniv
+
+    d = daemon.Demon(env.db, env.systeme, env.horloge)
+    r = d.reglages()
+    if args.notifier:  # exactement comme le démon à 7 h 15
+        d._brief(r)
+        _ecrire(env.db.lire_meta("brief:dernier") or "Rien de particulier aujourd'hui.")
+        return 0
+    jour = d.aujourdhui(r)
+    a = d.annuaire(r)
+    regle = r.reglages["anniversaires"]["date_29_fevrier"]
+    b = brief.produire(env.db, r, jour, env.horloge(),
+                       meteo=lambda: daemon._ligne_meteo(env.db, r, jour, env.horloge, d.c.telecharger),
+                       anniversaires=lambda: anniv.ligne_brief(a.personnes, jour, regle))  # fmt: skip
+    page = brief.publier(b)
+    _ecrire(b.texte or "Rien de particulier aujourd'hui.")
+    _ecrire(f"Page : {page}")
+    return 0
+
+
+def cmd_doctor(args: argparse.Namespace, env: Environnement) -> int:
+    from quotidien import doctor
+
+    lignes = doctor.bilan(env.db, env.reglages, env.systeme, env.horloge())
+    _ecrire(doctor.texte(lignes))
+    return 1 if any(x.etat == doctor.PROBLEME for x in lignes) else 0
+
+
+def cmd_demon(args: argparse.Namespace, env: Environnement) -> int:  # pragma: no cover - lancé par launchd
+    from quotidien import daemon
+
+    if args.une_fois:
+        t = daemon.Demon(env.db, env.systeme, env.horloge).tour()
+        for f in t.fait:
+            _ecrire(f"✅ {f}")
+        for e in t.erreurs:
+            _ecrire(f"❌ {e}")
+        return 1 if t.erreurs else 0
+    env.db.fermer()
+    return daemon.principal()
+
+
+def cmd_installation(args: argparse.Namespace, env: Environnement) -> int:
+    from pathlib import Path as Chemin
+
+    from quotidien import installation, rappels_apple
+
+    r = env.reglages.reglages
+    if args.etape == "label":
+        print(installation.label(r))
+        return 0
+    if args.etape == "preparer":
+        b = installation.preparer(r, Chemin(args.python), Chemin(args.projet))
+    elif args.etape == "raccourcis":
+        b = installation.raccourcis(config.dossier_support() / "raccourcis")
+    elif args.etape == "verifier":  # pragma: no cover - sur le Mac, après l'installation
+        b = installation.verifier_reel(r, env.db, env.systeme)
+    elif args.etape == "listes":
+        nos = rappels_apple.Rappels(env.db, env.systeme, r).nos_listes()
+        _ecrire("\n".join(nos) if nos else "(aucune liste créée par Quotidien)")
+        return 0
+    elif args.etape == "supprimer-listes":
+        retirees = rappels_apple.Rappels(env.db, env.systeme, r).supprimer_nos_listes()
+        _ecrire("Listes supprimées : " + (", ".join(retirees) or "aucune"))
+        return 0
+    else:
+        b = installation.desinstaller(r, tout=args.tout)
+    for x in b.fait:
+        _ecrire(f"  ✅ {x}")
+    for x in b.avertissements:
+        _ecrire(f"  ⚠️ {x}")
+    for x in b.refus:
+        _ecrire(f"  ❌ {x}")
+    return 1 if b.refus else 0
+
+
 # --- Analyse des arguments ----------------------------------------------------------------------------------------
 
 Commande = Callable[[argparse.Namespace, Environnement], int]
@@ -265,6 +360,24 @@ def analyseur() -> argparse.ArgumentParser:
     a.add_argument("prenom", nargs="?")
     a.add_argument("numero", nargs="?", type=int, default=1)
     a.set_defaults(fonction=cmd_anniversaires)
+
+    b = sous.add_parser("brief", help="le brief du jour, tout de suite")
+    b.add_argument("--notifier", action="store_true", help="comme le démon : notification et page")
+    b.set_defaults(fonction=cmd_brief)
+
+    sous.add_parser("doctor", help="l'état de chaque brique").set_defaults(fonction=cmd_doctor)
+
+    d = sous.add_parser("demon", help="la boucle du démon (launchd)")
+    d.add_argument("--une-fois", action="store_true")
+    d.set_defaults(fonction=cmd_demon)
+
+    i = sous.add_parser("installation", help="étapes de install.sh et uninstall.sh")
+    i.add_argument("etape", choices=["label", "preparer", "raccourcis", "verifier", "listes", "supprimer-listes",
+                                      "desinstaller"])  # fmt: skip
+    i.add_argument("--python", default=sys.executable)
+    i.add_argument("--projet", default=str(config.racine_projet()))
+    i.add_argument("--tout", action="store_true")
+    i.set_defaults(fonction=cmd_installation)
     return p
 
 

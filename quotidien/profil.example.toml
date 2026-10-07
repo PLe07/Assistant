@@ -1,0 +1,26 @@
+# Ton profil Quotidien : copié dans ~/Library/Application Support/Quotidien/profil.toml à l'installation.
+# Modifie-le quand tu veux (TextEdit suffit) : le démon le relit tout seul. Une valeur mal écrite est signalée par
+# « quotidien doctor » et remplacée par la valeur par défaut, jamais ignorée en silence.
+
+[repas]
+regime = "omnivore"            # omnivore, sans_porc, pescetarien, vegetarien ou vegan
+allergies = []                 # parmi : gluten, crustaces, oeufs, poissons, arachides, soja, lait, fruits_a_coque,
+                               # celeri, moutarde, sesame, sulfites, lupin, mollusques
+deteste = []                   # ex. ["coriandre", "champignons"] : jamais dans tes menus
+aime = []                      # ex. ["curry", "pâtes"] : un peu plus souvent
+cuisines_preferees = []        # ex. ["italienne", "japonaise"]
+portions = 1                   # pour combien de personnes tu cuisines
+budget_semaine = 45.0          # en euros, courses de la semaine (± 10 %)
+equipement = ["plaques", "four", "micro-ondes"]   # aussi : airfryer, mixeur
+dejeuners = false              # true : le menu prévoit aussi tes midis (souvent avec les restes du soir)
+jour_courses = "lundi"
+
+[semaine]
+jours_charges = ["mercredi", "jeudi", "vendredi"]  # ces soirs-là : recette rapide ou restes
+jours_de_cours = ["mercredi", "jeudi", "vendredi"]  # la météo pense à tes trajets ces jours-là
+
+[trajets]
+depart = "08:00"
+retour = "18:30"
+duree_minutes = 30
+moyen = "velo"                 # velo, tram ou marche

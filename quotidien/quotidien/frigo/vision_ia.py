@@ -129,9 +129,11 @@ def lire(
     lire_trousseau: ia.LireTrousseau | None = None,
     dormir: Callable[[float], None] | None = None,
 ) -> LecturePhoto:
+    from PIL import Image
+
     try:
         image = preparer(chemin)
-    except (OSError, ValueError) as e:
+    except (OSError, ValueError, Image.DecompressionBombError) as e:
         return LecturePhoto(
             statut="illisible", message=f"📷 Je n'arrive pas à ouvrir cette image ({e.__class__.__name__})."
         )

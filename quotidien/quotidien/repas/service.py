@@ -13,7 +13,7 @@ from dataclasses import dataclass
 from datetime import date, datetime, timedelta
 from pathlib import Path
 
-from quotidien import config
+from quotidien import config, ia
 from quotidien.config import JOURS, Reglages
 from quotidien.db import Base as BaseDonnees
 from quotidien.repas import courses as module_courses
@@ -132,3 +132,19 @@ def jour_passe(nom: str, aujourdhui: date) -> date:
     if j is None:
         raise JourInconnu(f"« {nom} » n'est pas un jour (lundi … dimanche, hier, ou AAAA-MM-JJ)")
     return aujourdhui - timedelta(days=(aujourdhui.weekday() - JOURS.index(j)) % 7)
+
+
+def noter_envie(db: BaseDonnees, reglages: Reglages, texte: str, maintenant: float, client: ia.Client | None = None,
+                lire_trousseau: ia.LireTrousseau | None = None) -> tuple[bool, str]:  # fmt: skip
+    """Une envie pour le prochain menu (commande ou raccourci « Envie de… ») : (comprise ?, réponse à afficher)."""
+    from quotidien.repas import envies
+
+    texte = texte.strip()
+    if not texte:
+        return False, 'Écris ton envie : quotidien envie "mexicain et léger"'
+    criteres = envies.comprendre(db, reglages.reglages, texte, client=client, lire_trousseau=lire_trousseau)
+    if criteres.vide():
+        return False, "🤔 Je n'ai pas compris cette envie (essaie « italien », « léger », « pas de poisson »…)."
+    pl.ajouter_envie(db, criteres, maintenant)
+    return True, f"✅ Envie notée pour le prochain menu : « {texte} »" + (" (comprise par l'IA)" if criteres.par_ia
+                                                                         else "")  # fmt: skip

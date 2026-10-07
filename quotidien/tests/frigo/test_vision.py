@@ -145,6 +145,14 @@ def test_sans_ia_illisible_et_reponse_invalide(tmp_path: Path, db: BaseDonnees) 
     assert lecture.statut == "invalide" and "liste en texte" in lecture.message and lecture.cout_usd > 0
 
 
+def test_image_piegee_refusee(tmp_path: Path, db: BaseDonnees, monkeypatch: pytest.MonkeyPatch) -> None:
+    chemin = tmp_path / "bombe.png"
+    Image.new("RGB", (400, 400)).save(chemin)
+    monkeypatch.setattr(Image, "MAX_IMAGE_PIXELS", 1000)  # 400 × 400 > 2 × 1 000 : « bombe de décompression »
+    lecture = vision_ia.lire(db, config.defauts().reglages, chemin, BASE, Client([]))
+    assert lecture.statut == "illisible" and "DecompressionBombError" in lecture.message
+
+
 @pytest.mark.reel
 def test_reel_photo_dessinee(tmp_path: Path, db: BaseDonnees) -> None:  # pragma: no cover - sur le Mac, à la demande
     """Sur le Mac : une image dessinée (des étiquettes lisibles) lue par la vraie IA, pour moins de 0,02 $."""

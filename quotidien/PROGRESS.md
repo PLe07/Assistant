@@ -11,8 +11,8 @@ Chaque phase se termine par `./check.sh` vert, l'intégrité identique, un commi
 | P3 — planificateur et courses | ✅ | « Quotidien P3-P4 » |
 | P4 — vide-frigo | ✅ | « Quotidien P3-P4 » |
 | P5 — anniversaires | ✅ | « Quotidien P5 » |
-| P6 — brief, page, Rappels, iCloud, raccourcis | ⏳ | |
-| P7 — démon, planification, doctor, budget IA | ⏳ | |
+| P6 — brief, page, Rappels, iCloud, raccourcis | ✅ | « Quotidien P6-P7 » |
+| P7 — démon, planification, doctor, budget IA | ✅ | « Quotidien P6-P7 » |
 | P8 — bout en bout | ⏳ | |
 | P9 — installation (script + vérification sur le Mac) | ⏳ | |
 | P10 — revue hostile en deux passes | ⏳ | |
@@ -193,6 +193,50 @@ INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 593 fichiers, 0 Laun
 All checks passed!
 54 passed (socle) · 77 passed (météo) · 1686 passed in 726.05s (recettes) · 43 passed (vide-frigo) · 46 passed (anniversaires) · 29 passed (sécurité)
 TOTAL                                 3920     70    98%
+INTÉGRITÉ OK : identique à etat_avant.json (…)
+CHECK OK
+```
+
+## P6-P7 — 2026-10-07
+
+- `brief.py` : une ligne par brique (météo, repas du soir et ses restes, rappel de la veille, jour de courses,
+  anniversaires), lignes vides omises, une brique en panne n'emporte rien ; page `Ma journée.html` (iCloud) et
+  `brief.json` (pour l'assistant, INTEGRATION.md).
+- `rappels_apple.py` : « Courses (menu) » et « Anniversaires » seulement, suffixe « (Quotidien) » en cas de nom pris,
+  jamais un rappel en double, jamais une autre liste touchée ; désinstallation : nos listes seulement.
+- `icloud.py` + `raccourcis/generer.py` : « Mon frigo » (photo, galerie, texte ou dictée) et « Envie de… », dépôt dans
+  `Quotidien/entree/`, réponse en `Quotidien/reponses/<id>.txt`, 60 s d'attente, « Mac injoignable ».
+- `planification.py`, `daemon.py`, `notifier.py` : tâches datées avec fenêtre d'utilité (D-46), rattrapage au
+  réveil, silence 23 h – 7 h, réglages relus quand ils changent, brique en panne retentée.
+- `doctor.py`, `installation.py`, `install.sh`, `uninstall.sh` (relançables, sans sudo, vérification « kill puis
+  relance » et aller-retour iCloud), exemples `profil`, `reglages`, `proches`.
+- Tests : le brief dans 12 combinaisons ; un faux Mac avec des listes d'autres projets (jamais touchées) ; le démon
+  sur 5 jours d'horloge simulée (5 briefs à 7 h 15 exactement, 1 menu, 5 rappels de la veille, anniversaire J-1 et J
+  une seule fois, 0 notification la nuit, rien de refait après un redémarrage, pas de brief à 15 h).
+
+Aperçu (`quotidien brief`, ici sans réseau vers Open-Meteo) puis `quotidien doctor` (extrait) :
+
+```
+🌡️ Météo indisponible : pas de réseau et aucune prévision gardée. Regarde le ciel avant de partir.
+🍽️ Ce soir : riz sauté au chou et à l'œuf (kimchi doux) (20 min).
+🎂 Demain : anniversaire de Camille → message prêt.
+
+✅ Menu                          semaine du 2026-10-05 (7 repas)
+⚠️ Contacts                      Contacts indisponibles sur cette machine (pas un Mac ?) · proches.toml : 1 fiche(s)
+✅ IA                            abonnement Claude · ce mois : 0.00 $ sur 2.00 $
+✅ Tâche : brief du matin        prochaine : demain à 07:15
+✅ Tâche : menu de la semaine    prochaine : dimanche 11 octobre à 17:00
+```
+
+Première passe de la revue hostile faite ici (6 corrections, D-53), avec README.md et `tests/e2e_mac`.
+
+Preuve (`./check.sh`, après la première passe) :
+
+```
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 593 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 7 élément(s) divers, listes de Rappels : indisponibles)
+All checks passed!
+55 passed (socle) · 77 passed (météo) · 1686 passed in 609.75s (recettes) · 44 passed (vide-frigo) · 46 passed (anniversaires) · 32 passed (brief, Rappels, iCloud, raccourcis) · 29 passed (sécurité) · 16 passed (bout en bout)
+TOTAL                                 5027    111    98%
 INTÉGRITÉ OK : identique à etat_avant.json (…)
 CHECK OK
 ```

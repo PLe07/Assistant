@@ -1,0 +1,37 @@
+# Les réglages de Quotidien (facultatif : sans ce fichier, ce sont ces valeurs). Copié dans
+# ~/Library/Application Support/Quotidien/reglages.toml à l'installation.
+
+[lieu]
+ville = "Bordeaux"
+latitude = 44.8378
+longitude = -0.5792
+fuseau = "Europe/Paris"
+
+[horaires]
+brief = "07:15"                # le brief du matin (une notification + la page « Ma journée »)
+alerte_meteo_veille = "21:00"  # seulement si demain change beaucoup
+menu_jour = "dimanche"
+menu_heure = "17:00"
+rappels_veille = "20:00"       # « sors le poulet du congélateur », « fais tremper les pois chiches »
+anniversaire_veille = "19:30"
+anniversaire_jour = "09:00"
+anniversaire_cadeau = "10:00"  # J-7, pour les proches
+silence_debut = "23:00"        # aucune notification entre ces deux heures
+silence_fin = "07:00"
+
+[ia]
+active = true
+modele = "claude-haiku-4-5"
+budget_mensuel_usd = 2.0       # plafond pour tout le pack (photo du frigo, messages, envies libres)
+
+[rappels]
+active = true                  # false : notifications seules, aucune liste de Rappels
+liste_courses = "Courses (menu)"
+liste_anniversaires = "Anniversaires"
+
+[anniversaires]
+contacts = true                # lire les anniversaires de tes Contacts (lecture seule)
+jours_avant_proches = 7
+date_29_fevrier = "28-02"      # ou "01-03" les années non bissextiles
+fetes = false                  # true : te rappeler aussi les fêtes (prénoms du calendrier)
+dialogue = true                # le jour J, la fenêtre « Ouvrir dans Messages »

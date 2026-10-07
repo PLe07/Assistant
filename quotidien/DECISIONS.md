@@ -251,3 +251,41 @@ aucun (on ne devine pas). Un contact avec une année absurde garde son jour, san
 
 **D-45 · Fêtes : une option, désactivée par défaut.** Une table de 324 prénoms courants du calendrier français
 (première fête retenue, Catherine le 25 novembre) ; le jour de l'anniversaire, pas de fête en plus.
+
+## 2026-10-07 · P6-P7 — Brief, Rappels, iCloud, raccourcis, démon, doctor
+
+**D-46 · Une tâche datée = une échéance notée une fois, avec une fenêtre d'utilité.** Brief 7 h 15 utile jusqu'à
+11 h (pas de brief du matin à 15 h) ; rappels de la veille et alerte météo jusqu'au début du silence ; menu du
+dimanche jusqu'au lundi 20 h. Ce qui est fait est noté (`taches`) : un redémarrage ne refait rien, un Mac qui dormait
+rattrape seulement ce qui sert encore. Une heure réglée dans le silence (23 h – 7 h) est repoussée à sa fin.
+
+**D-47 · Les heures sont celles du fuseau des réglages, pas celles du Mac.** Trouvé par le test du démon : le menu du
+dimanche 17 h visait la semaine en cours quand l'heure système n'était pas celle de Paris.
+
+**D-48 · Une brique en panne n'emporte rien d'autre.** Chaque tâche du démon et chaque ligne du brief est isolée ;
+l'échec est noté (`doctor` l'affiche) et la tâche retentée au tour suivant.
+
+**D-49 · Nos listes de Rappels sont notées en base dès leur création.** Une liste « Courses (menu) » qui existait déjà
+n'est jamais la nôtre : la nôtre devient « Courses (menu) (Quotidien) » ; si les deux noms sont pris, rien n'est
+créé (notifications seules). Les seuls scripts qui visent une liste qui n'est pas à nous testent son existence ; un
+test le vérifie sur toutes les commandes envoyées. La liste de courses d'une semaine remplace la précédente (nos
+rappels seulement, jamais ceux ajoutés à la main).
+
+**D-50 · « Mon frigo » : un menu à trois choix plutôt que la feuille de partage.** Photo, galerie, ou texte écrit ou
+dicté (la dictée du clavier) : un seul raccourci, sans dépendre de ce qu'une autre app partage. Attente de 60 s
+(20 × 3 s), puis « Mac injoignable, réessaie plus tard. ».
+
+**D-51 · La vérification de l'installation ne touche pas à ton frigo.** La demande de test (`frigo-verification-…`)
+est traitée sans mémoire, puis effacée d'iCloud et de la base.
+
+**D-52 · Intégration par fichiers seulement.** `brief.json` (lecture), les deux pages HTML, et l'entrée iCloud
+`envie-…` / `frigo-…` (comme les raccourcis) : voir INTEGRATION.md. Aucun code de l'assistant n'est modifié.
+
+**D-53 · Revue hostile, première passe (6 corrections).** (1) La liste « Courses (menu) » suit le menu : un autre
+menu, un plat remplacé ou « ajouter ce soir » retirent nos articles qui n'y sont plus (la clé contient une
+empreinte du texte) et gardent ce que tu as ajouté à la main. (2) Une liste à nous supprimée à la main est recréée
+vide et ses anciennes traces oubliées. (3) Les rappels d'anniversaire passés depuis 2 jours sont retirés (les nôtres).
+(4) Le message mis dans Rappels passe par le trousseau comme celui des notifications (une seule demande à l'IA).
+(5) Le démon n'ouvre son fil de tâches que s'il y a quelque chose à faire (avant : une connexion à la base toutes
+les 3 s). (6) Une image piégée (« bombe de décompression ») est refusée proprement ; `doctor` dit « profil.toml
+absent » et « maintenant » pour une tâche due.
