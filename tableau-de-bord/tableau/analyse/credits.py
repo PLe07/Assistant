@@ -15,6 +15,7 @@ from __future__ import annotations
 import calendar
 import time
 from dataclasses import dataclass
+from typing import Any
 
 TARIFS_USD_PAR_MILLION: dict[str, tuple[float, float]] = {
     "claude-fable-5-1": (10.0, 50.0),
@@ -89,3 +90,68 @@ def projeter(mois_usd: float, plafond_usd: float | None, maintenant: float, jour
     projection = mois_usd / ecoules * jours_du_mois if ecoules >= jours_min else None
     pct = mois_usd / plafond_usd * 100 if plafond_usd else None
     return Projection(mois_usd, projection, plafond_usd, pct)
+
+
+def noter(base: Any, etats: list[Any], maintenant: float) -> None:
+    """Le coût du mois de chaque module, gardé pour la tendance et le rapport de la semaine."""
+    mois = time.strftime("%Y-%m", time.localtime(maintenant))
+    lignes = [
+        (e.id, mois, float(e.credits_mois), e.plafond_usd, maintenant)
+        for e in etats
+        if e.credits_mois is not None
+    ]
+    if lignes:
+        base.plusieurs(
+            "INSERT INTO credits (module, mois, cout_usd, plafond_usd, maj) VALUES (?, ?, ?, ?, ?) "
+            "ON CONFLICT(module, mois) DO UPDATE SET cout_usd = excluded.cout_usd, plafond_usd = excluded.plafond_usd, "
+            "maj = excluded.maj",
+            lignes,
+        )
+
+
+def mois_precedent(maintenant: float) -> str:
+    t = time.localtime(maintenant)
+    annee, mois = (t.tm_year, t.tm_mon - 1) if t.tm_mon > 1 else (t.tm_year - 1, 12)
+    return f"{annee:04d}-{mois:02d}"
+
+
+def synthese(base: Any, etats: list[Any], maintenant: float, reel_usd: float | None = None) -> dict[str, Any]:
+    """La vue « Crédits » : total du mois, répartition, projection, réel si disponible, tendance."""
+    modules = []
+    total_api = total_estime = 0.0
+    plafonds = 0.0
+    for e in etats:
+        source = (e.technique or {}).get("credits_source", "base")
+        if e.credits_mois is None and e.plafond_usd is None:
+            continue
+        p = projeter(e.credits_mois or 0.0, e.plafond_usd, maintenant)
+        modules.append({
+            "id": e.id, "nom": e.nom, "emoji": e.emoji, "mois_usd": e.credits_mois, "plafond_usd": e.plafond_usd,
+            "pct": p.pct, "projection_usd": p.projection_usd, "source": source,
+            "detail": (e.technique or {}).get("credits_detail", ""),
+        })  # fmt: skip
+        if source == "estimation":
+            total_estime += e.credits_mois or 0.0
+        else:
+            total_api += e.credits_mois or 0.0
+            plafonds += e.plafond_usd or 0.0
+    modules.sort(key=lambda m: -(m["mois_usd"] or 0))
+    total = projeter(total_api, plafonds or None, maintenant)
+    ids = [m["id"] for m in modules if m["source"] != "estimation"]
+    precedent = None
+    if ids:
+        marques = ",".join("?" * len(ids))
+        precedent = base.valeur(
+            f"SELECT SUM(cout_usd) FROM credits WHERE mois = ? AND module IN ({marques})",  # noqa: S608 - des « ? »
+            (mois_precedent(maintenant), *ids),
+        )
+    return {
+        "mois": time.strftime("%Y-%m", time.localtime(maintenant)),
+        "total_usd": total_api,
+        "plafonds_usd": plafonds or None,
+        "projection_usd": total.projection_usd,
+        "abonnement_equivalent_usd": total_estime,
+        "reel_usd": reel_usd,
+        "mois_precedent_usd": float(precedent) if precedent is not None else None,
+        "modules": modules,
+    }
