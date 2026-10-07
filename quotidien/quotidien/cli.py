@@ -9,6 +9,9 @@ quotidien frigo "2 courgettes, feta" 3 recettes réalisables tout de suite (text
 quotidien frigo photo.jpg           la même chose depuis une photo (lue par l'IA, budget du pack)
 quotidien frigo ce-soir 2           met la recette n°2 au menu de ce soir
 quotidien frigo vider               oublie tout ce que tu m'as dit avoir
+quotidien anniversaires             les prochains anniversaires (demande l'accès aux Contacts la première fois)
+quotidien anniversaires message Léa les 3 messages prêts pour Léa
+quotidien anniversaires ouvrir Léa 2  ouvre Messages avec le message n°2 (c'est toi qui appuies sur Envoyer)
 """
 
 from __future__ import annotations
@@ -165,6 +168,63 @@ def cmd_frigo(args: argparse.Namespace, env: Environnement) -> int:
     return 0 if reponse.propositions or reponse.creative is not None else 1
 
 
+# --- Anniversaires (n°37) ----------------------------------------------------------------------------------------
+
+
+def cmd_anniversaires(args: argparse.Namespace, env: Environnement) -> int:
+    from quotidien.anniversaires import contacts, dates, proches, service
+    from quotidien.repas.envies import normaliser
+    from quotidien.repas.page import date_longue
+
+    r = env.reglages.reglages
+    aujourdhui = dates.aujourdhui(env.horloge(), r["lieu"]["fuseau"])
+    if args.action is None and r["anniversaires"]["contacts"]:
+        contacts.demander_acces()  # la fenêtre de macOS, une seule fois, depuis le Terminal
+    a = service.annuaire(env.reglages, aujourdhui)
+    for avertissement in a.avertissements:
+        print(f"⚠️ {avertissement}", file=sys.stderr)
+    regle = r["anniversaires"]["date_29_fevrier"]
+    if args.action is None:
+        etat = contacts.STATUTS.get(a.statut_contacts, "désactivés dans reglages.toml")
+        avec = sum(1 for p in a.personnes if p.source == "contacts")
+        _ecrire(f"Contacts : {etat} · {avec} anniversaire(s) trouvé(s) ; proches.toml : "
+                f"{sum(1 for p in a.personnes if p.source == 'proches')}")  # fmt: skip
+        prochains = service.a_venir(a.personnes, aujourdhui, 366, regle)[:20]
+        if not prochains:
+            _ecrire(
+                f"Aucun anniversaire connu. Ajoute tes proches dans {proches.chemin()} (voir proches.example.toml)."
+            )
+        for jour, p in prochains:
+            age = dates.age(p.naissance, jour)
+            details = [f"{p.prenom}" + (f" ({age} ans)" if age else "")]
+            if p.relation:
+                details.append(p.relation.replace("_", " "))
+            _ecrire(f"  {date_longue(jour)} · " + " · ".join(details))
+        return 0
+    if not args.prenom:
+        _ecrire(f"De qui ? Exemple : quotidien anniversaires {args.action} Léa")
+        return 2
+    trouves = [x for x in service.a_venir(a.personnes, aujourdhui, 366, regle)
+               if normaliser(x[1].prenom) == normaliser(args.prenom)]  # fmt: skip
+    if not trouves:
+        _ecrire(f"❌ Personne ne s'appelle {args.prenom} dans tes anniversaires.")
+        return 1
+    jour, personne = trouves[0]  # le plus proche
+    m = service.message_pret(env.db, r, personne, jour, env.horloge(), lire_trousseau=env.systeme.trousseau_lire)
+    if args.action == "message":
+        _ecrire(f"🎂 {personne.prenom}, {date_longue(jour)} — 3 messages prêts :")
+        for i, v in enumerate(m.variantes, 1):
+            _ecrire(f"\n{i}. " + v.replace("\n", "\n   "))
+        _ecrire(f"\nPour l'ouvrir dans Messages : quotidien anniversaires ouvrir {personne.prenom} 1 (ou 2, 3).")
+        return 0
+    if not 1 <= args.numero <= len(m.variantes):
+        _ecrire("Le numéro du message va de 1 à 3.")
+        return 2
+    service.proposer_envoi(env.db, r, env.systeme, personne, jour, env.horloge(), args.numero)
+    _ecrire("💬 Messages est ouvert avec ton message (il est aussi copié). Relis-le, puis appuie sur Envoyer.")
+    return 0
+
+
 # --- Analyse des arguments ----------------------------------------------------------------------------------------
 
 Commande = Callable[[argparse.Namespace, Environnement], int]
@@ -199,6 +259,12 @@ def analyseur() -> argparse.ArgumentParser:
     f.add_argument("--sans-garder", action="store_true", help="ne pas retenir ce frigo pour le menu")
     f.add_argument("--court", action="store_true", help="réponse courte (pour l'iPhone)")
     f.set_defaults(fonction=cmd_frigo)
+
+    a = sous.add_parser("anniversaires", help="les prochains anniversaires et leurs messages prêts")
+    a.add_argument("action", nargs="?", choices=["message", "ouvrir"])
+    a.add_argument("prenom", nargs="?")
+    a.add_argument("numero", nargs="?", type=int, default=1)
+    a.set_defaults(fonction=cmd_anniversaires)
     return p
 
 

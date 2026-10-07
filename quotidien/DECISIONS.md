@@ -220,3 +220,34 @@ toute clé inconnue de `profil.toml` ou `reglages.toml` donne maintenant un aver
 rouges, maïs, tomates » en végan ; « pâtes, crème, champignons » sans gluten), aucune recette de la base ne tenait en
 2 manquants. Ils ont été complétés par 1 à 2 aliments courants (œufs, oignon, carottes…), plus proches d'un vrai
 frigo ; le critère reste « au moins une recette du top 3 utilise un aliment clé ».
+
+## 2026-10-07 · P5 — Anniversaires
+
+**D-39 · Ce que l'IA reçoit est construit, pas filtré.** La demande est un objet à cinq champs (prénom, relation, ton,
+âge, notes) ; les notes passent en plus par le caviardage (téléphone, adresse, e-mail, lien) et le nom de famille de
+la personne en est retiré. Un test espion vérifie l'absence du nom, des numéros, de l'adresse et de la clé interne.
+
+**D-40 · Chaque variante est vérifiée, celle de l'IA comme celle des modèles.** 40 à 320 caractères, 4 lignes au plus,
+le prénom présent, aucune des 40 formules interdites (« que tous tes rêves se réalisent », « une année de plus »,
+« coup de vieux »…), pas de lien ni de trou. Une variante refusée est remplacée par un modèle local. Les modèles
+évitent tout mot genré (ni pour toi, ni pour la personne) : « Je suis si fier… » a été retiré à la relecture.
+
+**D-41 · L'âge n'est dit qu'avec tact.** Jamais pour un collègue ou un professeur, ni en vouvoiement sauf une
+nouvelle dizaine ; 18, 20, 21, 25 et les dizaines ont leur phrase ; un autre âge seulement pour un proche.
+
+**D-42 · Rappels : une fenêtre d'utilité pour chacun.** J-7 (proches) utile jusqu'à la veille ; J-1 jusqu'à minuit ;
+J jusqu'à 23 h. Un Mac qui dormait rattrape seulement ce qui sert encore (un J-7 manqué part avec « Dans 2 jours »).
+Deux anniversaires le même jour : une seule notification, prénoms dans l'ordre alphabétique.
+
+**D-43 · « Ouvrir dans Messages » = une fenêtre de choix, puis `open sms:…&body=…`.** La notification du Mac n'a pas
+de bouton fiable depuis un démon ; le jour J, une fenêtre propose les 3 variantes avec le bouton « Ouvrir dans
+Messages » (et « Plus tard »). Le texte est aussi copié. Rien ne peut envoyer : un test cherche dans tout le code livré
+`send`, `smtplib`, un `osascript` vers Messages, l'action d'envoi des Raccourcis, et vérifie qu'il trouverait chacun.
+
+**D-44 · Contacts en lecture seule, l'accès demandé depuis le Terminal seulement.** `quotidien anniversaires` déclenche
+la fenêtre de macOS ; le démon ne la fait jamais apparaître (mode dégradé avec `proches.toml`). Une fiche
+`proches.toml` est reliée à un contact par prénom et nom ; un prénom seul qui désigne deux contacts n'est relié à
+aucun (on ne devine pas). Un contact avec une année absurde garde son jour, sans âge.
+
+**D-45 · Fêtes : une option, désactivée par défaut.** Une table de 324 prénoms courants du calendrier français
+(première fête retenue, Catherine le 25 novembre) ; le jour de l'anniversaire, pas de fête en plus.

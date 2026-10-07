@@ -1,0 +1,76 @@
+{
+  "_lisez_moi": "Modèles locaux des messages d'anniversaire (repli sans IA). {prenom} est remplacé ; « tu » partout sauf le ton formel (« vous »). Aucune formule de la liste interdite, aucun mot genré (ni pour toi, ni pour la personne).",
+  "corps": {
+    "tendre": [
+      "Bon anniversaire {prenom} ❤️\nJe pense fort à toi aujourd'hui. Merci d'être là, tout simplement.",
+      "{prenom}, joyeux anniversaire.\nTu comptes énormément pour moi : j'espère que ta journée sera aussi douce que toi.",
+      "Joyeux anniversaire {prenom} !\nJe t'embrasse fort, et j'ai hâte de te serrer dans mes bras pour fêter ça.",
+      "Bon anniversaire {prenom}.\nAujourd'hui c'est ta journée : je te la souhaite pleine de rires et de gens qui t'aiment.",
+      "{prenom}, c'est ton jour ✨\nQuelle chance de t'avoir dans ma vie. Profite de chaque minute, elles sont toutes à toi.",
+      "Joyeux anniversaire {prenom} 💛\nMerci pour tout ce que tu m'apportes. Garde cette lumière, elle fait du bien autour de toi."
+    ],
+    "drole": [
+      "Joyeux anniversaire {prenom} ! 🎉\nOfficiellement plus sage d'un an. Officieusement, on sait tous les deux que non.",
+      "Bon anniversaire {prenom} !\nJ'ai vérifié : aujourd'hui, tu as le droit de tout. Même au deuxième dessert.",
+      "{prenom}, joyeux anniversaire !\nPetit rappel : le gâteau ne compte pas dans les calories aujourd'hui. C'est scientifique.",
+      "Bon anniversaire {prenom} 🎂\nDouze mois d'expérience en plus, de sagesse aussi… enfin, surtout d'expérience.",
+      "Joyeux anniversaire {prenom} !\nJe t'aurais bien chanté la chanson, mais je tiens à notre amitié.",
+      "Bon anniversaire {prenom} 🥳\nAujourd'hui, interdiction de faire la vaisselle. C'est la loi, je n'y peux rien."
+    ],
+    "sobre": [
+      "Bon anniversaire {prenom} !\nJe te souhaite une très belle journée, avec les gens qui comptent pour toi.",
+      "Joyeux anniversaire {prenom}.\nJ'espère que cette nouvelle année t'apportera ce que tu attends.",
+      "Bon anniversaire {prenom} 🙂\nPasse une belle journée, et à très vite.",
+      "Joyeux anniversaire {prenom} !\nJe pense à toi aujourd'hui. Belle journée, et belle année qui commence.",
+      "Bon anniversaire {prenom}.\nQue cette année t'apporte de belles surprises… et du temps pour en profiter.",
+      "Joyeux anniversaire {prenom} 🎂\nUne belle journée à toi, et une année à ton image."
+    ],
+    "formel": [
+      "Bon anniversaire {prenom}.\nJe vous souhaite une excellente journée et une très belle année.",
+      "Joyeux anniversaire {prenom} !\nJe vous adresse tous mes vœux pour cette nouvelle année, personnelle comme professionnelle.",
+      "Bonjour {prenom}, bon anniversaire !\nJe vous souhaite une belle journée, et une année riche en projets.",
+      "Bon anniversaire {prenom}.\nAu plaisir de vous retrouver bientôt ; très belle journée à vous.",
+      "Joyeux anniversaire {prenom}.\nJe vous souhaite une journée agréable, et que cette année vous réussisse."
+    ]
+  },
+  "age": {
+    "tu": {
+      "18": "18 ans : la majorité, enfin officielle !",
+      "20": "20 ans, une belle décennie qui commence.",
+      "21": "21 ans, la majorité partout dans le monde cette fois !",
+      "25": "25 ans, un quart de siècle avec style.",
+      "dizaine": "{age} ans ! Une nouvelle dizaine, et franchement elle te va bien.",
+      "autre": "{age} ans aujourd'hui, ça se fête !"
+    },
+    "vous": {
+      "dizaine": "{age} ans : une nouvelle dizaine, qui vous va très bien."
+    }
+  },
+  "souvenir": {
+    "tu": [
+      "Je repense encore à {souvenir} : on remet ça quand tu veux ?",
+      "Petite pensée pour {souvenir}, un de mes meilleurs souvenirs avec toi."
+    ],
+    "vous": [
+      "Je garde un très bon souvenir de {souvenir}."
+    ]
+  },
+  "passion": {
+    "tu": [
+      "Et pour fêter ça, je te prévois une journée 100 % {passion}.",
+      "J'espère qu'il y aura un peu de {passion} au programme aujourd'hui !"
+    ],
+    "vous": [
+      "J'espère qu'un peu de {passion} sera au programme aujourd'hui."
+    ]
+  },
+  "fete": {
+    "tu": [
+      "Bonne fête {prenom} ! 🌼\nPetit message pour te dire que je pense à toi.",
+      "C'est ta fête aujourd'hui, {prenom} 🎉\nJe te souhaite une très belle journée."
+    ],
+    "vous": [
+      "Bonne fête {prenom} !\nJe vous souhaite une très belle journée."
+    ]
+  }
+}

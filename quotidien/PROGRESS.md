@@ -10,7 +10,7 @@ Chaque phase se termine par `./check.sh` vert, l'intégrité identique, un commi
 | P2 — base de recettes | ✅ | « Quotidien P2 » |
 | P3 — planificateur et courses | ✅ | « Quotidien P3-P4 » |
 | P4 — vide-frigo | ✅ | « Quotidien P3-P4 » |
-| P5 — anniversaires | ⏳ | |
+| P5 — anniversaires | ✅ | « Quotidien P5 » |
 | P6 — brief, page, Rappels, iCloud, raccourcis | ⏳ | |
 | P7 — démon, planification, doctor, budget IA | ⏳ | |
 | P8 — bout en bout | ⏳ | |
@@ -153,6 +153,46 @@ INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 593 fichiers, 0 Laun
 All checks passed!
 54 passed (socle) · 77 passed (météo) · 1686 passed in 693.73s (recettes, menu, courses) · 43 passed (vide-frigo) · 25 passed (sécurité)
 TOTAL                                3319     64    98%
+INTÉGRITÉ OK : identique à etat_avant.json (…)
+CHECK OK
+```
+
+## P5 — 2026-10-07
+
+- `anniversaires/contacts.py` : Contacts du Mac en lecture seule (`CNContactStore`), accès demandé depuis le
+  Terminal seulement ; `proches.py` : `proches.toml` (fiches, personnes hors Contacts), relié par prénom et nom ;
+  `dates.py` : formats de date, 29 février (28/02 ou 01/03), âge, fuseau des réglages.
+- `messages.py` : 3 variantes vérifiées (longueur, lignes, prénom, 40 formules interdites, pas de lien), IA avec
+  seulement prénom, relation, ton, âge et notes caviardées ; modèles locaux par ton, avec l'âge et tes notes.
+- `service.py` : rappels J-7 (proches), J-1, J, fenêtres d'utilité, une seule fois chacun, groupés, jamais la nuit ;
+  le jour J, la fenêtre « Ouvrir dans Messages » (URL `sms:` + presse-papiers) ; fêtes en option.
+- Commande `quotidien anniversaires [message|ouvrir Prénom N]`.
+- Tests : Contacts imités (29 février, sans année, même jour, contact supprimé, année absurde), horloge simulée sur
+  une semaine (J-7, J-1, J émis exactement une fois, redémarrage sans doublon, rattrapage utile seulement), espion de
+  l'IA (0 nom de famille, 0 numéro, 0 adresse), 1 260 combinaisons ton × relation × âge × notes (3 780 messages) sans cliché ni mot
+  genré, **aucune capacité d'envoi** (recherche dans tout le code livré, et preuve qu'elle trouverait chaque forme).
+
+Aperçu (modèles locaux, sans IA) pour une amie proche, ton drôle, 25 ans, notes « voyage à Lisbonne », « foot » :
+
+```
+1. Bon anniversaire Camille !
+   J'ai vérifié : aujourd'hui, tu as le droit de tout. Même au deuxième dessert.
+   25 ans, un quart de siècle avec style.
+2. Bon anniversaire Camille 🥳
+   Aujourd'hui, interdiction de faire la vaisselle. C'est la loi, je n'y peux rien.
+   Je repense encore à notre voyage à Lisbonne : on remet ça quand tu veux ?
+3. Joyeux anniversaire Camille !
+   Je t'aurais bien chanté la chanson, mais je tiens à notre amitié.
+   J'espère qu'il y aura un peu de foot au programme aujourd'hui !
+```
+
+Preuve (`./check.sh`) :
+
+```
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 593 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 7 élément(s) divers, listes de Rappels : indisponibles)
+All checks passed!
+54 passed (socle) · 77 passed (météo) · 1686 passed in 726.05s (recettes) · 43 passed (vide-frigo) · 46 passed (anniversaires) · 29 passed (sécurité)
+TOTAL                                 3920     70    98%
 INTÉGRITÉ OK : identique à etat_avant.json (…)
 CHECK OK
 ```
