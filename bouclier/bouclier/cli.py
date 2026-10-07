@@ -7,6 +7,7 @@ bouclier historique
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
@@ -67,12 +68,19 @@ def cmd_verifier(args: argparse.Namespace, env: Environnement) -> int:
     else:
         return _repondre(args, env, 'Donne-moi le message : bouclier verifier "le texte"  (ou un fichier, ou'
                                     " --presse-papiers)", 1)  # fmt: skip
-    textes = []
+    textes, resultats = [], []
     for message, source in messages:
         if not message.texte.strip() and not message.avertissements:
             textes.append("Le message est vide.")
             continue
-        textes.append(analyse.verifier(message, outils, source, demande_ia=args.ia).reponse.texte())
+        r = analyse.verifier(message, outils, source, demande_ia=args.ia)
+        textes.append(r.reponse.texte())
+        resultats.append({"niveau": r.verdict.niveau.code, "pastille": r.verdict.niveau.pastille,
+                          "score": r.verdict.score, "titre": r.reponse.titre, "raisons": r.reponse.raisons,
+                          "gestes": r.reponse.gestes})  # fmt: skip
+    if args.json:  # pour une autre app (INTEGRATION.md) : une ligne JSON par message
+        _ecrire("\n".join(json.dumps(x, ensure_ascii=False) for x in resultats))
+        return 0
     return _repondre(args, env, "\n\n".join(textes), 0)
 
 
@@ -315,6 +323,7 @@ def analyseur() -> argparse.ArgumentParser:
     v.add_argument("--presse-papiers", action="store_true", help="vérifier le texte copié")
     v.add_argument("--stdin", action="store_true", help="lire le message sur l'entrée standard (service macOS)")
     v.add_argument("--fenetre", action="store_true", help="montrer aussi la réponse dans une fenêtre")
+    v.add_argument("--json", action="store_true", help="réponse en JSON (pour une autre app)")
     v.add_argument("--ia", action="store_true", help="demander aussi l'avis de Claude, même si les règles sont sûres")
     v.set_defaults(fonction=cmd_verifier)
 

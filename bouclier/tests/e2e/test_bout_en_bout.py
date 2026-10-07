@@ -392,3 +392,35 @@ def test_verification_reelle_imitee(maison: Path) -> None:
     relance[0] = True
     shutil.rmtree(c.icloud)
     assert "aller-retour du raccourci non vérifié" in verifier().avertissements[0]
+
+
+def test_boucle_au_repos_econome(mac: Environnement) -> None:
+    """Au repos (rien dans l'entrée iCloud), 100 tours de 3 s n'écrivent presque rien sur le disque : un battement
+    toutes les 30 s ; les réglages ne sont relus que si config.toml change (le Nettoyeur surveille l'énergie)."""
+    c, base, _, _, _, _, t = mac
+    d = _demon(mac)
+    d.tour_rapide()
+    avant = base.cx.total_changes
+    for _ in range(100):
+        t[0] += 3
+        d.tour_rapide()
+    assert base.cx.total_changes - avant <= 10
+    assert d.reglages()["gmail"]["adresse"] == "camille@example.org"
+    c.config.write_text('[gmail]\nadresse = "autre@example.org"\nactive = false\n', encoding="utf-8")
+    assert d.reglages()["gmail"]["active"] is False and d.taches_dues(d.reglages())[:1] != ["gmail"]
+    c.config.write_text("[gmail\n", encoding="utf-8")
+    assert d.reglages()["gmail"]["active"] is True and "ne se lit pas" in (base.lire_meta("config_alerte") or "")
+
+
+def test_portes_pour_l_assistant(mac: Environnement, capsys: pytest.CaptureFixture[str]) -> None:
+    """INTEGRATION.md : `etat.json` (écrit avec le tableau de bord) et `bouclier verifier --json`."""
+    c, base, systeme, _, _, _, t = mac
+    _demon(mac).tour()
+    etat = json.loads((c.tableau_de_bord.with_name("etat.json")).read_text(encoding="utf-8"))
+    assert set(etat) == {"mis_a_jour", "hygiene", "arnaques_7_jours", "comptes", "fuites", "fiche_urgence"}
+    assert 0 <= etat["hygiene"]["score"] <= 100 and etat["fiche_urgence"] == "a_jour" and etat["fuites"] >= 1
+    assert (c.tableau_de_bord.with_name("etat.json").stat().st_mode & 0o777) == 0o600
+    capsys.readouterr()
+    assert cli.main(["verifier", "--json", ARNAQUE_CORPS.decode()], systeme) == 0
+    r = json.loads(capsys.readouterr().out.strip())
+    assert r["niveau"] == "arnaque" and r["pastille"] == "🔴" and r["raisons"] and r["gestes"]

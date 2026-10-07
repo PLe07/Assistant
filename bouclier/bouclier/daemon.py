@@ -14,7 +14,9 @@ Les dates des prochaines tâches sont en base : un redémarrage ou une mise en v
 
 from __future__ import annotations
 
+import copy
 import signal
+import sys
 import threading
 import time
 from collections.abc import Callable
@@ -37,6 +39,7 @@ JOUR_S = 86400
 SEMAINE_S = 7 * JOUR_S
 SIX_MOIS_S = 182 * JOUR_S
 RETRY_S = 3600
+BATTEMENT_S = 30  # doctor juge le démon arrêté sans battement depuis 2 min : inutile d'écrire en base toutes les 3 s
 
 
 @dataclass
@@ -67,6 +70,8 @@ class Demon:
         self.ouvrir_base = ouvrir_base or (lambda: db.ouvrir(chemins.base))
         self.boite = BoiteEntree(chemins, base, systeme, horloge)
         self.reveil = threading.Event()
+        self._dernier_battement = float("-inf")
+        self._reglages: tuple[tuple[int, int] | None, dict[str, Any], str | None] | None = None
 
     # --- Planification (en base : survit aux redémarrages) --------------------------------------------------------
     def _du(self, tache: str) -> bool:
@@ -156,9 +161,22 @@ class Demon:
             tour.fait.append(f"ménage : {retires} copie(s) de plus de 30 jours retirée(s)")
 
     # --- Les tours ----------------------------------------------------------------------------------------------
+    def reglages(self) -> dict[str, Any]:
+        """Les réglages, relus seulement quand config.toml a changé (la boucle tourne toutes les 3 s)."""
+        try:
+            st = self.chemins.config.stat()
+            cle: tuple[int, int] | None = (st.st_mtime_ns, st.st_size)
+        except OSError:
+            cle = None
+        if self._reglages is None or self._reglages[0] != cle:
+            reglages, alerte = config.charger_ou_defauts(self.chemins)
+            if (self.base.lire_meta("config_alerte") or "") != (alerte or ""):
+                self.base.ecrire_meta("config_alerte", alerte or "")
+            self._reglages = (cle, reglages, alerte)
+        return copy.deepcopy(self._reglages[1])
+
     def _debut(self) -> tuple[dict[str, Any], Notifieur]:
-        reglages, alerte = config.charger_ou_defauts(self.chemins)
-        self.base.ecrire_meta("config_alerte", alerte or "")
+        reglages = self.reglages()
         return reglages, Notifieur(self.base, self.systeme, reglages, self.horloge)
 
     def _executer(self, taches: list[tuple[str, Callable[[], None]]], t: Tour) -> None:
@@ -196,7 +214,9 @@ class Demon:
         """Toutes les 3 s : le battement, l'entrée iCloud du raccourci (réponse en quelques secondes), les
         notifications gardées pour la nuit."""
         t = Tour()
-        self.base.ecrire_meta("demon_battement", str(self.horloge()))
+        if self.horloge() - self._dernier_battement >= BATTEMENT_S:
+            self._dernier_battement = self.horloge()
+            self.base.ecrire_meta("demon_battement", str(self._dernier_battement))
         reglages, notifieur = self._debut()
         self._executer([("entree", lambda: self._entree(reglages, notifieur, t))], t)
         self._envoyer_en_attente(notifieur, t)
@@ -276,8 +296,7 @@ class Demon:
         while not arret.is_set():
             self.tour_rapide()
             if fil is None or not fil.is_alive():
-                reglages, _ = config.charger_ou_defauts(self.chemins)
-                if self.taches_dues(reglages):
+                if self.taches_dues(self.reglages()):
                     fil = threading.Thread(target=self._fil_lent, name="bouclier-taches", daemon=True)
                     fil.start()
             tours += 1
@@ -301,6 +320,9 @@ def principal(chemins: config.Chemins | None = None) -> int:  # pragma: no cover
     reglages, _ = config.charger_ou_defauts(chemins)
     journal.configurer(chemins.logs, reglages.get("moi", {}))
     config.preparer_dossiers(chemins)
+    # Une erreur imprévue irait en clair dans demon.erreurs.log (launchd) : seul son type est noté, caviardé.
+    sys.excepthook = lambda genre, *_: log().error("erreur imprévue : %s", genre.__name__)
+    threading.excepthook = lambda a: log().error("erreur imprévue dans un fil : %s", a.exc_type.__name__)
     arret = threading.Event()
     demon = Demon(chemins, db.ouvrir(chemins.base), Systeme())
 

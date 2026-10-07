@@ -11,6 +11,8 @@ import re
 import urllib.parse
 from dataclasses import dataclass
 
+from bouclier.arnaque.texte import INVISIBLES, sans_invisibles
+
 # Suffixes publics à deux niveaux (extrait de la Public Suffix List) et hébergeurs où chaque sous-domaine
 # appartient à quelqu'un de différent.
 SUFFIXES_DOUBLES = frozenset(
@@ -69,6 +71,7 @@ class InfoLien:
     raccourci: bool
     messagerie: bool
     hebergeur: bool
+    invisible: bool = False  # des caractères invisibles glissés dans l'adresse pour tromper l'œil
 
 
 def hote_de(url: str) -> str:
@@ -96,6 +99,8 @@ def domaine_enregistrable(hote: str) -> str:
 
 
 def analyser(url: str) -> InfoLien:
+    invisible = any(c in INVISIBLES for c in url)
+    url = sans_invisibles(url)
     morceaux = urllib.parse.urlsplit(url if "://" in url else "https://" + url)
     hote = (morceaux.hostname or "").rstrip(".").lower()
     try:
@@ -117,6 +122,7 @@ def analyser(url: str) -> InfoLien:
         raccourci=domaine in RACCOURCISSEURS or hote in RACCOURCISSEURS,
         messagerie=hote in MESSAGERIES,
         hebergeur=hebergeur,
+        invisible=invisible,
     )
 
 

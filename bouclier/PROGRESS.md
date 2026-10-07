@@ -15,7 +15,7 @@ Reprise après coupure : lire ce fichier et DECISIONS.md, puis reprendre à la p
 | P8 Raccourcis, actions rapides, iCloud | ✅ | plists valides, entrée/réponse iCloud testées, ci-dessous |
 | P9 Démon, tableau de bord, doctor, bout en bout | ✅ | un « jour » de démon simulé, Gmail intact, ci-dessous |
 | P10 Installation | ✅ | scripts lancés pour de vrai sur un Mac imité ; preuve réelle : `./install.sh` sur ton Mac |
-| P11 Revue hostile (2 passes) | ⏳ | |
+| P11 Revue hostile (2 passes) | ✅ | 39 pièges inédits 🟠/🔴, 15 vrais messages ⚪, 6 corrections, RAPPORT_FINAL.md |
 
 ## P0 — Environnement, empreinte, squelette (✅)
 
@@ -441,6 +441,48 @@ INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 455 fichiers, 0 Laun
 14 passed, 1 deselected in 23.59s
   ✅ bout en bout (démon, doctor, installation)
 TOTAL                                     5148    198    96%
+  ✅ couverture ≥ 90 % sur bouclier/
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 455 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
+  ✅ intégrité des autres projets (fin)
+CHECK OK
+```
+
+## P11 — Revue hostile en deux passes (✅)
+
+- Passe 1 : 25 pièges inédits et 15 vrais messages ; corrections (D-33) : faux positif 3-D Secure, caractères
+  invisibles, phrases des sosies et du punycode, « activez votre dispositif », énergie de la boucle, erreurs
+  imprévues caviardées. Mails authentifiés passant par SendGrid ou Mailchimp : ⚪.
+- Passe 2 : 14 nouveaux pièges, tous repérés sans correction.
+- README, ACTIONS_HUMAINES, INTEGRATION (`etat.json`, `verifier --json`), RAPPORT_FINAL.
+
+```
+$ python -m tests.corpus_arnaques.mesure principal
+| | 🔴 | 🟠 | 🟡 | ⚪ |
+| Arnaques | 125 | 20 | 0 | 0 |
+| Légitimes | 0 | 0 | 0 | 80 |
+$ python -m tests.corpus_arnaques.mesure inedit
+| Arnaques | 32 | 16 | 0 | 0 |
+| Légitimes | 0 | 0 | 0 | 32 |
+
+$ ./check.sh
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 455 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
+  ✅ intégrité des autres projets (début)
+  ✅ ruff check
+  ✅ ruff format
+  ✅ mypy
+147 passed in 3.71s
+  ✅ pytest : unitaires et intégrité
+69 passed in 9.54s
+  ✅ corpus d'arnaques (principal + 2e corpus inédit)
+35 passed in 1.57s
+  ✅ inventaire des comptes et fuites
+25 passed in 2.31s
+  ✅ métadonnées et fiche urgence
+30 passed in 1.79s
+  ✅ sécurité, réseau, vie privée
+16 passed, 1 deselected in 24.25s
+  ✅ bout en bout (démon, doctor, installation)
+TOTAL                                     5206    200    96%
   ✅ couverture ≥ 90 % sur bouclier/
 INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 455 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
   ✅ intégrité des autres projets (fin)

@@ -3,12 +3,14 @@ iCloud. Chaque brique y ajoute sa partie ; une brique pas encore utilisée affic
 
 from __future__ import annotations
 
+import json
 import os
 import threading
 import time
 from collections.abc import Callable
 from html import escape
 from pathlib import Path
+from typing import Any
 
 from bouclier.db import Base
 
@@ -174,10 +176,38 @@ def construire(base: Base, sections: list[Section] | None = None) -> str:
     )
 
 
-def ecrire(base: Base, chemin: Path) -> Path:
-    chemin.parent.mkdir(parents=True, exist_ok=True)
+def etat(base: Base, maintenant: float | None = None) -> dict[str, Any]:
+    """Le résumé lisible par une autre app (l'assistant, INTEGRATION.md) : `etat.json` à côté du tableau de bord."""
+    from bouclier import config
+    from bouclier.fuites import croisement, hibp
+
+    m = maintenant or time.time()
+    score, actions = hygiene(base, m)
+    arnaques = base.cx.execute("SELECT COUNT(*) FROM analyses WHERE niveau IN ('arnaque', 'tres_suspect')"
+                               " AND date >= ?", (m - 7 * 86400,)).fetchone()[0]  # fmt: skip
+    comptes = base.cx.execute("SELECT COUNT(*) FROM comptes WHERE nature = 'compte'").fetchone()[0]
+    fuites = croisement.croiser(hibp.ListeFuites(config.chemins().caches).fuites(), croisement.comptes_surveilles(base))
+    generee = base.lire_meta("fiche_generee_le")
+    fiche = "absente" if generee is None else "a_relire" if m - float(generee) > 182 * 86400 else "a_jour"
+    return {
+        "mis_a_jour": time.strftime("%Y-%m-%dT%H:%M:%S", time.localtime(m)),
+        "hygiene": {"score": score, "actions": actions},
+        "arnaques_7_jours": int(arnaques),
+        "comptes": int(comptes),
+        "fuites": len(fuites),
+        "fiche_urgence": fiche,
+    }
+
+
+def _ecrire_atomique(chemin: Path, texte: str) -> None:
     temporaire = chemin.with_name(f".{chemin.name}.{threading.get_ident()}.tmp")  # un nom par fil du démon
-    temporaire.write_text(construire(base), encoding="utf-8")
+    temporaire.write_text(texte, encoding="utf-8")
     os.chmod(temporaire, 0o600)
     os.replace(temporaire, chemin)
+
+
+def ecrire(base: Base, chemin: Path) -> Path:
+    chemin.parent.mkdir(parents=True, exist_ok=True)
+    _ecrire_atomique(chemin, construire(base))
+    _ecrire_atomique(chemin.with_name("etat.json"), json.dumps(etat(base), ensure_ascii=False, indent=2) + "\n")
     return chemin

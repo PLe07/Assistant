@@ -34,14 +34,25 @@ SECRET = _c(
     r"n'en parle(z)? (a personne|pas)|ne dites rien|confidentiel|ne contactez pas|ne raccrochez pas"
     r"|ne redemarrez pas|n'eteignez pas|ne l'eteignez pas|garde(z)? (le|ca) pour (vous|toi)"
 )
-_VERBE_DONNER = r"\b(communiqu|donn|transmet|transmett|lis|lire|lisez|dict|envoy|indiqu|saisi|entr|tap|fourni|precis)"
+# Donner un code à quelqu'un : toujours une demande. Le saisir : une demande, sauf si le message fournit lui-même
+# le code et n'a ni lien ni numéro (« saisissez le code 552013 sur la page de paiement… ne le communiquez jamais » :
+# c'est un SMS de validation 3-D Secure ou de connexion).
+_VERBE_TRANSMETTRE = r"\b(communiqu|donn|transmet|transmett|lis|lire|lisez|dict|envoy|fourni|precis|repond|partag)"
+_VERBE_SAISIR = r"\b(indiqu|saisi|entr|tap)"
 
-DEMANDE_CODE = _c(
-    _VERBE_DONNER + r"\w*\b[^.!?\n]{0,40}\bcode\b"
+DEMANDE_CODE_TRANSMIS = _c(
+    _VERBE_TRANSMETTRE + r"\w*\b[^.!?\n]{0,40}\bcode\b"
+    r"|\bcode\b[^!?\n]{0,60}" + _VERBE_TRANSMETTRE + r"\w*-(le|la|les|lui|leur|nous|moi)\b"
     r"|\bcode\b[^.!?\n]{0,30}(a votre conseiller|au conseiller|a la conseillere|par telephone)"
+)
+DEMANDE_CODE_SAISI = _c(
+    _VERBE_SAISIR + r"\w*\b[^.!?\n]{0,40}\bcode\b"
     r"|activez[- ]les avec le code|avec (le|votre) code (recu|de validation|secret)"
     r"|preparez[- ]la avec votre code|avec votre code dans"
 )
+CODE_FOURNI = _c(r"\bcode\b[^.!?\n]{0,25}?\b\d{4,8}\b")
+# Le code de remise d'un colis, fourni par le transporteur, se donne au livreur en main propre (Amazon, Chronopost).
+REMISE_AU_LIVREUR = _c(r"\b(au|a votre) livreur\b")
 VALIDER_OPERATION = _c(
     r"\b(validez|acceptez|confirmez) (l'|cette |votre |la )?(operation|transaction|notification)"
     r"|\bvalidez[^.!?\n]{0,30}sur (votre|l') ?(application|appli)"
@@ -67,6 +78,8 @@ CONNEXION_PAR_LIEN = _c(r"en vous (identifiant|connectant)|identifiez-vous|(re)?
 # « Validez votre compte » par un lien : on te fait passer par une fausse page de connexion.
 DEMANDE_COMPTE = _c(
     r"\b(validez|verifiez|confirmez|activez|reactivez|debloquez|retablissez) (votre|ton) (compte|acces)"
+    r"|\b(activez|reactivez|installez|validez) (votre|ton) (nouveau |nouvel |nouvelle )?(dispositif|pass|cle|service"
+    r"|espace|authentification)"
     r"|retablissez l'acces|retablir (votre|l') ?acces"
 )
 # Envoyer de l'argent directement (« rembourser la différence », « faites-moi un virement »).
@@ -132,7 +145,9 @@ def signaux_de_pression(t: str) -> list[Signal]:
 def signaux_de_demandes(t: str, lien: bool, telephone: bool) -> list[Signal]:
     s: list[Signal] = []
     vecteur = lien or telephone
-    if trouver(DEMANDE_CODE, t):
+    code_de_validation = not vecteur and bool(CODE_FOURNI.search(t))
+    transmis = trouver(DEMANDE_CODE_TRANSMIS, t) and not (code_de_validation and REMISE_AU_LIVREUR.search(t))
+    if transmis or (trouver(DEMANDE_CODE_SAISI, t) and not code_de_validation):
         s.append(Signal("demande:code", 45, "Il te demande de donner un code reçu par SMS : ce code sert à valider un"
                         " paiement ou un accès, ne le donne jamais à personne.",
                         critique=True, technique=False))  # fmt: skip

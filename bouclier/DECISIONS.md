@@ -254,3 +254,37 @@ Apple Vision sur une capture, `plutil -lint` des actions rapides installées, `s
 Gmail réel : drapeaux et libellés de 20 messages témoins identiques avant et après l'analyse de 3 messages et la
 lecture des en-têtes (base jetable, aucune notification). Lancés à la demande (ACTIONS_HUMAINES.md), jamais par
 `check.sh` (ils ont besoin de ton compte).
+
+## 2026-10-07 · P11 — Revue hostile (2 passes)
+
+**D-33 · Ce que la revue hostile a trouvé et corrigé.**
+Passe 1 (attaquant puis reviewer), 25 pièges inédits et 15 vrais messages qui leur ressemblent :
+- **Faux positif** : un vrai SMS 3-D Secure (« saisissez le code 552013 sur la page de paiement… ne le communiquez
+  jamais ») était 🟠. Règle séparée en deux : *transmettre* un code (à un conseiller, par SMS, « donnez-le ») est
+  toujours une demande ; *saisir* un code n'en est pas une quand le message fournit lui-même le code et n'a ni lien ni
+  numéro. Exception unique : le code de remise d'un colis « à donner au livreur » (Amazon, Chronopost), légitime.
+  Le piège « votre code est 552013, communiquez-le au conseiller » reste 🔴.
+- **Caractères invisibles** (espace de largeur nulle, marques de sens d'écriture) : retirés avant les règles (« rem
+  boursement » ne passe plus entre les mailles) ; dans un lien, ils sont un signe critique (« lien:invisible »).
+- **Phrases** : un sosie « à une lettre près » (credit-agricoIe.fr) le dit clairement ; un nom en punycode est
+  affiché décodé (jamais « xn--… »).
+- « Activez votre nouveau dispositif sécurité » avec un lien rejoint les demandes de compte.
+- **Énergie** : la boucle de 3 s écrivait deux fois en base à chaque tour (≈ 57 000 écritures par jour) et relisait
+  config.toml. Désormais : un battement toutes les 30 s, réglages relus seulement s'ils changent (test : ≤ 10
+  écritures pour 100 tours au repos). Le Nettoyeur ne verra pas Bouclier comme gourmand.
+- **Journal d'erreurs de launchd** : une erreur imprévue n'y écrit plus que son type (crochets `sys.excepthook` et
+  `threading.excepthook` vers le journal caviardé).
+Passe 2, 14 nouveaux pièges (i sans point, alpha latin, o arménien, pleine chasse, accent, « rn », lettre doublée,
+faux sous-domaines, faux conseiller « compte sécurisé », faux proche) : tous 🟠 ou 🔴 sans nouvelle correction. Les
+39 pièges et 15 vrais messages sont devenus des tests permanents (`tests/corpus_arnaques/test_revue_hostile.py`).
+Vérifiés sans défaut : écriture IMAP impossible (EXAMINE, `BODY.PEEK`, `LOGOUT` seul), colonne de mot de passe
+jamais nommée, journal caviardé, aucun fichier hors de `bouclier/` modifié depuis le premier commit de Bouclier.
+
+**D-34 · L'intégration à l'assistant passe par deux portes stables, sans importer Bouclier.**
+`etat.json` (à côté du tableau de bord, écrit en même temps, chmod 600) et `bouclier verifier --json`. L'assistant
+garde son propre environnement Python ; il n'a pas à connaître la base de Bouclier. INTEGRATION.md donne les
+quelques lignes à ajouter (brief du matin, bouton du menu).
+
+**D-35 · Dans Messages, un SMS n'a pas de bouton « Partager » : la capture d'écran est le chemin principal.**
+La documentation (README, ACTIONS_HUMAINES, recette manuelle) part de la capture d'écran (lue en local par Apple
+Vision) ; pour un mail ou un lien, appui long → Partager ; sur le Mac, `--presse-papiers`.

@@ -125,6 +125,9 @@ def analyser(message: Message, ctx: Contexte | None = None) -> AnalyseLocale:
         if info.arobase:
             c.ajouter(Signal("lien:arobase", 40, "Le lien est déguisé : la partie avant « @ » fait croire à un site"
                              " connu, mais il mène ailleurs.", critique=True))  # fmt: skip
+        if info.invisible:
+            c.ajouter(Signal("lien:invisible", 40, "Le lien contient des caractères invisibles, glissés pour tromper"
+                             " l'œil et les filtres : aucun vrai service ne fait ça.", critique=True))  # fmt: skip
         if info.raccourci:
             c.ajouter(Signal("lien:raccourci", 20, "Le lien est raccourci : on ne voit pas où il mène vraiment."))
         if info.messagerie:
@@ -148,8 +151,12 @@ def analyser(message: Message, ctx: Contexte | None = None) -> AnalyseLocale:
             if s.maniere == "caracteres":
                 phrase = (f"« {affiche} » imite {s.marque.nom} avec des lettres trompeuses : le vrai site est"
                           f" {s.marque.site}.")  # fmt: skip
+            elif s.maniere == "deforme":
+                phrase = (f"« {decoder_idn(info.domaine)} » ressemble à {s.marque.nom} à une lettre près : le vrai site"
+                          f" est {s.marque.site}.")  # fmt: skip
             else:
-                phrase = f"Le lien mène à « {info.domaine} », pas au site officiel de {s.marque.nom} ({s.marque.site})."
+                phrase = (f"Le lien mène à « {decoder_idn(info.domaine)} », pas au site officiel de {s.marque.nom}"
+                          f" ({s.marque.site}).")  # fmt: skip
             c.ajouter(Signal("lien:sosie", 45, phrase))
         if lien.affiche:
             d_affiche = liens.domaine_affiche(lien.affiche)

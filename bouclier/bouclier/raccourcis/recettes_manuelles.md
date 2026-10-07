@@ -31,8 +31,8 @@
    4. Transfère le SMS douteux au 33700 (gratuit), puis supprime-le.
    5. Si tu as déjà payé ou donné ta carte : fais opposition tout de suite (ta banque, ou le 0 892 705 705, payant), signale la fraude sur Perceval, puis porte plainte en ligne sur THESEE.
    ```
-9. **OK**. Essai : dans Messages, appuie longuement sur un SMS → **Plus…** → partage → **Arnaque ?**
-   (ou fais une capture d'écran → Partager → **Arnaque ?**).
+9. **OK**. Essai : fais une capture d'écran d'un SMS, touche la miniature → **Partager** → **Arnaque ?**
+   (pour un mail ou un lien : appui long → **Partager** → **Arnaque ?**).
 
 ## « Envoyer sans traces »
 
