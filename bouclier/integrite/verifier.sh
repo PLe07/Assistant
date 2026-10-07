@@ -5,11 +5,12 @@
 # - Ailleurs (conteneur de construction) : integrite/etat_avant.json.
 set -u
 ICI="$(cd "$(dirname "$0")" && pwd)"
-PY=python3
+PY="${PYTHON:-python3}"
 if [ "$(uname -s)" = "Darwin" ]; then
-  REF="$ICI/mac/etat_avant.json"
+  REF="${BOUCLIER_INTEGRITE_MAC:-$ICI/mac}/etat_avant.json"
   if [ ! -f "$REF" ]; then
     echo "Première vérification sur ce Mac : empreinte « avant » prise maintenant."
+    mkdir -p "$(dirname "$REF")" && chmod 700 "$(dirname "$REF")"
     "$PY" "$ICI/empreinte.py" capturer "$REF" || exit 1
     chmod 600 "$REF"
   fi

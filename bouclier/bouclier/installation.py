@@ -17,11 +17,15 @@ import os
 import plistlib
 import re
 import shutil
+import time
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
 from bouclier import config
+from bouclier.db import Base
+from bouclier.entree_icloud import PREFIXE_VERIF
 from bouclier.raccourcis import actions_rapides, generer
 from bouclier.systeme import Systeme
 from bouclier.urgence import infos
@@ -197,3 +201,98 @@ def etat_agent(systeme: Systeme, lab: str) -> EtatAgent:
     pid = re.search(r"\bpid = (\d+)", r.sortie)
     code = re.search(r"last exit code = ([^\n]+)", r.sortie)
     return EtatAgent(True, int(pid.group(1)) if pid else None, code.group(1).strip() if code else None)
+
+
+# --- La vérification réelle, sur le Mac, juste après l'installation (P10) ---------------------------------------------
+TEXTE_VERIF = "Bonjour, ceci est un test de Bouclier pour vérifier l'installation. Il n'y a rien à faire."
+ILLISIBLE = "⚠️ Je n'ai pas pu lire"
+
+
+def _attendre_que(condition: Callable[[], bool], delai: float, attendre: Callable[[float], None],
+                  horloge: Callable[[], float], pas: float = 1.0) -> float | None:  # fmt: skip
+    """Le temps qu'il a fallu pour que la condition soit vraie, ou None après `delai` secondes."""
+    debut = horloge()
+    while True:
+        if condition():
+            return horloge() - debut
+        if horloge() - debut >= delai:
+            return None
+        attendre(pas)
+
+
+def image_de_test(chemin: Path) -> bool:
+    """Une capture d'écran imitée (texte noir sur blanc, grande police) pour vérifier la lecture des captures."""
+    try:
+        from PIL import Image, ImageDraw, ImageFont
+
+        police = ImageFont.load_default(size=44)
+    except (ImportError, OSError, TypeError):  # pragma: no cover - Pillow sans FreeType
+        return False
+    image = Image.new("RGB", (1170, 400), "white")
+    dessin = ImageDraw.Draw(image)
+    dessin.text((40, 60), "Bonjour, ceci est un test", fill="black", font=police)
+    dessin.text((40, 160), "de Bouclier. Rien a faire.", fill="black", font=police)
+    image.save(chemin, "PNG")
+    return True
+
+
+def verifier_reel(chemins: config.Chemins, reglages: dict[str, Any], base: Base, systeme: Systeme,
+                  attendre: Callable[[float], None] = time.sleep, horloge: Callable[[], float] = time.time,
+                  delai_relance: float = 90, delai_reponse: float = 60) -> Bilan:  # fmt: skip
+    """Le démon tourne, est relancé par launchd après un `kill`, et répond à une demande déposée dans iCloud
+    (texte et capture d'écran) ; les fichiers de test sont retirés ensuite."""
+    b = Bilan()
+    lab = label(reglages)
+    avant = etat_agent(systeme, lab)
+    if not avant.charge or not avant.pid:
+        b.refus.append(f"{lab} n'est pas lancé par launchd (dernier code : {avant.dernier_code or 'inconnu'})")
+        return b
+    b.fait.append(f"launchctl print : {lab} tourne (pid {avant.pid})")
+    systeme.executer(["kill", "-TERM", str(avant.pid)], None, 10)
+    nouveau: list[int] = []
+
+    def relance() -> bool:
+        e = etat_agent(systeme, lab)
+        if e.pid and e.pid != avant.pid:
+            nouveau.append(e.pid)
+            return True
+        return False
+
+    duree = _attendre_que(relance, delai_relance, attendre, horloge, pas=2.0)
+    if duree is None:
+        b.refus.append(f"après kill {avant.pid}, launchd n'a pas relancé le démon en {int(delai_relance)} s")
+        return b
+    b.fait.append(f"kill {avant.pid} : relancé par launchd en {int(duree)} s (pid {nouveau[-1]})")
+
+    if not chemins.icloud.is_dir():
+        b.avertissements.append("iCloud Drive/Bouclier absent : aller-retour du raccourci non vérifié")
+        return b
+    entree, reponses = chemins.icloud / "entree", chemins.icloud / "reponses"
+    entree.mkdir(parents=True, exist_ok=True)
+    nom = f"{PREFIXE_VERIF}{int(horloge())}"
+    essais = [(entree / f"{nom}-texte.txt", "texte")]
+    (entree / f"{nom}-texte.txt").write_text(TEXTE_VERIF, encoding="utf-8")
+    if image_de_test(entree / f"{nom}-capture.png"):
+        essais.append((entree / f"{nom}-capture.png", "capture d'écran"))
+    try:
+        for fichier, genre in essais:
+            reponse = reponses / f"{fichier.stem}.txt"
+            duree = _attendre_que(reponse.exists, delai_reponse, attendre, horloge)
+            if duree is None:
+                b.refus.append(f"{genre} déposé dans iCloud : pas de réponse en {int(delai_reponse)} s")
+                continue
+            texte = reponse.read_text(encoding="utf-8")
+            if texte.startswith(ILLISIBLE):
+                b.avertissements.append(f"{genre} : reçu mais pas lu ({texte.splitlines()[0][:120]})")
+            else:
+                b.fait.append(
+                    f"{genre} déposé dans iCloud : réponse du démon en {int(duree)} s ({texte.splitlines()[0]})"
+                )
+    finally:
+        for fichier, _ in essais:
+            for f in (fichier, reponses / f"{fichier.stem}.txt"):
+                f.unlink(missing_ok=True)
+            with base.transaction() as cx:
+                cx.execute("DELETE FROM entrees_vues WHERE chemin = ?", (str(fichier),))
+        b.fait.append("fichiers de test retirés d'iCloud")
+    return b

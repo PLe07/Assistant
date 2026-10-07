@@ -221,3 +221,36 @@ Le LaunchAgent `com.<session>.bouclier`, le lanceur `~/.local/bin/bouclier` (mar
 lanceur ou le plist existent déjà sans être à Bouclier, l'installation s'arrête et l'explique. Tout peut être relancé
 sans effet de bord. La désinstallation retire ce qui a été posé ; tes données restent sauf `--tout` ; le dossier
 iCloud Bouclier reste toujours (il est dans ton iCloud, à toi de décider).
+
+## 2026-10-07 · P10 — Installation
+
+**D-29 · Le démon a deux rythmes : la réponse au raccourci dans le fil principal, le reste dans un fil à part.**
+Un inventaire de grosse boîte Gmail peut durer plusieurs minutes : pendant ce temps, l'iPhone attend une réponse
+60 s au plus. Le fil principal ne fait que l'entrée iCloud et les notifications gardées pour la nuit (toutes les
+3 s) ; Gmail, listes, inventaire, fuites, fiche urgence et ménage tournent dans le fil « bouclier-taches », avec
+leur propre connexion SQLite (une connexion par fil), un seul à la fois. SIGTERM de launchd réveille la boucle tout
+de suite (launchd tue au bout de 20 s). Le tableau de bord est écrit par un fichier temporaire propre à chaque fil.
+
+**D-30 · `install.sh` vérifie pour de vrai ce qu'il a installé, sur ton Mac.**
+Huit étapes, relançables : Python ≥ 3.11 ; empreinte des autres projets avant ; `.venv` (pip seulement si
+`pyproject.toml` a changé) ; dossiers, commande, actions rapides, plist ; raccourcis signés ; `launchctl bootout`
+de l'ancienne version, `enable`, `bootstrap`, attente du pid ; puis `bouclier installation verifier` : `launchctl
+print`, `kill` du démon, attente de la relance par launchd (90 s au plus, ThrottleInterval compris), dépôt d'un
+texte et d'une capture d'écran dans `iCloud Drive/Bouclier/entree/` et attente de la réponse du démon ; ces fichiers
+de test (`bouclier-verif-*`) sont analysés pour de vrai, sans notification ni trace dans l'historique, puis retirés.
+Enfin `bouclier doctor` et la comparaison de l'empreinte. Tout est copié dans `~/Library/Logs/Bouclier/
+installation-<date>.log`. Jamais de sudo (refusé). `uninstall.sh` : bootout, attente, retrait de ce qui est à
+Bouclier, empreinte avant/après ; `--tout` retire aussi les données ; le dossier iCloud et le projet restent.
+Ici (Linux), les deux scripts sont lancés pour de vrai deux fois chacun dans un Mac imité : faux launchctl qui lance
+VRAIMENT le démon et le relance après un kill, `uname` = Darwin, réseau coupé et noté dans chaque processus.
+
+**D-31 · L'empreinte des LaunchAgents des autres projets : chargé et en marche, pas le numéro de processus.**
+Le pid change à chaque redémarrage du Mac : le comparer aurait fait échouer `check.sh` sur ton Mac sans que rien
+n'ait changé. On compare le plist (SHA-256), « chargé » et « en marche ». La référence du Mac peut être placée
+ailleurs (`BOUCLIER_INTEGRITE_MAC`, utilisé par les tests).
+
+**D-32 · Les vérifications qui demandent ton Mac sont des tests `reel` dans `tests/e2e_mac`.**
+Apple Vision sur une capture, `plutil -lint` des actions rapides installées, `shortcuts sign` des 2 raccourcis,
+Gmail réel : drapeaux et libellés de 20 messages témoins identiques avant et après l'analyse de 3 messages et la
+lecture des en-têtes (base jetable, aucune notification). Lancés à la demande (ACTIONS_HUMAINES.md), jamais par
+`check.sh` (ils ont besoin de ton compte).

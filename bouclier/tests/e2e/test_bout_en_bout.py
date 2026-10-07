@@ -7,6 +7,7 @@ from __future__ import annotations
 import datetime as dt
 import json
 import plistlib
+import shutil
 import threading
 from collections.abc import Sequence
 from pathlib import Path
@@ -300,3 +301,94 @@ def test_hygiene_double_authentification_et_score_parfait(maison: Path) -> None:
     score, actions = tableau_de_bord.hygiene(base, maintenant=dt.datetime(2026, 10, 6).timestamp())
     assert (score, actions) == (100, [])
     assert "Rien d'urgent" in tableau_de_bord.construire(base)
+
+
+def test_un_long_inventaire_ne_retarde_pas_le_raccourci(mac: Environnement, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Sur le Mac, les tâches lentes tournent dans un fil à part avec leur propre connexion à la base : un inventaire
+    de plusieurs minutes ne retarde pas la réponse au raccourci « Arnaque ? »."""
+    c, base, systeme, _, faux, net, t = mac
+    c.config.write_text("[gmail]\nactive = false\n", encoding="utf-8")
+    commence, libere = threading.Event(), threading.Event()
+    fils: list[str] = []
+
+    def inventaire_interminable(self: daemon.Demon, reglages: object, tour: daemon.Tour) -> None:
+        fils.append(threading.current_thread().name)
+        commence.set()
+        libere.wait(20)
+        self._planifier("inventaire", daemon.SEMAINE_S)
+
+    monkeypatch.setattr(daemon.Demon, "_inventaire", inventaire_interminable)
+    monkeypatch.setattr(daemon, "PAS_S", 0.05)
+    arret = threading.Event()
+
+    def tourner() -> None:  # comme sous launchd : la base de la boucle est ouverte dans son propre fil
+        b = db.ouvrir(c.base)
+        composants = daemon.Composants(net, lambda s: faux, lambda r: analyse.Outils(r, b))  # type: ignore[arg-type]
+        daemon.Demon(c, b, systeme, horloge=lambda: t[0], composants=composants).lancer(arret)
+
+    boucle = threading.Thread(target=tourner)
+    boucle.start()
+    try:
+        assert commence.wait(10)
+        entree = c.icloud / "entree"
+        entree.mkdir(parents=True, exist_ok=True)
+        (entree / "arnaque-2.txt").write_text(ARNAQUE_CORPS.decode(), encoding="utf-8")
+        reponse = c.icloud / "reponses" / "arnaque-2.txt"
+        for _ in range(200):
+            if reponse.exists():
+                break
+            threading.Event().wait(0.05)
+        assert reponse.exists() and not libere.is_set()  # répondu pendant que l'inventaire tourne encore
+        assert fils == ["bouclier-taches"]
+    finally:
+        libere.set()
+        arret.set()
+        boucle.join(20)
+    assert not boucle.is_alive()
+    assert float(base.lire_meta("prochain:inventaire") or 0) > 0
+
+
+def test_verification_reelle_imitee(maison: Path) -> None:
+    """`installation verifier` : kill puis relance, aller-retour iCloud, et chaque échec dit clairement."""
+    c = config.chemins()
+    c.icloud.mkdir(parents=True)
+    reglages = config.charger()
+    base = db.ouvrir(c.base)
+    pids, temps, relance, repond = [100], [0.0], [True], [True]
+
+    def executer(a: Sequence[str], e: str | None, d: float) -> Resultat:
+        if a[:2] == ["launchctl", "print"]:
+            return Resultat(0, f"state = running\n\tpid = {pids[-1]}\n") if pids[-1] else Resultat(113, "")
+        if a[0] == "kill" and relance[0]:
+            pids.append(pids[-1] + 1)
+        return Resultat(0, "")
+
+    def attendre(s: float) -> None:  # pendant l'attente, le « démon » répond à ce qui est déposé
+        temps[0] += s
+        for f in (c.icloud / "entree").glob("bouclier-verif-*") if repond[0] else []:
+            reponse = c.icloud / "reponses" / f"{f.stem}.txt"
+            reponse.parent.mkdir(exist_ok=True)
+            lu = f.suffix == ".txt"
+            reponse.write_text("⚪ Pas de signe d'arnaque détecté\n" if lu else "⚠️ Je n'ai pas pu lire ça\n")
+
+    def verifier() -> installation.Bilan:
+        systeme = Systeme(executer, mac=True)
+        return installation.verifier_reel(c, reglages, base, systeme, attendre, lambda: temps[0])
+
+    b = verifier()
+    assert b.refus == [] and "kill 100 : relancé par launchd en 0 s (pid 101)" in b.fait
+    assert any(f.startswith("texte déposé dans iCloud : réponse du démon") for f in b.fait)
+    assert any(a.startswith("capture d'écran : reçu mais pas lu") for a in b.avertissements)
+    assert list((c.icloud / "entree").iterdir()) == [] and list((c.icloud / "reponses").iterdir()) == []
+
+    repond[0] = False
+    b = verifier()
+    assert any("pas de réponse en 60 s" in r for r in b.refus) and list((c.icloud / "entree").iterdir()) == []
+    relance[0] = False
+    assert "n'a pas relancé le démon en 90 s" in verifier().refus[0]
+    pids.append(0)
+    assert "n'est pas lancé par launchd" in verifier().refus[0]
+    pids.append(200)
+    relance[0] = True
+    shutil.rmtree(c.icloud)
+    assert "aller-retour du raccourci non vérifié" in verifier().avertissements[0]

@@ -106,3 +106,26 @@ def test_verifier_sh_du_depot_reel() -> None:
     r = subprocess.run([str(RACINE / "integrite" / "verifier.sh")], capture_output=True, text=True, timeout=300)
     assert r.returncode == 0, r.stdout + r.stderr
     assert "INTÉGRITÉ OK" in r.stdout
+
+
+def test_etat_launchd_sans_numero_de_processus(faux_mac: tuple[ModuleType, Path, Path],
+                                               monkeypatch: pytest.MonkeyPatch) -> None:  # fmt: skip
+    """Un redémarrage du Mac change le pid d'un agent : pas un écart. Un agent arrêté ou déchargé : un écart."""
+    m, _, _ = faux_mac
+    sortie = ["PID\tStatus\tLabel\n412\t0\tcom.exemple.trieur\n"]
+
+    def commande(args: list[str], cwd: Path | None = None) -> tuple[int, str]:
+        if args[:2] == ["launchctl", "list"]:
+            return 0, sortie[0]
+        return m._commande_origine(args, cwd)
+
+    monkeypatch.setattr(m, "_commande_origine", m._commande, raising=False)
+    monkeypatch.setattr(m, "_commande", commande)
+    avant = m.capturer()
+    assert avant["launch_agents"]["com.exemple.trieur"]["launchd"] == {"charge": True, "tourne": True}
+    sortie[0] = "PID\tStatus\tLabel\n9001\t0\tcom.exemple.trieur\n"
+    assert m.comparer(avant, m.capturer()) == []
+    sortie[0] = "PID\tStatus\tLabel\n-\t0\tcom.exemple.trieur\n"
+    assert any("tourne" in e for e in m.comparer(avant, m.capturer()))
+    sortie[0] = "PID\tStatus\tLabel\n"
+    assert any("charge" in e for e in m.comparer(avant, m.capturer()))

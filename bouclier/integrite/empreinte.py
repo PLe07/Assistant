@@ -171,15 +171,17 @@ def launch_agents() -> dict[str, dict]:
         for ligne in liste.splitlines()[1:]:
             morceaux = ligne.split("\t")
             if len(morceaux) == 3:
-                pid, statut, label = morceaux
-                etats[label] = {"charge": True, "pid": pid, "dernier_code": statut}
+                pid, _statut, label = morceaux
+                # Chargé et en marche ou non : le numéro de processus change à chaque redémarrage du Mac, il ne
+                # dit rien d'un changement fait par Bouclier.
+                etats[label] = {"charge": True, "tourne": pid.strip() not in ("", "-")}
     for plist in sorted(dossier.glob("*.plist")):
         label = plist.stem
         if NOTRE_LABEL.match(label):
             continue
         resultat[label] = {
             "sha256": sha256_fichier(plist),
-            "launchd": etats.get(label, {"charge": False, "pid": "-", "dernier_code": "-"}),
+            "launchd": etats.get(label, {"charge": False, "tourne": False}),
         }
     return resultat
 

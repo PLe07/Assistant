@@ -14,7 +14,7 @@ Reprise après coupure : lire ce fichier et DECISIONS.md, puis reprendre à la p
 | P7 Fiche urgence n°22 | ✅ | numéros sourcés, PDF lu, A6 une page, ci-dessous |
 | P8 Raccourcis, actions rapides, iCloud | ✅ | plists valides, entrée/réponse iCloud testées, ci-dessous |
 | P9 Démon, tableau de bord, doctor, bout en bout | ✅ | un « jour » de démon simulé, Gmail intact, ci-dessous |
-| P10 Installation réelle | ⏳ | |
+| P10 Installation | ✅ | scripts lancés pour de vrai sur un Mac imité ; preuve réelle : `./install.sh` sur ton Mac |
 | P11 Revue hostile (2 passes) | ⏳ | |
 
 ## P0 — Environnement, empreinte, squelette (✅)
@@ -368,6 +368,79 @@ INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 455 fichiers, 0 Laun
 10 passed, 1 deselected in 4.78s
   ✅ bout en bout (démon, doctor, installation)
 TOTAL                                     5033    189    96%
+  ✅ couverture ≥ 90 % sur bouclier/
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 455 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
+  ✅ intégrité des autres projets (fin)
+CHECK OK
+```
+
+## P10 — Installation (✅ sur Mac imité ; la preuve réelle est la sortie de `./install.sh` sur ton Mac)
+
+- `install.sh` (8 étapes, D-30) et `uninstall.sh` ; `bouclier installation verifier` (kill puis relance, aller-retour
+  iCloud texte et capture, nettoyage) ; démon à deux rythmes (D-29) ; empreinte launchd sans pid (D-31) ;
+  `tests/e2e_mac` (D-32).
+- `tests/e2e/test_scripts_installation.py` : install.sh deux fois, uninstall.sh deux fois puis `--tout`, dans un
+  Mac imité où le démon tourne pour de vrai ; refus de sudo et de Linux.
+- `tests/e2e` : un inventaire interminable ne retarde pas la réponse au raccourci (fil « bouclier-taches »).
+
+```
+$ ./install.sh   (Mac imité : faux launchd, Linux, réseau coupé)
+▶ 1/8 Python 3.11 ou plus
+▶ 2/8 Empreinte des autres projets (avant)
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 455 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
+▶ 3/8 Environnement Python de Bouclier
+  déjà à jour
+▶ 4/8 Dossiers, commande bouclier, actions rapides, agent de démarrage
+  ✅ commande bouclier : ~/.local/bin/bouclier
+  ✅ action rapide « Est-ce une arnaque » : installée
+  ✅ action rapide « Est-ce une arnaque (texte) » : installée
+  ✅ action rapide « Nettoyer les métadonnées » : installée
+  ✅ agent de démarrage : ~/Library/LaunchAgents/com.<session>.bouclier.plist
+  ✅ dossier iCloud : ~/Library/Mobile Documents/com~apple~CloudDocs/Bouclier
+▶ 5/8 Raccourcis « Arnaque ? » et « Envoyer sans traces »
+  ⚠️ Arnaque ?.shortcut non signé (la commande « shortcuts » n'existe pas ici (macOS 12 ou plus)) : recette manuelle dans ACTIONS_HUMAINES.md
+▶ 6/8 Démarrage de la surveillance
+  com.<session>.bouclier en marche
+▶ 7/8 Vérification : arrêt brutal puis relance, demande déposée dans iCloud
+  ✅ launchctl print : com.<session>.bouclier tourne (pid 1948)
+  ✅ kill 1948 : relancé par launchd en 2 s (pid 1962)
+  ✅ texte déposé dans iCloud : réponse du démon en 4 s (⚪ Pas de signe d'arnaque détecté)
+  ✅ fichiers de test retirés d'iCloud
+  ⚠️ capture d'écran : reçu mais pas lu (lecture des images indisponible sur cet ordinateur)   ← Linux : pas d'Apple Vision
+▶ 8/8 Bilan
+✅ démon : com.<session>.bouclier tourne (pid 1962), dernier tour il y a 0 s
+✅ inventaire : 0 comptes, dernier inventaire : 07/10/2026 07:15
+✅ fiche urgence : générée le 07/10/2026 07:15, copiée sur iCloud
+INTÉGRITÉ OK : identique à avant_installation.json (1 projet(s), 455 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
+✅ Bouclier est installé et surveille.
+Adresses tentées par tous les processus : openphish.com, urlhaus.abuse.ch, haveibeenpwned.com et des sites
+officiels (gouv.fr, service-public.fr, chu-bordeaux.fr, centres-antipoison.net, ars.sante.fr) : toutes permises.
+
+$ ./uninstall.sh
+  ✅ surveillance arrêtée : com.<session>.bouclier
+  ✅ agent retiré, commande retirée, 3 actions rapides retirées
+INTÉGRITÉ OK : identique à avant_desinstallation.json
+✅ Bouclier est retiré.
+
+$ ./check.sh
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 455 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
+  ✅ intégrité des autres projets (début)
+  ✅ ruff check
+  ✅ ruff format
+  ✅ mypy
+147 passed in 3.72s
+  ✅ pytest : unitaires et intégrité
+14 passed in 9.07s
+  ✅ corpus d'arnaques (principal + 2e corpus inédit)
+35 passed in 1.37s
+  ✅ inventaire des comptes et fuites
+25 passed in 2.19s
+  ✅ métadonnées et fiche urgence
+30 passed in 1.75s
+  ✅ sécurité, réseau, vie privée
+14 passed, 1 deselected in 23.59s
+  ✅ bout en bout (démon, doctor, installation)
+TOTAL                                     5148    198    96%
   ✅ couverture ≥ 90 % sur bouclier/
 INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 455 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
   ✅ intégrité des autres projets (fin)

@@ -1,8 +1,8 @@
 """Le démon de Bouclier (LaunchAgent `com.<session>.bouclier`, D-04) : une boucle qui ne s'arrête jamais sur une
 erreur.
 
-À chaque tour (toutes les 3 s, ou tout de suite quand FSEvents signale un nouveau fichier) :
-- l'entrée iCloud du raccourci « Arnaque ? » (réponse en quelques secondes) ;
+Toutes les 3 s (ou tout de suite quand FSEvents signale un nouveau fichier) : l'entrée iCloud du raccourci
+« Arnaque ? » (réponse en quelques secondes). Dans un fil à part, pour ne jamais retarder cette réponse :
 - Gmail toutes les 5 minutes (délai croissant après un échec : 10, 20, 40 puis 60 minutes) ;
 - une fois par jour : les flux de liens piégés, la liste des fuites, le ménage de l'entrée iCloud ;
 - une fois par semaine : l'inventaire des comptes ;
@@ -22,7 +22,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-from bouclier import config, reseau, tableau_de_bord
+from bouclier import config, db, reseau, tableau_de_bord
 from bouclier.arnaque import analyse
 from bouclier.arnaque.flux import Flux
 from bouclier.comptes.imap_lecture_seule import ErreurImap, Fabrique, _fabrique_reelle
@@ -53,10 +53,18 @@ class Tour:
 
 
 class Demon:
-    def __init__(self, chemins: config.Chemins, base: Base, systeme: Systeme, horloge: Callable[[], float] = time.time,
-                 composants: Composants | None = None) -> None:  # fmt: skip
+    def __init__(
+        self,
+        chemins: config.Chemins,
+        base: Base,
+        systeme: Systeme,
+        horloge: Callable[[], float] = time.time,
+        composants: Composants | None = None,
+        ouvrir_base: Callable[[], Base] | None = None,
+    ) -> None:
         self.chemins, self.base, self.systeme, self.horloge = chemins, base, systeme, horloge
         self.c = composants or Composants()
+        self.ouvrir_base = ouvrir_base or (lambda: db.ouvrir(chemins.base))
         self.boite = BoiteEntree(chemins, base, systeme, horloge)
         self.reveil = threading.Event()
 
@@ -147,26 +155,13 @@ class Demon:
         if retires:
             tour.fait.append(f"ménage : {retires} copie(s) de plus de 30 jours retirée(s)")
 
-    # --- Un tour --------------------------------------------------------------------------------------------------
-    def tour(self) -> Tour:
-        t = Tour()
-        self.base.ecrire_meta("demon_battement", str(self.horloge()))
+    # --- Les tours ----------------------------------------------------------------------------------------------
+    def _debut(self) -> tuple[dict[str, Any], Notifieur]:
         reglages, alerte = config.charger_ou_defauts(self.chemins)
         self.base.ecrire_meta("config_alerte", alerte or "")
-        notifieur = Notifieur(self.base, self.systeme, reglages, self.horloge)
-        taches: list[tuple[str, Callable[[], None]]] = [("entree", lambda: self._entree(reglages, notifieur, t))]
-        if reglages["gmail"].get("active", True) and self._du("gmail"):
-            taches.append(("gmail", lambda: self._gmail(reglages, notifieur, t)))
-        if self._du("flux"):
-            taches.append(("flux", lambda: self._flux(t)))
-        if self._du("inventaire"):
-            taches.append(("inventaire", lambda: self._inventaire(reglages, t)))
-        if self._du("fuites"):
-            taches.append(("fuites", lambda: self._fuites(reglages, notifieur, t)))
-        if self._du("urgence"):
-            taches.append(("urgence", lambda: self._urgence(notifieur, t)))
-        if self._du("menage"):
-            taches.append(("menage", lambda: self._menage(t)))
+        return reglages, Notifieur(self.base, self.systeme, reglages, self.horloge)
+
+    def _executer(self, taches: list[tuple[str, Callable[[], None]]], t: Tour) -> None:
         for nom, tache in taches:
             try:
                 tache()
@@ -175,18 +170,65 @@ class Demon:
                 log().warning("tâche %s en échec (%s) : nouvel essai dans 1 h", nom, e.__class__.__name__)
                 if nom != "entree":
                     self._planifier(nom, RETRY_S)
+
+    def _envoyer_en_attente(self, notifieur: Notifieur, t: Tour) -> None:
         try:
             notifieur.envoyer_en_attente()
         except Exception:  # noqa: BLE001
             t.erreurs.append("notifications")
-        if t.fait and any(not f.startswith("entrée") for f in t.fait):
-            try:
-                tableau_de_bord.ecrire(self.base, self.chemins.tableau_de_bord)
-            except Exception:  # noqa: BLE001
-                t.erreurs.append("tableau de bord")
+
+    def _tableau(self, t: Tour) -> None:
+        """Le tableau de bord est réécrit après chaque changement."""
+        if not t.fait:
+            return
+        try:
+            tableau_de_bord.ecrire(self.base, self.chemins.tableau_de_bord)
+        except Exception:  # noqa: BLE001
+            t.erreurs.append("tableau de bord")
+
+    def taches_dues(self, reglages: dict[str, Any]) -> list[str]:
+        noms = [n for n in ("flux", "inventaire", "fuites", "urgence", "menage") if self._du(n)]
+        if reglages["gmail"].get("active", True) and self._du("gmail"):
+            noms.insert(0, "gmail")
+        return noms
+
+    def tour_rapide(self) -> Tour:
+        """Toutes les 3 s : le battement, l'entrée iCloud du raccourci (réponse en quelques secondes), les
+        notifications gardées pour la nuit."""
+        t = Tour()
+        self.base.ecrire_meta("demon_battement", str(self.horloge()))
+        reglages, notifieur = self._debut()
+        self._executer([("entree", lambda: self._entree(reglages, notifieur, t))], t)
+        self._envoyer_en_attente(notifieur, t)
+        self._tableau(t)
         for f in t.fait:
             log().info("%s", f)
         return t
+
+    def tour_lent(self) -> Tour:
+        """Les tâches datées (Gmail, listes, inventaire, fuites, fiche urgence, ménage) : sur le Mac, dans un fil à
+        part, pour qu'un long inventaire ne retarde jamais la réponse au raccourci."""
+        t = Tour()
+        reglages, notifieur = self._debut()
+        actions: dict[str, Callable[[], None]] = {
+            "gmail": lambda: self._gmail(reglages, notifieur, t),
+            "flux": lambda: self._flux(t),
+            "inventaire": lambda: self._inventaire(reglages, t),
+            "fuites": lambda: self._fuites(reglages, notifieur, t),
+            "urgence": lambda: self._urgence(notifieur, t),
+            "menage": lambda: self._menage(t),
+        }
+        self._executer([(nom, actions[nom]) for nom in self.taches_dues(reglages)], t)
+        self._envoyer_en_attente(notifieur, t)
+        self._tableau(t)
+        for f in t.fait:
+            log().info("%s", f)
+        return t
+
+    def tour(self) -> Tour:
+        """Un tour complet, dans l'ordre (tests et `bouclier demon --une-fois`)."""
+        rapide, lent = self.tour_rapide(), self.tour_lent()
+        return Tour(rapide.fait + lent.fait, rapide.erreurs + lent.erreurs)
 
     # --- La boucle ------------------------------------------------------------------------------------------------
     def _surveiller(self) -> object | None:
@@ -212,17 +254,39 @@ class Demon:
         observateur.start()
         return observateur
 
+    def _fil_lent(self) -> None:
+        """Le tour lent avec sa propre connexion à la base (SQLite : une connexion par fil)."""
+        try:
+            base = self.ouvrir_base()
+        except Exception as e:  # noqa: BLE001
+            log().warning("tour lent impossible : base illisible (%s)", e.__class__.__name__)
+            return
+        try:
+            Demon(self.chemins, base, self.systeme, self.horloge, self.c, self.ouvrir_base).tour_lent()
+        except Exception as e:  # noqa: BLE001 - le fil ne doit jamais mourir en silence
+            log().warning("tour lent en échec (%s)", e.__class__.__name__)
+        finally:
+            base.cx.close()
+
     def lancer(self, arret: threading.Event, max_tours: int | None = None) -> int:
         observateur = self._surveiller()
         tours = 0
-        log().info("démon démarré (pid de launchd)")
+        fil: threading.Thread | None = None
+        log().info("démon démarré")
         while not arret.is_set():
-            self.tour()
+            self.tour_rapide()
+            if fil is None or not fil.is_alive():
+                reglages, _ = config.charger_ou_defauts(self.chemins)
+                if self.taches_dues(reglages):
+                    fil = threading.Thread(target=self._fil_lent, name="bouclier-taches", daemon=True)
+                    fil.start()
             tours += 1
             if max_tours is not None and tours >= max_tours:
                 break
             self.reveil.wait(PAS_S)
             self.reveil.clear()
+        if fil is not None:
+            fil.join(timeout=10)
         if observateur is not None:
             observateur.stop()  # type: ignore[attr-defined]
         log().info("démon arrêté")
@@ -230,7 +294,7 @@ class Demon:
 
 
 def principal(chemins: config.Chemins | None = None) -> int:  # pragma: no cover - lancé par launchd
-    from bouclier import db, journal
+    from bouclier import journal
 
     reseau.installer_garde()
     chemins = chemins or config.chemins()
@@ -238,9 +302,14 @@ def principal(chemins: config.Chemins | None = None) -> int:  # pragma: no cover
     journal.configurer(chemins.logs, reglages.get("moi", {}))
     config.preparer_dossiers(chemins)
     arret = threading.Event()
-    signal.signal(signal.SIGTERM, lambda *_: arret.set())
-    signal.signal(signal.SIGINT, lambda *_: arret.set())
     demon = Demon(chemins, db.ouvrir(chemins.base), Systeme())
+
+    def arreter(*_: object) -> None:  # launchd envoie SIGTERM puis, 20 s plus tard, SIGKILL : on s'arrête tout de suite
+        arret.set()
+        demon.reveil.set()
+
+    signal.signal(signal.SIGTERM, arreter)
+    signal.signal(signal.SIGINT, arreter)
     return 0 if demon.lancer(arret) >= 0 else 1
 
 

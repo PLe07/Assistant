@@ -286,6 +286,8 @@ def cmd_installation(args: argparse.Namespace, env: Environnement) -> int:
         b = installation.preparer(env.chemins, env.reglages, Path(args.python), Path(args.projet))
     elif args.etape == "raccourcis":
         b = installation.raccourcis(env.chemins)
+    elif args.etape == "verifier":
+        b = installation.verifier_reel(env.chemins, env.reglages, env.base, env.systeme)
     else:
         b = installation.desinstaller(env.chemins, env.reglages, tout=args.tout)
     for f in b.fait:
@@ -294,7 +296,7 @@ def cmd_installation(args: argparse.Namespace, env: Environnement) -> int:
         _ecrire(f"  ⚠️ {a}")
     for r in b.refus:
         _ecrire(f"  ❌ {r}")
-    return 1 if b.refus and args.etape == "preparer" else 0
+    return 1 if b.refus and args.etape in ("preparer", "verifier") else 0
 
 
 # --- Analyse des arguments -----------------------------------------------------------------------------------------
@@ -361,7 +363,7 @@ def analyseur() -> argparse.ArgumentParser:
     t.set_defaults(fonction=cmd_tableau)
 
     x = sous.add_parser("installation", help="(utilisé par install.sh et uninstall.sh)")
-    x.add_argument("etape", choices=["preparer", "raccourcis", "desinstaller", "label"])
+    x.add_argument("etape", choices=["preparer", "raccourcis", "verifier", "desinstaller", "label"])
     x.add_argument("--python", default=sys.executable)
     x.add_argument("--projet", default=str(Path(__file__).resolve().parents[1]))
     x.add_argument("--tout", action="store_true", help="(désinstaller) retirer aussi tes données")
@@ -382,8 +384,8 @@ def main(argv: Sequence[str] | None = None, systeme: Systeme | None = None) -> i
         return 0
     env = preparer(systeme)
     try:
-        if env.alerte_config:
-            _ecrire(f"⚠️ {env.alerte_config} (réglages par défaut utilisés)")
+        if env.alerte_config:  # sur la sortie d'erreur : `$(bouclier installation label)` reste propre
+            print(f"⚠️ {env.alerte_config} (réglages par défaut utilisés)", file=sys.stderr)
         return fonction(args, env)
     finally:
         env.base.fermer()

@@ -6,6 +6,8 @@ Raccourcis, D-12 du Trieur).
   attendu ; un fichier n'est lu que lorsque sa taille n'a pas bougé entre deux passages (il est complet).
 - Chaque fichier n'est traité qu'une fois (table `entrees_vues`) ; la réponse est écrite d'un coup (fichier
   temporaire puis renommage) pour que l'iPhone ne lise jamais une réponse à moitié écrite.
+- Les fichiers `bouclier-verif-*` (déposés par `install.sh`) sont analysés pour de vrai, sans notification ni trace
+  dans l'historique.
 - Ces fichiers sont des copies faites pour Bouclier (l'original reste dans Messages ou Photos) : ceux de plus de
   30 jours sont retirés de l'entrée et des réponses.
 """
@@ -26,6 +28,7 @@ from bouclier.notifier import Notifieur
 from bouclier.systeme import Systeme
 
 GARDE_S = 30 * 86400
+PREFIXE_VERIF = "bouclier-verif-"  # déposé par `install.sh` : analysé pour de vrai, puis rien n'en reste
 RELANCE_ICLOUD_S = 120
 TAILLE_MAX = 25_000_000
 
@@ -113,6 +116,10 @@ class BoiteEntree:
         r = analyse.verifier(message, outils, "iphone")
         reponse = self.repondre(entree, r.reponse.texte())
         self._noter(entree, taille, r.verdict.niveau.code)
+        if identifiant(entree).startswith(PREFIXE_VERIF):  # la vérification de l'installation : ni notification
+            with self.base.transaction() as cx:  # ni trace dans l'historique
+                cx.execute("DELETE FROM analyses WHERE id = ?", (r.id_historique,))
+            return Traite(entree, reponse, "vérification de l'installation")
         titre, corps = r.reponse.notification()
         notifieur.envoyer("reponse", titre, corps, reponse_a_demande=True)
         return Traite(entree, reponse, r.reponse.titre)

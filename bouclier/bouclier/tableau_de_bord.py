@@ -4,6 +4,7 @@ iCloud. Chaque brique y ajoute sa partie ; une brique pas encore utilisée affic
 from __future__ import annotations
 
 import os
+import threading
 import time
 from collections.abc import Callable
 from html import escape
@@ -175,7 +176,7 @@ def construire(base: Base, sections: list[Section] | None = None) -> str:
 
 def ecrire(base: Base, chemin: Path) -> Path:
     chemin.parent.mkdir(parents=True, exist_ok=True)
-    temporaire = chemin.with_suffix(".tmp")
+    temporaire = chemin.with_name(f".{chemin.name}.{threading.get_ident()}.tmp")  # un nom par fil du démon
     temporaire.write_text(construire(base), encoding="utf-8")
     os.chmod(temporaire, 0o600)
     os.replace(temporaire, chemin)

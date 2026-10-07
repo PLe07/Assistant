@@ -58,5 +58,7 @@ def test_config_abimee_signalee(capsys: pytest.CaptureFixture[str]) -> None:
     c.support.mkdir(parents=True)
     c.config.write_text("[ia\n", encoding="utf-8")
     assert cli.main(["historique"], _systeme()) == 0
-    sortie = capsys.readouterr().out
-    assert "ne se lit pas" in sortie and "Aucune vérification" in sortie
+    sortie = capsys.readouterr()
+    assert "ne se lit pas" in sortie.err and "Aucune vérification" in sortie.out  # l'alerte, sur la sortie d'erreur
+    assert cli.main(["installation", "label"], _systeme()) == 0
+    assert capsys.readouterr().out.strip().startswith("com.")  # `$(bouclier installation label)` reste propre
