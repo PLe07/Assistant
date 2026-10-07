@@ -1,0 +1,23 @@
+# Tableau de bord : tout ce qui est local, personnel ou régénéré.
+.venv/
+__pycache__/
+*.pyc
+.coverage
+.coverage.*
+htmlcov/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.hypothesis/
+*.egg-info/
+# Empreinte prise sur ton Mac (chemins et noms personnels) : jamais sur GitHub.
+integrite/mac/
+# Échantillons copiés sur ton Mac (anonymisés, mais personnels) : jamais sur GitHub.
+tests/fixtures/reelles/mac/
+# Sorties de test
+tests/.sorties/
+*.db
+*.db-wal
+*.db-shm
+*.log
+!tests/fixtures/reelles/**/*.log

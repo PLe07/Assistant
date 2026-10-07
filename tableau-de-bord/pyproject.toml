@@ -1,0 +1,67 @@
+[project]
+name = "tableau-de-bord"
+version = "1.0.0"
+description = "Le tableau de bord de l'assistant : santé, crédits, ressources et intégrité de tous les modules, en lecture seule."
+requires-python = ">=3.11"
+dependencies = [
+  "psutil>=5.9,<8",                                   # processeur et mémoire des modules (lecture seule)
+  "watchdog>=4,<7",                                   # FSEvents : prévenu quand le code d'un projet change
+  "rumps>=0.4,<1 ; sys_platform == 'darwin'",         # l'icône de la barre des menus
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "pytest-cov>=5", "ruff>=0.6", "mypy>=1.10", "hypothesis>=6.100", "types-psutil"]
+navigateur = ["playwright>=1.45"]
+
+[project.scripts]
+tableau = "tableau.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["tableau*"]
+
+[tool.setuptools.package-data]
+"*" = ["*.html", "*.css", "*.js", "*.svg", "*.toml"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+extend-exclude = [".venv"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S102", "S307", "S602", "S604", "S605"]
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
+follow_imports = "silent"
+warn_unused_ignores = true
+no_implicit_optional = true
+check_untyped_defs = true
+exclude = ["^\\.venv/", "^tests/"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+markers = [
+  "complet: le faux écosystème complet et la mesure de performance (longs) : ./check.sh --complet",
+  "mac: seulement sur un Mac (launchd, rumps, iCloud réels)",
+  "navigateur: rendu dans un navigateur sans fenêtre (Playwright), sauté s'il est absent",
+]
+addopts = "-m 'not complet' -p no:cacheprovider"
+
+[tool.coverage.run]
+source = ["tableau"]
+branch = false
+# Le lien natif avec rumps (barre des menus) ne s'exécute que sur un Mac, dans sa session graphique : son modèle,
+# lui, est testé partout. __main__ ne fait qu'appeler la CLI.
+omit = ["tableau/__main__.py", "tableau/barre_menus_natif.py"]
+
+[tool.coverage.report]
+fail_under = 90
+show_missing = true
+skip_covered = true
+exclude_also = ["if TYPE_CHECKING:", "raise NotImplementedError"]

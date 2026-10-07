@@ -1,0 +1,520 @@
+2026-10-06 14:27:39 WARNING [trieur] réglage inconnu : x
+2026-10-06 14:27:39 WARNING [trieur] pages HTML non écrites : 'NoneType' object has no attribute 'fiches'
+2026-10-06 14:27:39 ERROR   [trieur] tour en échec : 'NoneType' object has no attribute 'echeances'
+2026-10-06 14:27:39 WARNING [trieur] /tmp/pytest-of-root/pytest-374/test_un_a_trier_qui_contient_d0/bac/Documents/À trier existe déjà et contient tes fichiers : le Trieur ne le surveille pas et n'y touche pas (pour choisir un autre dossier : ACTIONS_HUMAINES.md)
+2026-10-06 14:27:39 WARNING [trieur] 1 fichier(s) d'un dossier qui n'est pas au Trieur ont une action au journal : python trieur.py journal
+2026-10-06 14:27:41 WARNING [trieur] document.jpg : disque plein (nouvel essai)
+2026-10-06 14:27:41 WARNING [trieur] document.pdf : rangé, mais tags ou garantie en échec (Rappels muet)
+2026-10-06 14:27:41 WARNING [trieur] document.pdf) : [Errno 17] File exists: 'document.pdf' -> 'document.pdf'
+2026-10-06 14:27:41 WARNING [trieur] Rappels a refusé : refus
+2026-10-06 14:27:41 WARNING [trieur] Rappels injoignable : absent
+2026-10-06 14:27:41 WARNING [trieur] tags impossibles : pas de Foundation
+2026-10-06 14:27:41 WARNING [trieur] alias du Finder impossible, lien symbolique à la place : pas de Foundation
+2026-10-06 14:27:41 WARNING [trieur] document.pdf : panne (nouvel essai)
+2026-10-06 14:27:41 WARNING [trieur] document.pdf : panne (nouvel essai)
+2026-10-06 14:27:41 WARNING [trieur] document.pdf : panne (abandon)
+2026-10-06 14:27:41 WARNING [trieur] document.pdf : la copie ne correspond pas à l'original : rien n'a bougé (nouvel essai)
+2026-10-06 14:27:42 WARNING [trieur] document.pdf : le fichier a changé pendant son traitement : il sera repris (nouvel essai)
+2026-10-06 14:28:04 WARNING [trieur] document.pdf : [Errno 11] Resource deadlock avoided (nouvel essai)
+2026-10-06 14:28:04 WARNING [trieur] document.pdf : [Errno 11] Resource deadlock avoided (nouvel essai)
+2026-10-06 14:28:04 WARNING [trieur] document.pdf : [Errno 11] Resource deadlock avoided (abandon)
+2026-10-06 14:28:13 WARNING [trieur] document.pdf : [Errno 11] Resource deadlock avoided (nouvel essai)
+2026-10-06 14:28:13 WARNING [trieur] document.pdf : [Errno 11] Resource deadlock avoided (nouvel essai)
+2026-10-06 14:28:13 WARNING [trieur] document.pdf : [Errno 11] Resource deadlock avoided (abandon)
+2026-10-06 14:28:16 WARNING [trieur] réglage inconnu : x
+2026-10-06 14:28:16 WARNING [trieur] pages HTML non écrites : 'NoneType' object has no attribute 'fiches'
+2026-10-06 14:28:16 ERROR   [trieur] tour en échec : 'NoneType' object has no attribute 'echeances'
+2026-10-06 14:28:16 WARNING [trieur] /tmp/pytest-of-root/pytest-376/test_un_a_trier_qui_contient_d0/bac/Documents/À trier existe déjà et contient tes fichiers : le Trieur ne le surveille pas et n'y touche pas (pour choisir un autre dossier : ACTIONS_HUMAINES.md)
+2026-10-06 14:28:16 WARNING [trieur] 1 fichier(s) d'un dossier qui n'est pas au Trieur ont une action au journal : python trieur.py journal
+2026-10-06 14:28:17 WARNING [trieur] document.jpg : disque plein (nouvel essai)
+2026-10-06 14:28:17 WARNING [trieur] document.pdf : rangé, mais tags ou garantie en échec (Rappels muet)
+2026-10-06 14:28:18 WARNING [trieur] document.pdf) : [Errno 17] File exists: 'document.pdf' -> 'document.pdf'
+2026-10-06 14:28:18 WARNING [trieur] Rappels a refusé : refus
+2026-10-06 14:28:18 WARNING [trieur] Rappels injoignable : absent
+2026-10-06 14:28:18 WARNING [trieur] tags impossibles : pas de Foundation
+2026-10-06 14:28:18 WARNING [trieur] alias du Finder impossible, lien symbolique à la place : pas de Foundation
+2026-10-06 14:28:18 WARNING [trieur] document.pdf : panne (nouvel essai)
+2026-10-06 14:28:18 WARNING [trieur] document.pdf : panne (nouvel essai)
+2026-10-06 14:28:18 WARNING [trieur] document.pdf : panne (abandon)
+2026-10-06 14:28:18 WARNING [trieur] document.pdf : la copie ne correspond pas à l'original : rien n'a bougé (nouvel essai)
+2026-10-06 14:28:18 WARNING [trieur] document.pdf : le fichier a changé pendant son traitement : il sera repris (nouvel essai)
+2026-10-06 14:28:41 WARNING [trieur] document.pdf : [Errno 11] Resource deadlock avoided (nouvel essai)
+2026-10-06 14:28:41 WARNING [trieur] document.pdf : [Errno 11] Resource deadlock avoided (nouvel essai)
+2026-10-06 14:28:41 WARNING [trieur] document.pdf : [Errno 11] Resource deadlock avoided (abandon)
+2026-10-06 14:28:45 WARNING [trieur] réglage inconnu : x
+2026-10-06 14:28:45 WARNING [trieur] pages HTML non écrites : 'NoneType' object has no attribute 'fiches'
+2026-10-06 14:28:45 ERROR   [trieur] tour en échec : 'NoneType' object has no attribute 'echeances'
+2026-10-06 14:28:46 WARNING [trieur] /tmp/pytest-of-root/pytest-377/test_un_a_trier_qui_contient_d0/bac/Documents/À trier existe déjà et contient tes fichiers : le Trieur ne le surveille pas et n'y touche pas (pour choisir un autre dossier : ACTIONS_HUMAINES.md)
+2026-10-06 14:28:46 WARNING [trieur] 1 fichier(s) d'un dossier qui n'est pas au Trieur ont une action au journal : python trieur.py journal
+2026-10-06 14:28:47 WARNING [trieur] document.jpg : disque plein (nouvel essai)
+2026-10-06 14:28:48 WARNING [trieur] document.pdf : rangé, mais tags ou garantie en échec (Rappels muet)
+2026-10-06 14:28:48 WARNING [trieur] document.pdf) : [Errno 17] File exists: 'document.pdf' -> 'document.pdf'
+2026-10-06 14:28:48 WARNING [trieur] Rappels a refusé : refus
+2026-10-06 14:28:48 WARNING [trieur] Rappels injoignable : absent
+2026-10-06 14:28:48 WARNING [trieur] tags impossibles : pas de Foundation
+2026-10-06 14:28:48 WARNING [trieur] alias du Finder impossible, lien symbolique à la place : pas de Foundation
+2026-10-06 14:28:48 WARNING [trieur] document.pdf : panne (nouvel essai)
+2026-10-06 14:28:48 WARNING [trieur] document.pdf : panne (nouvel essai)
+2026-10-06 14:28:48 WARNING [trieur] document.pdf : panne (abandon)
+2026-10-06 14:28:49 WARNING [trieur] document.pdf : la copie ne correspond pas à l'original : rien n'a bougé (nouvel essai)
+2026-10-06 14:28:49 WARNING [trieur] document.pdf : le fichier a changé pendant son traitement : il sera repris (nouvel essai)
+2026-10-06 14:37:23 WARNING [trieur] document.pdf : [Errno 11] Resource deadlock avoided (nouvel essai)
+2026-10-06 14:37:23 WARNING [trieur] document.pdf : [Errno 11] Resource deadlock avoided (nouvel essai)
+2026-10-06 14:37:23 WARNING [trieur] document.pdf : [Errno 11] Resource deadlock avoided (abandon)
+2026-10-06 14:37:26 WARNING [trieur] réglage inconnu : x
+2026-10-06 14:37:26 WARNING [trieur] pages HTML non écrites : 'NoneType' object has no attribute 'fiches'
+2026-10-06 14:37:26 ERROR   [trieur] tour en échec : 'NoneType' object has no attribute 'echeances'
+2026-10-06 14:37:26 WARNING [trieur] /tmp/pytest-of-root/pytest-382/test_un_a_trier_qui_contient_d0/bac/Documents/À trier existe déjà et contient tes fichiers : le Trieur ne le surveille pas et n'y touche pas (pour choisir un autre dossier : ACTIONS_HUMAINES.md)
+2026-10-06 14:37:26 WARNING [trieur] 1 fichier(s) d'un dossier qui n'est pas au Trieur ont une action au journal : python trieur.py journal
+2026-10-06 14:37:27 WARNING [trieur] document.jpg : disque plein (nouvel essai)
+2026-10-06 14:37:27 WARNING [trieur] document.pdf : rangé, mais tags ou garantie en échec (Rappels muet)
+2026-10-06 14:37:27 WARNING [trieur] document.pdf) : [Errno 17] File exists: 'document.pdf' -> 'document.pdf'
+2026-10-06 14:37:27 WARNING [trieur] Rappels a refusé : refus
+2026-10-06 14:37:27 WARNING [trieur] Rappels injoignable : absent
+2026-10-06 14:37:27 WARNING [trieur] tags impossibles : pas de Foundation
+2026-10-06 14:37:27 WARNING [trieur] alias du Finder impossible, lien symbolique à la place : pas de Foundation
+2026-10-06 14:37:27 WARNING [trieur] document.pdf : panne (nouvel essai)
+2026-10-06 14:37:27 WARNING [trieur] document.pdf : panne (nouvel essai)
+2026-10-06 14:37:27 WARNING [trieur] document.pdf : panne (abandon)
+2026-10-06 14:37:28 WARNING [trieur] document.pdf : la copie ne correspond pas à l'original : rien n'a bougé (nouvel essai)
+2026-10-06 14:37:28 WARNING [trieur] document.pdf : le fichier a changé pendant son traitement : il sera repris (nouvel essai)
+2026-10-06 14:37:48 WARNING [trieur] document.pdf : [Errno 11] Resource deadlock avoided (nouvel essai)
+2026-10-06 14:37:48 WARNING [trieur] document.pdf : [Errno 11] Resource deadlock avoided (nouvel essai)
+2026-10-06 14:37:48 WARNING [trieur] document.pdf : [Errno 11] Resource deadlock avoided (abandon)
+2026-10-06 14:37:52 WARNING [trieur] réglage inconnu : x
+2026-10-06 14:37:52 WARNING [trieur] pages HTML non écrites : 'NoneType' object has no attribute 'fiches'
+2026-10-06 14:37:52 ERROR   [trieur] tour en échec : 'NoneType' object has no attribute 'echeances'
+2026-10-06 14:37:52 WARNING [trieur] /tmp/pytest-of-root/pytest-383/test_un_a_trier_qui_contient_d0/bac/Documents/À trier existe déjà et contient tes fichiers : le Trieur ne le surveille pas et n'y touche pas (pour choisir un autre dossier : ACTIONS_HUMAINES.md)
+2026-10-06 14:37:52 WARNING [trieur] 1 fichier(s) d'un dossier qui n'est pas au Trieur ont une action au journal : python trieur.py journal
+2026-10-06 14:37:53 WARNING [trieur] document.jpg : disque plein (nouvel essai)
+2026-10-06 14:37:54 WARNING [trieur] document.pdf : rangé, mais tags ou garantie en échec (Rappels muet)
+2026-10-06 14:37:54 WARNING [trieur] document.pdf) : [Errno 17] File exists: 'document.pdf' -> 'document.pdf'
+2026-10-06 14:37:54 WARNING [trieur] Rappels a refusé : refus
+2026-10-06 14:37:54 WARNING [trieur] Rappels injoignable : absent
+2026-10-06 14:37:54 WARNING [trieur] tags impossibles : pas de Foundation
+2026-10-06 14:37:54 WARNING [trieur] alias du Finder impossible, lien symbolique à la place : pas de Foundation
+2026-10-06 14:37:54 WARNING [trieur] document.pdf : panne (nouvel essai)
+2026-10-06 14:37:54 WARNING [trieur] document.pdf : panne (nouvel essai)
+2026-10-06 14:37:54 WARNING [trieur] document.pdf : panne (abandon)
+2026-10-06 14:37:54 WARNING [trieur] document.pdf : la copie ne correspond pas à l'original : rien n'a bougé (nouvel essai)
+2026-10-06 14:37:55 WARNING [trieur] document.pdf : le fichier a changé pendant son traitement : il sera repris (nouvel essai)
+2026-10-06 14:41:35 WARNING [trieur] document.pdf : [Errno 11] Resource deadlock avoided (nouvel essai)
+2026-10-06 14:41:35 WARNING [trieur] document.pdf : [Errno 11] Resource deadlock avoided (nouvel essai)
+2026-10-06 14:41:35 WARNING [trieur] document.pdf : [Errno 11] Resource deadlock avoided (abandon)
+2026-10-06 14:41:39 WARNING [trieur] réglage inconnu : x
+2026-10-06 14:41:39 WARNING [trieur] pages HTML non écrites : 'NoneType' object has no attribute 'fiches'
+2026-10-06 14:41:39 ERROR   [trieur] tour en échec : 'NoneType' object has no attribute 'echeances'
+2026-10-06 14:41:39 WARNING [trieur] /tmp/pytest-of-root/pytest-388/test_un_a_trier_qui_contient_d0/bac/Documents/À trier existe déjà et contient tes fichiers : le Trieur ne le surveille pas et n'y touche pas (pour choisir un autre dossier : ACTIONS_HUMAINES.md)
+2026-10-06 14:41:39 WARNING [trieur] 1 fichier(s) d'un dossier qui n'est pas au Trieur ont une action au journal : python trieur.py journal
+2026-10-06 14:41:40 WARNING [trieur] document.jpg : disque plein (nouvel essai)
+2026-10-06 14:41:41 WARNING [trieur] document.pdf : rangé, mais tags ou garantie en échec (Rappels muet)
+2026-10-06 14:41:41 WARNING [trieur] document.pdf) : [Errno 17] File exists: 'document.pdf' -> 'document.pdf'
+2026-10-06 14:41:41 WARNING [trieur] Rappels a refusé : refus
+2026-10-06 14:41:41 WARNING [trieur] Rappels injoignable : absent
+2026-10-06 14:41:41 WARNING [trieur] tags impossibles : pas de Foundation
+2026-10-06 14:41:41 WARNING [trieur] alias du Finder impossible, lien symbolique à la place : pas de Foundation
+2026-10-06 14:41:41 WARNING [trieur] document.pdf : panne (nouvel essai)
+2026-10-06 14:41:41 WARNING [trieur] document.pdf : panne (nouvel essai)
+2026-10-06 14:41:41 WARNING [trieur] document.pdf : panne (abandon)
+2026-10-06 14:41:41 WARNING [trieur] document.pdf : la copie ne correspond pas à l'original : rien n'a bougé (nouvel essai)
+2026-10-06 14:41:41 WARNING [trieur] document.pdf : le fichier a changé pendant son traitement : il sera repris (nouvel essai)
+2026-10-06 14:41:58 INFO    [trieur] document.pdf → Santédocument.pdf (sante, 0.98)
+2026-10-06 14:42:00 INFO    [trieur] garantie : Velo electrique Riverside520E jusqu'au 2027-10-11 (légale)
+2026-10-06 14:42:00 INFO    [trieur] document.jpg → 2025document.pdf (facture_achat, 0.94)
+2026-10-06 14:42:00 INFO    [trieur] document.pdf → Administratifdocument.pdf (courrier_admin, 0.91)
+2026-10-06 14:42:01 INFO    [trieur] garantie : CasqueSonyWH-1000XM6 jusqu'au 2028-09-28 (légale)
+2026-10-06 14:42:01 INFO    [trieur] document.pdf → 2026document.pdf (facture_achat, 0.90)
+2026-10-06 14:42:01 INFO    [trieur] document.jpg → 2025document.pdf (ticket_caisse, 0.95)
+2026-10-06 14:42:03 INFO    [trieur] document.jpg → Santédocument.pdf (sante, 0.98)
+2026-10-06 14:42:03 INFO    [trieur] document.pdf → À vérifierdocument.pdf (a_verifier, 0.00)
+2026-10-06 14:42:03 INFO    [trieur] document.pdf → 2026document.pdf (facture_emise, 0.93)
+2026-10-06 14:42:03 INFO    [trieur] document.pdf → 2025document.pdf (facture_achat, 0.90)
+2026-10-06 14:42:05 INFO    [trieur] document.jpg → Identitédocument.pdf (identite, 0.98)
+2026-10-06 14:42:07 INFO    [trieur] document.jpg → Administratifdocument.pdf (courrier_admin, 0.94)
+2026-10-06 14:42:07 INFO    [trieur] garantie : CASQUE SONY WH-1000XM6 jusqu'au 2027-02-07 (légale)
+2026-10-06 14:42:07 INFO    [trieur] document.jpg → 2025document.pdf (ticket_caisse, 0.94)
+2026-10-06 14:42:08 INFO    [trieur] document.pdf → 2025document.pdf (bulletin_paie, 0.97)
+2026-10-06 14:42:08 INFO    [trieur] document.pdf → 2025document.pdf (billet_transport, 0.98)
+2026-10-06 14:42:09 INFO    [trieur] document.pdf → 2026document.pdf (releve_bancaire, 0.99)
+2026-10-06 14:42:11 INFO    [trieur] document.heic → Identitédocument.pdf (identite, 0.97)
+2026-10-06 14:42:13 INFO    [trieur] garantie : [jeton] jusqu'au 2027-01-16 (facture)
+2026-10-06 14:42:13 INFO    [trieur] document.jpg → 2025document.pdf (facture_achat, 0.96)
+2026-10-06 14:42:13 INFO    [trieur] garantie : TELEVISEUR SAMSUNG QLED 55" jusqu'au 2028-06-28 (légale)
+2026-10-06 14:42:13 INFO    [trieur] document.heic → 2026document.pdf (ticket_caisse, 0.94)
+2026-10-06 14:42:15 INFO    [trieur] document.jpg → 2025document.pdf (avis_imposition, 0.98)
+2026-10-06 14:42:15 INFO    [trieur] document.pdf → Logementdocument.pdf (bail_contrat, 0.94)
+2026-10-06 14:42:16 INFO    [trieur] garantie : TELEVISEUR SAMSUNG QLED 55" jusqu'au 2027-04-24 (légale)
+2026-10-06 14:42:16 INFO    [trieur] document.jpg → 2025document.pdf (ticket_caisse, 0.94)
+2026-10-06 14:42:17 INFO    [trieur] document.jpg → 2026document.pdf (facture_service, 0.80)
+2026-10-06 14:42:17 INFO    [trieur] document.pdf → Assurancesdocument.pdf (assurance, 0.91)
+2026-10-06 14:42:17 INFO    [trieur] garantie : Machine à café Delonghi Magnifica jusqu'au 2027-06-17 (légale)
+2026-10-06 14:42:17 INFO    [trieur] document.pdf → 2025document.pdf (facture_achat, 0.90)
+2026-10-06 14:42:17 INFO    [trieur] document.pdf → Logementdocument.pdf (quittance_loyer, 0.97)
+2026-10-06 14:42:19 INFO    [trieur] document.pdf → Logementdocument.pdf (bail_contrat, 0.96)
+2026-10-06 14:42:19 INFO    [trieur] document.pdf → Santédocument.pdf (sante, 0.98)
+2026-10-06 14:42:19 INFO    [trieur] document.pdf → 2025document.pdf (facture_service, 0.94)
+2026-10-06 14:42:20 INFO    [trieur] document.jpg → Identitédocument.pdf (identite, 0.97)
+2026-10-06 14:42:20 INFO    [trieur] garantie : MacBook Air 13 pouces M4 jusqu'au 2027-07-21 (légale)
+2026-10-06 14:42:20 INFO    [trieur] document.pdf → 2025document.pdf (facture_achat, 0.90)
+2026-10-06 14:42:21 INFO    [trieur] document.jpg → 2026document.pdf (ticket_caisse, 0.95)
+2026-10-06 14:42:21 INFO    [trieur] document.pdf → 2025document.pdf (reservation, 0.98)
+2026-10-06 14:42:22 INFO    [trieur] document.jpg → Depuis l'iPhonedocument.jpg (autre, 0.20)
+2026-10-06 14:42:22 INFO    [trieur] garantie : Canapé 3 places Friheten jusqu'au 2029-04-20 (facture)
+2026-10-06 14:42:22 INFO    [trieur] document.pdf → 2026document.pdf (facture_achat, 0.91)
+2026-10-06 14:42:22 INFO    [trieur] garantie : Lave-linge Bosch Série 6 9 kg jusqu'au 2028-03-07 (légale)
+2026-10-06 14:42:22 INFO    [trieur] document.pdf → 2026document.pdf (facture_achat, 0.91)
+2026-10-06 14:42:22 INFO    [trieur] document.pdf → 2025document.pdf (avis_imposition, 0.99)
+2026-10-06 14:42:22 INFO    [trieur] document.pdf → 2026document.pdf (releve_bancaire, 0.98)
+2026-10-06 14:42:24 INFO    [trieur] document.jpg → Santédocument.pdf (sante, 0.92)
+2026-10-06 14:42:26 INFO    [trieur] document.heic → Depuis l'iPhonedocument.heic (autre, 0.20)
+2026-10-06 14:42:26 INFO    [trieur] document.pdf → 2026document.pdf (facture_service, 0.94)
+2026-10-06 14:42:26 INFO    [trieur] document.pdf → Santédocument.pdf (sante, 0.98)
+2026-10-06 14:42:26 INFO    [trieur] document.pdf → 2025document.pdf (releve_bancaire, 0.98)
+2026-10-06 14:42:26 INFO    [trieur] garantie : Imprimante HP OfficeJet Pro 9010 jusqu'au 2027-09-15 (légale)
+2026-10-06 14:42:26 INFO    [trieur] document.pdf → 2025document.pdf (facture_achat, 0.93)
+2026-10-06 14:42:26 INFO    [trieur] document.pdf → 2025document.pdf (ticket_caisse, 0.99)
+2026-10-06 14:42:26 INFO    [trieur] document.pdf → Administratifdocument.pdf (courrier_admin, 0.94)
+2026-10-06 14:42:26 INFO    [trieur] document.pdf → Logementdocument.pdf (bail_contrat, 0.94)
+2026-10-06 14:42:26 INFO    [trieur] document.pdf → Administratifdocument.pdf (attestation, 0.83)
+2026-10-06 14:42:26 INFO    [trieur] document.pdf → 2025document.pdf (bulletin_paie, 0.97)
+2026-10-06 14:42:26 INFO    [trieur] document.pdf → 2025document.pdf (facture_emise, 0.93)
+2026-10-06 14:42:26 INFO    [trieur] document.pdf → 2025document.pdf (bulletin_paie, 0.97)
+2026-10-06 14:42:26 INFO    [trieur] document.pdf → 2025document.pdf (facture_emise, 0.93)
+2026-10-06 14:42:26 INFO    [trieur] document.pdf → Assurancesdocument.pdf (assurance, 0.94)
+2026-10-06 14:42:26 INFO    [trieur] document.pdf → Administratifdocument.pdf (attestation, 0.83)
+2026-10-06 14:42:26 INFO    [trieur] document.pdf → 2026document.pdf (facture_service, 0.85)
+2026-10-06 14:42:26 INFO    [trieur] garantie : Micro-ondes Whirlpool 25 L jusqu'au 2027-04-14 (légale)
+2026-10-06 14:42:26 INFO    [trieur] document.pdf → 2025document.pdf (facture_achat, 0.90)
+2026-10-06 14:42:26 INFO    [trieur] document.pdf → Assurancesdocument.pdf (assurance, 0.91)
+2026-10-06 14:42:26 INFO    [trieur] garantie : Lave-linge Bosch Série 6 9 kg jusqu'au 2029-08-26 (facture)
+2026-10-06 14:42:26 INFO    [trieur] document.pdf → 2026document.pdf (facture_achat, 0.90)
+2026-10-06 14:42:26 INFO    [trieur] document.pdf → 2026document.pdf (reservation, 0.97)
+2026-10-06 14:42:26 INFO    [trieur] document.pdf → 2025document.pdf (devis, 0.95)
+2026-10-06 14:42:26 INFO    [trieur] garantie : Console PS5 reconditionnée jusqu'au 2026-07-28 (légale)
+2026-10-06 14:42:26 INFO    [trieur] document.pdf → 2025document.pdf (facture_achat, 0.97)
+2026-10-06 14:42:26 INFO    [trieur] garantie : Canapé 3 places Friheten jusqu'au 2027-12-21 (légale)
+2026-10-06 14:42:26 INFO    [trieur] document.pdf → 2025document.pdf (facture_achat, 0.95)
+2026-10-06 14:42:26 INFO    [trieur] document.pdf → Logementdocument.pdf (quittance_loyer, 0.97)
+2026-10-06 14:42:27 INFO    [trieur] document.pdf → 2025document.pdf (reservation, 0.98)
+2026-10-06 14:42:27 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.20)
+2026-10-06 14:42:27 INFO    [trieur] document.pdf → Assurancesdocument.pdf (assurance, 0.94)
+2026-10-06 14:42:27 INFO    [trieur] document.pdf → Santédocument.pdf (sante, 0.98)
+2026-10-06 14:42:27 INFO    [trieur] document.pdf → 2025document.pdf (reservation, 0.98)
+2026-10-06 14:42:27 INFO    [trieur] document.pdf → 2025document.pdf (releve_bancaire, 0.99)
+2026-10-06 14:42:27 INFO    [trieur] document.pdf → Administratifdocument.pdf (attestation, 0.78)
+2026-10-06 14:42:27 INFO    [trieur] document.pdf → Noticesdocument.pdf (garantie_notice, 0.94)
+2026-10-06 14:42:27 INFO    [trieur] document.pdf → 2025document.pdf (facture_service, 0.96)
+2026-10-06 14:42:27 INFO    [trieur] document.pdf → Noticesdocument.pdf (garantie_notice, 0.85)
+2026-10-06 14:42:27 INFO    [trieur] document.pdf → 2026document.pdf (avis_imposition, 0.99)
+2026-10-06 14:42:27 INFO    [trieur] document.pdf → 2026document.pdf (billet_transport, 0.98)
+2026-10-06 14:42:27 INFO    [trieur] garantie : Vélo électrique Riverside 520 E jusqu'au 2028-07-18 (légale)
+2026-10-06 14:42:27 INFO    [trieur] document.pdf → 2026document.pdf (facture_achat, 0.90)
+2026-10-06 14:42:27 INFO    [trieur] garantie : MacBook Pro 14 M2 reconditionné jusqu'au 2026-06-16 (légale)
+2026-10-06 14:42:27 INFO    [trieur] document.pdf → 2025document.pdf (facture_achat, 0.96)
+2026-10-06 14:42:27 INFO    [trieur] garantie : Canapé 3 places Friheten jusqu'au 2028-09-04 (légale)
+2026-10-06 14:42:27 INFO    [trieur] document.pdf → 2026document.pdf (facture_achat, 0.88)
+2026-10-06 14:42:27 INFO    [trieur] document.pdf → 2025document.pdf (avis_imposition, 0.98)
+2026-10-06 14:42:27 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.20)
+2026-10-06 14:42:27 INFO    [trieur] document.pdf → Administratifdocument.pdf (courrier_admin, 0.91)
+2026-10-06 14:42:27 INFO    [trieur] document.pdf → 2025document.pdf (facture_service, 0.94)
+2026-10-06 14:42:27 INFO    [trieur] document.pdf → 2025document.pdf (billet_transport, 0.98)
+2026-10-06 14:42:27 INFO    [trieur] garantie : Montre Garmin Forerunner 265 jusqu'au 2028-01-06 (légale)
+2026-10-06 14:42:27 INFO    [trieur] document.pdf → 2026document.pdf (facture_achat, 0.91)
+2026-10-06 14:42:27 INFO    [trieur] document.pdf → 2025document.pdf (facture_achat, 0.90)
+2026-10-06 14:42:27 INFO    [trieur] document.pdf → 2026document.pdf (ticket_caisse, 0.99)
+2026-10-06 14:42:28 INFO    [trieur] garantie : MacBook Air 13 pouces M4 jusqu'au 2027-07-21 (légale)
+2026-10-06 14:42:28 INFO    [trieur] document.pdf → 2025document.pdf (facture_achat, 0.90)
+2026-10-06 14:42:28 INFO    [trieur] document.pdf → Logementdocument.pdf (quittance_loyer, 0.98)
+2026-10-06 14:42:28 INFO    [trieur] garantie : iPhone 17 128 Go jusqu'au 2027-04-30 (légale)
+2026-10-06 14:42:28 INFO    [trieur] document.pdf → 2025document.pdf (facture_achat, 0.94)
+2026-10-06 14:42:28 INFO    [trieur] garantie : Imprimante HP OfficeJet Pro 9010 jusqu'au 2027-02-28 (facture)
+2026-10-06 14:42:28 INFO    [trieur] document.pdf → 2024document.pdf (facture_achat, 0.94)
+2026-10-06 14:42:28 INFO    [trieur] document.pdf → 2026document.pdf (facture_service, 0.88)
+2026-10-06 14:42:28 INFO    [trieur] garantie : Perceuse-visseuse Makita 18 V jusqu'au 2028-06-03 (légale)
+2026-10-06 14:42:28 INFO    [trieur] document.pdf → 2026document.pdf (facture_achat, 0.97)
+2026-10-06 14:42:28 INFO    [trieur] garantie : Aspirateur Dyson V15 Detect jusqu'au 2027-12-07 (légale)
+2026-10-06 14:42:28 INFO    [trieur] document.pdf → 2025document.pdf (facture_achat, 0.96)
+2026-10-06 14:42:28 INFO    [trieur] annulé n°1 : remis : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°2 : remis : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°3 : remis : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°4 : remis : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°5 : remis : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°6 : remis : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°7 : remis : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°8 : rappel retiré : Lave-linge Bosch Série 6 9 kg; rappel retiré : Lave-linge Bosch Série 6 9 kg; alias retiré : document.pdf; remis : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°9 : remis : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°10 : rappel retiré : Casque Sony WH-1000XM6; rappel retiré : Casque Sony WH-1000XM6; alias retiré : document.pdf; remis : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°11 : remis : document.jpg; PDF retiré : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°12 : remis : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°13 : remis : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°14 : rappel retiré : Enceinte JBL Flip 6; rappel retiré : Enceinte JBL Flip 6; alias retiré : document.pdf; remis : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°15 : rappel retiré : iPhone 17128Go; rappel retiré : iPhone 17128Go; alias retiré : document.pdf; remis : document.jpg; PDF retiré : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°16 : remis : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°17 : remis : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°18 : rappel retiré : ASPIRATEUR DYSON V15 DETECT; rappel retiré : ASPIRATEUR DYSON V15 DETECT; alias retiré : document.pdf; remis : document.jpg; PDF retiré : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°19 : remis : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°20 : remis : document.jpg; PDF retiré : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°21 : remis : document.jpg; PDF retiré : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°22 : remis : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°23 : remis : document.jpg; PDF retiré : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°24 : remis : document.heic; PDF retiré : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°25 : remis : document.eml
+2026-10-06 14:42:28 INFO    [trieur] annulé n°26 : rappel retiré : MICRO-ONDES WHIRLPOOL 25 L; rappel retiré : MICRO-ONDES WHIRLPOOL 25 L; alias retiré : document.pdf; remis : document.jpg; PDF retiré : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°27 : remis : document.jpg; PDF retiré : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°28 : rappel retiré : Micro-ondesWhirlpool 25L; rappel retiré : Micro-ondesWhirlpool 25L; alias retiré : document.pdf; remis : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°29 : remis : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°30 : rappel retiré : MONTRE GARMIN FORERUNNER 265; rappel retiré : MONTRE GARMIN FORERUNNER 265; alias retiré : document.pdf; remis : document.heic; PDF retiré : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°31 : rappel retiré : [jeton]; rappel retiré : [jeton]; alias retiré : document.pdf; remis : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°32 : remis : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°33 : rappel retiré : Velo electrique Riverside520E; rappel retiré : Velo electrique Riverside520E; alias retiré : document.pdf; remis : document.jpg; PDF retiré : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°34 : remis : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°35 : rappel retiré : CasqueSonyWH-1000XM6; rappel retiré : CasqueSonyWH-1000XM6; alias retiré : document.pdf; remis : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°36 : remis : document.jpg; PDF retiré : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°37 : remis : document.jpg; PDF retiré : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°38 : remis : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°39 : remis : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°40 : remis : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°41 : remis : document.jpg; PDF retiré : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°42 : remis : document.jpg; PDF retiré : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°43 : rappel retiré : CASQUE SONY WH-1000XM6; rappel retiré : CASQUE SONY WH-1000XM6; alias retiré : document.pdf; remis : document.jpg; PDF retiré : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°44 : remis : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°45 : remis : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°46 : remis : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°47 : remis : document.heic; PDF retiré : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°48 : rappel retiré : [jeton]; rappel retiré : [jeton]; alias retiré : document.pdf; remis : document.jpg; PDF retiré : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°49 : rappel retiré : TELEVISEUR SAMSUNG QLED 55"; rappel retiré : TELEVISEUR SAMSUNG QLED 55"; alias retiré : document.pdf; remis : document.heic; PDF retiré : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°50 : remis : document.jpg; PDF retiré : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°51 : remis : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°52 : rappel retiré : TELEVISEUR SAMSUNG QLED 55"; rappel retiré : TELEVISEUR SAMSUNG QLED 55"; alias retiré : document.pdf; remis : document.jpg; PDF retiré : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°53 : remis : document.jpg; PDF retiré : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°54 : remis : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°55 : rappel retiré : Machine à café Delonghi Magnifica; rappel retiré : Machine à café Delonghi Magnifica; alias retiré : document.pdf; remis : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°56 : remis : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°57 : remis : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°58 : remis : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°59 : remis : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°60 : remis : document.jpg; PDF retiré : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°61 : rappel retiré : MacBook Air 13 pouces M4; rappel retiré : MacBook Air 13 pouces M4; alias retiré : document.pdf; remis : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°62 : remis : document.jpg; PDF retiré : document.pdf
+2026-10-06 14:42:28 INFO    [trieur] annulé n°63 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°64 : remis : document.jpg
+2026-10-06 14:42:29 INFO    [trieur] annulé n°65 : rappel retiré : Canapé 3 places Friheten; rappel retiré : Canapé 3 places Friheten; alias retiré : document.pdf; remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°66 : rappel retiré : Lave-linge Bosch Série 6 9 kg; rappel retiré : Lave-linge Bosch Série 6 9 kg; alias retiré : document.pdf; remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°67 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°68 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°69 : remis : document.jpg; PDF retiré : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°70 : remis : document.heic
+2026-10-06 14:42:29 INFO    [trieur] annulé n°71 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°72 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°73 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°74 : rappel retiré : Imprimante HP OfficeJet Pro 9010; rappel retiré : Imprimante HP OfficeJet Pro 9010; alias retiré : document.pdf; remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°75 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°76 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°77 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°78 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°79 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°80 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°81 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°82 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°83 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°84 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°85 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°86 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°87 : rappel retiré : Micro-ondes Whirlpool 25 L; rappel retiré : Micro-ondes Whirlpool 25 L; alias retiré : document.pdf; remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°88 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°89 : rappel retiré : Lave-linge Bosch Série 6 9 kg; rappel retiré : Lave-linge Bosch Série 6 9 kg; alias retiré : document.pdf; remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°90 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°91 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°92 : alias retiré : document.pdf; remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°93 : rappel retiré : Canapé 3 places Friheten; rappel retiré : Canapé 3 places Friheten; alias retiré : document.pdf; remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°94 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°95 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°96 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°97 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°98 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°99 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°100 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°101 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°102 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°103 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°104 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°105 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°106 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°107 : rappel retiré : Vélo électrique Riverside 520 E; rappel retiré : Vélo électrique Riverside 520 E; alias retiré : document.pdf; remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°108 : alias retiré : document.pdf; remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°109 : rappel retiré : Canapé 3 places Friheten; rappel retiré : Canapé 3 places Friheten; alias retiré : document.pdf; remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°110 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°111 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°112 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°113 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°114 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°115 : rappel retiré : Montre Garmin Forerunner 265; rappel retiré : Montre Garmin Forerunner 265; alias retiré : document.pdf; remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°116 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°117 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°118 : rappel retiré : MacBook Air 13 pouces M4; rappel retiré : MacBook Air 13 pouces M4; alias retiré : document.pdf; remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°119 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°120 : rappel retiré : iPhone 17 128 Go; rappel retiré : iPhone 17 128 Go; alias retiré : document.pdf; remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°121 : rappel retiré : Imprimante HP OfficeJet Pro 9010; rappel retiré : Imprimante HP OfficeJet Pro 9010; alias retiré : document.pdf; remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°122 : remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°123 : rappel retiré : Perceuse-visseuse Makita 18 V; rappel retiré : Perceuse-visseuse Makita 18 V; alias retiré : document.pdf; remis : document.pdf
+2026-10-06 14:42:29 INFO    [trieur] annulé n°124 : rappel retiré : Aspirateur Dyson V15 Detect; rappel retiré : Aspirateur Dyson V15 Detect; alias retiré : document.pdf; remis : document.pdf
+2026-10-06 14:44:15 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:15 INFO    [trieur] document.pdf : pas envoyé à Claude (peut-être bulletin_paie)
+2026-10-06 14:44:15 INFO    [trieur] document.pdf → À vérifierdocument.pdf (facture_achat, 0.94)
+2026-10-06 14:44:15 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:15 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:15 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:16 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:16 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:17 INFO    [trieur] document.jpg → À vérifierdocument.jpg (autre, 0.30)
+2026-10-06 14:44:17 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:17 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:17 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:17 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:17 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:19 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:19 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:20 INFO    [trieur] document.jpg : pas envoyé à Claude (peut-être bulletin_paie)
+2026-10-06 14:44:20 INFO    [trieur] document.jpg → À vérifierdocument.jpg (facture_achat, 0.96)
+2026-10-06 14:44:20 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:20 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:21 INFO    [trieur] document.pdf : pas envoyé à Claude (peut-être bulletin_paie)
+2026-10-06 14:44:21 INFO    [trieur] document.pdf → À vérifierdocument.pdf (facture_achat, 0.94)
+2026-10-06 14:44:21 INFO    [trieur] document.pdf : pas envoyé à Claude (peut-être bulletin_paie)
+2026-10-06 14:44:21 INFO    [trieur] document.pdf → À vérifierdocument.pdf (facture_achat, 0.94)
+2026-10-06 14:44:21 INFO    [trieur] document.pdf : pas envoyé à Claude (peut-être bulletin_paie)
+2026-10-06 14:44:21 INFO    [trieur] document.pdf → À vérifierdocument.pdf (facture_achat, 0.90)
+2026-10-06 14:44:22 INFO    [trieur] document.pdf : pas envoyé à Claude (peut-être bulletin_paie)
+2026-10-06 14:44:22 INFO    [trieur] document.pdf → À vérifierdocument.pdf (facture_achat, 0.94)
+2026-10-06 14:44:22 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:23 INFO    [trieur] document.jpg → À vérifierdocument.jpg (autre, 0.30)
+2026-10-06 14:44:23 INFO    [trieur] document.jpg → À vérifierdocument.jpg (autre, 0.30)
+2026-10-06 14:44:24 INFO    [trieur] document.jpg → À vérifierdocument.jpg (autre, 0.30)
+2026-10-06 14:44:24 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:24 INFO    [trieur] document.heic → À vérifierdocument.heic (autre, 0.30)
+2026-10-06 14:44:24 INFO    [trieur] document.jpg → À vérifierdocument.jpg (autre, 0.30)
+2026-10-06 14:44:25 INFO    [trieur] document.jpg → À vérifierdocument.jpg (autre, 0.30)
+2026-10-06 14:44:25 INFO    [trieur] document.jpg → À vérifierdocument.jpg (autre, 0.30)
+2026-10-06 14:44:25 INFO    [trieur] document.jpg → À vérifierdocument.jpg (autre, 0.30)
+2026-10-06 14:44:25 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:26 INFO    [trieur] document.heic → À vérifierdocument.heic (autre, 0.30)
+2026-10-06 14:44:26 INFO    [trieur] document.jpg → À vérifierdocument.jpg (autre, 0.30)
+2026-10-06 14:44:26 INFO    [trieur] document.jpg → À vérifierdocument.jpg (autre, 0.30)
+2026-10-06 14:44:26 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:26 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:26 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:27 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:27 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:27 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:27 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:29 INFO    [trieur] document.jpg → À vérifierdocument.jpg (autre, 0.30)
+2026-10-06 14:44:29 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:29 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:30 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:30 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:30 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:30 INFO    [trieur] document.pdf : pas envoyé à Claude (type sensible (avis_imposition))
+2026-10-06 14:44:30 INFO    [trieur] document.pdf → À vérifierdocument.pdf (avis_imposition, 0.99)
+2026-10-06 14:44:32 INFO    [trieur] document.jpg : pas envoyé à Claude (type sensible (avis_imposition))
+2026-10-06 14:44:32 INFO    [trieur] document.jpg → À vérifierdocument.jpg (avis_imposition, 0.98)
+2026-10-06 14:44:32 INFO    [trieur] document.pdf : pas envoyé à Claude (type sensible (avis_imposition))
+2026-10-06 14:44:32 INFO    [trieur] document.pdf → À vérifierdocument.pdf (avis_imposition, 0.99)
+2026-10-06 14:44:32 INFO    [trieur] document.pdf : pas envoyé à Claude (type sensible (avis_imposition))
+2026-10-06 14:44:32 INFO    [trieur] document.pdf → À vérifierdocument.pdf (avis_imposition, 0.98)
+2026-10-06 14:44:32 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:32 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:33 INFO    [trieur] document.jpg → À vérifierdocument.jpg (autre, 0.30)
+2026-10-06 14:44:33 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:33 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:33 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:35 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:35 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:35 INFO    [trieur] document.pdf : pas envoyé à Claude (peut-être identite)
+2026-10-06 14:44:35 INFO    [trieur] document.pdf → À vérifierdocument.pdf (attestation, 0.83)
+2026-10-06 14:44:35 INFO    [trieur] document.pdf : pas envoyé à Claude (peut-être identite)
+2026-10-06 14:44:35 INFO    [trieur] document.pdf → À vérifierdocument.pdf (attestation, 0.78)
+2026-10-06 14:44:35 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:36 INFO    [trieur] document.jpg : pas envoyé à Claude (peut-être identite)
+2026-10-06 14:44:36 INFO    [trieur] document.jpg → À vérifierdocument.jpg (attestation, 0.83)
+2026-10-06 14:44:36 INFO    [trieur] document.pdf : pas envoyé à Claude (peut-être identite)
+2026-10-06 14:44:36 INFO    [trieur] document.pdf → À vérifierdocument.pdf (attestation, 0.83)
+2026-10-06 14:44:36 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:36 INFO    [trieur] document.pdf : pas envoyé à Claude (type sensible (bulletin_paie))
+2026-10-06 14:44:36 INFO    [trieur] document.pdf → À vérifierdocument.pdf (bulletin_paie, 0.97)
+2026-10-06 14:44:37 INFO    [trieur] document.pdf : pas envoyé à Claude (type sensible (bulletin_paie))
+2026-10-06 14:44:38 INFO    [trieur] document.pdf → À vérifierdocument.pdf (bulletin_paie, 0.97)
+2026-10-06 14:44:38 INFO    [trieur] document.pdf : pas envoyé à Claude (type sensible (bulletin_paie))
+2026-10-06 14:44:38 INFO    [trieur] document.pdf → À vérifierdocument.pdf (bulletin_paie, 0.97)
+2026-10-06 14:44:38 INFO    [trieur] document.pdf : pas envoyé à Claude (type sensible (bulletin_paie))
+2026-10-06 14:44:38 INFO    [trieur] document.pdf → À vérifierdocument.pdf (bulletin_paie, 0.97)
+2026-10-06 14:44:38 INFO    [trieur] document.pdf : pas envoyé à Claude (peut-être bulletin_paie)
+2026-10-06 14:44:38 INFO    [trieur] document.pdf → À vérifierdocument.pdf (assurance, 0.94)
+2026-10-06 14:44:38 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:38 INFO    [trieur] document.pdf : pas envoyé à Claude (peut-être bulletin_paie)
+2026-10-06 14:44:38 INFO    [trieur] document.pdf → À vérifierdocument.pdf (assurance, 0.94)
+2026-10-06 14:44:38 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:38 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:38 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:39 INFO    [trieur] document.heic → À vérifierdocument.heic (autre, 0.30)
+2026-10-06 14:44:39 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:39 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:39 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:39 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:39 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:39 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:39 INFO    [trieur] document.pdf : pas envoyé à Claude (type sensible (sante))
+2026-10-06 14:44:39 INFO    [trieur] document.pdf → À vérifierdocument.pdf (sante, 0.98)
+2026-10-06 14:44:39 INFO    [trieur] document.pdf : pas envoyé à Claude (type sensible (sante))
+2026-10-06 14:44:39 INFO    [trieur] document.pdf → À vérifierdocument.pdf (sante, 0.98)
+2026-10-06 14:44:41 INFO    [trieur] document.jpg : pas envoyé à Claude (type sensible (sante))
+2026-10-06 14:44:41 INFO    [trieur] document.jpg → À vérifierdocument.jpg (sante, 0.92)
+2026-10-06 14:44:41 INFO    [trieur] document.pdf : pas envoyé à Claude (type sensible (sante))
+2026-10-06 14:44:41 INFO    [trieur] document.pdf → À vérifierdocument.pdf (sante, 0.98)
+2026-10-06 14:44:41 INFO    [trieur] document.pdf : pas envoyé à Claude (type sensible (sante))
+2026-10-06 14:44:41 INFO    [trieur] document.pdf → À vérifierdocument.pdf (sante, 0.98)
+2026-10-06 14:44:43 INFO    [trieur] document.jpg : pas envoyé à Claude (type sensible (identite))
+2026-10-06 14:44:43 INFO    [trieur] document.jpg → À vérifierdocument.jpg (identite, 0.98)
+2026-10-06 14:44:44 INFO    [trieur] document.jpg : pas envoyé à Claude (type sensible (identite))
+2026-10-06 14:44:44 INFO    [trieur] document.jpg → À vérifierdocument.jpg (identite, 0.97)
+2026-10-06 14:44:46 INFO    [trieur] document.heic : pas envoyé à Claude (type sensible (identite))
+2026-10-06 14:44:46 INFO    [trieur] document.heic → À vérifierdocument.heic (identite, 0.97)
+2026-10-06 14:44:48 INFO    [trieur] document.jpg : pas envoyé à Claude (type sensible (identite))
+2026-10-06 14:44:48 INFO    [trieur] document.jpg → À vérifierdocument.jpg (identite, 0.99)
+2026-10-06 14:44:48 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:49 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:49 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:49 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:49 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:49 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:49 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:49 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:49 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:49 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:49 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:51 INFO    [trieur] document.jpg → À vérifierdocument.jpg (autre, 0.30)
+2026-10-06 14:44:51 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:51 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:51 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:51 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:51 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:52 INFO    [trieur] document.jpg → Depuis l'iPhonedocument.jpg (autre, 0.30)
+2026-10-06 14:44:53 INFO    [trieur] document.heic → Depuis l'iPhonedocument.heic (autre, 0.30)
+2026-10-06 14:44:54 INFO    [trieur] document.pdf → À vérifierdocument.pdf (a_verifier, 0.00)
+2026-10-06 14:44:54 INFO    [trieur] document.pdf → À vérifierdocument.pdf (a_verifier, 0.00)
+2026-10-06 14:44:54 INFO    [trieur] document.pdf → À vérifierdocument.pdf (a_verifier, 0.00)
+2026-10-06 14:44:55 INFO    [trieur] document.jpg : pas envoyé à Claude (type sensible (sante))
+2026-10-06 14:44:55 INFO    [trieur] document.jpg → À vérifierdocument.jpg (sante, 0.98)
+2026-10-06 14:44:55 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:55 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:55 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:55 INFO    [trieur] document.pdf.icloud → iclouddocument.pdf.icloud (fichiers, 0.00)
+2026-10-06 14:44:55 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:55 INFO    [trieur] document.eml → À vérifierdocument.eml (autre, 0.30)
+2026-10-06 14:44:55 INFO    [trieur] document.pdf → À vérifierdocument.pdf (autre, 0.30)
+2026-10-06 14:44:55 INFO    [trieur] document.pdf : pas envoyé à Claude (indice sensible (patient))
+2026-10-06 14:44:55 INFO    [trieur] document.pdf : pas envoyé à Claude (indice sensible (numero fiscal))
+2026-10-06 14:44:55 INFO    [trieur] document.pdf : pas envoyé à Claude (indice sensible (bulletin de paie))
+2026-10-06 14:44:55 INFO    [trieur] document.pdf : pas envoyé à Claude (numéro de sécurité sociale)
+2026-10-06 14:45:06 INFO    [trieur] garantie : Casque Sony WH-1000XM6 jusqu'au 2028-10-03 (légale)
+2026-10-06 14:45:06 INFO    [trieur] document.pdf → 2026document.pdf (facture_achat, 0.86)
+2026-10-06 14:45:08 INFO    [trieur] (mode test) notification : document.pdf → Factures/2026 · garantie jusqu'au 03/10/2028
