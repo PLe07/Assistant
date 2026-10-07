@@ -105,6 +105,12 @@
    "conseil": "Pas de dinde ? Du filet de poulet."
   }
  ],
+ "poulet_cuisse": [
+  {
+   "par": "poulet_filet",
+   "conseil": "Pas de cuisses ? Du filet de poulet en gros morceaux, cuit moins longtemps mais à cœur."
+  }
+ ],
  "boeuf_hache": [
   {
    "par": "lentille_corail",
@@ -287,12 +293,26 @@
   {
    "par": "coulis_tomate",
    "conseil": "Pas de tomates concassées ? Du coulis de tomate."
+  },
+  {
+   "par": "tomate",
+   "conseil": "Pas de tomates en boîte ? Des tomates fraîches en dés (une par 100 g), cuites un peu plus."
   }
  ],
  "coulis_tomate": [
   {
    "par": "tomate_concassee",
    "conseil": "Pas de coulis ? Des tomates concassées, mixées ou non."
+  },
+  {
+   "par": "tomate",
+   "conseil": "Pas de coulis ? Des tomates fraîches mixées, cuites 10 min de plus."
+  }
+ ],
+ "concentre_tomate": [
+  {
+   "par": "tomate_concassee",
+   "conseil": "Pas de concentré ? Des tomates concassées, en faisant réduire un peu plus."
   }
  ],
  "tomate": [
@@ -413,6 +433,10 @@
   {
    "par": "echalote",
    "conseil": "Plus d'oignon ? Deux échalotes."
+  },
+  {
+   "par": "poireau",
+   "conseil": "Plus d'oignon ? Le blanc d'un poireau, émincé."
   }
  ],
  "champignon": [

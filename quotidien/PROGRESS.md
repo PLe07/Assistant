@@ -8,8 +8,8 @@ Chaque phase se termine par `./check.sh` vert, l'intégrité identique, un commi
 | P0 — environnement, intégrité, squelette, check.sh, réseau | ✅ | « Quotidien P0 » |
 | P1 — météo « habille-toi » | ✅ | « Quotidien P1 » |
 | P2 — base de recettes | ✅ | « Quotidien P2 » |
-| P3 — planificateur et courses | ⏳ | |
-| P4 — vide-frigo | ⏳ | |
+| P3 — planificateur et courses | ✅ | « Quotidien P3-P4 » |
+| P4 — vide-frigo | ✅ | « Quotidien P3-P4 » |
 | P5 — anniversaires | ⏳ | |
 | P6 — brief, page, Rappels, iCloud, raccourcis | ⏳ | |
 | P7 — démon, planification, doctor, budget IA | ⏳ | |
@@ -88,5 +88,71 @@ All checks passed!
 41 passed · 77 passed (météo) · 1632 passed (recettes) · 25 passed (sécurité)
 TOTAL                            1237     33    97%
 INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 593 fichiers, …)
+CHECK OK
+```
+
+## P3 — 2026-10-07
+
+- `repas/planificateur.py` : constructions au hasard puis amélioration locale. Contraintes dures : allergies, régime,
+  aliments refusés, jours chargés (rapide ou restes), pas de répétition sur 14 jours, restes ≤ conservation,
+  équipement. Cibles : budget ± 10 %, saison ≥ 70 %, chaînage anti-gaspi (alerte claire si impossible). Notes 👍/👎,
+  envies, frigo, `remplacer`, `imposer` (vide-frigo → menu de ce soir).
+- `repas/courses.py` : meilleur format vendu, frigo et placard déduits, « à congeler en rentrant », rayons, rien de
+  perdu (chaque ingrédient du menu est dans la liste ou « déjà là »). `repas/envies.py` (local d'abord, IA si besoin),
+  `repas/rappels_veille.py`, `repas/page.py` (Menu de la semaine.html), `repas/service.py`, `ia.py`, `systeme.py`.
+- Commandes : `quotidien menu [--regenerer] [remplacer jeudi]`, `quotidien noter jeudi 👍`, `quotidien envie "…"`.
+- Propriétés (hypothesis) : **1 200 profils aléatoires** et **150 séries de 4 semaines** : 0 violation d'allergie, de
+  régime ou d'aliment refusé, 0 recette lente un jour chargé, 0 répétition sur 14 jours.
+- Défauts trouvés et corrigés : « sans fromage » perdait sa négation (D-25), restes de la semaine suivante mal nommés
+  (D-30).
+
+Aperçu (menu par défaut, semaine du 5 octobre) :
+
+```
+🍽️ Menu de la semaine du lundi 5 octobre (14 € de repas, 100% de saison)
+  lundi : Goulasch (140 min) — en faire plus pour jeudi soir
+  mardi : Soupe turque aux lentilles corail (35 min)
+  mercredi : Riz sauté au chou et à l'œuf (kimchi doux) (20 min)
+  jeudi : restes de goulasch
+  vendredi : Polenta crémeuse aux champignons (20 min)
+  samedi : Soupe miso aux nouilles et au tofu (15 min)
+  dimanche : Cake salé jambon-olives (60 min) — en faire plus pour mercredi soir de la semaine prochaine
+🛒 Courses du lundi : 25 articles, ≈ 42.61 €
+```
+
+## P4 — 2026-10-07
+
+- `frigo/analyse_texte.py` (local, 0 crédit) : pluriels, accents, fautes (Damerau-Levenshtein), quantités en chiffres
+  ou en lettres, « une demi », « et demi », douzaines, unités, contenants, restes, absences (« plus de lait »).
+- `frigo/correspondance.py` : score (D-31), au plus 2 manquants, substitutions, facultatifs, variété des protéines.
+- `frigo/vision_ia.py` : image refaite à partir des pixels (1 024 px), métadonnées absentes vérifiées segment par
+  segment, JSON validé, « à confirmer » sous 0,6, budget épuisé → « envoie-moi plutôt la liste en texte ».
+- `frigo/service.py` : mémoire du frigo pour le planificateur, réponse courte (iPhone) ou longue, « ajouter au menu de
+  ce soir », idée originale `--creatif` contrôlée (D-36). Commande `quotidien frigo "…" | photo.jpg | ce-soir N | vider`.
+- **203 formulations : 100 %** normalisées (seuil 95 %). **60 frigos : 60/60** avec une recette pertinente dans le
+  top 3 (seuil 95 %), **0 violation du profil** ; plus 300 frigos et profils aléatoires (hypothesis) sans violation.
+- Photo : test avec une « photo d'iPhone » pleine de métadonnées (GPS, appareil, profil couleur, commentaire) : rien
+  ne part. Test réel `reel` (image dessinée, < 0,02 $) prêt pour le Mac.
+
+Aperçu :
+
+```
+$ quotidien frigo "2 courgettes, un reste de riz, feta, plus de lait, 6 oeufs" --court
+🧊 J'ai compris : 2 courgettes, reste de riz long, feta, 6 œufs.
+🚫 Plus de : lait demi-écrémé (retiré de ton frigo).
+1. Poêlée de courgettes au chèvre et aux pâtes — 20 min · tu as tout
+   👉 Pas de chèvre ? De la feta.
+2. Riz sauté au chou et à l'œuf (kimchi doux) — 20 min · il manque : chou vert, carotte
+3. Poivrons farcis au riz et à la feta — 50 min · il manque : tomate, oignon
+```
+
+Preuve (`./check.sh`, P3 et P4 ensemble) :
+
+```
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 593 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 7 élément(s) divers, listes de Rappels : indisponibles)
+All checks passed!
+54 passed (socle) · 77 passed (météo) · 1686 passed in 693.73s (recettes, menu, courses) · 43 passed (vide-frigo) · 25 passed (sécurité)
+TOTAL                                3319     64    98%
+INTÉGRITÉ OK : identique à etat_avant.json (…)
 CHECK OK
 ```

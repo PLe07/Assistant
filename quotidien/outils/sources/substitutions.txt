@@ -19,6 +19,7 @@ ricotta | fromage_frais | Pas de ricotta ? Du fromage frais à tartiner.
 ricotta | yaourt_grec | Pas de ricotta ? Du yaourt à la grecque bien égoutté.
 poulet_filet | dinde | Pas de poulet ? Des escalopes de dinde, même cuisson.
 dinde | poulet_filet | Pas de dinde ? Du filet de poulet.
+poulet_cuisse | poulet_filet | Pas de cuisses ? Du filet de poulet en gros morceaux, cuit moins longtemps mais à cœur.
 poulet_filet | tofu | Pas de poulet ? Du tofu ferme en dés, bien doré à la poêle.
 boeuf_hache | lentille_corail | Pas de viande hachée ? Des lentilles corail : 80 g sèches remplacent 125 g de viande.
 boeuf_emince | poulet_filet | Pas de bœuf ? Du poulet émincé, cuit à cœur.
@@ -52,6 +53,9 @@ pate_brisee | pate_feuilletee | Pas de pâte brisée ? Une pâte feuilletée.
 pate_feuilletee | pate_brisee | Pas de pâte feuilletée ? Une pâte brisée.
 tomate_concassee | coulis_tomate | Pas de tomates concassées ? Du coulis de tomate.
 coulis_tomate | tomate_concassee | Pas de coulis ? Des tomates concassées, mixées ou non.
+coulis_tomate | tomate | Pas de coulis ? Des tomates fraîches mixées, cuites 10 min de plus.
+tomate_concassee | tomate | Pas de tomates en boîte ? Des tomates fraîches en dés (une par 100 g), cuites un peu plus.
+concentre_tomate | tomate_concassee | Pas de concentré ? Des tomates concassées, en faisant réduire un peu plus.
 tomate | tomate_concassee | Pas de tomates fraîches ? Des tomates en boîte pour un plat cuit.
 tomate | tomate_cerise | Pas de grosses tomates ? Des tomates cerises.
 tomate_cerise | tomate | Pas de tomates cerises ? Une tomate en dés.
@@ -73,6 +77,7 @@ poireau | oignon | Pas de poireau ? Deux oignons émincés.
 echalote | oignon | Pas d'échalote ? Un demi-oignon.
 oignon_rouge | oignon | Pas d'oignon rouge ? Un oignon jaune, plus fort : mets-en moins.
 oignon | echalote | Plus d'oignon ? Deux échalotes.
+oignon | poireau | Plus d'oignon ? Le blanc d'un poireau, émincé.
 champignon | courgette | Pas de champignons ? Une courgette.
 salade | mache | Pas de salade ? De la mâche.
 salade | roquette | Pas de salade ? De la roquette.

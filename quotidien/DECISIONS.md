@@ -159,3 +159,64 @@ plutôt que cru sous le bouillon versé), cuisses de poulet au four (35 à 40 mi
 se lave, il ne s'épluche pas), nouilles égouttées et rincées, et « d'haricots » → « de haricots » (h aspiré).
 Les tests de validation avaient déjà trouvé : 7 recettes où aucune étape ne disait quand la viande ou le poisson est
 cuit, une mention de sécurité manquante pour les crevettes, et un bogue d'affichage (« 500 g » affiché « 5 g »).
+
+## 2026-10-07 · P3 — Planificateur et liste de courses
+
+**D-25 · « sans fromage » : les petits mots ne se mettent pas au singulier.** La mise au singulier transformait
+« sans » en « san » et la négation était perdue (l'envie « sans fromage » devenait « fromage »). Liste de mots
+invariables (`sans`, `plus`, `dans`, `très`, `gras`, `mais`, `jamais`, `moins`) ; un test la couvre.
+
+**D-26 · Ce qu'il faut avoir avant le jour des courses est dit en une seule phrase.** « Avant tes courses du lundi, il
+te faut déjà (dès samedi) : … » au lieu d'une note par ingrédient.
+
+**D-27 · « Un autre menu » est reproductible.** Graine = jour du lundi × 100 + numéro de la régénération (gardé en
+base) : chaque `--regenerer` donne un menu différent, mais relancer le même calcul redonne le même menu.
+
+**D-28 · La semaine affichée bascule le dimanche à l'heure du menu.** Avant dimanche 17 h : la semaine en cours ;
+à partir de 17 h : la semaine suivante (celle que le menu du dimanche prépare).
+
+**D-29 · Aucun test n'appelle la vraie IA.** Une fixture commune rend introuvable le Claude Code de la machine ; seuls
+les tests marqués `reel`, lancés exprès sur le Mac, parlent à l'API.
+
+**D-30 · Restes d'une semaine sur l'autre : le jour visé est nommé sans ambiguïté.** « dimanche : cake salé — en faire
+plus pour mercredi soir de la semaine prochaine » (trouvé en relisant un vrai menu : « mercredi soir » laissait croire
+au mercredi déjà passé).
+
+## 2026-10-07 · P4 — Vide-frigo
+
+**D-31 · Ce qui rend une recette « pertinente ».** Score = part de la recette que tu as déjà (pâtes ou riz que tu as
+dits : à moitié, ce n'est pas eux qu'il faut finir ; un remplaçant de ton frigo : 0,8 ; du placard : 0,4) + bonus pour
+ce qui se perd vite (restes, produits frais ≤ 5 jours) et pour la part de ton frigo utilisée ; − 15 par ingrédient
+manquant, − 12 de plus si c'est la viande ou le poisson du plat ; − 25 si la recette n'utilise rien de ce qui va se
+perdre. Une herbe fraîche ou un accompagnement absents ne bloquent pas (− 4). Variété : une autre protéine passe
+devant si elle est à moins de 15 points.
+
+**D-32 · 5 substitutions ajoutées.** Tomates fraîches ↔ concassées ou coulis, concentré → concassées, oignon →
+poireau, cuisses → filet de poulet : sans elles, « steak haché, oignons, tomates » ne trouvait aucun plat de viande.
+
+**D-33 · « plus de lait » veut dire qu'il n'y en a plus.** « plus » relie deux aliments (« courgettes plus feta »)
+sauf devant « de / d' / du / des » ; « je n'ai plus de… », « il n'y a plus de… », « ah non, plus de… » sont des
+absences ; à propos du même aliment, la dernière phrase gagne. Trouvé en essayant la commande : « 2 courgettes, plus
+de lait » comptait le lait comme présent.
+
+**D-34 · Quantités.** Un contenant vaut son format le plus courant (« un paquet de lardons » : 200 g) ; une pièce
+vaut son poids moyen quand l'ingrédient se compte en grammes (« une patate » : 150 g) ; un poids d'un ingrédient
+compté en pièces s'affiche en grammes s'il ne tombe pas rond (« pavé de saumon (200 g) », pas « 1,6 pavé »).
+
+**D-35 · Photo : rien de l'appareil ne part, et l'incertain n'est pas retenu.** L'image est refaite à partir de ses
+seuls pixels (orientation appliquée, 1 024 px au plus, JPEG) puis relue segment par segment : un APPn autre que JFIF
+ou un commentaire arrête tout. Ce que l'IA voit avec une confiance < 0,6 est « à confirmer » et n'entre pas dans la
+mémoire du frigo ; une photo ne donne pas de quantité (« assez »).
+
+**D-36 · Idée originale (`--creatif`) : contrôlée comme une recette de la base.** Chaque ingrédient proposé par l'IA
+doit être reconnu dans la base (sinon l'idée est refusée : allergènes invérifiables) ; allergènes recalculés depuis la
+table, régime et aliments refusés vérifiés ; rappel « cuis à cœur » ajouté si la recette contient volaille, porc ou
+haché et que ses étapes ne le disent pas ; restes : 2 h, 3 jours, réchauffés à cœur.
+
+**D-37 · Un réglage mal orthographié est signalé.** `aversions = […]` au lieu de `deteste` était ignoré en silence :
+toute clé inconnue de `profil.toml` ou `reglages.toml` donne maintenant un avertissement clair.
+
+**D-38 · 60 frigos : trois scénarios élargis.** À trois aliments (« poulet, poivron, riz » en végétarien ; « haricots
+rouges, maïs, tomates » en végan ; « pâtes, crème, champignons » sans gluten), aucune recette de la base ne tenait en
+2 manquants. Ils ont été complétés par 1 à 2 aliments courants (œufs, oignon, carottes…), plus proches d'un vrai
+frigo ; le critère reste « au moins une recette du top 3 utilise un aliment clé ».

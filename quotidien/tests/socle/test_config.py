@@ -112,6 +112,16 @@ def test_toml_illisible(tmp_path: Path) -> None:
     assert r["repas"]["budget_semaine"] == 45.0
 
 
+def test_reglage_inconnu_signale(tmp_path: Path) -> None:
+    (tmp_path / "profil.toml").write_text('[repas]\naversions = ["céleri"]\n[repass]\nx = 1\n', encoding="utf-8")
+    (tmp_path / "reglages.toml").write_text("[ia]\nbudget = 3\n", encoding="utf-8")
+    r = config.charger(tmp_path)
+    assert "profil.toml [repas] aversions : réglage inconnu, ignoré (vérifie l'orthographe)." in r.avertissements
+    assert "profil.toml repass : réglage inconnu, ignoré (vérifie l'orthographe)." in r.avertissements
+    assert "reglages.toml [ia] budget : réglage inconnu, ignoré (vérifie l'orthographe)." in r.avertissements
+    assert r["repas"]["deteste"] == [] and r["ia"]["budget_mensuel_usd"] == 2.0
+
+
 def test_section_qui_n_est_pas_une_section(tmp_path: Path) -> None:
     (tmp_path / "profil.toml").write_text('repas = "non"\n', encoding="utf-8")
     (tmp_path / "reglages.toml").write_text("ia = 3\n", encoding="utf-8")

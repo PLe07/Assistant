@@ -395,12 +395,27 @@ def _cle(texte: str) -> str:
     return t
 
 
+def _cles_inconnues(fichier: str, defaut: dict[str, Any], lu: dict[str, Any], avertissements: list[str],
+                    section: str = "") -> None:  # fmt: skip
+    """Une faute de frappe (« aversions » pour « deteste ») serait ignorée en silence : on la signale."""
+    for cle, valeur in lu.items():
+        if cle not in defaut:
+            ou = f"[{section}] " if section else ""
+            avertissements.append(f"{fichier} {ou}{cle} : réglage inconnu, ignoré (vérifie l'orthographe).")
+        elif isinstance(valeur, dict) and isinstance(defaut[cle], dict) and defaut[cle]:
+            _cles_inconnues(fichier, defaut[cle], valeur, avertissements, cle)
+
+
 def charger(dossier: Path | None = None) -> Reglages:
     """Lit profil.toml et reglages.toml (dans `dossier`, par défaut Application Support/Quotidien)."""
     dossier = dossier or dossier_support()
     avertissements: list[str] = []
-    profil = _fusion(DEFAUT_PROFIL, _lire_toml(dossier / "profil.toml", avertissements))
-    reglages = _fusion(DEFAUT_REGLAGES, _lire_toml(dossier / "reglages.toml", avertissements))
+    lu_profil = _lire_toml(dossier / "profil.toml", avertissements)
+    lu_reglages = _lire_toml(dossier / "reglages.toml", avertissements)
+    _cles_inconnues("profil.toml", DEFAUT_PROFIL, lu_profil, avertissements)
+    _cles_inconnues("reglages.toml", DEFAUT_REGLAGES, lu_reglages, avertissements)
+    profil = _fusion(DEFAUT_PROFIL, lu_profil)
+    reglages = _fusion(DEFAUT_REGLAGES, lu_reglages)
     _valider_profil(profil, avertissements)
     _valider_reglages(reglages, avertissements)
     return Reglages(profil, reglages, avertissements)

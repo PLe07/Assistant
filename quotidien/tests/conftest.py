@@ -46,6 +46,14 @@ def maison(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Any:
 
 
 @pytest.fixture(autouse=True)
+def sans_vraie_ia(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Aucun test n'appelle le vrai Claude Code de la machine (les tests `reel` le font exprès, sur le Mac)."""
+    from quotidien import ia
+
+    monkeypatch.setattr(ia, "trouver_claude", lambda: "/introuvable/claude")
+
+
+@pytest.fixture(autouse=True)
 def espion_reseau(monkeypatch: pytest.MonkeyPatch, request: pytest.FixtureRequest) -> Any:
     """Réseau coupé. Les tests `reel` (sur le Mac, à la demande) passent vers les hôtes de la liste blanche
     seulement : tout autre hôte est refusé et fait échouer le test."""
