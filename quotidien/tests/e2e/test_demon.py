@@ -199,3 +199,21 @@ def test_boucle_et_battement(monde: Any) -> None:
     d.reveil.set()
     assert d.lancer(arret, max_tours=2) == 2
     assert daemon.battement(d.db) == horloge.maintenant
+
+
+def test_le_demon_demande_l_acces_aux_contacts_une_seule_fois(maison: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    from quotidien.anniversaires import contacts
+
+    demandes: list[float] = []
+    monkeypatch.setattr(contacts, "statut_mac", lambda: "non_demande")
+    monkeypatch.setattr(contacts, "demander_acces", lambda delai=120: demandes.append(delai) or "refuse")
+    monkeypatch.setattr(contacts, "contacts_du_mac", lambda: ("refuse", []))
+    d = daemon.Demon(BaseDonnees(config.chemin_base()), FauxMac().systeme(), lambda: t(11, 9, 0))
+    d.annuaire(d.reglages())  # une commande lancée dans le Terminal : jamais de demande ici
+    assert demandes == []
+    d.par_launchd = True
+    d._annuaire = None
+    d.annuaire(d.reglages())
+    d._annuaire = None
+    d.annuaire(d.reglages())
+    assert demandes == [120] and d.db.lire_meta("contacts:demande_faite")

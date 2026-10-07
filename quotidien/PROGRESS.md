@@ -13,9 +13,9 @@ Chaque phase se termine par `./check.sh` vert, l'intégrité identique, un commi
 | P5 — anniversaires | ✅ | « Quotidien P5 » |
 | P6 — brief, page, Rappels, iCloud, raccourcis | ✅ | « Quotidien P6-P7 » |
 | P7 — démon, planification, doctor, budget IA | ✅ | « Quotidien P6-P7 » |
-| P8 — bout en bout | ⏳ | |
-| P9 — installation (script + vérification sur le Mac) | ⏳ | |
-| P10 — revue hostile en deux passes | ⏳ | |
+| P8 — bout en bout | ✅ ici · réels prêts pour le Mac | « Quotidien P8-P10 » |
+| P9 — installation (script + vérification sur le Mac) | ⏳ sur ton Mac (`./install.sh`) | « Quotidien P8-P10 » |
+| P10 — revue hostile en deux passes | ✅ | « Quotidien P8-P10 » |
 
 ## P0 — 2026-10-07
 
@@ -239,4 +239,31 @@ All checks passed!
 TOTAL                                 5027    111    98%
 INTÉGRITÉ OK : identique à etat_avant.json (…)
 CHECK OK
+```
+
+## P8-P10 — 2026-10-07
+
+- P8, ici : le démon sur 5 jours d'horloge simulée (faux Mac, faux Open-Meteo, faux Contacts), l'aller-retour iCloud
+  des raccourcis, `doctor`, l'installation (relançable, prudente) et la vérification « kill puis relance » avec un
+  faux launchd. Réels, prêts pour le Mac (`tests/e2e_mac`, `-m reel`) : liste `Quotidien-TEST` créée, 3 éléments
+  relus puis supprimée (autres listes comparées), aller-retour iCloud dans `Quotidien-TEST/` supprimé ensuite,
+  nombre d'anniversaires des Contacts (aucun nom), raccourcis signés, message et photo lus par l'IA.
+- P9 : `install.sh` (sans sudo, relançable) prend l'empreinte, installe, génère le premier menu et le premier brief
+  réels, démarre le démon, le tue, attend la relance par launchd, fait un aller-retour iCloud, affiche `doctor`,
+  compare l'empreinte. À lancer sur ton Mac (ACTIONS_HUMAINES.md, étape 1) : impossible dans ce conteneur Linux.
+- P10 : revue hostile en deux passes : 6 corrections puis 1 (D-53, D-54), détail dans RAPPORT_FINAL.md §6.
+- Les autres projets : `git diff --stat` depuis le commit d'avant Quotidien, hors `quotidien/` : vide.
+
+Preuve (`./check.sh`, état final) :
+
+```
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 593 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 7 élément(s) divers, listes de Rappels : indisponibles)
+All checks passed!
+55 passed (socle) · 77 passed (météo) · 1686 passed in 595.31s (recettes, menu, courses) · 44 passed (vide-frigo) · 46 passed (anniversaires) · 32 passed (brief, Rappels, iCloud, raccourcis) · 29 passed (sécurité) · 17 passed (bout en bout)
+TOTAL                                 5030    110    98%
+INTÉGRITÉ OK : identique à etat_avant.json (…)
+CHECK OK
+
+$ git diff --stat 46e10c0 HEAD -- . ':!quotidien'
+(rien : 0 fichier modifié hors de quotidien/)
 ```

@@ -39,7 +39,7 @@ la durée « Up 3 hours », qui change toute seule) et le nom et le nombre d'él
 
 **D-04 · Le dépôt est public : aucun prénom écrit dedans.**
 Comme Bouclier (D-04), le label est construit à l'installation à partir de ton **nom de session macOS** :
-`com.<session>.quotidien`, ce qui donne exactement `com.thibaut.quotidien` si ta session porte ton prénom. Réglable
+`com.<session>.quotidien`, ce qui donne exactement le label demandé si ta session porte ton prénom. Réglable
 dans `reglages.toml` (`[installation] prefixe_label`). `install.sh` vérifie que le label et la commande `quotidien`
 sont libres avant d'installer.
 
@@ -289,3 +289,10 @@ vide et ses anciennes traces oubliées. (3) Les rappels d'anniversaire passés d
 (5) Le démon n'ouvre son fil de tâches que s'il y a quelque chose à faire (avant : une connexion à la base toutes
 les 3 s). (6) Une image piégée (« bombe de décompression ») est refusée proprement ; `doctor` dit « profil.toml
 absent » et « maintenant » pour une tâche due.
+
+**D-54 · Revue hostile, deuxième passe : l'accès aux Contacts du démon.** macOS accorde l'accès aux Contacts
+programme par programme : celui donné au Terminal pendant l'installation ne vaut pas pour le démon lancé par
+launchd, qui serait resté en mode dégradé sans le dire. Le démon le demande lui-même, une seule fois (noté en base) ;
+refusé, il reste en mode dégradé avec `proches.toml`, et `doctor` le dit. ACTIONS_HUMAINES.md nomme les deux
+fenêtres (Terminal, puis python3). Le reste de la passe (allergies, envoi, autres listes, double brief, nuit, autres
+projets) n'a rien trouvé de plus.

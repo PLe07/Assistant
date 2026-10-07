@@ -60,6 +60,7 @@ class Demon:
         self._dernier_battement = float("-inf")
         self._reglages: tuple[tuple[Any, ...], config.Reglages] | None = None
         self._annuaire: tuple[float, Any] | None = None
+        self.par_launchd = False  # le vrai démon (pas une commande lancée dans le Terminal)
 
     # --- Réglages (relus quand un fichier change) -----------------------------------------------------------------
     def reglages(self) -> config.Reglages:
@@ -88,9 +89,22 @@ class Demon:
         """Contacts + proches.toml, relus au plus une fois par heure (et quand un réglage change)."""
         from quotidien.anniversaires import service
 
+        if self.par_launchd and self.c.fournisseur_contacts is None and r.reglages["anniversaires"]["contacts"]:
+            self._demander_contacts_une_fois()
         if self._annuaire is None or self.horloge() - self._annuaire[0] > ANNUAIRE_S:
             self._annuaire = (self.horloge(), service.annuaire(r, self.aujourdhui(r), self.c.fournisseur_contacts))
         return self._annuaire[1]
+
+    def _demander_contacts_une_fois(self) -> None:  # pragma: no cover - sur le Mac
+        """macOS accorde l'accès aux Contacts programme par programme : celui donné au Terminal pendant
+        l'installation ne vaut pas pour le démon lancé par launchd. Le démon le demande donc lui-même, UNE fois
+        (fenêtre « python… souhaite accéder à vos contacts ») ; refusé : mode dégradé, dit par doctor."""
+        from quotidien.anniversaires import contacts
+
+        if self.db.lire_meta("contacts:demande_faite") or contacts.statut_mac() != "non_demande":
+            return
+        self.db.ecrire_meta("contacts:demande_faite", str(self.horloge()))
+        log().info("Contacts : accès demandé par le démon (%s)", contacts.demander_acces(delai=120))
 
     # --- L'entrée iCloud des raccourcis ----------------------------------------------------------------------------
     def _frigo(self, r: config.Reglages, d: icloud.Demande) -> str:
@@ -281,7 +295,9 @@ class Demon:
             log().warning("tour lent impossible : base illisible (%s)", e.__class__.__name__)
             return
         try:
-            Demon(db, self.systeme, self.horloge, self.c, self.ouvrir_base).tour_lent()
+            fil = Demon(db, self.systeme, self.horloge, self.c, self.ouvrir_base)
+            fil.par_launchd = self.par_launchd
+            fil.tour_lent()
         except Exception as e:  # noqa: BLE001
             log().warning("tour lent en échec (%s)", e.__class__.__name__)
         finally:
@@ -335,6 +351,7 @@ def principal() -> int:  # pragma: no cover - lancé par launchd
     threading.excepthook = lambda a: log().error("erreur imprévue dans un fil : %s", a.exc_type.__name__)
     arret = threading.Event()
     demon = Demon(BaseDonnees(config.chemin_base()), Systeme())
+    demon.par_launchd = True
 
     def arreter(*_: object) -> None:
         arret.set()
