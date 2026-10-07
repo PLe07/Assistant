@@ -221,10 +221,20 @@ def test_lecteur_ne_recopie_pas_une_base_qui_n_a_pas_bouge(tmp_path: Path, horlo
     ecrivain.execute("INSERT INTO couts (quand, cout_usd) VALUES (1, 1)")
     os.utime(tmp_path / "m.db-wal", ns=(1, time.time_ns() + 10**9))
     assert lecteur.lire(tmp_path / "m.db", "n", compter) == 5  # a bougé, mais trop tôt : ancienne valeur
+    horloge.avancer(60)
+    assert lecteur.lire(tmp_path / "m.db", "n", compter) == 6  # petite base : relue au tour suivant
+    ecrivain.execute("INSERT INTO couts (quand, cout_usd) VALUES (1, 1)")
+    os.utime(tmp_path / "m.db-wal", ns=(1, time.time_ns() + 2 * 10**9))
+    sqlite_copie.PETITE_BASE, ancienne = 0, sqlite_copie.PETITE_BASE
+    try:
+        horloge.avancer(60)
+        assert lecteur.lire(tmp_path / "m.db", "n", compter) == 6  # « grosse » base : pas avant 10 min
+    finally:
+        sqlite_copie.PETITE_BASE = ancienne
     horloge.avancer(601)
-    assert lecteur.lire(tmp_path / "m.db", "n", compter) == 6
-    assert lecteur.lire(tmp_path / "m.db", "n", compter, forcer=True) == 6
-    assert appels == [5, 6, 6]
+    assert lecteur.lire(tmp_path / "m.db", "n", compter) == 7
+    assert lecteur.lire(tmp_path / "m.db", "n", compter, forcer=True) == 7
+    assert appels == [5, 6, 7, 7]
     assert lecteur.lire(tmp_path / "absente.db", "n", compter) is None
     ecrivain.close()
 

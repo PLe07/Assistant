@@ -56,6 +56,7 @@ class DefModule:
     labels: list[str] = field(default_factory=list)
     superviseur: str | None = None  # nom du module dans le superviseur de l'assistant
     conteneur: str | None = None  # Docker
+    port: int | None = None  # n8n : son port local (5678)
     dossier_projet: str | None = None
     dossier_donnees: str | None = None
     dossier_logs: str | None = None
@@ -64,16 +65,22 @@ class DefModule:
     files: list[str] = field(default_factory=list)
     file_max_min: int | None = None  # au-delà, une entrée de file est « bloquée » (sinon le seuil général)
     perimetre_code: list[str] = field(default_factory=list)
+    perimetre_exclu: list[str] = field(default_factory=list)  # sous-dossiers suivis par un autre module
     doit_tourner: bool = True
     plafond_usd: float | None = None
     commande_diagnostic: list[str] = field(default_factory=list)
+    aide: str = ""  # la commande à taper toi-même, citée dans les alertes (« bouclier doctor »)
     attentes: list[Attente] = field(default_factory=list)
     attendu: bool = False  # fait partie de ton écosystème connu : absent, il est « pas installé », sans alarme
     actif: bool = True  # false : ignoré (tu l'as désactivé dans modules.toml)
 
-    def chemin(self, brut: str | None, maison: Path) -> Path | None:
+    def chemin(self, brut: str | None, maison: Path, icloud: Path | None = None) -> Path | None:
+        """Un chemin du registre : « ~/… », « icloud:Dossier », absolu, ou relatif au dossier du projet."""
         if not brut:
             return None
+        if brut.startswith("icloud:"):
+            base_icloud = icloud or maison / "Library" / "Mobile Documents" / "com~apple~CloudDocs"
+            return base_icloud / brut[len("icloud:") :]
         if brut.startswith("~/"):
             return maison / brut[2:]
         if brut == "~":
@@ -121,6 +128,7 @@ class FileAttente:
     n: int
     plus_vieux_s: float
     pas_encore_telecharges: int = 0
+    seuil_min: int | None = None  # au-delà, bloquée (None : le seuil général des réglages)
 
 
 @dataclass
@@ -149,6 +157,9 @@ class Observation:
     relances: list[float] = field(default_factory=list)  # instants des plantages vus (journal du superviseur)
     tailles: tuple[int, int] | None = None  # (données, journaux) en octets
     n8n: dict[str, Any] | None = None
+    actif: bool | None = None  # False : éteint par toi dans ses réglages (pas une panne)
+    raison_inactif: str = ""
+    reglages_attentes: dict[str, dict[str, Any]] = field(default_factory=dict)  # heure, période, actif, lus chez lui
     inconnus: list[str] = field(default_factory=list)
     technique: dict[str, Any] = field(default_factory=dict)
 

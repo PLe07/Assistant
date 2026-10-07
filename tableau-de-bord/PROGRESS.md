@@ -7,7 +7,7 @@ Chaque phase se termine par `./check.sh` vert, l'intégrité identique, un commi
 |---|---|---|
 | P0 — environnement, empreinte, découverte, échantillons, squelette, check.sh | ✅ | « Tableau de bord P0 » |
 | P1 — sondes en lecture seule | ✅ | « Tableau de bord P1 » |
-| P2 — registre et adaptateurs | ⏳ | |
+| P2 — registre et adaptateurs | ✅ | « Tableau de bord P2 » |
 | P3 — analyses | ⏳ | |
 | P4 — alertes, sourdine, rapport de la semaine | ⏳ | |
 | P5 — page web | ⏳ | |
@@ -79,5 +79,34 @@ Success: no issues found in 14 source files
 12 passed in 2.92s     (empreinte)
 TOTAL                              1315     32    98%
 INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 730 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
+CHECK OK
+```
+
+## P2 — 2026-10-07
+
+- `decouverte.py` : plists lus avec plistlib (programme, journaux, KeepAlive, périodique), dossier du projet déduit
+  du programme, assistant retrouvé par son superviseur ou son tri Gmail, conteneurs n8n.
+- `registre.py` : `modules.toml` généré (8 modules connus + chaque `com.<session>.*` inconnu), puis seulement
+  complété à la fin ; lecture tolérante (bloc faux ignoré avec un message) ; `modules.example.toml` commenté.
+- `adaptateurs/` : `contexte.py` (lectures partagées une fois par tour : `launchctl list`, journal de l'assistant,
+  `etat.db`, fils du superviseur, `docker ps`), `base.py` (générique, étapes isolées), `supervise.py` (D-07),
+  `assistant.py`, `corvees.py`, `nettoyeur.py`, `trieur.py`, `bouclier.py`, `quotidien.py`, `ambiance.py`, `n8n.py`.
+- Schémas recopiés **à l'identique** du code des modules : `tests/fixtures/deduites/*.schema.sql` ; schémas réels
+  capturés : `tests/fixtures/reelles/conteneur/`. Un faux Mac (`tests/fabrique.py`) les assemble.
+- Tests (41) : écosystème sain lu correctement module par module ; journal partagé réparti ; relances vues par
+  launchd et par le journal du superviseur ; éteint/en pause ≠ panne ; désinstallé en cours de route ; Docker éteint ;
+  launchd muet ; **11 formats inattendus** (table absente, colonne renommée, valeur non numérique, base abîmée ou
+  absente, réglages illisibles ou interdits en lecture) → « inconnu », 0 exception ; registre (génération, ajout à la
+  fin sans toucher au reste, fichier cassé, aller-retour TOML).
+
+Preuve (`./check.sh`) :
+
+```
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 730 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
+All checks passed!
+Success: no issues found in 31 source files
+113 passed (unitaires) · 14 passed (lecture seule) · 41 passed (adaptateurs) · 12 passed (empreinte)
+TOTAL                               2453     91    96%
+INTÉGRITÉ OK : identique à etat_avant.json (…)
 CHECK OK
 ```

@@ -28,6 +28,8 @@ SUFFIXES = ("", "-wal", "-shm")
 DELAIS = (0.2, 0.5, 1.0, 2.0, 4.0)
 MARGE_DISQUE = 50 * 1024 * 1024
 BLOC = 1 << 20
+PETITE_BASE = 4 * 1024 * 1024
+PETITE_INTERVALLE_S = 55.0
 
 
 class CopieImpossible(Exception):
@@ -194,9 +196,12 @@ class LecteurBases:
             return None
         memo = self._cache.get((str(source), cle))
         maintenant = self.horloge()
+        # Une petite base (statuts, battements) se recopie à chaque tour si elle a bougé ; une grosse, rarement.
+        taille = sum(f[0] for f in sig.fichiers if f is not None)
+        intervalle = min(self.intervalle_s, PETITE_INTERVALLE_S) if taille <= PETITE_BASE else self.intervalle_s
         if memo is not None and not forcer:
             ancienne, quand, valeur = memo
-            if ancienne == sig or maintenant - quand < self.intervalle_s:
+            if ancienne == sig or maintenant - quand < intervalle:
                 return valeur
         try:
             with copie(source, self.dossier, self.taille_max, dormir=self.dormir) as db:

@@ -34,6 +34,10 @@ extend-exclude = [".venv"]
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "B", "UP", "S102", "S307", "S602", "S604", "S605"]
 
+[tool.ruff.lint.per-file-ignores]
+# Le faux Mac des tests : des données écrites comme des tables (une ligne SQL ou un plist par instruction).
+"tests/fabrique.py" = ["E501"]
+
 [tool.mypy]
 python_version = "3.11"
 ignore_missing_imports = true

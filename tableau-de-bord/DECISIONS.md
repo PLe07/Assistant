@@ -93,3 +93,70 @@ dans le trousseau. Le diagnostic d'un autre module a sa propre porte (`executer_
 - Base de plus de 256 Mo ou disque presque plein : pas de copie (« inconnu » pour ce qui en dépend), pas de plantage.
 - Preuve : un « module » écrit sans arrêt dans sa base WAL (délai de verrou de 50 ms de son côté) pendant 30 lectures :
   0 « database is locked » vu par le module, 0 plantage, original identique octet pour octet, aucun fichier créé.
+
+## 2026-10-07 · P1 — Sondes
+
+**D-11 · L'âge d'une entrée de file = la première fois que le tableau de bord l'a vue.** La date de modification
+d'un fichier dit quand il a été écrit, pas quand il est arrivé (un PDF d'il y a un an déposé à l'instant) ; `ctime`
+n'est pas fiable après un déplacement selon le système de fichiers. Le « premier vu » est gardé dans notre base
+(juste à une minute près, et après un redémarrage). Seuls les fichiers déjà présents la toute première fois qu'on
+regarde un dossier prennent leur `ctime`. Les pages que le Trieur écrit lui-même dans `BoiteMac/` (« Mon
+coffre.html », « Derniers classements.html », « … (Trieur).html ») et les fichiers temporaires ne comptent pas ; un
+fantôme iCloud (`.x.pdf.icloud`) compte, signalé « pas encore téléchargé », et n'est jamais téléchargé par nous.
+
+**D-12 · Un journal : la pile d'appels appartient à sa ligne.** Une ligne datée suivie d'un `Traceback` (format de
+l'assistant : « Plantage : … » puis la pile) compte **une** erreur ; une pile seule (sortie d'erreur brute
+`demon.erreurs.log`) en compte une, avec sa dernière ligne (« ValueError: … ») comme message. Les erreurs sont
+rangées par tranches de 5 minutes (1 h, 24 h et moyenne sur 7 jours exactes) ; le curseur et ces compteurs sont dans
+notre base : un redémarrage ne recompte rien.
+
+## 2026-10-07 · P2 — Registre et adaptateurs
+
+**D-13 · Les attentes et plafonds, déduits des README et du code des modules (à vérifier, réglés chez eux d'abord).**
+
+| Module | Attente | Tolérance | Plafond Claude | Lu chez le module (prime) |
+|---|---|---|---|---|
+| Quotidien | brief chaque jour vers 7h15 | 20 min | 2 $ | `reglages.toml` : `[heures] brief`, `[ia] budget_mensuel_usd` |
+| Corvées | analyse chaque jour vers 21h | 60 min (reportée si batterie < 30 % ou Mac en veille) | 2 $ | `reglages.json` : `modules.corvees.analyse.heure`, `.ia.budget_mensuel_usd` |
+| Trieur | aucun document en attente depuis plus de 15 min | — | 1 $ | `modules.trieur.ia.budget_mensuel_usd` |
+| Bouclier | relève Gmail toutes les 5 min | 15 min | 2 $ | `config.toml` : `[gmail] active`, `intervalle_minutes`, `[ia] budget_mensuel_usd` |
+| Nettoyeur | un relevé toutes les 2 min (surveillance allumée) | 10 min | — (pas de Claude) | `modules.demarrage.actif` |
+| Assistant | — (voir D-15) | — | — (abonnement) | `claude.appels_max_par_jour` |
+| Ambiance | — (voir D-14) | — | — | — |
+
+Les files `BoiteMac/`, `Bouclier/entree/`, `Quotidien/entree/`, `~/Desktop/À trier/` (la mission) et
+`~/Documents/À trier par l'assistant` (le vrai dossier du Trieur depuis son D-57) sont « bloquées » au-delà de
+30 min (réglable).
+
+**D-14 · Ambiance : adaptateur générique tolérant.** Ni son code ni son README ne sont dans ce dépôt. Labels attendus
+`com.<session>.ambiance` et `.ambiance.audio`, dossiers `Application Support/Ambiance` et `Logs/Ambiance` ; un
+battement et un coût du mois sont lus **s'ils existent** (clé `battement` ou `demon_battement` dans `meta`/`etat`,
+table `depenses_ia` ou `couts` avec `cout_usd`). Pas d'attente ni de plafond tant qu'on ne les connaît pas : à
+compléter dans `modules.toml` (ACTIONS_HUMAINES.md, facultatif).
+
+**D-15 · Le tri Gmail n'a pas d'attente « toutes les 3 min ».** Il n'écrit rien quand il n'a rien à trier (ni dans le
+journal, ni dans `memoire.db`) : une attente périodique donnerait de fausses alertes chaque nuit calme. On suit son
+statut dans le superviseur (actif, en relance, désactivé) et la date du dernier mail trié. La carte « Assistant »
+réunit le superviseur, l'icône, le tri Gmail et les appels à Claude.
+
+**D-16 · Un module éteint ou en pause n'est pas une panne.** Corvées et le Nettoyeur sont éteints au départ, le
+superviseur peut tout mettre en pause, Corvées a sa propre pause : la pastille est ⚪ avec la raison et la commande
+pour rallumer, jamais une alerte.
+
+**D-17 · Le registre est généré une fois, puis il est à toi.** Jamais réécrit : un module découvert plus tard est
+**ajouté à la fin** ; un module connu que tu as retiré revient seulement s'il apparaît vraiment (son plist) ;
+`actif = false` le fait ignorer ; `dossier_projet = "auto"` est déduit de la découverte à chaque fois (sans toucher
+au fichier). Un fichier illisible : les modules connus sont surveillés quand même, le fichier n'est pas réécrit,
+`tableau doctor` dit pourquoi.
+
+**D-18 · Le battement : la base copiée, complétée par la date de ses fichiers.** Une petite base (moins de 4 Mo :
+statuts, battements) est recopiée à chaque tour si elle a bougé ; une grosse (Corvées garde 30 jours d'événements)
+au plus toutes les 10 minutes. Entre deux copies, la date de dernière écriture de la base (`stat`, sans l'ouvrir)
+complète le battement lu dedans.
+
+**D-19 · Le coût de l'assistant est un équivalent API.** Il passe par l'abonnement Claude Code : aucun dollar n'est
+facturé à l'appel. Pour comparer, ses jetons (table `appels_claude`, appels réussis) sont multipliés par les tarifs
+publics (relevés le 2026-10-06 dans la documentation d'Anthropic) ; les alias « haiku », « sonnet », « opus »
+désignent la génération actuelle (`claude-haiku-5-5` 0,10/0,50 $, `claude-sonnet-5-5` 2/10 $, `claude-opus-5-5`
+4/20 $ par million de jetons). Affiché « estimé », sans plafond ; le nombre d'appels du jour est comparé à
+`appels_max_par_jour`.

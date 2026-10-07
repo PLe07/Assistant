@@ -1,0 +1,91 @@
+"""Les crédits Claude : coût estimé par module, plafond, projection à la fin du mois (§4.3).
+
+- **Estimé** : lu dans les bases (copies) des modules qui tiennent leurs comptes (Corvées, Trieur, Bouclier,
+  Quotidien, Ambiance si l'option est active). L'assistant, lui, passe par ton abonnement Claude Code : son coût est
+  un **équivalent API** (jetons × tarif public), pour comparer, pas une facture.
+- **Réel** (facultatif, éteint par défaut) : le rapport de coûts officiel de l'organisation, avec une clé Admin rangée
+  dans le trousseau (voir `admin_anthropic.py`).
+
+Tarifs publics par million de jetons (entrée, sortie), relevés le 2026-10-06 dans la documentation d'Anthropic. Les
+alias de Claude Code (« haiku », « sonnet », « opus ») désignent la génération actuelle.
+"""
+
+from __future__ import annotations
+
+import calendar
+import time
+from dataclasses import dataclass
+
+TARIFS_USD_PAR_MILLION: dict[str, tuple[float, float]] = {
+    "claude-fable-5-1": (10.0, 50.0),
+    "claude-fable-5": (10.0, 50.0),
+    "claude-opus-5-5": (4.0, 20.0),
+    "claude-opus-5": (5.0, 25.0),
+    "claude-opus-4-8": (5.0, 25.0),
+    "claude-opus-4-7": (5.0, 25.0),
+    "claude-opus-4-6": (5.0, 25.0),
+    "claude-sonnet-5-5": (2.0, 10.0),
+    "claude-sonnet-5": (2.0, 10.0),
+    "claude-sonnet-4-6": (3.0, 15.0),
+    "claude-haiku-5-5": (0.10, 0.50),
+    "claude-haiku-4-5": (1.0, 5.0),
+}
+ALIAS = {
+    "haiku": "claude-haiku-5-5",
+    "rapide": "claude-haiku-5-5",
+    "sonnet": "claude-sonnet-5-5",
+    "fort": "claude-sonnet-5-5",
+    "opus": "claude-opus-5-5",
+    "fable": "claude-fable-5-1",
+}
+
+
+def tarif(modele: str | None) -> tuple[float, float] | None:
+    """Le tarif d'un modèle (identifiant complet, préfixe connu, ou alias) ; None si inconnu."""
+    if not modele:
+        return None
+    m = modele.strip().lower()
+    m = ALIAS.get(m, m)
+    if m in TARIFS_USD_PAR_MILLION:
+        return TARIFS_USD_PAR_MILLION[m]
+    for connu in sorted(TARIFS_USD_PAR_MILLION, key=len, reverse=True):
+        if m.startswith(connu):
+            return TARIFS_USD_PAR_MILLION[connu]
+    for nom, complet in ALIAS.items():
+        if nom in m:
+            return TARIFS_USD_PAR_MILLION[complet]
+    return None
+
+
+def estimer(jetons: dict[str, tuple[int, int]]) -> tuple[float | None, list[str]]:
+    """Coût estimé (équivalent API) de jetons par modèle ; et les modèles au tarif inconnu."""
+    total = 0.0
+    inconnus: list[str] = []
+    for modele, (entree, sortie) in jetons.items():
+        t = tarif(modele)
+        if t is None:
+            inconnus.append(modele)
+            continue
+        total += entree / 1e6 * t[0] + sortie / 1e6 * t[1]
+    if inconnus and total == 0 and len(inconnus) == len(jetons):
+        return None, inconnus
+    return total, inconnus
+
+
+@dataclass
+class Projection:
+    mois_usd: float
+    projection_usd: float | None  # None : trop tôt dans le mois pour projeter
+    plafond_usd: float | None
+    pct: float | None  # du plafond, à date
+
+
+def projeter(mois_usd: float, plafond_usd: float | None, maintenant: float, jours_min: float = 3.0) -> Projection:
+    """Projection linéaire à la fin du mois : dépensé / jours écoulés × jours du mois (au moins 3 jours écoulés)."""
+    t = time.localtime(maintenant)
+    jours_du_mois = calendar.monthrange(t.tm_year, t.tm_mon)[1]
+    debut = time.mktime((t.tm_year, t.tm_mon, 1, 0, 0, 0, 0, 0, -1))
+    ecoules = max(0.0, (maintenant - debut) / 86400)
+    projection = mois_usd / ecoules * jours_du_mois if ecoules >= jours_min else None
+    pct = mois_usd / plafond_usd * 100 if plafond_usd else None
+    return Projection(mois_usd, projection, plafond_usd, pct)

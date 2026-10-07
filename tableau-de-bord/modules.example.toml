@@ -1,0 +1,60 @@
+# Exemple commenté du registre du tableau de bord.
+# Le vrai fichier est ~/Library/Application Support/TableauDeBord/modules.toml : généré au premier démarrage, puis à toi.
+# Chemins : « ~/… » (ton dossier), « icloud:Dossier » (iCloud Drive), absolus, ou relatifs au dossier du projet.
+
+[[module]]
+id = "trieur"                       # identifiant court (unique)
+nom = "Trieur"                      # le nom affiché
+emoji = "🗂"
+adaptateur = "trieur"               # generique, assistant, corvees, nettoyeur, trieur, bouclier, quotidien, ambiance, n8n
+labels = ["com.exemple.trieur"]     # ses LaunchAgents (le premier est le principal)
+superviseur = "trieur"              # s'il tourne sous le superviseur de l'assistant : son nom là-bas
+dossier_projet = "auto"             # « auto » : déduit de la découverte
+files = ["icloud:BoiteMac", "~/Documents/À trier par l'assistant", "~/Desktop/À trier"]
+file_max_min = 15                   # au-delà, un document en attente est « bloqué » (sinon : 30 min, réglages)
+perimetre_code = ["modules/trieur", "trieur.py"]   # ce que le gardien d'intégrité surveille
+plafond_usd = 1.0                   # plafond de crédits Claude du mois (le sien, lu dans ses réglages, prime)
+commande_diagnostic = [".venv/bin/python", "trieur.py", "doctor"]  # lancée seulement à ta demande (bouton)
+aide = "python trieur.py doctor (dans ~/Assistant)"
+
+[[module]]
+id = "bouclier"
+nom = "Bouclier"
+emoji = "🛡️"
+adaptateur = "bouclier"
+labels = ["com.exemple.bouclier"]
+dossier_projet = "auto"
+dossier_donnees = "~/Library/Application Support/Bouclier"
+dossier_logs = "~/Library/Logs/Bouclier"
+files = ["icloud:Bouclier/entree"]
+perimetre_code = ["."]
+plafond_usd = 2.0
+aide = "bouclier doctor"
+[[module.attente]]
+id = "gmail"
+genre = "periodique"                # periodique : toutes_les_min ; quotidienne : heure
+libelle = "relève Gmail toutes les 5 min"
+toutes_les_min = 5
+tolerance_min = 15
+
+[[module]]
+id = "quotidien"
+nom = "Quotidien"
+emoji = "☀️"
+adaptateur = "quotidien"
+labels = ["com.exemple.quotidien"]
+dossier_donnees = "~/Library/Application Support/Quotidien"
+plafond_usd = 2.0
+[[module.attente]]
+id = "brief"
+genre = "quotidienne"
+libelle = "brief chaque jour vers 7h15"
+heure = "07:15"
+tolerance_min = 20
+
+[[module]]
+id = "futur"                        # un module que tu n'utilises plus : actif = false le fait ignorer
+nom = "Futur"
+adaptateur = "generique"
+labels = ["com.exemple.futur"]
+actif = false
