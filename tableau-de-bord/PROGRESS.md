@@ -6,7 +6,7 @@ Chaque phase se termine par `./check.sh` vert, l'intégrité identique, un commi
 | Phase | État | Commit |
 |---|---|---|
 | P0 — environnement, empreinte, découverte, échantillons, squelette, check.sh | ✅ | « Tableau de bord P0 » |
-| P1 — sondes en lecture seule | ⏳ | |
+| P1 — sondes en lecture seule | ✅ | « Tableau de bord P1 » |
 | P2 — registre et adaptateurs | ⏳ | |
 | P3 — analyses | ⏳ | |
 | P4 — alertes, sourdine, rapport de la semaine | ⏳ | |
@@ -45,6 +45,39 @@ Success: no issues found in 8 source files
 11 passed in 11.27s   (lecture seule : 30 lectures pendant les écritures, 0 « database is locked »)
 12 passed in 3.07s    (empreinte)
 TOTAL                              743      8    99%
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 730 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
+CHECK OK
+```
+
+## P1 — 2026-10-07
+
+- `sondes/launchd.py` : `launchctl list` (un appel par tour) et `launchctl print` (seulement si le label a changé ou
+  toutes les 10 min), lus au format de macOS (échantillons `tests/fixtures/launchd/`), tolérants.
+- `sondes/processus.py` : psutil, processeur par différence de temps processeur (aucune attente active), mémoire et
+  âge de l'arbre de processus ; fils du superviseur de l'assistant (`python -m modules.<nom>`) ; charge du Mac.
+- `sondes/logs.py` : lecture par la fin, curseur dans notre base (redémarrage sans double compte), rotation
+  (fin de l'ancien fichier lue sous son nouveau nom), troncature, réécriture sous le même numéro (empreinte de tête),
+  lignes incomplètes laissées pour le tour suivant, 256 Ko au premier passage ; formats de l'assistant, de Bouclier,
+  de Quotidien et des sorties d'erreur brutes (piles d'appels rattachées, jamais recomptées) ; erreurs par tranches
+  de 5 min, dernières erreurs caviardées.
+- `sondes/files_attente.py` (âge = première fois vu, pages du Trieur et fichiers temporaires ignorés, fantômes
+  iCloud comptés à part, jamais téléchargés), `sondes/docker_n8n.py` (Docker éteint, `docker stats --no-stream` au
+  plus toutes les 10 min, `healthz` en local seulement, sans mandataire), `sondes/tailles.py` (stat seulement, borné).
+- Preuves de lecture seule (`tests/lecture_seule/`) : un **crochet d'audit Python** voit chaque ouverture,
+  connexion SQLite, suppression, renommage, changement de droits ou de date chez le faux module pendant le passage de
+  toutes les sondes → 0 interdit (et un test prouve que l'espion verrait une écriture) ; empreintes et dates
+  identiques ; vrai `lsof` pendant les lectures en boucle → aucun fichier du module resté ouvert.
+
+Preuve (`./check.sh`) :
+
+```
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 730 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
+All checks passed!
+Success: no issues found in 14 source files
+113 passed in 11.01s   (unitaires)
+14 passed in 13.03s    (lecture seule)
+12 passed in 2.92s     (empreinte)
+TOTAL                              1315     32    98%
 INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 730 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
 CHECK OK
 ```

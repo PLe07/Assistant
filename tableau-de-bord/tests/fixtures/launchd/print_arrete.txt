@@ -1,0 +1,31 @@
+gui/501/com.exemple.quotidien = {
+	active count = 0
+	path = /Users/exemple/Library/LaunchAgents/com.exemple.quotidien.plist
+	type = LaunchAgent
+	state = not running
+
+	program = /Users/exemple/Assistant/quotidien/.venv/bin/python
+	arguments = {
+		/Users/exemple/Assistant/quotidien/.venv/bin/python
+		-m
+		quotidien
+		demon
+	}
+
+	stdout path = /Users/exemple/Library/Logs/Quotidien/demon.sortie.log
+	stderr path = /Users/exemple/Library/Logs/Quotidien/demon.erreurs.log
+	default environment = {
+		PATH => /usr/bin:/bin:/usr/sbin:/sbin
+	}
+
+	domain = gui/501 [100008]
+	asid = 100008
+	minimum runtime = 30
+	exit timeout = 5
+	runs = 7
+	last exit code = 1
+	last terminating signal = Terminated: 15
+
+	spawn type = daemon (3)
+	properties = keepalive | runatload | inferred program
+}

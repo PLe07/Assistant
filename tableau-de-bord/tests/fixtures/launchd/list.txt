@@ -1,0 +1,6 @@
+PID	Status	Label
+4242	0	com.exemple.bouclier
+-	1	com.exemple.quotidien
+-	-9	com.exemple.ambiance.audio
+512	0	com.assistant.superviseur
+-	0	com.apple.Safari.History

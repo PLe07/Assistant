@@ -1,0 +1,61 @@
+gui/501/com.exemple.bouclier = {
+	active count = 1
+	path = /Users/exemple/Library/LaunchAgents/com.exemple.bouclier.plist
+	type = LaunchAgent
+	state = running
+
+	program = /Users/exemple/Assistant/bouclier/.venv/bin/python
+	arguments = {
+		/Users/exemple/Assistant/bouclier/.venv/bin/python
+		-m
+		bouclier
+		demon
+	}
+
+	working directory = /Users/exemple/Assistant/bouclier
+
+	stdout path = /Users/exemple/Library/Logs/Bouclier/demon.sortie.log
+	stderr path = /Users/exemple/Library/Logs/Bouclier/demon.erreurs.log
+	inherited environment = {
+		SSH_AUTH_SOCK => /private/tmp/com.apple.launchd.AbCd/Listeners
+	}
+
+	default environment = {
+		PATH => /usr/bin:/bin:/usr/sbin:/sbin
+	}
+
+	environment = {
+		PYTHONUNBUFFERED => 1
+		XPC_SERVICE_NAME => com.exemple.bouclier
+	}
+
+	domain = gui/501 [100008]
+	asid = 100008
+	minimum runtime = 10
+	exit timeout = 5
+	nice = 10
+	runs = 1
+	pid = 4242
+	immediate reason = speculative
+	forks = 2
+	execs = 1
+	initialized = 1
+	trampolined = 1
+	started suspended = 0
+	proxy started suspended = 0
+	last exit code = (never exited)
+
+	spawn type = background (4)
+	jetsam priority = 40
+	jetsam memory limit (active) = (unlimited)
+	jetsam memory limit (inactive) = (unlimited)
+	jetsamproperties category = daemon
+	jetsam thread limit = 32
+	cpumon = default
+	probabilistic guard malloc policy = {
+		activation rate = 1/1000
+		sample rate = 1/0
+	}
+
+	properties = keepalive | runatload | inferred program
+}
