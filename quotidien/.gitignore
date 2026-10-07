@@ -1,0 +1,22 @@
+# Quotidien : tout ce qui est local, personnel ou régénéré.
+.venv/
+__pycache__/
+*.pyc
+.coverage
+.coverage.*
+htmlcov/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.hypothesis/
+# Empreinte prise sur ton Mac (chemins et noms personnels) : jamais sur GitHub.
+integrite/mac/
+# Sorties de test et caches régénérés
+tests/.cache/
+sorties/
+*.db
+*.log
+*.egg-info/
+# Captures Open-Meteo prises sur ton Mac (anonymisées, mais inutiles sur GitHub)
+tests/meteo/fixtures/reelles/*
+!tests/meteo/fixtures/reelles/README.md
