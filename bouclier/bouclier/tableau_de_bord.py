@@ -94,7 +94,71 @@ def _section_urgence(base: Base) -> str:
     return "\n".join(morceaux)
 
 
-SECTIONS: list[Section] = [_section_arnaques, _section_fuites, _section_comptes, _section_urgence]
+IMPORTANTS = {"google", "apple", "microsoft", "amazon", "paypal", "yahoo", "proton", "facebook", "instagram",
+              "laposte", "ameli", "impots", "franceconnect"}  # fmt: skip
+
+
+def hygiene(base: Base, maintenant: float | None = None) -> tuple[int, list[str]]:
+    """Le score « Hygiène numérique » (0 à 100) et les 3 actions qui le feraient le plus monter."""
+    from bouclier import config
+    from bouclier.comptes import inventaire, regroupement
+    from bouclier.fuites import croisement, hibp
+
+    m = maintenant or time.time()
+    retraits: list[tuple[int, str]] = []
+    if base.lire_meta("inventaire_le") is None:
+        retraits.append((10, "Lance l'inventaire de tes comptes : bouclier inventaire"))
+    fuites = croisement.croiser(hibp.ListeFuites(config.chemins().caches).fuites(), croisement.comptes_surveilles(base))
+    for c in fuites[:3]:
+        quand = c.fuite.date.strftime("%m/%Y") if c.fuite.date else "date inconnue"
+        retraits.append((14, f"Change le mot de passe de {c.compte.nom} (fuite de {quand}) et partout où tu l'as"
+                             " réutilisé"))  # fmt: skip
+    lignes = inventaire.lignes(base)
+    a_supprimer = [x for x in lignes if x.statut == "a_supprimer"]
+    if a_supprimer:
+        texte = f"Supprime les {len(a_supprimer)} compte(s) marqués « à supprimer » (liens dans la liste ci-dessous)"
+        retraits.append((min(10, 2 * len(a_supprimer)), texte))
+    doubles = []
+    for x in lignes:
+        service = regroupement.service(x.id)
+        actif = x.nature == "compte" and x.statut not in ("supprime", "a_supprimer")
+        if actif and (x.id in IMPORTANTS or x.categorie == "banque") and service and service.double_auth:
+            doubles.append(x.nom.split(" (")[0])
+    if doubles:
+        retraits.append((10, "Active la double authentification sur tes comptes importants : "
+                             + ", ".join(sorted(set(doubles))[:4])))  # fmt: skip
+    generee = base.lire_meta("fiche_generee_le")
+    if generee is None:
+        retraits.append((9, "Prépare ta fiche urgence : bouclier urgence editer, puis bouclier urgence"))
+    elif m - float(generee) > 182 * 86400:
+        retraits.append((5, "Relis et régénère ta fiche urgence : bouclier urgence editer"))
+    if base.lire_meta("gmail_releve_le") is None:
+        retraits.append((5, "Relie Gmail en lecture seule pour que les mails piégés soient repérés"
+                            " (ACTIONS_HUMAINES.md)"))  # fmt: skip
+    a_trier = [x for x in lignes if x.statut == "a_trier" and x.nature == "compte"]
+    if len(a_trier) > 20:
+        retraits.append((3, f"Trie tes {len(a_trier)} comptes : garde ou supprime ceux qui ne servent plus"))
+    score = max(0, 100 - min(100, sum(r for r, _ in retraits)))
+    actions = [texte for _, texte in sorted(retraits, key=lambda r: -r[0])[:3]]
+    return score, actions
+
+
+def _section_hygiene(base: Base) -> str:
+    score, actions = hygiene(base)
+    couleur = "var(--vert)" if score >= 80 else "var(--orange)" if score >= 50 else "var(--rouge)"
+    morceaux = [f'<div class="carte"><h2 style="margin-top:0;border:0">Hygiène numérique : '
+                f'<span style="color:{couleur}">{score}/100</span></h2>']  # fmt: skip
+    if actions:
+        morceaux.append("<p>Les 3 actions qui comptent le plus :</p><ol>")
+        morceaux += [f"<li>{escape(a)}</li>" for a in actions]
+        morceaux.append("</ol>")
+    else:
+        morceaux.append("<p>Rien d'urgent. Continue de vérifier les messages douteux avant d'agir.</p>")
+    morceaux.append("</div>")
+    return "\n".join(morceaux)
+
+
+SECTIONS: list[Section] = [_section_hygiene, _section_arnaques, _section_fuites, _section_comptes, _section_urgence]
 
 
 def construire(base: Base, sections: list[Section] | None = None) -> str:

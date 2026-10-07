@@ -13,7 +13,7 @@ Reprise après coupure : lire ce fichier et DECISIONS.md, puis reprendre à la p
 | P6 Métadonnées n°21 | ✅ | 7 formats + vidéo, SSIM ≥ 0,99, ICC gardé, ci-dessous |
 | P7 Fiche urgence n°22 | ✅ | numéros sourcés, PDF lu, A6 une page, ci-dessous |
 | P8 Raccourcis, actions rapides, iCloud | ✅ | plists valides, entrée/réponse iCloud testées, ci-dessous |
-| P9 Démon, tableau de bord, doctor, bout en bout | ⏳ | |
+| P9 Démon, tableau de bord, doctor, bout en bout | ✅ | un « jour » de démon simulé, Gmail intact, ci-dessous |
 | P10 Installation réelle | ⏳ | |
 | P11 Revue hostile (2 passes) | ⏳ | |
 
@@ -315,6 +315,59 @@ INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 455 fichiers, 0 Laun
 30 passed in 2.31s
   ✅ sécurité, réseau, vie privée
 TOTAL                                     4494    169    96%
+  ✅ couverture ≥ 90 % sur bouclier/
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 455 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
+  ✅ intégrité des autres projets (fin)
+CHECK OK
+```
+
+## P9 — Démon, Gmail, doctor, tableau de bord, bout en bout (✅)
+
+- `daemon.py` : boucle de 3 s réveillée par FSEvents ; tâches datées en base (D-25) ; une brique en panne n'arrête
+  jamais les autres ; notifications de la nuit envoyées à 8 h ; tableau de bord réécrit après chaque changement.
+- `surveillance_gmail.py` : boîte de réception en lecture seule, à partir du jour où Gmail est relié (D-26) ; délai
+  10 / 20 / 40 / 60 min après un échec.
+- `doctor.py`, score « Hygiène numérique » et ses 3 actions dans le tableau de bord (D-27).
+- `installation.py` : ce que `install.sh` pose, vérifié « à nous » avant d'y toucher (D-28).
+- `tests/e2e/` (dans `check.sh`) : un jour de démon sur un faux Mac (raccourci → réponse, Gmail → alerte, flux,
+  fuites, inventaire, fiche), drapeaux Gmail identiques avant/après, panne isolée, réglages abîmés, installation
+  relancée deux fois, plist d'un autre jamais touché.
+- Bug trouvé par le test : un compte supprimé demandait encore la double authentification. Corrigé.
+
+```
+$ bouclier installation preparer   (dans un faux dossier personnel)
+  ✅ réglages créés : ~/Library/Application Support/Bouclier/config.toml
+  ✅ commande bouclier : ~/.local/bin/bouclier
+  ✅ action rapide « Est-ce une arnaque » : installée
+  ✅ action rapide « Est-ce une arnaque (texte) » : installée
+  ✅ action rapide « Nettoyer les métadonnées » : installée
+  ✅ agent de démarrage : ~/Library/LaunchAgents/com.<session>.bouclier.plist
+  ⚠️ iCloud Drive introuvable : le raccourci « Arnaque ? » ne pourra pas joindre le Mac
+$ bouclier tableau --sans-ouvrir
+🛡️ Hygiène numérique : 76/100
+  1. Lance l'inventaire de tes comptes : bouclier inventaire
+  2. Prépare ta fiche urgence : bouclier urgence editer, puis bouclier urgence
+  3. Relie Gmail en lecture seule pour que les mails piégés soient repérés (ACTIONS_HUMAINES.md)
+
+$ ./check.sh
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 455 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
+  ✅ intégrité des autres projets (début)
+  ✅ ruff check
+  ✅ ruff format
+  ✅ mypy
+146 passed in 3.92s
+  ✅ pytest : unitaires et intégrité
+14 passed in 9.85s
+  ✅ corpus d'arnaques (principal + 2e corpus inédit)
+35 passed in 1.67s
+  ✅ inventaire des comptes et fuites
+25 passed in 2.39s
+  ✅ métadonnées et fiche urgence
+30 passed in 1.92s
+  ✅ sécurité, réseau, vie privée
+10 passed, 1 deselected in 4.78s
+  ✅ bout en bout (démon, doctor, installation)
+TOTAL                                     5033    189    96%
   ✅ couverture ≥ 90 % sur bouclier/
 INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 455 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
   ✅ intégrité des autres projets (fin)

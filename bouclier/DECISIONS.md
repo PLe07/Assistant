@@ -190,3 +190,34 @@ reprennent la structure Automator de l'action du Trieur, avec l'identifiant `fr.
 qui n'est pas à Bouclier n'est jamais touché. Les copies déposées pour Bouclier (entrées, réponses) de plus de 30
 jours sont retirées (les originaux restent dans Messages ou Photos). La structure exacte des actions d'un raccourci
 ne peut pas être vérifiée sans iPhone : la recette manuelle (noms d'actions en français) est le plan B.
+
+## 2026-10-07 · P9 — Démon, Gmail, doctor, tableau de bord, installation
+
+**D-25 · Le démon : une boucle qui ne s'arrête jamais, des dates de tâches gardées en base.**
+Un seul LaunchAgent (`KeepAlive`, `ThrottleInterval` 30 s) lance `python -m bouclier demon`. Chaque tour (3 s, ou
+tout de suite quand FSEvents voit un fichier dans l'entrée iCloud) : entrée du raccourci, puis les tâches dues
+(Gmail 5 min, flux et fuites chaque jour, inventaire chaque semaine, numéros de la fiche tous les 6 mois). La date
+de la prochaine exécution de chaque tâche est écrite en base (`prochain:<tâche>`) : un redémarrage ou une veille ne
+la décale pas et ne relance pas tout. Une tâche qui plante est notée, retentée dans 1 h, et n'empêche jamais les
+autres ; un réglage abîmé fait tourner le démon sur les valeurs par défaut (signalé par `doctor`). Écarté : un
+LaunchAgent par tâche (plus d'éléments de démarrage pour le Nettoyeur, plus de risques de collision).
+
+**D-26 · Gmail : la boîte de réception seulement, à partir du jour où tu relies Gmail.**
+Au premier passage, Bouclier note le dernier UID et n'analyse pas l'ancien courrier (des centaines d'alertes
+inutiles sinon). Ensuite : EXAMINE, `BODY.PEEK[]` limité à 5 Mo, analyse locale, IA seulement si le score hésite,
+notification seulement pour « Arnaque » ou « Très suspect ». Après un échec IMAP, le délai double (10, 20, 40 puis
+60 min au plus) ; un Gmail non relié est revérifié toutes les heures, sans notification.
+
+**D-27 · `doctor` et le score « Hygiène numérique » : des constats, jamais des actions automatiques.**
+`bouclier doctor` donne l'état de chaque brique (✅ / ⚠️ / ❌) avec la solution en une ligne. Le score (0 à 100) part
+de 100 et retire des points pour ce qui compte vraiment : une fuite qui te concerne (14 chacune, 3 au plus), pas de
+double authentification sur un compte important ou bancaire encore actif (10), fiche urgence absente (9) ou vieille
+de plus de 6 mois (5), inventaire jamais lancé (10), comptes marqués « à supprimer » (2 chacun, 10 au plus), Gmail
+non relié (5), plus de 20 comptes à trier (3). Les 3 retraits les plus lourds deviennent les 3 actions affichées.
+
+**D-28 · L'installation pose 5 choses, chacune vérifiée « à nous » avant d'être touchée.**
+Le LaunchAgent `com.<session>.bouclier`, le lanceur `~/.local/bin/bouclier` (marqué), les actions rapides
+`fr.bouclier.*`, les 2 raccourcis signés dans iCloud Drive/Bouclier, et nos dossiers. Si la commande `bouclier`, le
+lanceur ou le plist existent déjà sans être à Bouclier, l'installation s'arrête et l'explique. Tout peut être relancé
+sans effet de bord. La désinstallation retire ce qui a été posé ; tes données restent sauf `--tout` ; le dossier
+iCloud Bouclier reste toujours (il est dans ton iCloud, à toi de décider).

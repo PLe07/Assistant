@@ -27,6 +27,7 @@ etape "corpus d'arnaques (principal + 2e corpus inédit)" tests tests/corpus_arn
 etape "inventaire des comptes et fuites" tests tests/comptes tests/fuites
 etape "métadonnées et fiche urgence" tests tests/metadonnees tests/urgence
 etape "sécurité, réseau, vie privée" tests tests/securite
+etape "bout en bout (démon, doctor, installation)" tests tests/e2e
 etape "couverture ≥ 90 % sur bouclier/" "$PY" -m coverage report --fail-under=90
 etape "intégrité des autres projets (fin)" ./integrite/verifier.sh
 

@@ -66,6 +66,7 @@ class Message:
     entetes: bytes
     drapeaux: set[str] = field(default_factory=set)
     libelles: tuple[str, ...] = ("\\\\Inbox",)
+    corps: bytes = b""
 
 
 def _entetes(expediteur: str, sujet: str, date: dt.datetime, lettre: bool) -> bytes:
@@ -167,7 +168,8 @@ class FauxImap:
                     libelles = " ".join(f'"{x}"' for x in m.libelles)
                     sortie.append(f"{u} (X-GM-LABELS ({libelles}) UID {u} FLAGS ({drapeaux}))".encode())
                 else:
-                    sortie.append((f"{u} (UID {u} BODY[HEADER.FIELDS (FROM)] {{{len(m.entetes)}}}".encode(), m.entetes))
+                    contenu = m.entetes + m.corps if "BODY.PEEK[]" in elements else m.entetes
+                    sortie.append((f"{u} (UID {u} BODY[] {{{len(contenu)}}}".encode(), contenu))
                     sortie.append(b")")
             return "OK", sortie
         self.violations.append(f"UID {commande}")

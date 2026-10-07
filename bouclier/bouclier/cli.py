@@ -244,6 +244,59 @@ def cmd_urgence(args: argparse.Namespace, env: Environnement) -> int:
     return 0
 
 
+# --- Démon, diagnostic, tableau de bord, installation ---------------------------------------------------------------
+
+
+def cmd_demon(args: argparse.Namespace, env: Environnement) -> int:  # pragma: no cover - lancé par launchd
+    from bouclier import daemon
+
+    env.base.fermer()
+    return daemon.principal(env.chemins)
+
+
+def cmd_doctor(args: argparse.Namespace, env: Environnement) -> int:
+    from bouclier import doctor
+
+    lignes = doctor.verifier(env.chemins, env.reglages, env.base, env.systeme, env.alerte_config)
+    _ecrire(doctor.afficher(lignes))
+    return 1 if any(etat == "❌" for etat, _, _ in lignes) else 0
+
+
+def cmd_tableau(args: argparse.Namespace, env: Environnement) -> int:
+    from bouclier import tableau_de_bord
+
+    chemin = tableau_de_bord.ecrire(env.base, env.chemins.tableau_de_bord)
+    score, actions = tableau_de_bord.hygiene(env.base)
+    _ecrire(f"🛡️ Hygiène numérique : {score}/100")
+    for i, a in enumerate(actions, 1):
+        _ecrire(f"  {i}. {a}")
+    _ecrire(f"Tableau de bord : {chemin}")
+    if not args.sans_ouvrir:
+        env.systeme.ouvrir(chemin)
+    return 0
+
+
+def cmd_installation(args: argparse.Namespace, env: Environnement) -> int:
+    from bouclier import installation
+
+    if args.etape == "label":
+        _ecrire(installation.label(env.reglages))
+        return 0
+    if args.etape == "preparer":
+        b = installation.preparer(env.chemins, env.reglages, Path(args.python), Path(args.projet))
+    elif args.etape == "raccourcis":
+        b = installation.raccourcis(env.chemins)
+    else:
+        b = installation.desinstaller(env.chemins, env.reglages, tout=args.tout)
+    for f in b.fait:
+        _ecrire(f"  ✅ {f}")
+    for a in b.avertissements:
+        _ecrire(f"  ⚠️ {a}")
+    for r in b.refus:
+        _ecrire(f"  ❌ {r}")
+    return 1 if b.refus and args.etape == "preparer" else 0
+
+
 # --- Analyse des arguments -----------------------------------------------------------------------------------------
 
 Commande = Callable[[argparse.Namespace, Environnement], int]
@@ -296,6 +349,23 @@ def analyseur() -> argparse.ArgumentParser:
     u = sous.add_parser("urgence", help="la fiche urgence hors-ligne (numéros vérifiés, réflexes, tes contacts)")
     u.add_argument("action", nargs="?", default="generer", choices=["generer", "editer", "verifier", "ouvrir"])
     u.set_defaults(fonction=cmd_urgence)
+
+    d = sous.add_parser("demon", help="(lancé par launchd) la surveillance en continu")
+    d.set_defaults(fonction=cmd_demon)
+
+    o = sous.add_parser("doctor", help="l'état de chaque brique et la solution si besoin")
+    o.set_defaults(fonction=cmd_doctor)
+
+    t = sous.add_parser("tableau", help="le tableau de bord (Bouclier.html) et le score d'hygiène numérique")
+    t.add_argument("--sans-ouvrir", action="store_true")
+    t.set_defaults(fonction=cmd_tableau)
+
+    x = sous.add_parser("installation", help="(utilisé par install.sh et uninstall.sh)")
+    x.add_argument("etape", choices=["preparer", "raccourcis", "desinstaller", "label"])
+    x.add_argument("--python", default=sys.executable)
+    x.add_argument("--projet", default=str(Path(__file__).resolve().parents[1]))
+    x.add_argument("--tout", action="store_true", help="(désinstaller) retirer aussi tes données")
+    x.set_defaults(fonction=cmd_installation)
 
     g = sous.add_parser("gmail-relier", help="ranger le mot de passe d'application Gmail dans le trousseau")
     g.add_argument("adresse")
