@@ -6,7 +6,7 @@ Chaque phase se termine par `./check.sh` vert, l'intégrité identique, un commi
 | Phase | État | Commit |
 |---|---|---|
 | P0 — environnement, intégrité, squelette, check.sh, réseau | ✅ | « Quotidien P0 » |
-| P1 — météo « habille-toi » | ⏳ | |
+| P1 — météo « habille-toi » | ✅ | « Quotidien P1 » |
 | P2 — base de recettes | ⏳ | |
 | P3 — planificateur et courses | ⏳ | |
 | P4 — vide-frigo | ⏳ | |
@@ -36,5 +36,34 @@ All checks passed!
 25 passed in 0.27s
 TOTAL                   421     22    95%
 INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 593 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 7 élément(s) divers, listes de Rappels : indisponibles)
+CHECK OK
+```
+
+## P1 — 2026-10-07
+
+- `meteo/open_meteo.py` : requête (hier + 3 jours, `unixtime`), lecture validée, cache 3 h, repli hors ligne signalé,
+  géocodage. `meteo/trajets.py`, `meteo/regles.py` + `regles_tenue.toml`, `meteo/textes.py` (12 situations × 5–6
+  modèles, phrases d'appoint × 5), `meteo/service.py` (ligne du brief, alerte de 21 h).
+- Table de décision exhaustive : **3 936 cas** (−5 à 35 °C × 6 pluies × vent × UV × nuit × cours), **100 % conformes**
+  à l'oracle écrit d'après la mission ; 300 journées aléatoires (hypothesis) sans aucun conseil contradictoire ;
+  changement d'heure (23 h et 25 h) ; verglas (3 règles) ; bascule ; alerte (écart, pluie, tempête, orage, gel).
+- Défauts trouvés et corrigés par les tests : variante « tram » sans le mot tram, lunettes un jour de neige, rappel
+  d'éclairage perdu quand la ligne était pleine, verglas annoncé pour un gel sec (D-11, D-14, D-15).
+
+Aperçu sur la fixture de janvier :
+
+```
+🌧️ 6 °C → 12 °C, averses entre 7h et 10h : imper ou poncho + sur-pantalon, pull + doudoune, gants à vélo, bonnet, tour de cou.
+Dans le noir à l'aller comme au retour : allume ton éclairage, casque sur la tête. Retour au sec vers 18h30.
+```
+
+Preuve (`./check.sh`, extrait) :
+
+```
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 593 fichiers, …)
+All checks passed!
+41 passed · 77 passed (météo) · 25 passed (sécurité)
+TOTAL                            1070     31    97%
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 593 fichiers, …)
 CHECK OK
 ```

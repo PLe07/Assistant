@@ -74,3 +74,41 @@ il reste dans le dossier privé du Mac).
 **D-08 · Une allergie mal écrite n'est jamais ignorée.**
 Une allergie hors des 14 allergènes réglementaires (« noix de pécan ») est signalée **et** ajoutée aux aliments
 interdits (contrainte dure, comme une aversion) : une faute de frappe ne doit pas laisser passer un aliment dangereux.
+
+## 2026-10-07 · P1 — Météo « habille-toi »
+
+**D-09 · La pluie d'un trajet est comptée au prorata, et sur la bonne heure.**
+Open-Meteo donne pour l'heure *h* la pluie tombée entre *h* − 1 h et *h*. L'aller de 8 h 00 à 8 h 30 est donc
+couvert par la valeur de 9 h, pour moitié : 3 mm/h donnent 1,5 mm pendant le trajet (> 1 mm → équipement de pluie).
+Même logique pour les rafales (maximum de l'heure précédente). Le texte annonce l'**épisode** de pluie entier qui
+touche le trajet (« averses entre 7h et 10h »), pas seulement la demi-heure du trajet.
+
+**D-10 · À vélo, le ressenti est diminué de 3 °C, et la tenue vise le trajet le plus froid.**
+L'air de la vitesse (20 km/h environ) refroidit. Les couches sont choisies pour le moment le plus froid de tes
+trajets ; si l'après-midi est bien plus chaud (8 °C ou plus), la bascule ajoute « une couche que tu peux enlever ».
+Les seuils sont dans `regles_tenue.toml` (modifiable, recopiable dans Application Support pour le garder à toi).
+
+**D-11 · Les lunettes de soleil regardent toute la journée dehors, de jour, au sec.**
+Ton trajet de 8 h a rarement un UV de 3 ; ta pause de midi, si. La fenêtre va de ton départ à ton retour ; une heure ne
+compte que si elle est de jour (entre lever et coucher), sans pluie et avec un UV ≥ 3. Jamais de lunettes un jour
+dominé par la neige ou l'orage (« Il neige… lunettes de soleil » se contredirait) : trouvé par le test aléatoire.
+
+**D-12 · Les jours sans cours : une journée de 9 h à 19 h, sans vélo.**
+Le conseil est général (« lunettes de soleil si tu sors ») ; le parapluie y est permis ; le tram est formulé « si tu
+sors, privilégie le tram ». Par grand vent (rafales > 50 km/h), le parapluie devient « imper à capuche ».
+
+**D-13 · Les modèles de texte tournent avec la date.**
+Chaque situation a 5 à 6 modèles ; le modèle du jour avance d'un cran chaque jour : deux jours qui se suivent n'ont
+jamais le même modèle, donc jamais le même message 3 jours de suite. Le même jour, le texte reste stable.
+*Écarté :* le hasard (deux jours identiques possibles) et une mémoire en base (inutile ici).
+
+**D-14 · Dans le texte, la sécurité passe avant tout.**
+« Prends plutôt le tram » et « casque et éclairage » sont toujours affichés, quitte à laisser tomber « Vélo OK » ou le
+retour au sec. Défaut trouvé par le test de bout en bout sur la fixture de janvier (le rappel de nuit disparaissait
+quand la ligne était pleine) ; la table exhaustive vérifie désormais « éclairage » dans le texte de chaque trajet de
+nuit.
+
+**D-15 · L'alerte de 21 h distingue le gel sec du verglas.**
+Gel sec annoncé (−3 °C, air sec) : « gel au petit matin », sans parler de verglas ni de tram. Gel humide, pluie
+verglaçante ou pluie la veille suivie de gel : « risque de verglas » et le tram, comme le moteur de règles du
+lendemain. Défaut trouvé par les tests (l'alerte annonçait un verglas que les règles ne voyaient pas).

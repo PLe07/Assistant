@@ -1,0 +1,55 @@
+# Règles de la tenue du jour (n°36). Tout est en °C de ressenti, en mm de pluie et en km/h de vent.
+# Tu peux les ajuster : Quotidien relit ce fichier à chaque conseil. Un nombre mal écrit garde sa valeur par défaut.
+
+[velo]
+# À vélo, l'air de la vitesse refroidit : le ressenti des trajets à vélo est diminué d'autant.
+correction_ressenti = 3
+
+# Les couches, du plus chaud au plus froid : la première dont le ressenti le plus froid de tes trajets est supérieur
+# ou égal à « a_partir_de » gagne.
+[[couches]]
+a_partir_de = 22
+tenue = ["t-shirt"]
+
+[[couches]]
+a_partir_de = 17
+tenue = ["t-shirt", "veste légère"]
+
+[[couches]]
+a_partir_de = 12
+tenue = ["pull", "veste légère"]
+
+[[couches]]
+a_partir_de = 5
+tenue = ["pull", "manteau"]
+
+[[couches]]
+a_partir_de = -100
+tenue = ["pull", "doudoune"]
+
+[accessoires]
+gants_velo_sous = 8       # gants si le ressenti à vélo est sous 8 °C
+gants_a_pied_sous = 2     # sans vélo, il en faut moins
+bonnet_sous = 3
+tour_de_cou_sous = 5
+lunettes_uv_des = 3       # lunettes de soleil dès un indice UV de 3, de jour et sans pluie
+
+[pluie]
+equipement_au_dessus_de_mm = 1.0   # imper ou poncho + sur-pantalon (vélo), parapluie (sans vélo)
+petite_pluie_des_mm = 0.2          # en dessous : sec
+
+[tram]
+rafales_au_dessus_de = 50          # km/h pendant un trajet
+pluie_forte_au_dessus_de_mm_h = 4  # mm en une heure pendant un trajet
+verglas_temperature_max = 1        # °C ou moins…
+verglas_humidite_min = 90          # … avec au moins 90 % d'humidité, de la pluie, du brouillard ou de la neige
+pluie_veille_min_mm = 0.5          # ou de la pluie la veille…
+gel_matin_fin = 9                  # … et une température négative entre minuit et 9 h
+
+[bascule]
+ecart_min = 8                      # « 9 °C le matin et 21 °C l'après-midi : prends une couche que tu peux enlever »
+
+[alerte_veille]
+ecart_temperature = 8              # demain bien plus chaud ou plus froid qu'aujourd'hui
+rafales_tempete = 70               # tempête
+pluie_min_mm = 1.0                 # arrivée de la pluie
