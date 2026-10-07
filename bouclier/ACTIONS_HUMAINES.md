@@ -35,13 +35,16 @@ Sans ça, les mails piégés ne sont pas vérifiés tout seuls et l'inventaire n
 1. Va sur <https://myaccount.google.com/apppasswords> (la validation en deux étapes doit être activée sur ton compte
    Google ; sinon, active-la d'abord dans **Sécurité**).
 2. Nom de l'application : `Bouclier` → **Créer**. Copie les 16 lettres affichées.
-3. Dans le Terminal, en remplaçant `ADRESSE` par ton adresse Gmail complète :
+3. Dans le Terminal :
 
 ```
-bouclier gmail-relier ADRESSE
+bouclier gmail-relier
 ```
 
-4. Colle les 16 lettres quand le Mac les demande, puis Entrée. Tu dois lire `✅ Gmail relié en lecture seule`.
+4. Tape ton adresse Gmail, Entrée. Puis colle les 16 lettres, Entrée, et recolle-les, Entrée (rien ne s'affiche
+   quand tu colles : c'est normal). Bouclier se connecte aussitôt pour vérifier : tu dois lire
+   `✅ Gmail relié en lecture seule … connexion réussie`. L'inventaire de tes comptes démarre tout de suite ;
+   quelques minutes plus tard : `bouclier comptes`.
 
 Le mot de passe est rangé dans ton trousseau (élément `bouclier-gmail`), jamais dans un fichier. Bouclier n'utilise
 pas l'accès du module de tri de l'assistant et ne touche jamais à ta boîte.

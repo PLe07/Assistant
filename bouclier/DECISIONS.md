@@ -288,3 +288,21 @@ quelques lignes à ajouter (brief du matin, bouton du menu).
 **D-35 · Dans Messages, un SMS n'a pas de bouton « Partager » : la capture d'écran est le chemin principal.**
 La documentation (README, ACTIONS_HUMAINES, recette manuelle) part de la capture d'écran (lue en local par Apple
 Vision) ; pour un mail ou un lien, appui long → Partager ; sur le Mac, `--presse-papiers`.
+
+## 2026-10-07 · Après la première installation réelle sur ton Mac
+
+**D-36 · Ce que ton Mac a montré, et ce qui a changé.**
+L'installation a réussi deux fois (relance par launchd en 30 s, réponse iCloud en 5 à 11 s, Apple Vision, raccourcis
+signés, intégrité identique). Quatre défauts visibles seulement là :
+- **OpenPhish jamais téléchargé** (URLhaus et HIBP l'étaient) : cause la plus probable, une redirection vers
+  `www.openphish.com`, refusée par la liste blanche, ou un refus du site. `www.openphish.com` est permis, et le miroir
+  officiel d'OpenPhish sur GitHub (`raw.githubusercontent.com/openphish/public_feed/…`, mis à jour toutes les 12 h)
+  sert de secours : **cette adresse-là seulement** (tout autre chemin de raw.githubusercontent.com reste refusé). La
+  raison d'un échec est gardée (`flux-erreurs.json`) et affichée par `doctor` ; une liste ratée est retentée toutes
+  les heures, une liste de moins de 20 h n'est pas retéléchargée.
+- **`gmail-relier ADRESSE`** tapé tel quel : l'adresse est maintenant demandée si elle manque ou n'a pas de « @ » ; le
+  mot de passe d'application est vérifié aussitôt par une vraie connexion en lecture seule (EXAMINE), les espaces de
+  l'affichage de Google sont retirés, et le démon lance Gmail et l'inventaire dans les secondes qui suivent.
+- **Bilan trop tôt** : `install.sh` (étape 7) attend la fin du premier tour du démon (3 min au plus) avant `doctor`.
+- **Inventaire à 0 sans explication** : `doctor` dit quels navigateurs ont été lus, que Safari ne l'est jamais (ses
+  mots de passe sont au trousseau) et qu'il faut relier Gmail.

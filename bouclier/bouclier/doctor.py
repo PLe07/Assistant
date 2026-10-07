@@ -74,7 +74,10 @@ def verifier(chemins: config.Chemins, reglages: dict[str, Any], base: Base, syst
     # Listes téléchargées
     for e in Flux(chemins.caches).etats():
         etat = "✅" if _age_jours(e.date, m) <= 2 else "⚠️"
-        lignes.append((etat, f"liste {e.nom}", f"{e.entrees} liens piégés, copie du {_date(e.date)}"))
+        texte = f"{e.entrees} liens piégés, copie du {_date(e.date)}"
+        if e.erreur and e.erreur != "jamais téléchargé":
+            texte += f" ; dernier essai raté ({e.erreur[:160]}), nouvel essai toutes les heures"
+        lignes.append((etat, f"liste {e.nom}", texte))
     date_fuites = hibp.ListeFuites(chemins.caches).date()
     etat_f = "✅" if _age_jours(date_fuites, m) <= 2 else "⚠️"
     lignes.append((etat_f, "liste des fuites", f"Have I Been Pwned, copie du {_date(date_fuites)}"))
@@ -82,8 +85,14 @@ def verifier(chemins: config.Chemins, reglages: dict[str, Any], base: Base, syst
     # Inventaire, fiche urgence
     inv = base.lire_meta("inventaire_le")
     nb = base.cx.execute("SELECT COUNT(*) FROM comptes WHERE nature = 'compte'").fetchone()[0]
-    lignes.append(("✅" if inv else "⚠️", "inventaire", f"{nb} comptes, dernier inventaire : "
-                                                       f"{_date(float(inv) if inv else None)}"))  # fmt: skip
+    texte_inv = f"{nb} comptes, dernier inventaire : {_date(float(inv) if inv else None)}"
+    if inv and nb == 0:
+        lus = base.lire_meta("inventaire_navigateurs") or ""
+        texte_inv += f" ; navigateurs lus : {lus or 'aucun'} (Safari n'est jamais lu : ses mots de passe sont au"
+        texte_inv += " trousseau)"
+        if not ok:
+            texte_inv += " ; relie Gmail pour retrouver tes comptes : bouclier gmail-relier"
+    lignes.append(("✅" if inv else "⚠️", "inventaire", texte_inv))
     generee = base.lire_meta("fiche_generee_le")
     sur_icloud = (chemins.icloud / urgence.NOM_PDF).exists()
     if generee:

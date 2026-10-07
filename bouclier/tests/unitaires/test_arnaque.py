@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import datetime as dt
 import json
+import os
+import time
 from email.message import EmailMessage
 from pathlib import Path
 from typing import Any
@@ -11,7 +13,7 @@ from typing import Any
 import pytest
 
 from bouclier import db, reseau
-from bouclier.arnaque import entetes, extraction, familles, liens, pression, sosies
+from bouclier.arnaque import entetes, extraction, familles, flux, liens, pression, sosies
 from bouclier.arnaque.detecteur import Contexte, analyser
 from bouclier.arnaque.flux import Flux, normaliser
 from bouclier.arnaque.rdap import ClientRdap, date_de_creation
@@ -292,11 +294,31 @@ def test_flux_mise_a_jour_repli_et_recherche(tmp_path: Path) -> None:
     assert f("https://bit.ly/abc") == "OpenPhish" and f("https://bit.ly/autre") is None  # raccourcisseur : exact
     assert f("https://sites.google.com/view/autre") is None
     assert f("http://198.51.100.7/bin.sh") == "URLhaus"
-    # Le lendemain, les flux sont injoignables : la copie de la veille reste.
-    f2 = Flux(tmp_path, FauxTelechargeur([reseau.ErreurReseau("panne"), reseau.Reponse(503, b"", "")]))
+    # Moins de 20 h après : rien n'est retéléchargé (le démon ne retente que les listes en échec).
+    assert [e.erreur for e in Flux(tmp_path, FauxTelechargeur([])).mettre_a_jour(forcer=False)] == ["", ""]
+    # Le lendemain, les flux sont injoignables (OpenPhish et son miroir aussi) : la copie de la veille reste, et la
+    # raison est gardée pour doctor.
+    pannes = [reseau.ErreurReseau("panne"), reseau.Reponse(403, b"", ""), reseau.Reponse(503, b"", "")]
+    f2 = Flux(tmp_path, FauxTelechargeur(pannes))
     etats2 = f2.mettre_a_jour()
-    assert etats2[0].erreur and etats2[0].entrees == 3 and etats2[1].erreur == "HTTP 503"
+    assert "panne" in etats2[0].erreur and "raw.githubusercontent.com : HTTP 403" in etats2[0].erreur
+    assert etats2[0].entrees == 3 and etats2[1].erreur == "urlhaus.abuse.ch : HTTP 503"
     assert f2("https://evil.example/login") == "OpenPhish"
+    assert [bool(e.erreur) for e in Flux(tmp_path).etats()] == [True, True]
+    # Deux jours plus tard, openphish.com refuse, le miroir officiel répond : la liste est à jour, l'erreur oubliée.
+    vieux = time.time() - 2 * 86400
+    for nom in ("flux-openphish.txt", "flux-urlhaus.txt"):
+        os.utime(tmp_path / nom, (vieux, vieux))
+    refus, liste, indisponible = (
+        reseau.Reponse(403, b"", ""),
+        reseau.Reponse(200, b"https://autre.example/x\n", ""),
+        reseau.Reponse(503, b"", ""),
+    )
+    miroir = FauxTelechargeur([refus, liste, indisponible])
+    f3 = Flux(tmp_path, miroir)
+    assert f3.mettre_a_jour(forcer=False)[0].erreur == "" and f3("https://autre.example/x") == "OpenPhish"
+    assert [u for u, _ in miroir.appels] == [*flux.SOURCES["OpenPhish"], *flux.SOURCES["URLhaus"]]
+    assert Flux(tmp_path).etats()[0].erreur == "" and Flux(tmp_path).etats()[1].erreur
     assert Flux(tmp_path / "vide").etats()[0].date is None
     assert normaliser("HTTPS://Evil.Example/a/?q=1") == "evil.example/a?q=1"
 

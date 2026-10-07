@@ -14,7 +14,7 @@ Reprise après coupure : lire ce fichier et DECISIONS.md, puis reprendre à la p
 | P7 Fiche urgence n°22 | ✅ | numéros sourcés, PDF lu, A6 une page, ci-dessous |
 | P8 Raccourcis, actions rapides, iCloud | ✅ | plists valides, entrée/réponse iCloud testées, ci-dessous |
 | P9 Démon, tableau de bord, doctor, bout en bout | ✅ | un « jour » de démon simulé, Gmail intact, ci-dessous |
-| P10 Installation | ✅ | scripts lancés pour de vrai sur un Mac imité ; preuve réelle : `./install.sh` sur ton Mac |
+| P10 Installation | ✅ | installée deux fois sur ton Mac : relance launchd 30 s, iCloud 5 à 11 s, intégrité identique (RAPPORT_FINAL §6) |
 | P11 Revue hostile (2 passes) | ✅ | 39 pièges inédits 🟠/🔴, 15 vrais messages ⚪, 6 corrections, RAPPORT_FINAL.md |
 
 ## P0 — Environnement, empreinte, squelette (✅)
@@ -488,3 +488,9 @@ INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 455 fichiers, 0 Laun
   ✅ intégrité des autres projets (fin)
 CHECK OK
 ```
+
+## Après la première installation réelle (✅)
+
+Sur ton Mac : deux `./install.sh` réussis (RAPPORT_FINAL §6). Corrigé ensuite (D-36) : OpenPhish (www + miroir
+officiel GitHub, raison de l'échec dans doctor, nouvel essai toutes les heures), `gmail-relier` qui demande l'adresse
+et teste la connexion, attente du premier tour avant le bilan, inventaire vide expliqué, « capture d'écran déposée ».

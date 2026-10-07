@@ -206,6 +206,7 @@ def etat_agent(systeme: Systeme, lab: str) -> EtatAgent:
 # --- La vérification réelle, sur le Mac, juste après l'installation (P10) ---------------------------------------------
 TEXTE_VERIF = "Bonjour, ceci est un test de Bouclier pour vérifier l'installation. Il n'y a rien à faire."
 ILLISIBLE = "⚠️ Je n'ai pas pu lire"
+PREMIER_TOUR = ("flux", "fuites", "inventaire", "urgence")
 
 
 def _attendre_que(condition: Callable[[], bool], delai: float, attendre: Callable[[float], None],
@@ -238,7 +239,8 @@ def image_de_test(chemin: Path) -> bool:
 
 def verifier_reel(chemins: config.Chemins, reglages: dict[str, Any], base: Base, systeme: Systeme,
                   attendre: Callable[[float], None] = time.sleep, horloge: Callable[[], float] = time.time,
-                  delai_relance: float = 90, delai_reponse: float = 60) -> Bilan:  # fmt: skip
+                  delai_relance: float = 90, delai_reponse: float = 60,
+                  delai_premier_tour: float = 180) -> Bilan:  # fmt: skip
     """Le démon tourne, est relancé par launchd après un `kill`, et répond à une demande déposée dans iCloud
     (texte et capture d'écran) ; les fichiers de test sont retirés ensuite."""
     b = Bilan()
@@ -264,30 +266,45 @@ def verifier_reel(chemins: config.Chemins, reglages: dict[str, Any], base: Base,
         return b
     b.fait.append(f"kill {avant.pid} : relancé par launchd en {int(duree)} s (pid {nouveau[-1]})")
 
+    _aller_retour_icloud(b, chemins, base, attendre, horloge, delai_reponse)
+
+    # Le premier tour du démon (relancé juste avant) : sans lui, le bilan de doctor afficherait « jamais ».
+    def premier_tour() -> bool:
+        return all(base.lire_meta(f"prochain:{t}") is not None for t in PREMIER_TOUR)
+
+    duree = _attendre_que(premier_tour, delai_premier_tour, attendre, horloge, pas=3.0)
+    if duree is None:
+        b.avertissements.append("le premier tour (listes, fuites, inventaire, fiche urgence) continue en fond :"
+                                " relance bouclier doctor dans quelques minutes")  # fmt: skip
+    else:
+        b.fait.append(f"premier tour de surveillance terminé en {int(duree)} s (listes, fuites, inventaire, fiche)")
+    return b
+
+
+def _aller_retour_icloud(b: Bilan, chemins: config.Chemins, base: Base, attendre: Callable[[float], None],
+                         horloge: Callable[[], float], delai_reponse: float) -> None:  # fmt: skip
     if not chemins.icloud.is_dir():
         b.avertissements.append("iCloud Drive/Bouclier absent : aller-retour du raccourci non vérifié")
-        return b
+        return
     entree, reponses = chemins.icloud / "entree", chemins.icloud / "reponses"
     entree.mkdir(parents=True, exist_ok=True)
     nom = f"{PREFIXE_VERIF}{int(horloge())}"
-    essais = [(entree / f"{nom}-texte.txt", "texte")]
+    essais = [(entree / f"{nom}-texte.txt", "texte déposé")]
     (entree / f"{nom}-texte.txt").write_text(TEXTE_VERIF, encoding="utf-8")
     if image_de_test(entree / f"{nom}-capture.png"):
-        essais.append((entree / f"{nom}-capture.png", "capture d'écran"))
+        essais.append((entree / f"{nom}-capture.png", "capture d'écran déposée"))
     try:
-        for fichier, genre in essais:
+        for fichier, quoi in essais:
             reponse = reponses / f"{fichier.stem}.txt"
             duree = _attendre_que(reponse.exists, delai_reponse, attendre, horloge)
             if duree is None:
-                b.refus.append(f"{genre} déposé dans iCloud : pas de réponse en {int(delai_reponse)} s")
+                b.refus.append(f"{quoi} dans iCloud : pas de réponse en {int(delai_reponse)} s")
                 continue
             texte = reponse.read_text(encoding="utf-8")
             if texte.startswith(ILLISIBLE):
-                b.avertissements.append(f"{genre} : reçu mais pas lu ({texte.splitlines()[0][:120]})")
+                b.avertissements.append(f"{quoi} dans iCloud : reçue mais pas lue ({texte.splitlines()[0][:120]})")
             else:
-                b.fait.append(
-                    f"{genre} déposé dans iCloud : réponse du démon en {int(duree)} s ({texte.splitlines()[0]})"
-                )
+                b.fait.append(f"{quoi} dans iCloud : réponse du démon en {int(duree)} s ({texte.splitlines()[0]})")
     finally:
         for fichier, _ in essais:
             for f in (fichier, reponses / f"{fichier.stem}.txt"):
@@ -295,4 +312,3 @@ def verifier_reel(chemins: config.Chemins, reglages: dict[str, Any], base: Base,
             with base.transaction() as cx:
                 cx.execute("DELETE FROM entrees_vues WHERE chemin = ?", (str(fichier),))
         b.fait.append("fichiers de test retirés d'iCloud")
-    return b

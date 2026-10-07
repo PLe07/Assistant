@@ -23,7 +23,7 @@ def etat(reglages: dict[str, Any], systeme: Systeme) -> tuple[bool, str]:
     if not g.get("active", True):
         return False, "surveillance Gmail coupée dans config.toml"
     if not g.get("adresse"):
-        return False, "Gmail pas encore relié : mets ton adresse dans config.toml (voir ACTIONS_HUMAINES.md)"
+        return False, "Gmail pas encore relié : lance bouclier gmail-relier (voir ACTIONS_HUMAINES.md)"
     if not systeme.trousseau_lire(ELEMENT_TROUSSEAU, g["adresse"]):
         return False, "mot de passe d'application Gmail absent : bouclier gmail-relier (voir ACTIONS_HUMAINES.md)"
     return True, f"Gmail relié en lecture seule ({g['adresse']})"
@@ -35,5 +35,6 @@ def ouvrir(reglages: dict[str, Any], systeme: Systeme, fabrique: Fabrique = _fab
         raise GmailNonRelie(message)
     adresse = reglages["gmail"]["adresse"]
     lecteur = LecteurImap(fabrique)
-    lecteur.connecter(adresse, systeme.trousseau_lire(ELEMENT_TROUSSEAU, adresse) or "")
+    # Google affiche le mot de passe d'application par groupes de 4 lettres : les espaces collés avec sont retirés.
+    lecteur.connecter(adresse, (systeme.trousseau_lire(ELEMENT_TROUSSEAU, adresse) or "").replace(" ", ""))
     return lecteur

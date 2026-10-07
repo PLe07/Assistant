@@ -139,9 +139,24 @@ def test_cli_inventaire_comptes_compte(maison: Path, capsys: pytest.CaptureFixtu
 def test_cli_gmail_relier(capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch) -> None:
     secrets: dict[str, str] = {}
     mac = _mac(secrets)
-    monkeypatch.setattr(Systeme, "interactif", lambda self, args: (secrets.update({"bouclier-gmail": "x"}), 0)[1])
+    monkeypatch.setattr(
+        Systeme, "interactif", lambda self, args: (secrets.update({"bouclier-gmail": "abcd efgh"}), 0)[1]
+    )
+    boite = FauxImap(generer()[0])
+    boite.mot_de_passe = "abcdefgh"  # collé avec les espaces de l'affichage de Google : ils sont retirés
+    monkeypatch.setattr(cli, "FABRIQUE_IMAP", lambda serveur: boite)
     assert cli.main(["gmail-relier", "pas-une-adresse"], mac) == 1
-    assert cli.main(["gmail-relier", "Camille@Example.org"], mac) == 0
+    # « ADRESSE » tapé tel quel, dans le Terminal : l'adresse est demandée.
+    monkeypatch.setattr("sys.stdin.isatty", lambda: True)
+    monkeypatch.setattr("builtins.input", lambda invite: "Camille@Example.org")
+    assert cli.main(["gmail-relier", "ADRESSE"], mac) == 0
     assert 'adresse = "camille@example.org"' in config.chemins().config.read_text(encoding="utf-8")
-    assert "✅ Gmail relié en lecture seule" in capsys.readouterr().out
+    sortie = capsys.readouterr().out
+    assert "✅ Gmail relié en lecture seule" in sortie and "connexion réussie" in sortie
+    assert boite.violations == [] and not any(c[0] in ("STORE", "SELECT") for c in boite.commandes)
+    base = db.ouvrir(config.chemins().base)
+    assert base.lire_meta("prochain:gmail") == "0" and base.lire_meta("prochain:inventaire") == "0"
+    boite.mot_de_passe = "autre"  # mauvais mot de passe collé : message clair
+    assert cli.main(["gmail-relier", "camille@example.org"], mac) == 1
+    assert "pas ton mot de passe Google" in capsys.readouterr().out
     assert cli.main(["gmail-relier", "a@b.fr"], Systeme(lambda a, e, d: Resultat(0, ""), mac=False)) == 1

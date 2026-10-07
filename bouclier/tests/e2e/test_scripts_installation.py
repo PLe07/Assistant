@@ -222,6 +222,7 @@ def test_install_et_uninstall_pour_de_vrai_deux_fois(mac_imite: dict[str, str]) 
     assert "relancé par launchd en" in sortie  # kill puis relance
     assert "texte déposé dans iCloud : réponse du démon en" in sortie
     assert "fichiers de test retirés d'iCloud" in sortie
+    assert "premier tour de surveillance terminé en" in sortie  # bilan de doctor fait après le premier tour
     assert "✅ démon : com.camille.bouclier tourne" in sortie  # doctor
     assert sortie.count("INTÉGRITÉ OK") >= 2 and "✅ Bouclier est installé" in sortie
 

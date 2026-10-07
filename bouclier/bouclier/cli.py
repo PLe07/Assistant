@@ -15,6 +15,7 @@ from pathlib import Path
 from typing import Any
 
 from bouclier import config, db, journal, reseau
+from bouclier.comptes.imap_lecture_seule import Fabrique, _fabrique_reelle
 from bouclier.systeme import Systeme
 
 
@@ -152,25 +153,45 @@ def cmd_compte(args: argparse.Namespace, env: Environnement) -> int:
     return 0
 
 
+# Remplacée dans les tests par une boîte imitée.
+FABRIQUE_IMAP: Fabrique = _fabrique_reelle
+
+
 def cmd_gmail_relier(args: argparse.Namespace, env: Environnement) -> int:
     from bouclier import gmail
 
-    adresse = args.adresse.strip().lower()
+    adresse = (args.adresse or "").strip().lower()
+    if "@" not in adresse and sys.stdin.isatty():
+        adresse = input("Ton adresse Gmail : ").strip().lower()
     if "@" not in adresse:
-        _ecrire("Donne ton adresse : bouclier gmail-relier <ton adresse Gmail>")
+        _ecrire("Donne ton adresse Gmail complète : bouclier gmail-relier (puis tape ton adresse)")
         return 1
     config.ecrire_modele_si_absent(env.chemins)
     texte = env.chemins.config.read_text(encoding="utf-8")
     if 'adresse = ""' in texte:
         env.chemins.config.write_text(texte.replace('adresse = ""', f'adresse = "{adresse}"', 1), encoding="utf-8")
-    _ecrire("Colle le mot de passe d'application (16 lettres) quand le Mac te le demande, puis Entrée :")
+    _ecrire("Colle le mot de passe d'application (16 lettres, créé sur https://myaccount.google.com/apppasswords),"
+            " puis Entrée, deux fois. Rien ne s'affiche quand tu colles : c'est normal.")  # fmt: skip
     if not env.systeme.trousseau_ecrire_interactif(gmail.ELEMENT_TROUSSEAU, adresse):
         _ecrire("❌ Le mot de passe n'a pas été rangé dans le trousseau (sur le Mac seulement).")
         return 1
     reglages = config.charger_ou_defauts(env.chemins)[0]
     ok, message = gmail.etat(reglages, env.systeme)
-    _ecrire(("✅ " if ok else "❌ ") + message)
-    return 0 if ok else 1
+    if not ok:
+        _ecrire("❌ " + message)
+        return 1
+    try:  # on vérifie tout de suite, en lecture seule
+        with gmail.ouvrir(reglages, env.systeme, FABRIQUE_IMAP) as lecteur:
+            nombre, _ = lecteur.examiner("INBOX")
+    except gmail.ErreurImap as e:
+        _ecrire(f"❌ {e}\nColle bien le mot de passe d'application (pas ton mot de passe Google), puis relance :"
+                " bouclier gmail-relier")  # fmt: skip
+        return 1
+    for tache in ("gmail", "inventaire"):  # le démon s'y met dans les secondes qui suivent, sans attendre son heure
+        env.base.ecrire_meta(f"prochain:{tache}", "0")
+    _ecrire(f"✅ {message} : connexion réussie, {nombre} messages dans ta boîte de réception (rien n'est modifié).")
+    _ecrire("L'inventaire de tes comptes commence maintenant ; résultat dans quelques minutes : bouclier comptes")
+    return 0
 
 
 # --- Fuites (n°19) -------------------------------------------------------------------------------------------------
@@ -379,7 +400,7 @@ def analyseur() -> argparse.ArgumentParser:
     x.set_defaults(fonction=cmd_installation)
 
     g = sous.add_parser("gmail-relier", help="ranger le mot de passe d'application Gmail dans le trousseau")
-    g.add_argument("adresse")
+    g.add_argument("adresse", nargs="?", default="", help="ton adresse Gmail (sinon, elle t'est demandée)")
     g.set_defaults(fonction=cmd_gmail_relier)
     return p
 

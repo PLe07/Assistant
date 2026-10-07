@@ -378,7 +378,11 @@ def test_verification_reelle_imitee(maison: Path) -> None:
     b = verifier()
     assert b.refus == [] and "kill 100 : relancé par launchd en 0 s (pid 101)" in b.fait
     assert any(f.startswith("texte déposé dans iCloud : réponse du démon") for f in b.fait)
-    assert any(a.startswith("capture d'écran : reçu mais pas lu") for a in b.avertissements)
+    assert any(a.startswith("capture d'écran déposée dans iCloud : reçue mais pas lue") for a in b.avertissements)
+    assert any(a.startswith("le premier tour") for a in b.avertissements)  # le démon imité ne fait pas de tour
+    for tache in installation.PREMIER_TOUR:
+        base.ecrire_meta(f"prochain:{tache}", "1")
+    assert any(f.startswith("premier tour de surveillance terminé en 0 s") for f in verifier().fait)
     assert list((c.icloud / "entree").iterdir()) == [] and list((c.icloud / "reponses").iterdir()) == []
 
     repond[0] = False
@@ -424,3 +428,18 @@ def test_portes_pour_l_assistant(mac: Environnement, capsys: pytest.CaptureFixtu
     assert cli.main(["verifier", "--json", ARNAQUE_CORPS.decode()], systeme) == 0
     r = json.loads(capsys.readouterr().out.strip())
     assert r["niveau"] == "arnaque" and r["pastille"] == "🔴" and r["raisons"] and r["gestes"]
+
+
+def test_doctor_explique_un_inventaire_vide_et_une_liste_ratee(mac: Environnement) -> None:
+    c, base, systeme, _, _, _, t = mac
+    base.ecrire_meta("inventaire_le", str(t[0]))
+    base.ecrire_meta("inventaire_navigateurs", "")
+    reglages = config.charger(c)
+    reglages["gmail"]["adresse"] = ""
+    lignes = {b: x for _, b, x in doctor.verifier(c, reglages, base, systeme, maintenant=t[0])}
+    assert "navigateurs lus : aucun" in lignes["inventaire"] and "Safari n'est jamais lu" in lignes["inventaire"]
+    assert "bouclier gmail-relier" in lignes["inventaire"] and "bouclier gmail-relier" in lignes["Gmail"]
+    c.caches.mkdir(parents=True, exist_ok=True)
+    (c.caches / "flux-erreurs.json").write_text('{"OpenPhish": "openphish.com : HTTP 403"}', encoding="utf-8")
+    lignes = {b: x for _, b, x in doctor.verifier(c, reglages, base, systeme, maintenant=t[0])}
+    assert "dernier essai raté (openphish.com : HTTP 403), nouvel essai toutes les heures" in lignes["liste OpenPhish"]

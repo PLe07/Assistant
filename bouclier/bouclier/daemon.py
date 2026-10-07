@@ -122,8 +122,8 @@ class Demon:
             tour.fait.append(f"Gmail : {r.analyses} message(s) analysé(s)")
 
     def _flux(self, tour: Tour) -> None:
-        etats = Flux(self.chemins.caches, self.c.telecharger).mettre_a_jour()
-        self._planifier("flux", JOUR_S)
+        etats = Flux(self.chemins.caches, self.c.telecharger).mettre_a_jour(forcer=False)
+        self._planifier("flux", RETRY_S if any(e.erreur for e in etats) else JOUR_S)
         tour.fait.append("flux : " + ", ".join(f"{e.nom} {'OK' if not e.erreur else e.erreur}" for e in etats))
 
     def _inventaire(self, reglages: dict[str, Any], tour: Tour) -> None:

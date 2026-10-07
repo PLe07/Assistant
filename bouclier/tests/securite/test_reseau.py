@@ -51,6 +51,16 @@ def test_hotes_refuses(hote: str) -> None:
     assert not reseau.hote_autorise(hote)
 
 
+def test_miroir_openphish_seulement_son_chemin() -> None:
+    """raw.githubusercontent.com est partagé par des millions de dépôts : seul le flux d'OpenPhish y est permis."""
+    assert reseau.verifier_url("https://raw.githubusercontent.com/openphish/public_feed/main/feed.txt")
+    assert reseau.verifier_url("https://www.openphish.com/feed.txt") == "www.openphish.com"
+    for url in ("https://raw.githubusercontent.com/pirate/depot/main/x.sh",
+                "https://raw.githubusercontent.com/openphish/autre/main/x"):  # fmt: skip
+        with pytest.raises(reseau.HoteInterdit):
+            reseau.verifier_url(url)
+
+
 def test_telecharger_refuse_sans_contacter(espion_reseau: Any) -> None:
     with pytest.raises(reseau.HoteInterdit):
         reseau.telecharger("https://colissimo-suivi-frais.top/payer")

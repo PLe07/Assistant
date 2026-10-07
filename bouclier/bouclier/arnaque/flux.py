@@ -1,6 +1,6 @@
 """Les flux publics de liens piégés, téléchargés en entier une fois par jour puis consultés **sur le Mac**.
 
-- OpenPhish (flux communautaire gratuit) : https://openphish.com/feed.txt
+- OpenPhish (flux communautaire gratuit) : https://openphish.com/feed.txt, ou son miroir officiel sur GitHub ;
 - URLhaus (abuse.ch) : https://urlhaus.abuse.ch/downloads/text_online/
 
 Aucun lien n'est envoyé à ces services : c'est toi qui télécharges leur liste, la recherche se fait en local.
@@ -9,6 +9,7 @@ Si un flux est indisponible, la copie de la veille reste utilisée (et `doctor` 
 
 from __future__ import annotations
 
+import json
 import os
 import time
 import urllib.parse
@@ -20,9 +21,14 @@ from bouclier import reseau
 from bouclier.arnaque import liens
 
 SOURCES = {
-    "OpenPhish": "https://openphish.com/feed.txt",
-    "URLhaus": "https://urlhaus.abuse.ch/downloads/text_online/",
+    # Le miroir officiel sur GitHub (mis à jour toutes les 12 h) si openphish.com refuse ou ne répond pas.
+    "OpenPhish": (
+        "https://openphish.com/feed.txt",
+        "https://raw.githubusercontent.com/openphish/public_feed/main/feed.txt",
+    ),
+    "URLhaus": ("https://urlhaus.abuse.ch/downloads/text_online/",),
 }
+FRAIS_S = 20 * 3600  # une liste plus récente n'est pas retéléchargée (le démon retente les autres toutes les heures)
 # Sur ces hôtes, chaque page appartient à quelqu'un de différent : seule l'adresse exacte compte.
 _HOTES_PARTAGES = liens.RACCOURCISSEURS | liens.HEBERGEURS_PAR_CHEMIN | liens.MESSAGERIES | {
     "google.com", "www.google.com", "drive.google.com", "dropbox.com", "www.dropbox.com", "onedrive.live.com",
@@ -62,22 +68,50 @@ class Flux:
     def _fichier(self, nom: str) -> Path:
         return self.dossier / f"flux-{nom.lower()}.txt"
 
-    def mettre_a_jour(self) -> list[EtatFlux]:
+    def _fichier_erreurs(self) -> Path:
+        return self.dossier / "flux-erreurs.json"
+
+    def _erreurs(self) -> dict[str, str]:
+        try:
+            data = json.loads(self._fichier_erreurs().read_text(encoding="utf-8"))
+            return {str(k): str(v) for k, v in data.items()} if isinstance(data, dict) else {}
+        except (OSError, ValueError):
+            return {}
+
+    def mettre_a_jour(self, forcer: bool = True) -> list[EtatFlux]:
+        """Télécharge chaque liste (sauf, sans `forcer`, celles de moins de 20 h). La raison d'un échec est gardée
+        pour `doctor` ; la copie précédente reste utilisée."""
         self.dossier.mkdir(parents=True, exist_ok=True)
+        erreurs = self._erreurs()
         etats = []
-        for nom, url in SOURCES.items():
-            erreur = ""
-            try:
-                r = self.telecharger(url, delai=60, max_octets=80_000_000)
-                if r.statut == 200 and r.corps.strip():
-                    temporaire = self._fichier(nom).with_suffix(".tmp")
-                    temporaire.write_bytes(r.corps)
-                    os.replace(temporaire, self._fichier(nom))
-                else:
-                    erreur = f"HTTP {r.statut}"
-            except (reseau.ErreurReseau, reseau.HoteInterdit) as e:
-                erreur = str(e)
-            etats.append(self._etat(nom, erreur))
+        for nom, urls in SOURCES.items():
+            f = self._fichier(nom)
+            if not forcer and f.exists() and time.time() - f.stat().st_mtime < FRAIS_S:
+                erreurs.pop(nom, None)
+                etats.append(self._etat(nom))
+                continue
+            echecs: list[str] = []
+            for url in urls:
+                hote = urllib.parse.urlsplit(url).hostname
+                try:
+                    r = self.telecharger(url, delai=60, max_octets=80_000_000)
+                    if r.statut == 200 and r.corps.strip():
+                        temporaire = f.with_suffix(".tmp")
+                        temporaire.write_bytes(r.corps)
+                        os.replace(temporaire, f)
+                        echecs = []
+                        break
+                    echecs.append(f"{hote} : HTTP {r.statut}")
+                except (reseau.ErreurReseau, reseau.HoteInterdit) as e:
+                    echecs.append(str(e))
+            if echecs:
+                erreurs[nom] = " ; ".join(echecs)
+            else:
+                erreurs.pop(nom, None)
+            etats.append(self._etat(nom, erreurs.get(nom, "")))
+        temporaire = self._fichier_erreurs().with_suffix(".tmp")
+        temporaire.write_text(json.dumps(erreurs, ensure_ascii=False), encoding="utf-8")
+        os.replace(temporaire, self._fichier_erreurs())
         self._charge_le = 0.0
         return etats
 
@@ -89,7 +123,8 @@ class Flux:
         return EtatFlux(nom, f.stat().st_mtime, lignes, erreur)
 
     def etats(self) -> list[EtatFlux]:
-        return [self._etat(nom) for nom in SOURCES]
+        erreurs = self._erreurs()
+        return [self._etat(nom, erreurs.get(nom, "")) for nom in SOURCES]
 
     def _charger(self) -> None:
         dates = [self._fichier(n).stat().st_mtime for n in SOURCES if self._fichier(n).exists()]

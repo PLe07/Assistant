@@ -59,6 +59,7 @@ def lancer(
             inv.comptes[domaine].service = dataclasses.replace(inv.comptes[domaine].service, categorie=categorie)
     inventaire.enregistrer(base, inv)
     base.ecrire_meta("inventaire_le", str(time.time()))
+    base.ecrire_meta("inventaire_navigateurs", ", ".join(releve.navigateurs))
     totaux = inventaire.compter(base)
     nouveaux = sorted(i for i, c in inv.comptes.items() if c.nature == "compte" and i not in deja)
     resultat = ResultatInventaire(etat_gmail, releve.navigateurs, totaux.get("compte", 0), totaux.get("abonnement", 0),

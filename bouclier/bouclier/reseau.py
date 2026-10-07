@@ -4,7 +4,8 @@ Hôtes permis, et seulement ceux-là :
 - l'API Anthropic (avis de l'IA) ;
 - Have I Been Pwned (liste publique des fuites) ;
 - rdap.org et les serveurs RDAP qu'il désigne (date de création d'un nom de domaine) ;
-- les flux publics de liens piégés : OpenPhish (communauté) et URLhaus (abuse.ch), téléchargés en entier ;
+- les flux publics de liens piégés : OpenPhish (communauté, ou son miroir officiel sur GitHub, cette adresse-là
+  seulement) et URLhaus (abuse.ch), téléchargés en entier ;
 - les sites officiels qui servent à vérifier les numéros utiles et les réflexes ;
 - Gmail en IMAP.
 
@@ -37,6 +38,7 @@ HOTES_EXACTS = frozenset(
         "haveibeenpwned.com",
         "rdap.org",
         "openphish.com",
+        "www.openphish.com",
         "urlhaus.abuse.ch",
         "imap.gmail.com",
     }
@@ -51,6 +53,10 @@ DOMAINES_OFFICIELS = (
     "centres-antipoison.net",
     "ars.sante.fr",  # agences régionales de santé (pharmacies de garde)
 )
+
+# Hôtes partagés par des milliers de comptes : seule une adresse précise y est permise. Le miroir officiel du flux
+# communautaire d'OpenPhish (github.com/openphish/public_feed), utilisé si openphish.com refuse ou ne répond pas.
+CHEMINS_PERMIS = {"raw.githubusercontent.com": ("/openphish/public_feed/",)}
 
 # Hors processus (installation seulement) : les paquets Python.
 HOTES_INSTALLATION = ("pypi.org", "files.pythonhosted.org")
@@ -84,7 +90,7 @@ def est_local(hote: str) -> bool:
 
 def hote_autorise(hote: str) -> bool:
     h = _normaliser(hote)
-    if h in HOTES_EXACTS or est_officiel(h):
+    if h in HOTES_EXACTS or h in CHEMINS_PERMIS or est_officiel(h):
         return True
     with _verrou:
         return h in _rdap_designes
@@ -115,6 +121,8 @@ def verifier_url(url: str) -> str:
     hote = _normaliser(morceaux.hostname or "")
     if not hote_autorise(hote):
         raise HoteInterdit(f"hôte hors liste blanche : {hote or '(vide)'}")
+    if hote in CHEMINS_PERMIS and not morceaux.path.startswith(CHEMINS_PERMIS[hote]):
+        raise HoteInterdit(f"adresse hors liste blanche : {hote}{morceaux.path}")
     return hote
 
 
