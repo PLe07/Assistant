@@ -1,0 +1,62 @@
+{
+ "fruits_legumes": {
+  "nom": "Fruits et légumes",
+  "emoji": "🥬",
+  "ordre": 1
+ },
+ "boucherie": {
+  "nom": "Boucherie, volaille",
+  "emoji": "🥩",
+  "ordre": 2
+ },
+ "poissonnerie": {
+  "nom": "Poissonnerie",
+  "emoji": "🐟",
+  "ordre": 3
+ },
+ "cremerie": {
+  "nom": "Crèmerie, œufs, fromages",
+  "emoji": "🧀",
+  "ordre": 4
+ },
+ "frais": {
+  "nom": "Charcuterie, traiteur, frais",
+  "emoji": "🥓",
+  "ordre": 5
+ },
+ "boulangerie": {
+  "nom": "Pain",
+  "emoji": "🥖",
+  "ordre": 6
+ },
+ "epicerie": {
+  "nom": "Pâtes, riz, féculents",
+  "emoji": "🍝",
+  "ordre": 7
+ },
+ "conserves": {
+  "nom": "Conserves, sauces",
+  "emoji": "🥫",
+  "ordre": 8
+ },
+ "monde": {
+  "nom": "Produits du monde",
+  "emoji": "🌮",
+  "ordre": 9
+ },
+ "condiments": {
+  "nom": "Épices, huiles, condiments",
+  "emoji": "🧂",
+  "ordre": 10
+ },
+ "sucre": {
+  "nom": "Épicerie sucrée, fruits secs",
+  "emoji": "🍯",
+  "ordre": 11
+ },
+ "surgeles": {
+  "nom": "Surgelés",
+  "emoji": "❄️",
+  "ordre": 12
+ }
+}

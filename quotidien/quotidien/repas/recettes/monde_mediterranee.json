@@ -1,0 +1,2953 @@
+[
+ {
+  "id": "tortilla-patatas",
+  "nom": "Tortilla de patatas",
+  "famille": "monde_mediterranee",
+  "portions": 4,
+  "ingredients": [
+   {
+    "id": "pomme_de_terre",
+    "quantite": 600.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "oeuf",
+    "quantite": 6.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 60.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "salade",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Coupe les pommes de terre en fines lamelles et l'oignon en lanières. Fais-les cuire 20 min à feu doux dans l'huile, à couvert, sans les dorer : elles doivent être tendres.",
+   "Bats les œufs avec du sel, ajoute les pommes de terre égouttées et laisse reposer 5 min.",
+   "Verse dans la poêle chaude, laisse prendre 5 min à feu doux, retourne la tortilla à l'aide d'une assiette et cuis encore 3 à 4 min : le centre doit être pris.",
+   "Sers tiède ou froide, avec la salade."
+  ],
+  "preparation_min": 15,
+  "cuisson_min": 30,
+  "temps_total_min": 45,
+  "difficulte": "moyen",
+  "cuisine": "espagnole",
+  "proteine": "oeuf",
+  "feculent": "pomme_de_terre",
+  "cout_total_eur": 4.1,
+  "cout_portion_eur": 1.02,
+  "saisons": [
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "produits_saisonniers": [
+   "pomme_de_terre",
+   "salade"
+  ],
+  "etiquettes": [
+   "transportable",
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "sans_four",
+   "pas_cher"
+  ],
+  "allergenes": [
+   "oeufs"
+  ],
+  "ustensiles": [
+   "poêle avec couvercle",
+   "saladier"
+  ],
+  "equipement": [],
+  "conservation_jours": 2,
+  "conservation": "Restes : 2 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "gaspacho",
+  "nom": "Gaspacho",
+  "famille": "monde_mediterranee",
+  "portions": 4,
+  "ingredients": [
+   {
+    "id": "tomate",
+    "quantite": 6.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "concombre",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "poivron",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "oignon_rouge",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 30.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "vinaigre",
+    "quantite": 15.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "pain",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": "un peu pour mixer, le reste en accompagnement"
+   }
+  ],
+  "etapes": [
+   "Coupe grossièrement les tomates, le concombre épluché, le poivron, l'oignon et l'ail.",
+   "Mixe très finement avec un morceau de pain, l'huile, le vinaigre, sel et poivre ; ajoute un peu d'eau froide si c'est trop épais.",
+   "Laisse au moins 1 h au frais et sers bien froid avec le pain."
+  ],
+  "preparation_min": 20,
+  "cuisson_min": 0,
+  "temps_total_min": 20,
+  "difficulte": "facile",
+  "cuisine": "espagnole",
+  "proteine": "aucune",
+  "feculent": "pain",
+  "cout_total_eur": 5.41,
+  "cout_portion_eur": 1.35,
+  "saisons": [
+   7,
+   8,
+   9
+  ],
+  "produits_saisonniers": [
+   "tomate",
+   "concombre",
+   "poivron"
+  ],
+  "etiquettes": [
+   "soupe",
+   "froid",
+   "leger",
+   "rapide",
+   "vegetarien",
+   "vegan",
+   "sans_porc",
+   "pescetarien",
+   "sans_four",
+   "sans_cuisson",
+   "pas_cher"
+  ],
+  "allergenes": [
+   "gluten",
+   "sulfites"
+  ],
+  "ustensiles": [
+   "mixeur",
+   "saladier"
+  ],
+  "equipement": [
+   "mixeur"
+  ],
+  "conservation_jours": 2,
+  "conservation": "Restes : 2 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "paella",
+  "nom": "Paella au poulet, chorizo et crevettes",
+  "famille": "monde_mediterranee",
+  "portions": 4,
+  "ingredients": [
+   {
+    "id": "riz_rond",
+    "quantite": 300.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "poulet_filet",
+    "quantite": 300.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "chorizo",
+    "quantite": 100.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "crevette",
+    "quantite": 200.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "poivron",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "petit_pois",
+    "quantite": 150.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "tomate_concassee",
+    "quantite": 400.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "paprika",
+    "quantite": 2.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "curcuma",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "bouillon_cube",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 30.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais dorer le poulet en cubes et le chorizo en rondelles dans l'huile 6 min ; réserve.",
+   "Fais revenir l'oignon, l'ail et le poivron 5 min, ajoute les tomates, le paprika et le curcuma.",
+   "Ajoute le riz, mélange, puis 800 ml d'eau chaude avec le cube. Remets poulet et chorizo et cuis 18 min sans remuer.",
+   "Ajoute crevettes et petits pois 5 min avant la fin. Le riz doit être tendre et le poulet cuit à cœur ; laisse reposer 5 min sous un torchon."
+  ],
+  "preparation_min": 20,
+  "cuisson_min": 35,
+  "temps_total_min": 55,
+  "difficulte": "moyen",
+  "cuisine": "espagnole",
+  "proteine": "volaille",
+  "feculent": "riz",
+  "cout_total_eur": 12.73,
+  "cout_portion_eur": 3.18,
+  "saisons": [
+   7,
+   8,
+   9
+  ],
+  "produits_saisonniers": [
+   "poivron"
+  ],
+  "etiquettes": [
+   "sans_four",
+   "poisson"
+  ],
+  "allergenes": [
+   "gluten",
+   "crustaces",
+   "lait",
+   "celeri"
+  ],
+  "ustensiles": [
+   "grande poêle ou sauteuse"
+  ],
+  "equipement": [],
+  "conservation_jours": 1,
+  "conservation": "Restes : 1 jour au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [
+   "Cuis la volaille à cœur : plus aucune trace rosée, jus clair (74 °C au centre).",
+   "Crevettes surgelées : décongèle-les au réfrigérateur, jamais à température ambiante, et mange-les dans la journée.",
+   "Riz cuit : refroidis-le vite et garde-le 24 h au frigo au plus."
+  ],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "espinacas-garbanzos",
+  "nom": "Pois chiches aux épinards à l'andalouse",
+  "famille": "monde_mediterranee",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "pois_chiche",
+    "quantite": 265.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "epinard_surgele",
+    "quantite": 300.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "cumin",
+    "quantite": 2.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "paprika",
+    "quantite": 2.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "tomate_concassee",
+    "quantite": 200.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 30.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "pain",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais dorer l'ail et le pain en petits cubes dans l'huile, puis les épices 30 secondes.",
+   "Ajoute les tomates, les épinards et les pois chiches ; laisse mijoter 10 min. Sale. Sers chaud avec le reste du pain."
+  ],
+  "preparation_min": 10,
+  "cuisson_min": 15,
+  "temps_total_min": 25,
+  "difficulte": "facile",
+  "cuisine": "espagnole",
+  "proteine": "legumineuse",
+  "feculent": "pain",
+  "cout_total_eur": 2.97,
+  "cout_portion_eur": 1.49,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [],
+  "etiquettes": [
+   "epice",
+   "vegetarien",
+   "vegan",
+   "sans_porc",
+   "pescetarien",
+   "sans_four",
+   "se_garde_3j",
+   "pas_cher"
+  ],
+  "allergenes": [
+   "gluten"
+  ],
+  "ustensiles": [
+   "sauteuse"
+  ],
+  "equipement": [],
+  "conservation_jours": 3,
+  "conservation": "Restes : 3 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "patatas-bravas",
+  "nom": "Patatas bravas et œufs au plat",
+  "famille": "monde_mediterranee",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "pomme_de_terre",
+    "quantite": 600.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 30.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "tomate_concassee",
+    "quantite": 200.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "paprika",
+    "quantite": 2.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "piment",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "oeuf",
+    "quantite": 4.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "salade",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Préchauffe le four à 220 °C. Coupe les pommes de terre en cubes, mélange-les avec l'huile et du sel, et fais-les rôtir 30 à 35 min en les retournant.",
+   "Sauce : fais réduire les tomates avec l'ail, le paprika et le piment 10 min.",
+   "Fais cuire les œufs au plat jusqu'à ce que le blanc soit pris. Sers les pommes de terre nappées de sauce, avec les œufs et la salade."
+  ],
+  "preparation_min": 10,
+  "cuisson_min": 35,
+  "temps_total_min": 45,
+  "difficulte": "facile",
+  "cuisine": "espagnole",
+  "proteine": "oeuf",
+  "feculent": "pomme_de_terre",
+  "cout_total_eur": 3.15,
+  "cout_portion_eur": 1.58,
+  "saisons": [
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "produits_saisonniers": [
+   "pomme_de_terre",
+   "salade"
+  ],
+  "etiquettes": [
+   "airfryer_possible",
+   "epice",
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "au_four"
+  ],
+  "allergenes": [
+   "oeufs"
+  ],
+  "ustensiles": [
+   "four",
+   "plaque",
+   "casserole",
+   "poêle"
+  ],
+  "equipement": [
+   "four"
+  ],
+  "conservation_jours": 0,
+  "conservation": "Ne se garde pas : à manger tout de suite.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "caldo-verde",
+  "nom": "Caldo verde (soupe au chou et au chorizo)",
+  "famille": "monde_mediterranee",
+  "portions": 4,
+  "ingredients": [
+   {
+    "id": "chou_vert",
+    "quantite": 0.3,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "pomme_de_terre",
+    "quantite": 600.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "chorizo",
+    "quantite": 100.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "bouillon_cube",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 30.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "pain",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais revenir l'oignon et l'ail dans l'huile, ajoute les pommes de terre en cubes, le cube et 1,2 litre d'eau ; cuis 20 min.",
+   "Écrase ou mixe grossièrement. Ajoute le chou émincé en très fines lanières et le chorizo en rondelles ; poursuis 8 min.",
+   "Sale, poivre, sers avec le pain."
+  ],
+  "preparation_min": 15,
+  "cuisson_min": 30,
+  "temps_total_min": 45,
+  "difficulte": "facile",
+  "cuisine": "portugaise",
+  "proteine": "porc",
+  "feculent": "pomme_de_terre",
+  "cout_total_eur": 4.06,
+  "cout_portion_eur": 1.01,
+  "saisons": [
+   1,
+   2,
+   3,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [
+   "chou_vert",
+   "pomme_de_terre"
+  ],
+  "etiquettes": [
+   "batch",
+   "soupe",
+   "reconfortant",
+   "sans_four",
+   "se_garde_3j",
+   "pas_cher"
+  ],
+  "allergenes": [
+   "gluten",
+   "lait",
+   "celeri"
+  ],
+  "ustensiles": [
+   "cocotte",
+   "mixeur plongeant ou presse-purée"
+  ],
+  "equipement": [],
+  "conservation_jours": 3,
+  "conservation": "Restes : 3 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "salade-grecque",
+  "nom": "Salade grecque et pain pita",
+  "famille": "monde_mediterranee",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "tomate",
+    "quantite": 3.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "concombre",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "poivron",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "oignon_rouge",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "feta",
+    "quantite": 150.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "olive",
+    "quantite": 40.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "origan",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 30.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "pain_pita",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Coupe tomates, concombre et poivron en gros morceaux, l'oignon en fines lamelles.",
+   "Ajoute les olives, la feta en tranche entière ou en cubes, l'origan, l'huile, poivre. Sers avec les pitas chaudes."
+  ],
+  "preparation_min": 15,
+  "cuisson_min": 0,
+  "temps_total_min": 15,
+  "difficulte": "facile",
+  "cuisine": "grecque",
+  "proteine": "fromage",
+  "feculent": "pain",
+  "cout_total_eur": 5.8,
+  "cout_portion_eur": 2.9,
+  "saisons": [
+   7,
+   8,
+   9
+  ],
+  "produits_saisonniers": [
+   "tomate",
+   "concombre",
+   "poivron"
+  ],
+  "etiquettes": [
+   "salade",
+   "leger",
+   "froid",
+   "rapide",
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "sans_four",
+   "sans_cuisson"
+  ],
+  "allergenes": [
+   "gluten",
+   "lait"
+  ],
+  "ustensiles": [
+   "saladier"
+  ],
+  "equipement": [],
+  "conservation_jours": 0,
+  "conservation": "Ne se garde pas : à manger tout de suite.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "moussaka",
+  "nom": "Moussaka",
+  "famille": "monde_mediterranee",
+  "portions": 6,
+  "ingredients": [
+   {
+    "id": "aubergine",
+    "quantite": 3.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "pomme_de_terre",
+    "quantite": 400.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "boeuf_hache",
+    "quantite": 500.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "tomate_concassee",
+    "quantite": 400.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "cannelle",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "beurre",
+    "quantite": 40.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "farine",
+    "quantite": 40.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "lait",
+    "quantite": 500.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "oeuf",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "fromage_rape",
+    "quantite": 50.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 60.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Préchauffe le four à 200 °C. Coupe aubergines et pommes de terre en tranches, badigeonne-les d'huile et fais-les rôtir 20 min.",
+   "Fais revenir l'oignon et l'ail, ajoute la viande jusqu'à ce qu'elle ne soit plus rosée, puis les tomates et la cannelle ; laisse réduire 15 min.",
+   "Béchamel : beurre, farine, lait ; laisse épaissir, puis ajoute hors du feu l'œuf battu et la moitié du fromage.",
+   "Monte : pommes de terre, aubergines, viande, aubergines, béchamel, fromage. Enfourne 35 min à 180 °C et laisse reposer 15 min."
+  ],
+  "preparation_min": 30,
+  "cuisson_min": 60,
+  "temps_total_min": 90,
+  "difficulte": "avance",
+  "cuisine": "grecque",
+  "proteine": "boeuf",
+  "feculent": "pomme_de_terre",
+  "cout_total_eur": 12.82,
+  "cout_portion_eur": 2.14,
+  "saisons": [
+   7,
+   8,
+   9
+  ],
+  "produits_saisonniers": [
+   "aubergine",
+   "pomme_de_terre"
+  ],
+  "etiquettes": [
+   "gratin",
+   "reconfortant",
+   "sans_porc",
+   "au_four"
+  ],
+  "allergenes": [
+   "gluten",
+   "oeufs",
+   "lait"
+  ],
+  "ustensiles": [
+   "four",
+   "plat à gratin",
+   "plaque",
+   "sauteuse",
+   "casserole",
+   "fouet"
+  ],
+  "equipement": [
+   "four"
+  ],
+  "conservation_jours": 2,
+  "conservation": "Restes : 2 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [
+   "Cuis la viande hachée à cœur : plus de rose au centre (70 °C)."
+  ],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "souvlaki-poulet",
+  "nom": "Souvlaki de poulet et tzatziki",
+  "famille": "monde_mediterranee",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "poulet_filet",
+    "quantite": 300.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "citron",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "origan",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "yaourt_grec",
+    "quantite": 150.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "concombre",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "menthe",
+    "quantite": 5.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "pain_pita",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "tomate",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "oignon_rouge",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 15.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Coupe le poulet en cubes, mélange avec le jus de citron, l'origan, l'huile, sel et poivre.",
+   "Tzatziki : concombre râpé et pressé, yaourt, ail râpé, menthe, sel.",
+   "Fais griller le poulet 10 à 12 min en le retournant, jusqu'à ce qu'il soit cuit à cœur.",
+   "Sers dans les pitas chaudes avec la tomate, l'oignon et le tzatziki."
+  ],
+  "preparation_min": 15,
+  "cuisson_min": 15,
+  "temps_total_min": 30,
+  "difficulte": "facile",
+  "cuisine": "grecque",
+  "proteine": "volaille",
+  "feculent": "pain",
+  "cout_total_eur": 6.34,
+  "cout_portion_eur": 3.17,
+  "saisons": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "produits_saisonniers": [
+   "concombre",
+   "tomate"
+  ],
+  "etiquettes": [
+   "sans_porc",
+   "sans_four"
+  ],
+  "allergenes": [
+   "gluten",
+   "lait"
+  ],
+  "ustensiles": [
+   "poêle ou gril",
+   "saladier",
+   "râpe"
+  ],
+  "equipement": [],
+  "conservation_jours": 1,
+  "conservation": "Restes : 1 jour au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [
+   "Cuis la volaille à cœur : plus aucune trace rosée, jus clair (74 °C au centre)."
+  ],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "gigantes",
+  "nom": "Haricots blancs à la grecque au four",
+  "famille": "monde_mediterranee",
+  "portions": 4,
+  "ingredients": [
+   {
+    "id": "haricot_blanc",
+    "quantite": 530.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "tomate_concassee",
+    "quantite": 400.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "carotte",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "origan",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 40.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "feta",
+    "quantite": 100.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "pain",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Préchauffe le four à 190 °C. Mélange dans le plat les haricots rincés, les tomates, l'oignon et la carotte émincés, l'ail, l'origan, l'huile, sel et poivre.",
+   "Enfourne 40 min en remuant à mi-cuisson : la sauce doit être confite. Émiette la feta dessus et sers avec le pain."
+  ],
+  "preparation_min": 10,
+  "cuisson_min": 40,
+  "temps_total_min": 50,
+  "difficulte": "facile",
+  "cuisine": "grecque",
+  "proteine": "legumineuse",
+  "feculent": "pain",
+  "cout_total_eur": 5.45,
+  "cout_portion_eur": 1.36,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [
+   "carotte"
+  ],
+  "etiquettes": [
+   "batch",
+   "airfryer_possible",
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "au_four",
+   "se_garde_3j",
+   "pas_cher"
+  ],
+  "allergenes": [
+   "gluten",
+   "lait"
+  ],
+  "ustensiles": [
+   "four",
+   "plat à four"
+  ],
+  "equipement": [
+   "four"
+  ],
+  "conservation_jours": 3,
+  "conservation": "Restes : 3 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "mercimek-corba",
+  "nom": "Soupe turque aux lentilles corail",
+  "famille": "monde_mediterranee",
+  "portions": 4,
+  "ingredients": [
+   {
+    "id": "lentille_corail",
+    "quantite": 250.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "carotte",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "pomme_de_terre",
+    "quantite": 150.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "concentre_tomate",
+    "quantite": 20.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "cumin",
+    "quantite": 2.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "paprika",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "bouillon_cube",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "citron",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 20.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "pain",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais revenir l'oignon, la carotte et la pomme de terre en dés 5 min dans l'huile, ajoute le concentré et les épices.",
+   "Ajoute les lentilles rincées, le cube et 1,2 litre d'eau ; laisse cuire 20 min.",
+   "Mixe, sale, et sers avec le citron et le pain."
+  ],
+  "preparation_min": 10,
+  "cuisson_min": 25,
+  "temps_total_min": 35,
+  "difficulte": "facile",
+  "cuisine": "turque",
+  "proteine": "legumineuse",
+  "feculent": "pain",
+  "cout_total_eur": 3.3,
+  "cout_portion_eur": 0.82,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [
+   "carotte",
+   "pomme_de_terre"
+  ],
+  "etiquettes": [
+   "batch",
+   "soupe",
+   "leger",
+   "vegetarien",
+   "vegan",
+   "sans_porc",
+   "pescetarien",
+   "sans_four",
+   "se_garde_3j",
+   "pas_cher"
+  ],
+  "allergenes": [
+   "gluten",
+   "celeri"
+  ],
+  "ustensiles": [
+   "cocotte",
+   "mixeur plongeant ou presse-purée"
+  ],
+  "equipement": [],
+  "conservation_jours": 3,
+  "conservation": "Restes : 3 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "kofte-boulgour",
+  "nom": "Boulettes de bœuf à la turque et boulgour",
+  "famille": "monde_mediterranee",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "boeuf_hache",
+    "quantite": 250.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "persil",
+    "quantite": 10.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "cumin",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "paprika",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "boulgour",
+    "quantite": 140.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "tomate_concassee",
+    "quantite": 200.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "yaourt_grec",
+    "quantite": 100.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 15.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Mélange la viande avec l'oignon râpé, le persil, les épices, sel et poivre ; forme 8 petites boulettes.",
+   "Cuis le boulgour avec les tomates et 200 ml d'eau salée 12 min à couvert.",
+   "Fais dorer les boulettes 8 à 10 min dans l'huile : elles doivent être cuites à cœur, sans trace rosée. Sers avec le boulgour et le yaourt."
+  ],
+  "preparation_min": 15,
+  "cuisson_min": 20,
+  "temps_total_min": 35,
+  "difficulte": "facile",
+  "cuisine": "turque",
+  "proteine": "boeuf",
+  "feculent": "boulgour",
+  "cout_total_eur": 4.98,
+  "cout_portion_eur": 2.49,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [],
+  "etiquettes": [
+   "sans_porc",
+   "sans_four"
+  ],
+  "allergenes": [
+   "gluten",
+   "lait"
+  ],
+  "ustensiles": [
+   "saladier",
+   "poêle",
+   "casserole"
+  ],
+  "equipement": [],
+  "conservation_jours": 2,
+  "conservation": "Restes : 2 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [
+   "Cuis la viande hachée à cœur : plus de rose au centre (70 °C)."
+  ],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "imam-bayildi",
+  "nom": "Aubergines farcies à l'oignon et à la tomate",
+  "famille": "monde_mediterranee",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "aubergine",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "tomate",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "persil",
+    "quantite": 10.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 40.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "boulgour",
+    "quantite": 120.0,
+    "unite": "g",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Préchauffe le four à 190 °C. Coupe les aubergines en deux, entaille la chair en croisillons, huile et fais rôtir 20 min, face coupée en dessous.",
+   "Fais fondre les oignons émincés 10 min dans l'huile, ajoute l'ail, les tomates en dés et le persil ; sale.",
+   "Creuse un peu les aubergines, garnis-les de la fondue et remets au four 20 min. Sers avec le boulgour cuit 12 min."
+  ],
+  "preparation_min": 15,
+  "cuisson_min": 45,
+  "temps_total_min": 60,
+  "difficulte": "moyen",
+  "cuisine": "turque",
+  "proteine": "aucune",
+  "feculent": "boulgour",
+  "cout_total_eur": 4.37,
+  "cout_portion_eur": 2.18,
+  "saisons": [
+   7,
+   8,
+   9
+  ],
+  "produits_saisonniers": [
+   "aubergine",
+   "tomate"
+  ],
+  "etiquettes": [
+   "vegetarien",
+   "vegan",
+   "sans_porc",
+   "pescetarien",
+   "au_four",
+   "se_garde_3j"
+  ],
+  "allergenes": [
+   "gluten"
+  ],
+  "ustensiles": [
+   "four",
+   "plat à four",
+   "poêle",
+   "casserole"
+  ],
+  "equipement": [
+   "four"
+  ],
+  "conservation_jours": 3,
+  "conservation": "Restes : 3 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "taboule",
+  "nom": "Taboulé libanais",
+  "famille": "monde_mediterranee",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "boulgour",
+    "quantite": 60.0,
+    "unite": "g",
+    "note": "fin"
+   },
+   {
+    "id": "persil",
+    "quantite": 60.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "menthe",
+    "quantite": 15.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "tomate",
+    "quantite": 3.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "concombre",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "oignon_rouge",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "citron",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 40.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "pois_chiche",
+    "quantite": 265.0,
+    "unite": "g",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais gonfler le boulgour 15 min dans le jus du citron et 3 c. à soupe d'eau froide.",
+   "Hache finement le persil et la menthe, coupe tomates, concombre et oignon en petits dés.",
+   "Mélange tout avec l'huile, sel et poivre ; ajoute les pois chiches rincés pour en faire un plat complet."
+  ],
+  "preparation_min": 20,
+  "cuisson_min": 0,
+  "temps_total_min": 20,
+  "difficulte": "facile",
+  "cuisine": "libanaise",
+  "proteine": "aucune",
+  "feculent": "boulgour",
+  "cout_total_eur": 6.03,
+  "cout_portion_eur": 3.01,
+  "saisons": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "produits_saisonniers": [
+   "tomate",
+   "concombre"
+  ],
+  "etiquettes": [
+   "salade",
+   "froid",
+   "leger",
+   "transportable",
+   "rapide",
+   "vegetarien",
+   "vegan",
+   "sans_porc",
+   "pescetarien",
+   "sans_four",
+   "sans_cuisson"
+  ],
+  "allergenes": [
+   "gluten"
+  ],
+  "ustensiles": [
+   "saladier"
+  ],
+  "equipement": [],
+  "conservation_jours": 1,
+  "conservation": "Restes : 1 jour au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "fattoush",
+  "nom": "Fattoush (salade au pain grillé)",
+  "famille": "monde_mediterranee",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "pain_pita",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "salade",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "tomate",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "concombre",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "radis",
+    "quantite": 50.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "menthe",
+    "quantite": 10.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "citron",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 30.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "feta",
+    "quantite": 100.0,
+    "unite": "g",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Coupe les pitas en morceaux et fais-les griller 4 min à la poêle sèche.",
+   "Coupe la salade, les tomates, le concombre et les radis.",
+   "Mélange avec la menthe, le jus de citron, l'huile, sel et poivre, puis le pain grillé et la feta au dernier moment."
+  ],
+  "preparation_min": 15,
+  "cuisson_min": 5,
+  "temps_total_min": 20,
+  "difficulte": "facile",
+  "cuisine": "libanaise",
+  "proteine": "fromage",
+  "feculent": "pain",
+  "cout_total_eur": 4.45,
+  "cout_portion_eur": 2.22,
+  "saisons": [
+   6,
+   7
+  ],
+  "produits_saisonniers": [
+   "salade",
+   "tomate",
+   "concombre",
+   "radis"
+  ],
+  "etiquettes": [
+   "salade",
+   "leger",
+   "rapide",
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "sans_four"
+  ],
+  "allergenes": [
+   "gluten",
+   "lait"
+  ],
+  "ustensiles": [
+   "poêle",
+   "saladier"
+  ],
+  "equipement": [],
+  "conservation_jours": 0,
+  "conservation": "Ne se garde pas : à manger tout de suite.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "houmous-maison",
+  "nom": "Houmous maison, crudités et pita",
+  "famille": "monde_mediterranee",
+  "portions": 4,
+  "ingredients": [
+   {
+    "id": "pois_chiche_sec",
+    "quantite": 250.0,
+    "unite": "g",
+    "note": "trempés 12 h la veille"
+   },
+   {
+    "id": "tahini",
+    "quantite": 60.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "citron",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 30.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "cumin",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "carotte",
+    "quantite": 4.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "concombre",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "pain_pita",
+    "quantite": 6.0,
+    "unite": "p",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "La veille : fais tremper les pois chiches dans trois fois leur volume d'eau.",
+   "Jette l'eau de trempage, couvre d'eau neuve et cuis 1 h à petits bouillons, jusqu'à ce qu'ils s'écrasent facilement. Sale en fin de cuisson.",
+   "Mixe les pois chiches tièdes avec le tahini, le citron, l'ail, le cumin, l'huile et assez d'eau de cuisson pour une crème lisse.",
+   "Sers avec les carottes et le concombre en bâtonnets et les pitas chaudes."
+  ],
+  "preparation_min": 20,
+  "cuisson_min": 60,
+  "temps_total_min": 80,
+  "difficulte": "moyen",
+  "cuisine": "libanaise",
+  "proteine": "legumineuse",
+  "feculent": "pain",
+  "cout_total_eur": 4.85,
+  "cout_portion_eur": 1.21,
+  "saisons": [
+   5,
+   6,
+   7,
+   8,
+   9
+  ],
+  "produits_saisonniers": [
+   "carotte",
+   "concombre"
+  ],
+  "etiquettes": [
+   "froid",
+   "transportable",
+   "vegetarien",
+   "vegan",
+   "sans_porc",
+   "pescetarien",
+   "sans_four",
+   "se_garde_3j",
+   "pas_cher"
+  ],
+  "allergenes": [
+   "gluten",
+   "sesame"
+  ],
+  "ustensiles": [
+   "casserole",
+   "mixeur"
+  ],
+  "equipement": [
+   "mixeur"
+  ],
+  "conservation_jours": 3,
+  "conservation": "Restes : 3 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson.",
+  "securite": [
+   "Fais tremper les légumineuses sèches 12 h, puis jette l'eau de trempage avant cuisson."
+  ],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "falafels-four",
+  "nom": "Falafels au four",
+  "famille": "monde_mediterranee",
+  "portions": 4,
+  "ingredients": [
+   {
+    "id": "pois_chiche_sec",
+    "quantite": 250.0,
+    "unite": "g",
+    "note": "trempés 12 h la veille, crus"
+   },
+   {
+    "id": "oignon",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "persil",
+    "quantite": 20.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "coriandre",
+    "quantite": 10.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "cumin",
+    "quantite": 2.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "farine",
+    "quantite": 20.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 30.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "yaourt_grec",
+    "quantite": 150.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "pain_pita",
+    "quantite": 4.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "salade",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "La veille : fais tremper les pois chiches. Jette l'eau et sèche-les (ils se mixent crus).",
+   "Préchauffe le four à 200 °C. Mixe les pois chiches avec l'oignon, l'ail, les herbes, le cumin, la farine et du sel, en une pâte granuleuse qui se tient.",
+   "Forme 20 boulettes aplaties, badigeonne-les d'huile et fais-les cuire 25 min en les retournant : elles doivent être bien dorées et cuites au centre.",
+   "Sers dans les pitas avec la salade et le yaourt salé."
+  ],
+  "preparation_min": 25,
+  "cuisson_min": 25,
+  "temps_total_min": 50,
+  "difficulte": "moyen",
+  "cuisine": "libanaise",
+  "proteine": "legumineuse",
+  "feculent": "pain",
+  "cout_total_eur": 4.55,
+  "cout_portion_eur": 1.14,
+  "saisons": [
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "produits_saisonniers": [
+   "salade"
+  ],
+  "etiquettes": [
+   "airfryer_possible",
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "au_four",
+   "pas_cher"
+  ],
+  "allergenes": [
+   "gluten",
+   "lait"
+  ],
+  "ustensiles": [
+   "four",
+   "plaque",
+   "mixeur",
+   "saladier"
+  ],
+  "equipement": [
+   "four",
+   "mixeur"
+  ],
+  "conservation_jours": 2,
+  "conservation": "Restes : 2 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [
+   "Fais tremper les légumineuses sèches 12 h, puis jette l'eau de trempage avant cuisson."
+  ],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "mujaddara",
+  "nom": "Mujaddara (lentilles, riz et oignons dorés)",
+  "famille": "monde_mediterranee",
+  "portions": 4,
+  "ingredients": [
+   {
+    "id": "lentille_verte",
+    "quantite": 200.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "riz",
+    "quantite": 150.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 3.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "cumin",
+    "quantite": 2.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 40.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "yaourt_grec",
+    "quantite": 200.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "salade",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Cuis les lentilles 15 min dans l'eau, ajoute le riz, le cumin, du sel et un peu d'eau si besoin ; poursuis 15 min à couvert.",
+   "Pendant ce temps, fais dorer les oignons émincés dans l'huile 20 min à feu moyen, jusqu'à ce qu'ils soient bruns et croustillants.",
+   "Sers les lentilles au riz couvertes d'oignons, avec le yaourt et la salade."
+  ],
+  "preparation_min": 10,
+  "cuisson_min": 35,
+  "temps_total_min": 45,
+  "difficulte": "facile",
+  "cuisine": "libanaise",
+  "proteine": "legumineuse",
+  "feculent": "riz",
+  "cout_total_eur": 3.78,
+  "cout_portion_eur": 0.95,
+  "saisons": [
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "produits_saisonniers": [
+   "salade"
+  ],
+  "etiquettes": [
+   "reconfortant",
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "sans_four",
+   "pas_cher"
+  ],
+  "allergenes": [
+   "lait"
+  ],
+  "ustensiles": [
+   "casserole",
+   "poêle"
+  ],
+  "equipement": [],
+  "conservation_jours": 1,
+  "conservation": "Restes : 1 jour au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [
+   "Riz cuit : refroidis-le vite et garde-le 24 h au frigo au plus."
+  ],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "chich-taouk",
+  "nom": "Chich taouk (poulet mariné au citron)",
+  "famille": "monde_mediterranee",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "poulet_filet",
+    "quantite": 300.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "yaourt_grec",
+    "quantite": 100.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "citron",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "paprika",
+    "quantite": 2.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "riz",
+    "quantite": 150.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "tomate",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "concombre",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 15.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Coupe le poulet en cubes et mélange-le avec le yaourt, le jus de citron, l'ail, le paprika et du sel ; laisse au moins 10 min.",
+   "Mets le riz à cuire. Fais dorer le poulet égoutté 10 à 12 min dans l'huile, jusqu'à ce qu'il soit cuit à cœur.",
+   "Sers avec le riz et une salade de tomates et concombre."
+  ],
+  "preparation_min": 15,
+  "cuisson_min": 15,
+  "temps_total_min": 30,
+  "difficulte": "facile",
+  "cuisine": "libanaise",
+  "proteine": "volaille",
+  "feculent": "riz",
+  "cout_total_eur": 6.21,
+  "cout_portion_eur": 3.1,
+  "saisons": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "produits_saisonniers": [
+   "tomate",
+   "concombre"
+  ],
+  "etiquettes": [
+   "sans_porc",
+   "sans_four"
+  ],
+  "allergenes": [
+   "lait"
+  ],
+  "ustensiles": [
+   "saladier",
+   "poêle",
+   "casserole"
+  ],
+  "equipement": [],
+  "conservation_jours": 2,
+  "conservation": "Restes : 2 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [
+   "Cuis la volaille à cœur : plus aucune trace rosée, jus clair (74 °C au centre).",
+   "Riz cuit : refroidis-le vite et garde-le 24 h au frigo au plus."
+  ],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "tajine-poulet-citron",
+  "nom": "Tajine de poulet au citron et aux olives",
+  "famille": "monde_mediterranee",
+  "portions": 4,
+  "ingredients": [
+   {
+    "id": "poulet_cuisse",
+    "quantite": 4.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "citron",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "olive",
+    "quantite": 80.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "curcuma",
+    "quantite": 2.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "gingembre",
+    "quantite": 2.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "cumin",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "coriandre",
+    "quantite": 10.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "semoule",
+    "quantite": 300.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 30.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais dorer les cuisses dans l'huile, réserve. Fais fondre les oignons émincés avec l'ail et les épices 5 min.",
+   "Remets le poulet, ajoute 300 ml d'eau, le citron en quartiers ; couvre et laisse mijoter 40 min : la viande doit se détacher de l'os, jus clair.",
+   "Ajoute les olives 5 min avant la fin. Prépare la semoule (même volume d'eau bouillante salée, 5 min à couvert) et sers avec la coriandre."
+  ],
+  "preparation_min": 20,
+  "cuisson_min": 50,
+  "temps_total_min": 70,
+  "difficulte": "moyen",
+  "cuisine": "marocaine",
+  "proteine": "volaille",
+  "feculent": "semoule",
+  "cout_total_eur": 7.96,
+  "cout_portion_eur": 1.99,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [],
+  "etiquettes": [
+   "batch",
+   "sans_porc",
+   "sans_four",
+   "se_garde_3j"
+  ],
+  "allergenes": [
+   "gluten"
+  ],
+  "ustensiles": [
+   "cocotte",
+   "saladier"
+  ],
+  "equipement": [],
+  "conservation_jours": 3,
+  "conservation": "Restes : 3 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [
+   "Cuis la volaille à cœur : plus aucune trace rosée, jus clair (74 °C au centre)."
+  ],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "couscous-legumes-merguez",
+  "nom": "Couscous aux légumes et merguez",
+  "famille": "monde_mediterranee",
+  "portions": 4,
+  "ingredients": [
+   {
+    "id": "merguez",
+    "quantite": 6.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "carotte",
+    "quantite": 3.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "courgette",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "navet",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "pois_chiche",
+    "quantite": 265.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "tomate_concassee",
+    "quantite": 400.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "ras_el_hanout",
+    "quantite": 4.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "bouillon_cube",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "semoule",
+    "quantite": 300.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 20.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais revenir l'oignon et le ras el-hanout dans l'huile, ajoute carottes et navets en tronçons, les tomates, le cube et 1 litre d'eau ; cuis 20 min.",
+   "Ajoute les courgettes et les pois chiches, poursuis 15 min.",
+   "Fais griller les merguez 10 min à la poêle, jusqu'à ce qu'elles soient cuites à cœur.",
+   "Prépare la semoule avec un peu de bouillon des légumes. Sers le tout ensemble."
+  ],
+  "preparation_min": 25,
+  "cuisson_min": 40,
+  "temps_total_min": 65,
+  "difficulte": "moyen",
+  "cuisine": "marocaine",
+  "proteine": "boeuf",
+  "feculent": "semoule",
+  "cout_total_eur": 9.15,
+  "cout_portion_eur": 2.29,
+  "saisons": [
+   6
+  ],
+  "produits_saisonniers": [
+   "carotte",
+   "courgette",
+   "navet"
+  ],
+  "etiquettes": [
+   "batch",
+   "epice",
+   "sans_porc",
+   "sans_four",
+   "se_garde_3j"
+  ],
+  "allergenes": [
+   "gluten",
+   "celeri"
+  ],
+  "ustensiles": [
+   "cocotte",
+   "poêle",
+   "saladier"
+  ],
+  "equipement": [],
+  "conservation_jours": 3,
+  "conservation": "Restes : 3 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "harira",
+  "nom": "Harira",
+  "famille": "monde_mediterranee",
+  "portions": 4,
+  "ingredients": [
+   {
+    "id": "lentille_verte",
+    "quantite": 100.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "pois_chiche",
+    "quantite": 265.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "tomate_concassee",
+    "quantite": 400.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "celeri_branche",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "persil",
+    "quantite": 20.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "coriandre",
+    "quantite": 10.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "gingembre",
+    "quantite": 2.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "curcuma",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "cannelle",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "farine",
+    "quantite": 30.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "citron",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 20.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "pain",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais revenir l'oignon et le céleri hachés dans l'huile avec les épices.",
+   "Ajoute lentilles, tomates, la moitié des herbes et 1,3 litre d'eau ; laisse cuire 30 min.",
+   "Ajoute les pois chiches. Délaie la farine dans un peu d'eau froide et verse-la en remuant : la soupe épaissit en 5 min.",
+   "Ajoute le reste des herbes, sale, et sers avec le citron et le pain."
+  ],
+  "preparation_min": 15,
+  "cuisson_min": 40,
+  "temps_total_min": 55,
+  "difficulte": "facile",
+  "cuisine": "marocaine",
+  "proteine": "legumineuse",
+  "feculent": "legumineuse",
+  "cout_total_eur": 4.94,
+  "cout_portion_eur": 1.24,
+  "saisons": [
+   6,
+   7,
+   8,
+   9,
+   10,
+   11
+  ],
+  "produits_saisonniers": [
+   "celeri_branche"
+  ],
+  "etiquettes": [
+   "batch",
+   "soupe",
+   "epice",
+   "vegetarien",
+   "vegan",
+   "sans_porc",
+   "pescetarien",
+   "sans_four",
+   "se_garde_3j",
+   "pas_cher"
+  ],
+  "allergenes": [
+   "gluten",
+   "celeri"
+  ],
+  "ustensiles": [
+   "cocotte"
+  ],
+  "equipement": [],
+  "conservation_jours": 3,
+  "conservation": "Restes : 3 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "tajine-kefta-oeufs",
+  "nom": "Tajine de kefta aux œufs",
+  "famille": "monde_mediterranee",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "boeuf_hache",
+    "quantite": 250.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "persil",
+    "quantite": 10.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "cumin",
+    "quantite": 2.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "paprika",
+    "quantite": 2.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "tomate_concassee",
+    "quantite": 400.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "oeuf",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "pain",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Mélange la viande avec la moitié de l'oignon haché, le persil, la moitié des épices, sel ; forme de petites boulettes.",
+   "Fais revenir le reste de l'oignon, ajoute tomates et épices, laisse mijoter 10 min, puis les boulettes 10 min à couvert : elles doivent être cuites à cœur.",
+   "Casse les œufs dans la sauce, couvre et cuis 4 min jusqu'à ce que les blancs soient pris. Sers avec le pain."
+  ],
+  "preparation_min": 15,
+  "cuisson_min": 25,
+  "temps_total_min": 40,
+  "difficulte": "facile",
+  "cuisine": "marocaine",
+  "proteine": "boeuf",
+  "feculent": "pain",
+  "cout_total_eur": 6.03,
+  "cout_portion_eur": 3.01,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [],
+  "etiquettes": [
+   "epice",
+   "sans_porc",
+   "sans_four"
+  ],
+  "allergenes": [
+   "gluten",
+   "oeufs"
+  ],
+  "ustensiles": [
+   "saladier",
+   "sauteuse avec couvercle"
+  ],
+  "equipement": [],
+  "conservation_jours": 0,
+  "conservation": "Ne se garde pas : à manger tout de suite.",
+  "securite": [
+   "Cuis la viande hachée à cœur : plus de rose au centre (70 °C)."
+  ],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "tajine-legumes-abricots",
+  "nom": "Tajine de légumes aux abricots secs",
+  "famille": "monde_mediterranee",
+  "portions": 4,
+  "ingredients": [
+   {
+    "id": "carotte",
+    "quantite": 3.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "courge",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": "petite"
+   },
+   {
+    "id": "pois_chiche",
+    "quantite": 265.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "abricot_sec",
+    "quantite": 80.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "cannelle",
+    "quantite": 2.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "cumin",
+    "quantite": 2.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "curcuma",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "amande",
+    "quantite": 30.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "semoule",
+    "quantite": 300.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 20.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais revenir l'oignon et les épices dans l'huile, ajoute les carottes en tronçons et la courge en cubes.",
+   "Ajoute les pois chiches, les abricots et 400 ml d'eau salée ; laisse mijoter 35 min à couvert.",
+   "Sers avec la semoule et les amandes grillées à sec."
+  ],
+  "preparation_min": 20,
+  "cuisson_min": 40,
+  "temps_total_min": 60,
+  "difficulte": "facile",
+  "cuisine": "marocaine",
+  "proteine": "legumineuse",
+  "feculent": "semoule",
+  "cout_total_eur": 5.99,
+  "cout_portion_eur": 1.5,
+  "saisons": [
+   1,
+   2,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [
+   "carotte",
+   "courge"
+  ],
+  "etiquettes": [
+   "batch",
+   "sucre_sale",
+   "vegetarien",
+   "vegan",
+   "sans_porc",
+   "pescetarien",
+   "sans_four",
+   "se_garde_3j",
+   "pas_cher"
+  ],
+  "allergenes": [
+   "gluten",
+   "fruits_a_coque",
+   "sulfites"
+  ],
+  "ustensiles": [
+   "cocotte",
+   "saladier"
+  ],
+  "equipement": [],
+  "conservation_jours": 3,
+  "conservation": "Restes : 3 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "salade-carottes-cumin",
+  "nom": "Salade de carottes au cumin et pois chiches",
+  "famille": "monde_mediterranee",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "carotte",
+    "quantite": 5.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "pois_chiche",
+    "quantite": 265.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "cumin",
+    "quantite": 2.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "citron",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "persil",
+    "quantite": 10.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 30.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "pain",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Coupe les carottes en rondelles et cuis-les 5 min : elles doivent rester croquantes. Refroidis-les.",
+   "Mélange avec les pois chiches, le cumin, le jus de citron, l'huile, le persil, sel et poivre. Sers avec le pain."
+  ],
+  "preparation_min": 10,
+  "cuisson_min": 5,
+  "temps_total_min": 15,
+  "difficulte": "facile",
+  "cuisine": "marocaine",
+  "proteine": "legumineuse",
+  "feculent": "pain",
+  "cout_total_eur": 3.09,
+  "cout_portion_eur": 1.54,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [
+   "carotte"
+  ],
+  "etiquettes": [
+   "salade",
+   "froid",
+   "leger",
+   "transportable",
+   "rapide",
+   "vegetarien",
+   "vegan",
+   "sans_porc",
+   "pescetarien",
+   "sans_four"
+  ],
+  "allergenes": [
+   "gluten"
+  ],
+  "ustensiles": [
+   "casserole",
+   "saladier"
+  ],
+  "equipement": [],
+  "conservation_jours": 2,
+  "conservation": "Restes : 2 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "lablabi",
+  "nom": "Lablabi (soupe tunisienne de pois chiches)",
+  "famille": "monde_mediterranee",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "pois_chiche",
+    "quantite": 530.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 3.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "cumin",
+    "quantite": 2.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "harissa",
+    "quantite": 10.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "citron",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 20.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "oeuf",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "pain",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais chauffer les pois chiches dans 800 ml d'eau avec l'ail écrasé et le cumin, 10 min ; sale.",
+   "Plonge les œufs 6 min dans l'eau bouillante (mollets), écale-les.",
+   "Mets du pain rassis en morceaux dans les bols, verse la soupe, ajoute la harissa, l'huile, le citron et un œuf coupé en deux."
+  ],
+  "preparation_min": 10,
+  "cuisson_min": 15,
+  "temps_total_min": 25,
+  "difficulte": "facile",
+  "cuisine": "tunisienne",
+  "proteine": "legumineuse",
+  "feculent": "pain",
+  "cout_total_eur": 3.88,
+  "cout_portion_eur": 1.94,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [],
+  "etiquettes": [
+   "soupe",
+   "epice",
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "sans_four"
+  ],
+  "allergenes": [
+   "gluten",
+   "oeufs"
+  ],
+  "ustensiles": [
+   "casserole"
+  ],
+  "equipement": [],
+  "conservation_jours": 2,
+  "conservation": "Restes : 2 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ }
+]

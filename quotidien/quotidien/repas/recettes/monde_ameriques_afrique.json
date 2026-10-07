@@ -1,0 +1,2742 @@
+[
+ {
+  "id": "chili-con-carne",
+  "nom": "Chili con carne",
+  "famille": "monde_ameriques_afrique",
+  "portions": 6,
+  "ingredients": [
+   {
+    "id": "boeuf_hache",
+    "quantite": 500.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "haricot_rouge",
+    "quantite": 500.0,
+    "unite": "g",
+    "note": "2 boîtes"
+   },
+   {
+    "id": "tomate_concassee",
+    "quantite": 800.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "carotte",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "cumin",
+    "quantite": 4.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "paprika",
+    "quantite": 4.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "piment",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "mais",
+    "quantite": 140.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "riz",
+    "quantite": 450.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_neutre",
+    "quantite": 15.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais revenir oignons, ail et carotte hachés 5 min dans l'huile, ajoute la viande et cuis-la en l'émiettant jusqu'à ce qu'elle ne soit plus rosée.",
+   "Ajoute les épices, les tomates et 200 ml d'eau ; laisse mijoter 40 min à feu doux.",
+   "Ajoute les haricots rincés et le maïs, poursuis 15 min. Sale.",
+   "Sers avec le riz."
+  ],
+  "preparation_min": 15,
+  "cuisson_min": 60,
+  "temps_total_min": 75,
+  "difficulte": "facile",
+  "cuisine": "mexicaine",
+  "proteine": "boeuf",
+  "feculent": "riz",
+  "cout_total_eur": 11.52,
+  "cout_portion_eur": 1.92,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [
+   "carotte"
+  ],
+  "etiquettes": [
+   "epice",
+   "reconfortant",
+   "sans_porc",
+   "sans_four"
+  ],
+  "allergenes": [],
+  "ustensiles": [
+   "cocotte",
+   "casserole"
+  ],
+  "equipement": [],
+  "conservation_jours": 2,
+  "conservation": "Restes : 2 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [
+   "Cuis la viande hachée à cœur : plus de rose au centre (70 °C).",
+   "Riz cuit : refroidis-le vite et garde-le 24 h au frigo au plus."
+  ],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "chili-sin-carne",
+  "nom": "Chili sin carne",
+  "famille": "monde_ameriques_afrique",
+  "portions": 6,
+  "ingredients": [
+   {
+    "id": "haricot_rouge",
+    "quantite": 500.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "lentille_corail",
+    "quantite": 150.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "tomate_concassee",
+    "quantite": 800.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "carotte",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "cumin",
+    "quantite": 4.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "paprika",
+    "quantite": 4.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "piment",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "mais",
+    "quantite": 140.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "riz",
+    "quantite": 450.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_neutre",
+    "quantite": 15.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais revenir oignons, carottes et ail hachés 5 min, ajoute les épices.",
+   "Ajoute les lentilles rincées, les tomates et 500 ml d'eau ; laisse mijoter 25 min en remuant.",
+   "Ajoute les haricots rincés et le maïs, poursuis 10 min. Sale, et sers avec le riz."
+  ],
+  "preparation_min": 15,
+  "cuisson_min": 40,
+  "temps_total_min": 55,
+  "difficulte": "facile",
+  "cuisine": "mexicaine",
+  "proteine": "legumineuse",
+  "feculent": "riz",
+  "cout_total_eur": 6.24,
+  "cout_portion_eur": 1.04,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [
+   "carotte"
+  ],
+  "etiquettes": [
+   "batch",
+   "epice",
+   "reconfortant",
+   "vegetarien",
+   "vegan",
+   "sans_porc",
+   "pescetarien",
+   "sans_four",
+   "se_garde_3j",
+   "pas_cher"
+  ],
+  "allergenes": [],
+  "ustensiles": [
+   "cocotte",
+   "casserole"
+  ],
+  "equipement": [],
+  "conservation_jours": 3,
+  "conservation": "Restes : 3 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [
+   "Riz cuit : refroidis-le vite et garde-le 24 h au frigo au plus."
+  ],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "tacos-poulet",
+  "nom": "Tacos de poulet au paprika",
+  "famille": "monde_ameriques_afrique",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "poulet_filet",
+    "quantite": 300.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "tortilla",
+    "quantite": 4.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "paprika",
+    "quantite": 2.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "cumin",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "tomate",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "oignon_rouge",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "salade",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "citron_vert",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "coriandre",
+    "quantite": 10.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "yaourt_grec",
+    "quantite": 80.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_neutre",
+    "quantite": 10.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Coupe le poulet en petits morceaux, mélange-le avec les épices et du sel, et fais-le dorer 8 min dans l'huile, jusqu'à ce qu'il soit cuit à cœur.",
+   "Salsa : tomate et oignon en petits dés, coriandre, jus de citron vert, sel.",
+   "Garnis les tortillas chaudes de salade, de poulet, de salsa et de yaourt."
+  ],
+  "preparation_min": 15,
+  "cuisson_min": 10,
+  "temps_total_min": 25,
+  "difficulte": "facile",
+  "cuisine": "mexicaine",
+  "proteine": "volaille",
+  "feculent": "tortilla",
+  "cout_total_eur": 6.7,
+  "cout_portion_eur": 3.35,
+  "saisons": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "produits_saisonniers": [
+   "tomate",
+   "salade"
+  ],
+  "etiquettes": [
+   "epice",
+   "sans_porc",
+   "sans_four"
+  ],
+  "allergenes": [
+   "gluten",
+   "lait"
+  ],
+  "ustensiles": [
+   "poêle",
+   "saladier"
+  ],
+  "equipement": [],
+  "conservation_jours": 1,
+  "conservation": "Restes : 1 jour au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [
+   "Cuis la volaille à cœur : plus aucune trace rosée, jus clair (74 °C au centre)."
+  ],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "burritos-riz-haricots",
+  "nom": "Burritos au riz et aux haricots",
+  "famille": "monde_ameriques_afrique",
+  "portions": 4,
+  "ingredients": [
+   {
+    "id": "riz",
+    "quantite": 150.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "haricot_rouge",
+    "quantite": 500.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "tortilla",
+    "quantite": 8.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "cumin",
+    "quantite": 2.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "tomate_concassee",
+    "quantite": 400.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "fromage_rape",
+    "quantite": 120.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "citron_vert",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "coriandre",
+    "quantite": 10.0,
+    "unite": "g",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Cuis le riz, ajoute le jus du citron vert et la coriandre.",
+   "Fais revenir l'oignon avec le cumin, ajoute les tomates et les haricots, laisse réduire 10 min en écrasant à moitié.",
+   "Garnis chaque tortilla de riz, de haricots et de fromage, replie les côtés et roule serré.",
+   "Dore-les 2 min par face dans une poêle sèche. Ceux pour demain se gardent au frigo, emballés."
+  ],
+  "preparation_min": 20,
+  "cuisson_min": 20,
+  "temps_total_min": 40,
+  "difficulte": "facile",
+  "cuisine": "mexicaine",
+  "proteine": "legumineuse",
+  "feculent": "riz",
+  "cout_total_eur": 6.46,
+  "cout_portion_eur": 1.62,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [],
+  "etiquettes": [
+   "transportable",
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "sans_four"
+  ],
+  "allergenes": [
+   "gluten",
+   "lait"
+  ],
+  "ustensiles": [
+   "casserole",
+   "poêle",
+   "papier aluminium"
+  ],
+  "equipement": [],
+  "conservation_jours": 1,
+  "conservation": "Restes : 1 jour au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [
+   "Riz cuit : refroidis-le vite et garde-le 24 h au frigo au plus."
+  ],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "enchiladas-poulet",
+  "nom": "Enchiladas au poulet",
+  "famille": "monde_ameriques_afrique",
+  "portions": 4,
+  "ingredients": [
+   {
+    "id": "poulet_filet",
+    "quantite": 400.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "tortilla",
+    "quantite": 8.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "coulis_tomate",
+    "quantite": 500.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "poivron",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "cumin",
+    "quantite": 2.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "paprika",
+    "quantite": 2.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "fromage_rape",
+    "quantite": 120.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "yaourt_grec",
+    "quantite": 100.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_neutre",
+    "quantite": 15.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Préchauffe le four à 200 °C. Fais revenir l'oignon et le poivron, ajoute le poulet en petits dés et les épices ; cuis 8 min, jusqu'à ce qu'il soit cuit à cœur.",
+   "Ajoute un tiers du coulis. Garnis et roule les tortillas, range-les dans le plat.",
+   "Nappe du reste du coulis, couvre de fromage et enfourne 20 min. Sers avec le yaourt."
+  ],
+  "preparation_min": 20,
+  "cuisson_min": 25,
+  "temps_total_min": 45,
+  "difficulte": "moyen",
+  "cuisine": "mexicaine",
+  "proteine": "volaille",
+  "feculent": "tortilla",
+  "cout_total_eur": 10.07,
+  "cout_portion_eur": 2.52,
+  "saisons": [
+   7,
+   8,
+   9
+  ],
+  "produits_saisonniers": [
+   "poivron"
+  ],
+  "etiquettes": [
+   "gratin",
+   "sans_porc",
+   "au_four"
+  ],
+  "allergenes": [
+   "gluten",
+   "lait"
+  ],
+  "ustensiles": [
+   "four",
+   "plat à gratin",
+   "poêle"
+  ],
+  "equipement": [
+   "four"
+  ],
+  "conservation_jours": 2,
+  "conservation": "Restes : 2 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [
+   "Cuis la volaille à cœur : plus aucune trace rosée, jus clair (74 °C au centre)."
+  ],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "mac-and-cheese",
+  "nom": "Mac and cheese au four",
+  "famille": "monde_ameriques_afrique",
+  "portions": 4,
+  "ingredients": [
+   {
+    "id": "pates",
+    "quantite": 300.0,
+    "unite": "g",
+    "note": "des macaroni"
+   },
+   {
+    "id": "beurre",
+    "quantite": 30.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "farine",
+    "quantite": 30.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "lait",
+    "quantite": 600.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "fromage_rape",
+    "quantite": 180.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "moutarde",
+    "quantite": 5.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "salade",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Préchauffe le four à 200 °C. Cuis les pâtes 2 min de moins qu'indiqué.",
+   "Sauce : beurre, farine, lait en fouettant ; laisse épaissir 5 min, ajoute la moutarde et les deux tiers du fromage.",
+   "Mélange avec les pâtes, verse dans le plat, couvre du reste de fromage et enfourne 15 min. Sers avec la salade."
+  ],
+  "preparation_min": 10,
+  "cuisson_min": 25,
+  "temps_total_min": 35,
+  "difficulte": "facile",
+  "cuisine": "americaine",
+  "proteine": "fromage",
+  "feculent": "pates",
+  "cout_total_eur": 4.29,
+  "cout_portion_eur": 1.07,
+  "saisons": [
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "produits_saisonniers": [
+   "salade"
+  ],
+  "etiquettes": [
+   "gratin",
+   "reconfortant",
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "au_four",
+   "pas_cher"
+  ],
+  "allergenes": [
+   "gluten",
+   "lait",
+   "moutarde"
+  ],
+  "ustensiles": [
+   "four",
+   "plat à gratin",
+   "casserole",
+   "fouet"
+  ],
+  "equipement": [
+   "four"
+  ],
+  "conservation_jours": 2,
+  "conservation": "Restes : 2 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "jambalaya",
+  "nom": "Jambalaya",
+  "famille": "monde_ameriques_afrique",
+  "portions": 4,
+  "ingredients": [
+   {
+    "id": "poulet_filet",
+    "quantite": 300.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "chorizo",
+    "quantite": 100.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "riz",
+    "quantite": 300.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "poivron",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "celeri_branche",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "tomate_concassee",
+    "quantite": 400.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "paprika",
+    "quantite": 2.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "piment",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "thym",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "bouillon_cube",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "huile_neutre",
+    "quantite": 15.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais dorer le poulet en dés et le chorizo 6 min dans l'huile.",
+   "Ajoute oignon, poivron, céleri et ail, 5 min, puis les épices et le riz.",
+   "Verse les tomates et 600 ml d'eau avec le cube ; couvre et cuis 20 min à feu doux, jusqu'à ce que le riz soit tendre et le poulet cuit à cœur."
+  ],
+  "preparation_min": 20,
+  "cuisson_min": 35,
+  "temps_total_min": 55,
+  "difficulte": "moyen",
+  "cuisine": "americaine",
+  "proteine": "volaille",
+  "feculent": "riz",
+  "cout_total_eur": 7.76,
+  "cout_portion_eur": 1.94,
+  "saisons": [
+   7,
+   8,
+   9
+  ],
+  "produits_saisonniers": [
+   "poivron",
+   "celeri_branche"
+  ],
+  "etiquettes": [
+   "epice",
+   "sans_four"
+  ],
+  "allergenes": [
+   "gluten",
+   "lait",
+   "celeri"
+  ],
+  "ustensiles": [
+   "cocotte"
+  ],
+  "equipement": [],
+  "conservation_jours": 1,
+  "conservation": "Restes : 1 jour au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [
+   "Cuis la volaille à cœur : plus aucune trace rosée, jus clair (74 °C au centre).",
+   "Riz cuit : refroidis-le vite et garde-le 24 h au frigo au plus."
+  ],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "chowder-poisson",
+  "nom": "Chowder de poisson et maïs",
+  "famille": "monde_ameriques_afrique",
+  "portions": 4,
+  "ingredients": [
+   {
+    "id": "poisson_blanc",
+    "quantite": 400.0,
+    "unite": "g",
+    "note": "décongelé au réfrigérateur"
+   },
+   {
+    "id": "pomme_de_terre",
+    "quantite": 500.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "carotte",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "mais",
+    "quantite": 140.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "lait",
+    "quantite": 400.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "creme",
+    "quantite": 100.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "lardons",
+    "quantite": 60.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "bouillon_cube",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "laurier",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais revenir les lardons et l'oignon 5 min, ajoute pommes de terre et carottes en dés, le cube, le laurier et 500 ml d'eau ; cuis 15 min.",
+   "Ajoute le lait, la crème, le maïs et le poisson en gros cubes ; laisse frémir 6 min sans bouillir : le poisson doit être opaque.",
+   "Poivre et sers bien chaud."
+  ],
+  "preparation_min": 15,
+  "cuisson_min": 25,
+  "temps_total_min": 40,
+  "difficulte": "facile",
+  "cuisine": "americaine",
+  "proteine": "poisson",
+  "feculent": "pomme_de_terre",
+  "cout_total_eur": 7.24,
+  "cout_portion_eur": 1.81,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [
+   "pomme_de_terre",
+   "carotte"
+  ],
+  "etiquettes": [
+   "soupe",
+   "reconfortant",
+   "sans_four",
+   "poisson"
+  ],
+  "allergenes": [
+   "gluten",
+   "poissons",
+   "lait",
+   "celeri"
+  ],
+  "ustensiles": [
+   "cocotte"
+  ],
+  "equipement": [],
+  "conservation_jours": 2,
+  "conservation": "Restes : 2 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [
+   "Le poisson est cuit quand sa chair devient opaque et se détache en lamelles."
+  ],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "porc-effiloche",
+  "nom": "Porc effiloché au four",
+  "famille": "monde_ameriques_afrique",
+  "portions": 6,
+  "ingredients": [
+   {
+    "id": "porc_echine",
+    "quantite": 1000.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "coulis_tomate",
+    "quantite": 200.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "miel",
+    "quantite": 30.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "vinaigre",
+    "quantite": 15.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "paprika",
+    "quantite": 4.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "cumin",
+    "quantite": 2.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "pain_burger",
+    "quantite": 6.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "chou_rouge",
+    "quantite": 0.3,
+    "unite": "p",
+    "note": "en salade"
+   }
+  ],
+  "etapes": [
+   "Préchauffe le four à 150 °C. Frotte la viande avec les épices et du sel.",
+   "Mets-la dans la cocotte sur les oignons émincés, avec le coulis, le miel, le vinaigre et 200 ml d'eau. Couvre et enfourne 3 h.",
+   "Effiloche la viande à la fourchette dans la sauce : elle doit se défaire toute seule.",
+   "Sers dans les pains, avec le chou rouge émincé et assaisonné."
+  ],
+  "preparation_min": 15,
+  "cuisson_min": 180,
+  "temps_total_min": 195,
+  "difficulte": "facile",
+  "cuisine": "americaine",
+  "proteine": "porc",
+  "feculent": "pain",
+  "cout_total_eur": 15.05,
+  "cout_portion_eur": 2.51,
+  "saisons": [
+   1,
+   2,
+   3,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [
+   "chou_rouge"
+  ],
+  "etiquettes": [
+   "batch",
+   "au_four",
+   "se_garde_3j"
+  ],
+  "allergenes": [
+   "gluten",
+   "lait",
+   "sesame",
+   "sulfites"
+  ],
+  "ustensiles": [
+   "four",
+   "cocotte allant au four"
+  ],
+  "equipement": [
+   "four"
+  ],
+  "conservation_jours": 3,
+  "conservation": "Restes : 3 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [
+   "Cuis le porc à cœur : plus de rose au centre (70 °C)."
+  ],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "patate-douce-haricots",
+  "nom": "Patate douce rôtie, haricots rouges et feta",
+  "famille": "monde_ameriques_afrique",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "patate_douce",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "haricot_rouge",
+    "quantite": 250.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "feta",
+    "quantite": 80.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "cumin",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "paprika",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 20.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "citron_vert",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "roquette",
+    "quantite": 50.0,
+    "unite": "g",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Préchauffe le four à 210 °C. Coupe les patates douces en cubes, mélange avec l'huile, les épices et du sel ; rôtis 25 à 30 min.",
+   "Réchauffe les haricots rincés avec un peu d'eau.",
+   "Dresse patates, haricots, roquette et feta ; arrose de citron vert."
+  ],
+  "preparation_min": 10,
+  "cuisson_min": 30,
+  "temps_total_min": 40,
+  "difficulte": "facile",
+  "cuisine": "americaine",
+  "proteine": "legumineuse",
+  "feculent": "pomme_de_terre",
+  "cout_total_eur": 4.89,
+  "cout_portion_eur": 2.44,
+  "saisons": [
+   9,
+   10
+  ],
+  "produits_saisonniers": [
+   "patate_douce",
+   "roquette"
+  ],
+  "etiquettes": [
+   "airfryer_possible",
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "au_four"
+  ],
+  "allergenes": [
+   "lait"
+  ],
+  "ustensiles": [
+   "four",
+   "plaque",
+   "casserole"
+  ],
+  "equipement": [
+   "four"
+  ],
+  "conservation_jours": 2,
+  "conservation": "Restes : 2 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "mafe-poulet",
+  "nom": "Mafé de poulet",
+  "famille": "monde_ameriques_afrique",
+  "portions": 4,
+  "ingredients": [
+   {
+    "id": "poulet_filet",
+    "quantite": 600.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "beurre_cacahuete",
+    "quantite": 120.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "tomate_concassee",
+    "quantite": 400.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "carotte",
+    "quantite": 3.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "patate_douce",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "bouillon_cube",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "piment",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "riz",
+    "quantite": 300.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_neutre",
+    "quantite": 15.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais dorer le poulet en morceaux dans l'huile, ajoute oignons et ail.",
+   "Délaie le beurre de cacahuète dans 500 ml d'eau chaude avec le cube ; verse dans la cocotte avec les tomates et le piment.",
+   "Ajoute carottes et patate douce en morceaux, laisse mijoter 35 min : le poulet doit être cuit à cœur et la sauce épaisse.",
+   "Sers avec le riz."
+  ],
+  "preparation_min": 20,
+  "cuisson_min": 45,
+  "temps_total_min": 65,
+  "difficulte": "facile",
+  "cuisine": "africaine",
+  "proteine": "volaille",
+  "feculent": "riz",
+  "cout_total_eur": 11.45,
+  "cout_portion_eur": 2.86,
+  "saisons": [
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [
+   "carotte",
+   "patate_douce"
+  ],
+  "etiquettes": [
+   "batch",
+   "reconfortant",
+   "sans_porc",
+   "sans_four",
+   "se_garde_3j"
+  ],
+  "allergenes": [
+   "gluten",
+   "arachides",
+   "celeri"
+  ],
+  "ustensiles": [
+   "cocotte",
+   "casserole"
+  ],
+  "equipement": [],
+  "conservation_jours": 3,
+  "conservation": "Restes : 3 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [
+   "Cuis la volaille à cœur : plus aucune trace rosée, jus clair (74 °C au centre).",
+   "Riz cuit : refroidis-le vite et garde-le 24 h au frigo au plus."
+  ],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "poulet-yassa",
+  "nom": "Poulet yassa",
+  "famille": "monde_ameriques_afrique",
+  "portions": 4,
+  "ingredients": [
+   {
+    "id": "poulet_cuisse",
+    "quantite": 4.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 4.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "citron",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "moutarde",
+    "quantite": 15.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "piment",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "bouillon_cube",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "riz",
+    "quantite": 300.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_neutre",
+    "quantite": 20.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Mélange le jus des citrons, la moutarde, l'ail, le piment et du sel ; fais-y mariner le poulet et les oignons émincés au moins 15 min.",
+   "Fais dorer le poulet égoutté dans l'huile, réserve. Fais fondre longuement les oignons de la marinade 15 min.",
+   "Remets le poulet, ajoute le reste de marinade, le cube et 200 ml d'eau ; laisse mijoter 25 min : jus clair près de l'os.",
+   "Sers avec le riz."
+  ],
+  "preparation_min": 20,
+  "cuisson_min": 40,
+  "temps_total_min": 60,
+  "difficulte": "facile",
+  "cuisine": "africaine",
+  "proteine": "volaille",
+  "feculent": "riz",
+  "cout_total_eur": 7.42,
+  "cout_portion_eur": 1.86,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [],
+  "etiquettes": [
+   "batch",
+   "sans_porc",
+   "sans_four",
+   "se_garde_3j"
+  ],
+  "allergenes": [
+   "gluten",
+   "celeri",
+   "moutarde"
+  ],
+  "ustensiles": [
+   "saladier",
+   "cocotte",
+   "casserole"
+  ],
+  "equipement": [],
+  "conservation_jours": 3,
+  "conservation": "Restes : 3 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [
+   "Cuis la volaille à cœur : plus aucune trace rosée, jus clair (74 °C au centre).",
+   "Riz cuit : refroidis-le vite et garde-le 24 h au frigo au plus."
+  ],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "colombo-poulet",
+  "nom": "Colombo de poulet",
+  "famille": "monde_ameriques_afrique",
+  "portions": 4,
+  "ingredients": [
+   {
+    "id": "poulet_filet",
+    "quantite": 600.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 3.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "curry",
+    "quantite": 8.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "courgette",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "aubergine",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "pomme_de_terre",
+    "quantite": 300.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "citron_vert",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "thym",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "riz",
+    "quantite": 300.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_neutre",
+    "quantite": 20.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais dorer le poulet en morceaux dans l'huile avec les oignons, ajoute l'ail et le curry 1 min.",
+   "Ajoute les légumes en cubes, le thym et 400 ml d'eau ; sale et laisse mijoter 30 min.",
+   "Arrose de citron vert : le poulet doit être cuit à cœur et les légumes fondants. Sers avec le riz."
+  ],
+  "preparation_min": 20,
+  "cuisson_min": 40,
+  "temps_total_min": 60,
+  "difficulte": "facile",
+  "cuisine": "antillaise",
+  "proteine": "volaille",
+  "feculent": "riz",
+  "cout_total_eur": 10.97,
+  "cout_portion_eur": 2.74,
+  "saisons": [
+   7,
+   8,
+   9
+  ],
+  "produits_saisonniers": [
+   "courgette",
+   "aubergine",
+   "pomme_de_terre"
+  ],
+  "etiquettes": [
+   "batch",
+   "epice",
+   "sans_porc",
+   "sans_four",
+   "se_garde_3j"
+  ],
+  "allergenes": [
+   "moutarde"
+  ],
+  "ustensiles": [
+   "cocotte",
+   "casserole"
+  ],
+  "equipement": [],
+  "conservation_jours": 3,
+  "conservation": "Restes : 3 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [
+   "Cuis la volaille à cœur : plus aucune trace rosée, jus clair (74 °C au centre).",
+   "Riz cuit : refroidis-le vite et garde-le 24 h au frigo au plus."
+  ],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "rougail-saucisse",
+  "nom": "Rougail saucisse",
+  "famille": "monde_ameriques_afrique",
+  "portions": 4,
+  "ingredients": [
+   {
+    "id": "saucisse",
+    "quantite": 6.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "tomate_concassee",
+    "quantite": 800.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 3.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "gingembre",
+    "quantite": 15.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "curcuma",
+    "quantite": 2.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "piment",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "thym",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "riz",
+    "quantite": 300.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "haricot_rouge",
+    "quantite": 265.0,
+    "unite": "g",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Coupe les saucisses en rondelles épaisses et fais-les dorer dans la cocotte sans matière grasse ; jette l'excès de graisse.",
+   "Ajoute oignons, ail, gingembre, curcuma, piment et thym, 5 min, puis les tomates ; laisse mijoter 30 min à feu doux : les saucisses doivent être cuites à cœur.",
+   "Réchauffe les haricots rouges. Sers le rougail avec le riz et les haricots."
+  ],
+  "preparation_min": 15,
+  "cuisson_min": 40,
+  "temps_total_min": 55,
+  "difficulte": "facile",
+  "cuisine": "reunionnaise",
+  "proteine": "porc",
+  "feculent": "riz",
+  "cout_total_eur": 9.85,
+  "cout_portion_eur": 2.46,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [],
+  "etiquettes": [
+   "batch",
+   "epice",
+   "sans_four",
+   "se_garde_3j"
+  ],
+  "allergenes": [],
+  "ustensiles": [
+   "cocotte",
+   "casserole"
+  ],
+  "equipement": [],
+  "conservation_jours": 3,
+  "conservation": "Restes : 3 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [
+   "Cuis le porc à cœur : plus de rose au centre (70 °C).",
+   "Riz cuit : refroidis-le vite et garde-le 24 h au frigo au plus."
+  ],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "riz-haricots-rouges",
+  "nom": "Riz créole aux haricots rouges",
+  "famille": "monde_ameriques_afrique",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "riz",
+    "quantite": 150.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "haricot_rouge",
+    "quantite": 250.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "lait_coco",
+    "quantite": 200.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "thym",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "piment",
+    "quantite": 0.5,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "carotte",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": "en salade râpée"
+   },
+   {
+    "id": "huile_neutre",
+    "quantite": 10.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais revenir l'oignon et l'ail dans l'huile, ajoute le riz, le lait de coco, 150 ml d'eau, le thym, le piment et du sel.",
+   "Couvre et cuis 15 min à feu doux, ajoute les haricots rincés et laisse reposer 5 min.",
+   "Sers avec la carotte râpée assaisonnée."
+  ],
+  "preparation_min": 10,
+  "cuisson_min": 20,
+  "temps_total_min": 30,
+  "difficulte": "facile",
+  "cuisine": "antillaise",
+  "proteine": "legumineuse",
+  "feculent": "riz",
+  "cout_total_eur": 2.31,
+  "cout_portion_eur": 1.16,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [
+   "carotte"
+  ],
+  "etiquettes": [
+   "epice",
+   "vegetarien",
+   "vegan",
+   "sans_porc",
+   "pescetarien",
+   "sans_four",
+   "pas_cher"
+  ],
+  "allergenes": [],
+  "ustensiles": [
+   "casserole avec couvercle"
+  ],
+  "equipement": [],
+  "conservation_jours": 1,
+  "conservation": "Restes : 1 jour au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [
+   "Riz cuit : refroidis-le vite et garde-le 24 h au frigo au plus."
+  ],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "goulasch",
+  "nom": "Goulasch",
+  "famille": "monde_ameriques_afrique",
+  "portions": 4,
+  "ingredients": [
+   {
+    "id": "boeuf_braiser",
+    "quantite": 700.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 3.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "paprika",
+    "quantite": 8.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "tomate_concassee",
+    "quantite": 400.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "carotte",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "pomme_de_terre",
+    "quantite": 600.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "bouillon_cube",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "huile_neutre",
+    "quantite": 20.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais dorer la viande en cubes dans l'huile, ajoute les oignons émincés et laisse fondre 8 min.",
+   "Hors du feu, ajoute le paprika (il brûle vite), puis l'ail, les tomates, le cube et 600 ml d'eau.",
+   "Laisse mijoter 1 h 30 à couvert, ajoute carottes et pommes de terre en morceaux et poursuis 30 min."
+  ],
+  "preparation_min": 20,
+  "cuisson_min": 120,
+  "temps_total_min": 140,
+  "difficulte": "facile",
+  "cuisine": "hongroise",
+  "proteine": "boeuf",
+  "feculent": "pomme_de_terre",
+  "cout_total_eur": 14.05,
+  "cout_portion_eur": 3.51,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [
+   "carotte",
+   "pomme_de_terre"
+  ],
+  "etiquettes": [
+   "batch",
+   "reconfortant",
+   "sans_porc",
+   "sans_four",
+   "se_garde_3j"
+  ],
+  "allergenes": [
+   "gluten",
+   "celeri"
+  ],
+  "ustensiles": [
+   "cocotte"
+  ],
+  "equipement": [],
+  "conservation_jours": 3,
+  "conservation": "Restes : 3 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "bowl-patate-douce-poulet",
+  "nom": "Bowl de patate douce et poulet au sésame",
+  "famille": "monde_ameriques_afrique",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "patate_douce",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "poulet_filet",
+    "quantite": 250.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "roquette",
+    "quantite": 50.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "chou_rouge",
+    "quantite": 0.25,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "sauce_soja",
+    "quantite": 20.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "miel",
+    "quantite": 10.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "graines_sesame",
+    "quantite": 5.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 20.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Préchauffe le four à 210 °C. Rôtis la patate douce en cubes avec la moitié de l'huile 25 min.",
+   "Fais dorer le poulet en lamelles 6 à 8 min dans le reste d'huile, jusqu'à ce qu'il soit cuit à cœur ; laque-le avec la sauce soja et le miel 1 min.",
+   "Dresse roquette, chou rouge émincé, patate douce et poulet ; parsème de sésame."
+  ],
+  "preparation_min": 15,
+  "cuisson_min": 25,
+  "temps_total_min": 40,
+  "difficulte": "facile",
+  "cuisine": "americaine",
+  "proteine": "volaille",
+  "feculent": "pomme_de_terre",
+  "cout_total_eur": 5.52,
+  "cout_portion_eur": 2.76,
+  "saisons": [
+   9,
+   10
+  ],
+  "produits_saisonniers": [
+   "patate_douce",
+   "roquette",
+   "chou_rouge"
+  ],
+  "etiquettes": [
+   "transportable",
+   "airfryer_possible",
+   "sans_porc",
+   "au_four"
+  ],
+  "allergenes": [
+   "gluten",
+   "soja",
+   "sesame"
+  ],
+  "ustensiles": [
+   "four",
+   "plaque",
+   "poêle"
+  ],
+  "equipement": [
+   "four"
+  ],
+  "conservation_jours": 2,
+  "conservation": "Restes : 2 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [
+   "Cuis la volaille à cœur : plus aucune trace rosée, jus clair (74 °C au centre)."
+  ],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "burger-saumon",
+  "nom": "Hamburger de saumon et salade de chou",
+  "famille": "monde_ameriques_afrique",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "saumon",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "pain_burger",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "chou_rouge",
+    "quantite": 0.2,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "carotte",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "mayonnaise",
+    "quantite": 40.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "citron",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "salade",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Retire la peau du saumon et fais cuire les pavés 3 à 4 min par face, jusqu'à ce que la chair soit opaque.",
+   "Salade de chou : chou et carotte râpés, mayonnaise, jus de citron, sel, poivre.",
+   "Garnis les pains toastés de salade, de saumon et d'un peu de salade de chou ; sers le reste à côté."
+  ],
+  "preparation_min": 15,
+  "cuisson_min": 10,
+  "temps_total_min": 25,
+  "difficulte": "facile",
+  "cuisine": "americaine",
+  "proteine": "poisson",
+  "feculent": "pain",
+  "cout_total_eur": 8.07,
+  "cout_portion_eur": 4.04,
+  "saisons": [
+   9,
+   10
+  ],
+  "produits_saisonniers": [
+   "chou_rouge",
+   "carotte",
+   "salade"
+  ],
+  "etiquettes": [
+   "sans_porc",
+   "pescetarien",
+   "sans_four",
+   "poisson"
+  ],
+  "allergenes": [
+   "gluten",
+   "oeufs",
+   "poissons",
+   "lait",
+   "moutarde",
+   "sesame"
+  ],
+  "ustensiles": [
+   "poêle",
+   "saladier"
+  ],
+  "equipement": [],
+  "conservation_jours": 0,
+  "conservation": "Ne se garde pas : à manger tout de suite.",
+  "securite": [
+   "Le poisson est cuit quand sa chair devient opaque et se détache en lamelles."
+  ],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "soupe-patate-douce-coco",
+  "nom": "Soupe de patate douce au lait de coco",
+  "famille": "monde_ameriques_afrique",
+  "portions": 4,
+  "ingredients": [
+   {
+    "id": "patate_douce",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "carotte",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "lentille_corail",
+    "quantite": 150.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "lait_coco",
+    "quantite": 400.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "gingembre",
+    "quantite": 10.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "curry",
+    "quantite": 6.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "bouillon_cube",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "pain",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais revenir l'oignon, le gingembre et le curry, ajoute les légumes en cubes et les lentilles rincées.",
+   "Couvre de 1 litre d'eau avec le cube, cuis 20 min, ajoute le lait de coco et mixe. Sale et sers avec le pain."
+  ],
+  "preparation_min": 15,
+  "cuisson_min": 25,
+  "temps_total_min": 40,
+  "difficulte": "facile",
+  "cuisine": "antillaise",
+  "proteine": "legumineuse",
+  "feculent": "pain",
+  "cout_total_eur": 5.82,
+  "cout_portion_eur": 1.45,
+  "saisons": [
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [
+   "patate_douce",
+   "carotte"
+  ],
+  "etiquettes": [
+   "batch",
+   "soupe",
+   "epice",
+   "vegetarien",
+   "vegan",
+   "sans_porc",
+   "pescetarien",
+   "sans_four",
+   "se_garde_3j",
+   "pas_cher"
+  ],
+  "allergenes": [
+   "gluten",
+   "celeri",
+   "moutarde"
+  ],
+  "ustensiles": [
+   "cocotte",
+   "mixeur plongeant ou presse-purée"
+  ],
+  "equipement": [],
+  "conservation_jours": 3,
+  "conservation": "Restes : 3 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "poulet-coleslaw",
+  "nom": "Coleslaw au poulet et pommes de terre au four",
+  "famille": "monde_ameriques_afrique",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "poulet_cuisse",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "pomme_de_terre",
+    "quantite": 500.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "chou_vert",
+    "quantite": 0.25,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "carotte",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "mayonnaise",
+    "quantite": 50.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "vinaigre",
+    "quantite": 10.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "paprika",
+    "quantite": 2.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_neutre",
+    "quantite": 20.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Préchauffe le four à 210 °C. Frotte les cuisses de paprika, de sel et d'huile ; mets-les sur la plaque avec les pommes de terre en quartiers huilées.",
+   "Enfourne 35 à 40 min : le poulet doit être cuit à cœur (jus clair quand tu piques près de l'os) et les pommes de terre dorées.",
+   "Coleslaw : chou émincé finement et carotte râpée, mayonnaise, vinaigre, sel et poivre."
+  ],
+  "preparation_min": 15,
+  "cuisson_min": 40,
+  "temps_total_min": 55,
+  "difficulte": "facile",
+  "cuisine": "americaine",
+  "proteine": "volaille",
+  "feculent": "pomme_de_terre",
+  "cout_total_eur": 3.99,
+  "cout_portion_eur": 2.0,
+  "saisons": [
+   1,
+   2,
+   3,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [
+   "pomme_de_terre",
+   "chou_vert",
+   "carotte"
+  ],
+  "etiquettes": [
+   "airfryer_possible",
+   "sans_porc",
+   "au_four"
+  ],
+  "allergenes": [
+   "oeufs",
+   "moutarde",
+   "sulfites"
+  ],
+  "ustensiles": [
+   "four",
+   "plaque",
+   "saladier"
+  ],
+  "equipement": [
+   "four"
+  ],
+  "conservation_jours": 1,
+  "conservation": "Restes : 1 jour au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [
+   "Cuis la volaille à cœur : plus aucune trace rosée, jus clair (74 °C au centre)."
+  ],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "poisson-pane",
+  "nom": "Poisson pané maison, purée et petits pois",
+  "famille": "monde_ameriques_afrique",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "poisson_blanc",
+    "quantite": 300.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "oeuf",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "farine",
+    "quantite": 30.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "pain",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": "rassis, émietté"
+   },
+   {
+    "id": "pomme_de_terre",
+    "quantite": 500.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "petit_pois",
+    "quantite": 150.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "lait",
+    "quantite": 100.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "beurre",
+    "quantite": 20.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_neutre",
+    "quantite": 30.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "citron",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Cuis les pommes de terre 20 min, écrase-les avec le lait et le beurre. Cuis les petits pois 5 min.",
+   "Passe les filets décongelés et séchés dans la farine, l'œuf battu puis la mie de pain émiettée.",
+   "Fais-les dorer 3 à 4 min par face dans l'huile : la chair doit être opaque au centre. Sers avec citron, purée et petits pois."
+  ],
+  "preparation_min": 15,
+  "cuisson_min": 20,
+  "temps_total_min": 35,
+  "difficulte": "facile",
+  "cuisine": "anglaise",
+  "proteine": "poisson",
+  "feculent": "pomme_de_terre",
+  "cout_total_eur": 5.21,
+  "cout_portion_eur": 2.61,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [
+   "pomme_de_terre"
+  ],
+  "etiquettes": [
+   "sans_porc",
+   "pescetarien",
+   "sans_four",
+   "poisson"
+  ],
+  "allergenes": [
+   "gluten",
+   "oeufs",
+   "poissons",
+   "lait"
+  ],
+  "ustensiles": [
+   "casserole",
+   "poêle",
+   "assiettes creuses",
+   "presse-purée"
+  ],
+  "equipement": [],
+  "conservation_jours": 0,
+  "conservation": "Ne se garde pas : à manger tout de suite.",
+  "securite": [
+   "Le poisson est cuit quand sa chair devient opaque et se détache en lamelles."
+  ],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "shakshuka-verte",
+  "nom": "Shakshuka verte aux épinards et à la feta",
+  "famille": "monde_ameriques_afrique",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "oeuf",
+    "quantite": 4.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "epinard_surgele",
+    "quantite": 300.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "poireau",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "cumin",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "feta",
+    "quantite": 60.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 15.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "pain",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais fondre le poireau émincé dans l'huile 5 min, ajoute l'ail, le cumin et les épinards ; laisse 5 min.",
+   "Creuse 4 puits, casse les œufs, couvre et cuis 4 à 5 min jusqu'à ce que les blancs soient pris.",
+   "Émiette la feta par-dessus et sers avec le pain."
+  ],
+  "preparation_min": 5,
+  "cuisson_min": 15,
+  "temps_total_min": 20,
+  "difficulte": "facile",
+  "cuisine": "tunisienne",
+  "proteine": "oeuf",
+  "feculent": "pain",
+  "cout_total_eur": 3.96,
+  "cout_portion_eur": 1.98,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [
+   "poireau"
+  ],
+  "etiquettes": [
+   "rapide",
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "sans_four"
+  ],
+  "allergenes": [
+   "gluten",
+   "oeufs",
+   "lait"
+  ],
+  "ustensiles": [
+   "poêle avec couvercle"
+  ],
+  "equipement": [],
+  "conservation_jours": 0,
+  "conservation": "Ne se garde pas : à manger tout de suite.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "boeuf-saute-oignons",
+  "nom": "Bœuf sauté aux oignons et au riz",
+  "famille": "monde_ameriques_afrique",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "boeuf_emince",
+    "quantite": 300.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "sauce_soja",
+    "quantite": 30.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "sauce_huitre",
+    "quantite": 15.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "gingembre",
+    "quantite": 10.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "riz",
+    "quantite": 150.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "carotte",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "huile_neutre",
+    "quantite": 15.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Mets le riz à cuire.",
+   "Fais sauter le bœuf 2 min à feu très vif dans l'huile, réserve. Fais sauter les oignons en lamelles et la carotte en julienne 4 min avec le gingembre.",
+   "Remets le bœuf avec les sauces, mélange 1 min. Sers avec le riz."
+  ],
+  "preparation_min": 10,
+  "cuisson_min": 15,
+  "temps_total_min": 25,
+  "difficulte": "facile",
+  "cuisine": "chinoise",
+  "proteine": "boeuf",
+  "feculent": "riz",
+  "cout_total_eur": 6.77,
+  "cout_portion_eur": 3.38,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [
+   "carotte"
+  ],
+  "etiquettes": [
+   "sans_porc",
+   "sans_four"
+  ],
+  "allergenes": [
+   "gluten",
+   "soja",
+   "mollusques"
+  ],
+  "ustensiles": [
+   "wok ou grande poêle",
+   "casserole"
+  ],
+  "equipement": [],
+  "conservation_jours": 2,
+  "conservation": "Restes : 2 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [
+   "Riz cuit : refroidis-le vite et garde-le 24 h au frigo au plus."
+  ],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "poulet-gingembre-miel",
+  "nom": "Poulet au gingembre et au miel, brocolis",
+  "famille": "monde_ameriques_afrique",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "poulet_filet",
+    "quantite": 300.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "gingembre",
+    "quantite": 15.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "sauce_soja",
+    "quantite": 30.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "miel",
+    "quantite": 15.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "brocoli_surgele",
+    "quantite": 300.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "riz",
+    "quantite": 150.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_neutre",
+    "quantite": 15.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Mets le riz à cuire.",
+   "Fais sauter le poulet en dés 6 min dans l'huile, jusqu'à ce qu'il soit cuit à cœur, avec le gingembre et l'ail râpés.",
+   "Ajoute les brocolis et 3 c. à soupe d'eau, couvre 4 min ; ajoute la sauce soja et le miel et laisse laquer 1 min."
+  ],
+  "preparation_min": 10,
+  "cuisson_min": 15,
+  "temps_total_min": 25,
+  "difficulte": "facile",
+  "cuisine": "chinoise",
+  "proteine": "volaille",
+  "feculent": "riz",
+  "cout_total_eur": 5.25,
+  "cout_portion_eur": 2.62,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [],
+  "etiquettes": [
+   "sans_porc",
+   "sans_four",
+   "se_garde_3j"
+  ],
+  "allergenes": [
+   "gluten",
+   "soja"
+  ],
+  "ustensiles": [
+   "wok ou grande poêle",
+   "casserole"
+  ],
+  "equipement": [],
+  "conservation_jours": 3,
+  "conservation": "Restes : 3 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [
+   "Cuis la volaille à cœur : plus aucune trace rosée, jus clair (74 °C au centre).",
+   "Riz cuit : refroidis-le vite et garde-le 24 h au frigo au plus."
+  ],
+  "source": "originale (Quotidien)"
+ }
+]

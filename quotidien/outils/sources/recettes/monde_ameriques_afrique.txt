@@ -1,0 +1,418 @@
+# Cuisines des Amériques, d'Afrique, des Antilles et de la Réunion, version du quotidien. Recettes originales.
+
+## Chili con carne
+id: chili-con-carne · portions: 6 · prep: 15 · cuisson: 60 · difficulte: facile · cuisine: mexicaine · proteine: boeuf · feculent: riz · restes: 2
+tags: epice, reconfortant
+ustensiles: cocotte, casserole
+- 500 g boeuf_hache
+- 500 g haricot_rouge : 2 boîtes
+- 800 g tomate_concassee
+- 2 oignon
+- 2 ail
+- 1 carotte
+- 4 g cumin
+- 4 g paprika
+- 1 g piment
+- 140 g mais
+- 450 g riz
+- 15 ml huile_neutre
+> Fais revenir oignons, ail et carotte hachés 5 min dans l'huile, ajoute la viande et cuis-la en l'émiettant jusqu'à ce qu'elle ne soit plus rosée.
+> Ajoute les épices, les tomates et 200 ml d'eau ; laisse mijoter 40 min à feu doux.
+> Ajoute les haricots rincés et le maïs, poursuis 15 min. Sale.
+> Sers avec le riz.
+
+## Chili sin carne
+id: chili-sin-carne · portions: 6 · prep: 15 · cuisson: 40 · difficulte: facile · cuisine: mexicaine · proteine: legumineuse · feculent: riz · restes: 3
+tags: batch, epice, reconfortant
+ustensiles: cocotte, casserole
+- 500 g haricot_rouge
+- 150 g lentille_corail
+- 800 g tomate_concassee
+- 2 oignon
+- 2 carotte
+- 2 ail
+- 4 g cumin
+- 4 g paprika
+- 1 g piment
+- 140 g mais
+- 450 g riz
+- 15 ml huile_neutre
+> Fais revenir oignons, carottes et ail hachés 5 min, ajoute les épices.
+> Ajoute les lentilles rincées, les tomates et 500 ml d'eau ; laisse mijoter 25 min en remuant.
+> Ajoute les haricots rincés et le maïs, poursuis 10 min. Sale, et sers avec le riz.
+
+## Tacos de poulet au paprika
+id: tacos-poulet · portions: 2 · prep: 15 · cuisson: 10 · difficulte: facile · cuisine: mexicaine · proteine: volaille · feculent: tortilla · restes: 1
+tags: epice
+ustensiles: poêle, saladier
+- 300 g poulet_filet
+- 4 tortilla
+- 2 g paprika
+- 1 g cumin
+- 1 tomate
+- 0.5 oignon_rouge
+- 0.5 salade
+- 1 citron_vert
+- 10 g coriandre
+- 80 g yaourt_grec
+- 10 ml huile_neutre
+> Coupe le poulet en petits morceaux, mélange-le avec les épices et du sel, et fais-le dorer 8 min dans l'huile, jusqu'à ce qu'il soit cuit à cœur.
+> Salsa : tomate et oignon en petits dés, coriandre, jus de citron vert, sel.
+> Garnis les tortillas chaudes de salade, de poulet, de salsa et de yaourt.
+
+## Burritos au riz et aux haricots
+id: burritos-riz-haricots · portions: 4 · prep: 20 · cuisson: 20 · difficulte: facile · cuisine: mexicaine · proteine: legumineuse · feculent: riz · restes: 1 · riz: melange
+tags: transportable
+ustensiles: casserole, poêle, papier aluminium
+- 150 g riz
+- 500 g haricot_rouge
+- 8 tortilla
+- 1 oignon
+- 2 g cumin
+- 400 g tomate_concassee
+- 120 g fromage_rape
+- 1 citron_vert
+- 10 g coriandre
+> Cuis le riz, ajoute le jus du citron vert et la coriandre.
+> Fais revenir l'oignon avec le cumin, ajoute les tomates et les haricots, laisse réduire 10 min en écrasant à moitié.
+> Garnis chaque tortilla de riz, de haricots et de fromage, replie les côtés et roule serré.
+> Dore-les 2 min par face dans une poêle sèche. Ceux pour demain se gardent au frigo, emballés.
+
+## Enchiladas au poulet
+id: enchiladas-poulet · portions: 4 · prep: 20 · cuisson: 25 · difficulte: moyen · cuisine: mexicaine · proteine: volaille · feculent: tortilla · restes: 2
+tags: gratin
+ustensiles: four, plat à gratin, poêle
+- 400 g poulet_filet
+- 8 tortilla
+- 500 ml coulis_tomate
+- 1 oignon
+- 1 poivron
+- 2 g cumin
+- 2 g paprika
+- 120 g fromage_rape
+- 100 g yaourt_grec
+- 15 ml huile_neutre
+> Préchauffe le four à 200 °C. Fais revenir l'oignon et le poivron, ajoute le poulet en petits dés et les épices ; cuis 8 min, jusqu'à ce qu'il soit cuit à cœur.
+> Ajoute un tiers du coulis. Garnis et roule les tortillas, range-les dans le plat.
+> Nappe du reste du coulis, couvre de fromage et enfourne 20 min. Sers avec le yaourt.
+
+## Mac and cheese au four
+id: mac-and-cheese · portions: 4 · prep: 10 · cuisson: 25 · difficulte: facile · cuisine: americaine · proteine: fromage · feculent: pates · restes: 2
+tags: gratin, reconfortant
+ustensiles: four, plat à gratin, casserole, fouet
+- 300 g pates : des macaroni
+- 30 g beurre
+- 30 g farine
+- 600 ml lait
+- 180 g fromage_rape
+- 5 g moutarde
+- 1 salade
+> Préchauffe le four à 200 °C. Cuis les pâtes 2 min de moins qu'indiqué.
+> Sauce : beurre, farine, lait en fouettant ; laisse épaissir 5 min, ajoute la moutarde et les deux tiers du fromage.
+> Mélange avec les pâtes, verse dans le plat, couvre du reste de fromage et enfourne 15 min. Sers avec la salade.
+
+## Jambalaya
+id: jambalaya · portions: 4 · prep: 20 · cuisson: 35 · difficulte: moyen · cuisine: americaine · proteine: volaille · feculent: riz · restes: 1 · riz: melange
+tags: epice
+ustensiles: cocotte
+- 300 g poulet_filet
+- 100 g chorizo
+- 300 g riz
+- 1 poivron
+- 1 oignon
+- 1 celeri_branche
+- 2 ail
+- 400 g tomate_concassee
+- 2 g paprika
+- 1 g piment
+- 1 g thym
+- 1 bouillon_cube
+- 15 ml huile_neutre
+> Fais dorer le poulet en dés et le chorizo 6 min dans l'huile.
+> Ajoute oignon, poivron, céleri et ail, 5 min, puis les épices et le riz.
+> Verse les tomates et 600 ml d'eau avec le cube ; couvre et cuis 20 min à feu doux, jusqu'à ce que le riz soit tendre et le poulet cuit à cœur.
+
+## Chowder de poisson et maïs
+id: chowder-poisson · portions: 4 · prep: 15 · cuisson: 25 · difficulte: facile · cuisine: americaine · proteine: poisson · feculent: pomme_de_terre · restes: 2
+tags: soupe, reconfortant
+ustensiles: cocotte
+- 400 g poisson_blanc : décongelé au réfrigérateur
+- 500 g pomme_de_terre
+- 1 oignon
+- 2 carotte
+- 140 g mais
+- 400 ml lait
+- 100 ml creme
+- 60 g lardons
+- 1 bouillon_cube
+- 1 laurier
+> Fais revenir les lardons et l'oignon 5 min, ajoute pommes de terre et carottes en dés, le cube, le laurier et 500 ml d'eau ; cuis 15 min.
+> Ajoute le lait, la crème, le maïs et le poisson en gros cubes ; laisse frémir 6 min sans bouillir : le poisson doit être opaque.
+> Poivre et sers bien chaud.
+
+## Porc effiloché au four
+id: porc-effiloche · portions: 6 · prep: 15 · cuisson: 180 · difficulte: facile · cuisine: americaine · proteine: porc · feculent: pain · restes: 3
+tags: batch
+ustensiles: four, cocotte allant au four
+- 1000 g porc_echine
+- 200 ml coulis_tomate
+- 30 g miel
+- 15 ml vinaigre
+- 4 g paprika
+- 2 g cumin
+- 2 oignon
+- 6 pain_burger
+- 0.3 chou_rouge : en salade
+> Préchauffe le four à 150 °C. Frotte la viande avec les épices et du sel.
+> Mets-la dans la cocotte sur les oignons émincés, avec le coulis, le miel, le vinaigre et 200 ml d'eau. Couvre et enfourne 3 h.
+> Effiloche la viande à la fourchette dans la sauce : elle doit se défaire toute seule.
+> Sers dans les pains, avec le chou rouge émincé et assaisonné.
+
+## Patate douce rôtie, haricots rouges et feta
+id: patate-douce-haricots · portions: 2 · prep: 10 · cuisson: 30 · difficulte: facile · cuisine: americaine · proteine: legumineuse · feculent: pomme_de_terre · restes: 2
+tags: airfryer_possible
+ustensiles: four, plaque, casserole
+- 2 patate_douce
+- 250 g haricot_rouge
+- 80 g feta
+- 1 g cumin
+- 1 g paprika
+- 20 ml huile_olive
+- 0.5 citron_vert
+- 50 g roquette
+> Préchauffe le four à 210 °C. Coupe les patates douces en cubes, mélange avec l'huile, les épices et du sel ; rôtis 25 à 30 min.
+> Réchauffe les haricots rincés avec un peu d'eau.
+> Dresse patates, haricots, roquette et feta ; arrose de citron vert.
+
+## Mafé de poulet
+id: mafe-poulet · portions: 4 · prep: 20 · cuisson: 45 · difficulte: facile · cuisine: africaine · proteine: volaille · feculent: riz · restes: 3
+tags: batch, reconfortant
+ustensiles: cocotte, casserole
+- 600 g poulet_filet
+- 120 g beurre_cacahuete
+- 400 g tomate_concassee
+- 2 oignon
+- 3 carotte
+- 1 patate_douce
+- 2 ail
+- 1 bouillon_cube
+- 1 g piment
+- 300 g riz
+- 15 ml huile_neutre
+> Fais dorer le poulet en morceaux dans l'huile, ajoute oignons et ail.
+> Délaie le beurre de cacahuète dans 500 ml d'eau chaude avec le cube ; verse dans la cocotte avec les tomates et le piment.
+> Ajoute carottes et patate douce en morceaux, laisse mijoter 35 min : le poulet doit être cuit à cœur et la sauce épaisse.
+> Sers avec le riz.
+
+## Poulet yassa
+id: poulet-yassa · portions: 4 · prep: 20 · cuisson: 40 · difficulte: facile · cuisine: africaine · proteine: volaille · feculent: riz · restes: 3
+tags: batch
+ustensiles: saladier, cocotte, casserole
+- 4 poulet_cuisse
+- 4 oignon
+- 2 citron
+- 15 g moutarde
+- 2 ail
+- 1 g piment
+- 1 bouillon_cube
+- 300 g riz
+- 20 ml huile_neutre
+> Mélange le jus des citrons, la moutarde, l'ail, le piment et du sel ; fais-y mariner le poulet et les oignons émincés au moins 15 min.
+> Fais dorer le poulet égoutté dans l'huile, réserve. Fais fondre longuement les oignons de la marinade 15 min.
+> Remets le poulet, ajoute le reste de marinade, le cube et 200 ml d'eau ; laisse mijoter 25 min : jus clair près de l'os.
+> Sers avec le riz.
+
+## Colombo de poulet
+id: colombo-poulet · portions: 4 · prep: 20 · cuisson: 40 · difficulte: facile · cuisine: antillaise · proteine: volaille · feculent: riz · restes: 3
+tags: batch, epice
+ustensiles: cocotte, casserole
+- 600 g poulet_filet
+- 2 oignon
+- 3 ail
+- 8 g curry
+- 1 courgette
+- 1 aubergine
+- 300 g pomme_de_terre
+- 1 citron_vert
+- 1 g thym
+- 300 g riz
+- 20 ml huile_neutre
+> Fais dorer le poulet en morceaux dans l'huile avec les oignons, ajoute l'ail et le curry 1 min.
+> Ajoute les légumes en cubes, le thym et 400 ml d'eau ; sale et laisse mijoter 30 min.
+> Arrose de citron vert : le poulet doit être cuit à cœur et les légumes fondants. Sers avec le riz.
+
+## Rougail saucisse
+id: rougail-saucisse · portions: 4 · prep: 15 · cuisson: 40 · difficulte: facile · cuisine: reunionnaise · proteine: porc · feculent: riz · restes: 3
+tags: batch, epice
+ustensiles: cocotte, casserole
+- 6 saucisse
+- 800 g tomate_concassee
+- 2 oignon
+- 3 ail
+- 15 g gingembre
+- 2 g curcuma
+- 1 g piment
+- 1 g thym
+- 300 g riz
+- 265 g haricot_rouge
+> Coupe les saucisses en rondelles épaisses et fais-les dorer dans la cocotte sans matière grasse ; jette l'excès de graisse.
+> Ajoute oignons, ail, gingembre, curcuma, piment et thym, 5 min, puis les tomates ; laisse mijoter 30 min à feu doux : les saucisses doivent être cuites à cœur.
+> Réchauffe les haricots rouges. Sers le rougail avec le riz et les haricots.
+
+## Riz créole aux haricots rouges
+id: riz-haricots-rouges · portions: 2 · prep: 10 · cuisson: 20 · difficulte: facile · cuisine: antillaise · proteine: legumineuse · feculent: riz · restes: 1 · riz: melange
+tags: epice
+ustensiles: casserole avec couvercle
+- 150 g riz
+- 250 g haricot_rouge
+- 200 ml lait_coco
+- 1 oignon
+- 1 ail
+- 1 g thym
+- 0.5 g piment
+- 1 carotte : en salade râpée
+- 10 ml huile_neutre
+> Fais revenir l'oignon et l'ail dans l'huile, ajoute le riz, le lait de coco, 150 ml d'eau, le thym, le piment et du sel.
+> Couvre et cuis 15 min à feu doux, ajoute les haricots rincés et laisse reposer 5 min.
+> Sers avec la carotte râpée assaisonnée.
+
+## Goulasch
+id: goulasch · portions: 4 · prep: 20 · cuisson: 120 · difficulte: facile · cuisine: hongroise · proteine: boeuf · feculent: pomme_de_terre · restes: 3
+tags: batch, reconfortant
+ustensiles: cocotte
+- 700 g boeuf_braiser
+- 3 oignon
+- 2 ail
+- 8 g paprika
+- 400 g tomate_concassee
+- 2 carotte
+- 600 g pomme_de_terre
+- 1 bouillon_cube
+- 20 ml huile_neutre
+> Fais dorer la viande en cubes dans l'huile, ajoute les oignons émincés et laisse fondre 8 min.
+> Hors du feu, ajoute le paprika (il brûle vite), puis l'ail, les tomates, le cube et 600 ml d'eau.
+> Laisse mijoter 1 h 30 à couvert, ajoute carottes et pommes de terre en morceaux et poursuis 30 min.
+
+## Bowl de patate douce et poulet au sésame
+id: bowl-patate-douce-poulet · portions: 2 · prep: 15 · cuisson: 25 · difficulte: facile · cuisine: americaine · proteine: volaille · feculent: pomme_de_terre · restes: 2
+tags: transportable, airfryer_possible
+ustensiles: four, plaque, poêle
+- 1 patate_douce
+- 250 g poulet_filet
+- 50 g roquette
+- 0.25 chou_rouge
+- 20 ml sauce_soja
+- 10 g miel
+- 5 g graines_sesame
+- 20 ml huile_olive
+> Préchauffe le four à 210 °C. Rôtis la patate douce en cubes avec la moitié de l'huile 25 min.
+> Fais dorer le poulet en lamelles 6 à 8 min dans le reste d'huile, jusqu'à ce qu'il soit cuit à cœur ; laque-le avec la sauce soja et le miel 1 min.
+> Dresse roquette, chou rouge émincé, patate douce et poulet ; parsème de sésame.
+
+## Hamburger de saumon et salade de chou
+id: burger-saumon · portions: 2 · prep: 15 · cuisson: 10 · difficulte: facile · cuisine: americaine · proteine: poisson · feculent: pain · restes: 0
+ustensiles: poêle, saladier
+- 2 saumon
+- 2 pain_burger
+- 0.2 chou_rouge
+- 1 carotte
+- 40 g mayonnaise
+- 0.5 citron
+- 0.5 salade
+> Retire la peau du saumon et fais cuire les pavés 3 à 4 min par face, jusqu'à ce que la chair soit opaque.
+> Salade de chou : chou et carotte râpés, mayonnaise, jus de citron, sel, poivre.
+> Garnis les pains toastés de salade, de saumon et d'un peu de salade de chou ; sers le reste à côté.
+
+## Soupe de patate douce au lait de coco
+id: soupe-patate-douce-coco · portions: 4 · prep: 15 · cuisson: 25 · difficulte: facile · cuisine: antillaise · proteine: legumineuse · feculent: pain · restes: 3
+tags: batch, soupe, epice
+ustensiles: cocotte, mixeur plongeant ou presse-purée
+- 2 patate_douce
+- 2 carotte
+- 150 g lentille_corail
+- 400 ml lait_coco
+- 1 oignon
+- 10 g gingembre
+- 6 g curry
+- 1 bouillon_cube
+- 1 pain
+> Fais revenir l'oignon, le gingembre et le curry, ajoute les légumes en cubes et les lentilles rincées.
+> Couvre de 1 litre d'eau avec le cube, cuis 20 min, ajoute le lait de coco et mixe. Sale et sers avec le pain.
+
+## Coleslaw au poulet et pommes de terre au four
+id: poulet-coleslaw · portions: 2 · prep: 15 · cuisson: 40 · difficulte: facile · cuisine: americaine · proteine: volaille · feculent: pomme_de_terre · restes: 1
+tags: airfryer_possible
+ustensiles: four, plaque, saladier
+- 2 poulet_cuisse
+- 500 g pomme_de_terre
+- 0.25 chou_vert
+- 1 carotte
+- 50 g mayonnaise
+- 10 ml vinaigre
+- 2 g paprika
+- 20 ml huile_neutre
+> Préchauffe le four à 210 °C. Frotte les cuisses de paprika, de sel et d'huile ; mets-les sur la plaque avec les pommes de terre en quartiers huilées.
+> Enfourne 35 à 40 min : le poulet doit être cuit à cœur (jus clair quand tu piques près de l'os) et les pommes de terre dorées.
+> Coleslaw : chou émincé finement et carotte râpée, mayonnaise, vinaigre, sel et poivre.
+
+## Poisson pané maison, purée et petits pois
+id: poisson-pane · portions: 2 · prep: 15 · cuisson: 20 · difficulte: facile · cuisine: anglaise · proteine: poisson · feculent: pomme_de_terre · restes: 0
+ustensiles: casserole, poêle, assiettes creuses, presse-purée
+- 300 g poisson_blanc
+- 1 oeuf
+- 30 g farine
+- 0.5 pain : rassis, émietté
+- 500 g pomme_de_terre
+- 150 g petit_pois
+- 100 ml lait
+- 20 g beurre
+- 30 ml huile_neutre
+- 0.5 citron
+> Cuis les pommes de terre 20 min, écrase-les avec le lait et le beurre. Cuis les petits pois 5 min.
+> Passe les filets décongelés et séchés dans la farine, l'œuf battu puis la mie de pain émiettée.
+> Fais-les dorer 3 à 4 min par face dans l'huile : la chair doit être opaque au centre. Sers avec citron, purée et petits pois.
+
+## Shakshuka verte aux épinards et à la feta
+id: shakshuka-verte · portions: 2 · prep: 5 · cuisson: 15 · difficulte: facile · cuisine: tunisienne · proteine: oeuf · feculent: pain · restes: 0
+ustensiles: poêle avec couvercle
+- 4 oeuf
+- 300 g epinard_surgele
+- 1 poireau
+- 1 ail
+- 1 g cumin
+- 60 g feta
+- 15 ml huile_olive
+- 0.5 pain
+> Fais fondre le poireau émincé dans l'huile 5 min, ajoute l'ail, le cumin et les épinards ; laisse 5 min.
+> Creuse 4 puits, casse les œufs, couvre et cuis 4 à 5 min jusqu'à ce que les blancs soient pris.
+> Émiette la feta par-dessus et sers avec le pain.
+
+## Bœuf sauté aux oignons et au riz
+id: boeuf-saute-oignons · portions: 2 · prep: 10 · cuisson: 15 · difficulte: facile · cuisine: chinoise · proteine: boeuf · feculent: riz · restes: 2
+ustensiles: wok ou grande poêle, casserole
+- 300 g boeuf_emince
+- 2 oignon
+- 30 ml sauce_soja
+- 15 ml sauce_huitre
+- 10 g gingembre
+- 150 g riz
+- 1 carotte
+- 15 ml huile_neutre
+> Mets le riz à cuire.
+> Fais sauter le bœuf 2 min à feu très vif dans l'huile, réserve. Fais sauter les oignons en lamelles et la carotte en julienne 4 min avec le gingembre.
+> Remets le bœuf avec les sauces, mélange 1 min. Sers avec le riz.
+
+## Poulet au gingembre et au miel, brocolis
+id: poulet-gingembre-miel · portions: 2 · prep: 10 · cuisson: 15 · difficulte: facile · cuisine: chinoise · proteine: volaille · feculent: riz · restes: 3
+ustensiles: wok ou grande poêle, casserole
+- 300 g poulet_filet
+- 15 g gingembre
+- 2 ail
+- 30 ml sauce_soja
+- 15 g miel
+- 300 g brocoli_surgele
+- 150 g riz
+- 15 ml huile_neutre
+> Mets le riz à cuire.
+> Fais sauter le poulet en dés 6 min dans l'huile, jusqu'à ce qu'il soit cuit à cœur, avec le gingembre et l'ail râpés.
+> Ajoute les brocolis et 3 c. à soupe d'eau, couvre 4 min ; ajoute la sauce soja et le miel et laisse laquer 1 min.

@@ -1,0 +1,594 @@
+{
+ "creme": [
+  {
+   "par": "yaourt_grec",
+   "conseil": "Pas de crème ? Un yaourt à la grecque fait l'affaire, ajouté hors du feu pour qu'il ne tranche pas."
+  },
+  {
+   "par": "creme_epaisse",
+   "conseil": "Pas de crème liquide ? La crème épaisse va très bien, détendue d'un peu d'eau."
+  },
+  {
+   "par": "lait_coco",
+   "conseil": "Pas de crème ? Le lait de coco donne une sauce aussi onctueuse, avec un goût plus doux."
+  }
+ ],
+ "creme_epaisse": [
+  {
+   "par": "yaourt_grec",
+   "conseil": "Pas de crème fraîche ? Du yaourt à la grecque, hors du feu."
+  },
+  {
+   "par": "creme",
+   "conseil": "Pas de crème épaisse ? La crème liquide, en faisant un peu réduire."
+  },
+  {
+   "par": "fromage_frais",
+   "conseil": "Pas de crème fraîche ? Du fromage frais à tartiner fond très bien dans une sauce."
+  }
+ ],
+ "yaourt_grec": [
+  {
+   "par": "creme_epaisse",
+   "conseil": "Pas de yaourt grec ? De la crème fraîche, un peu plus riche."
+  }
+ ],
+ "lait": [
+  {
+   "par": "lait_coco",
+   "conseil": "Plus de lait ? Du lait de coco coupé d'eau, pour une sauce ou une soupe."
+  }
+ ],
+ "beurre": [
+  {
+   "par": "huile_olive",
+   "conseil": "Plus de beurre ? De l'huile d'olive pour la cuisson."
+  }
+ ],
+ "fromage_rape": [
+  {
+   "par": "parmesan",
+   "conseil": "Plus d'emmental ? Du parmesan râpé, en mettant un peu moins."
+  },
+  {
+   "par": "mozzarella",
+   "conseil": "Plus de fromage râpé ? De la mozzarella coupée en petits dés pour gratiner."
+  }
+ ],
+ "parmesan": [
+  {
+   "par": "fromage_rape",
+   "conseil": "Plus de parmesan ? De l'emmental râpé."
+  }
+ ],
+ "mozzarella": [
+  {
+   "par": "fromage_rape",
+   "conseil": "Pas de mozzarella ? De l'emmental râpé gratine aussi bien."
+  }
+ ],
+ "feta": [
+  {
+   "par": "chevre",
+   "conseil": "Pas de feta ? Du chèvre émietté."
+  }
+ ],
+ "chevre": [
+  {
+   "par": "feta",
+   "conseil": "Pas de chèvre ? De la feta."
+  }
+ ],
+ "ricotta": [
+  {
+   "par": "fromage_frais",
+   "conseil": "Pas de ricotta ? Du fromage frais à tartiner."
+  },
+  {
+   "par": "yaourt_grec",
+   "conseil": "Pas de ricotta ? Du yaourt à la grecque bien égoutté."
+  }
+ ],
+ "poulet_filet": [
+  {
+   "par": "dinde",
+   "conseil": "Pas de poulet ? Des escalopes de dinde, même cuisson."
+  },
+  {
+   "par": "tofu",
+   "conseil": "Pas de poulet ? Du tofu ferme en dés, bien doré à la poêle."
+  }
+ ],
+ "dinde": [
+  {
+   "par": "poulet_filet",
+   "conseil": "Pas de dinde ? Du filet de poulet."
+  }
+ ],
+ "boeuf_hache": [
+  {
+   "par": "lentille_corail",
+   "conseil": "Pas de viande hachée ? Des lentilles corail : 80 g sèches remplacent 125 g de viande."
+  }
+ ],
+ "boeuf_emince": [
+  {
+   "par": "poulet_filet",
+   "conseil": "Pas de bœuf ? Du poulet émincé, cuit à cœur."
+  }
+ ],
+ "lardons": [
+  {
+   "par": "jambon",
+   "conseil": "Pas de lardons ? Du jambon coupé en dés."
+  },
+  {
+   "par": "chorizo",
+   "conseil": "Pas de lardons ? Du chorizo en petits dés, pour un goût plus relevé."
+  }
+ ],
+ "jambon": [
+  {
+   "par": "lardons",
+   "conseil": "Pas de jambon ? Des lardons poêlés."
+  }
+ ],
+ "saumon": [
+  {
+   "par": "poisson_blanc",
+   "conseil": "Pas de saumon ? Un filet de poisson blanc."
+  }
+ ],
+ "poisson_blanc": [
+  {
+   "par": "saumon",
+   "conseil": "Pas de poisson blanc ? Un pavé de saumon."
+  }
+ ],
+ "thon": [
+  {
+   "par": "sardine",
+   "conseil": "Pas de thon ? Des sardines à l'huile égouttées."
+  }
+ ],
+ "crevette": [
+  {
+   "par": "poisson_blanc",
+   "conseil": "Pas de crevettes ? Du poisson blanc en morceaux."
+  }
+ ],
+ "pois_chiche": [
+  {
+   "par": "haricot_blanc",
+   "conseil": "Pas de pois chiches ? Des haricots blancs en boîte."
+  }
+ ],
+ "haricot_rouge": [
+  {
+   "par": "haricot_blanc",
+   "conseil": "Pas de haricots rouges ? Des haricots blancs."
+  }
+ ],
+ "haricot_blanc": [
+  {
+   "par": "pois_chiche",
+   "conseil": "Pas de haricots blancs ? Des pois chiches."
+  }
+ ],
+ "lentille_verte": [
+  {
+   "par": "lentille_corail",
+   "conseil": "Pas de lentilles vertes ? Des lentilles corail, cuites 10 min seulement."
+  }
+ ],
+ "lentille_corail": [
+  {
+   "par": "lentille_verte",
+   "conseil": "Pas de lentilles corail ? Des lentilles vertes, cuites 25 min."
+  }
+ ],
+ "pates": [
+  {
+   "par": "riz",
+   "conseil": "Plus de pâtes ? Du riz."
+  }
+ ],
+ "riz": [
+  {
+   "par": "quinoa",
+   "conseil": "Plus de riz ? Du quinoa, cuit 12 min."
+  },
+  {
+   "par": "semoule",
+   "conseil": "Plus de riz ? De la semoule, prête en 5 min."
+  },
+  {
+   "par": "boulgour",
+   "conseil": "Plus de riz ? Du boulgour."
+  }
+ ],
+ "riz_rond": [
+  {
+   "par": "riz",
+   "conseil": "Pas de riz à risotto ? Du riz long, en remuant souvent : moins crémeux, mais bon."
+  }
+ ],
+ "semoule": [
+  {
+   "par": "boulgour",
+   "conseil": "Pas de semoule ? Du boulgour."
+  }
+ ],
+ "boulgour": [
+  {
+   "par": "semoule",
+   "conseil": "Pas de boulgour ? De la semoule."
+  }
+ ],
+ "quinoa": [
+  {
+   "par": "boulgour",
+   "conseil": "Pas de quinoa ? Du boulgour."
+  },
+  {
+   "par": "riz",
+   "conseil": "Pas de quinoa ? Du riz."
+  }
+ ],
+ "nouilles_riz": [
+  {
+   "par": "pates",
+   "conseil": "Pas de nouilles de riz ? Des spaghetti fins."
+  }
+ ],
+ "nouilles_ble": [
+  {
+   "par": "pates",
+   "conseil": "Pas de nouilles chinoises ? Des spaghetti."
+  }
+ ],
+ "tortilla": [
+  {
+   "par": "pain_pita",
+   "conseil": "Pas de tortillas ? Des pains pita."
+  }
+ ],
+ "pain_pita": [
+  {
+   "par": "tortilla",
+   "conseil": "Pas de pain pita ? Des tortillas."
+  }
+ ],
+ "pain": [
+  {
+   "par": "pain_mie",
+   "conseil": "Plus de baguette ? Du pain de mie grillé."
+  }
+ ],
+ "pain_mie": [
+  {
+   "par": "pain",
+   "conseil": "Pas de pain de mie ? De la baguette en tranches."
+  }
+ ],
+ "pate_brisee": [
+  {
+   "par": "pate_feuilletee",
+   "conseil": "Pas de pâte brisée ? Une pâte feuilletée."
+  }
+ ],
+ "pate_feuilletee": [
+  {
+   "par": "pate_brisee",
+   "conseil": "Pas de pâte feuilletée ? Une pâte brisée."
+  }
+ ],
+ "tomate_concassee": [
+  {
+   "par": "coulis_tomate",
+   "conseil": "Pas de tomates concassées ? Du coulis de tomate."
+  }
+ ],
+ "coulis_tomate": [
+  {
+   "par": "tomate_concassee",
+   "conseil": "Pas de coulis ? Des tomates concassées, mixées ou non."
+  }
+ ],
+ "tomate": [
+  {
+   "par": "tomate_concassee",
+   "conseil": "Pas de tomates fraîches ? Des tomates en boîte pour un plat cuit."
+  },
+  {
+   "par": "tomate_cerise",
+   "conseil": "Pas de grosses tomates ? Des tomates cerises."
+  }
+ ],
+ "tomate_cerise": [
+  {
+   "par": "tomate",
+   "conseil": "Pas de tomates cerises ? Une tomate en dés."
+  }
+ ],
+ "courgette": [
+  {
+   "par": "aubergine",
+   "conseil": "Pas de courgette ? Une aubergine."
+  }
+ ],
+ "aubergine": [
+  {
+   "par": "courgette",
+   "conseil": "Pas d'aubergine ? Une courgette."
+  }
+ ],
+ "poivron": [
+  {
+   "par": "courgette",
+   "conseil": "Pas de poivron ? Une courgette."
+  }
+ ],
+ "epinard": [
+  {
+   "par": "epinard_surgele",
+   "conseil": "Pas d'épinards frais ? Des surgelés, bien égouttés."
+  }
+ ],
+ "epinard_surgele": [
+  {
+   "par": "epinard",
+   "conseil": "Pas d'épinards surgelés ? Des frais, tombés à la poêle."
+  }
+ ],
+ "haricot_vert": [
+  {
+   "par": "haricot_vert_surgele",
+   "conseil": "Pas de haricots verts frais ? Des surgelés."
+  }
+ ],
+ "haricot_vert_surgele": [
+  {
+   "par": "haricot_vert",
+   "conseil": "Pas de surgelés ? Des haricots verts frais."
+  }
+ ],
+ "brocoli": [
+  {
+   "par": "brocoli_surgele",
+   "conseil": "Pas de brocoli frais ? Des surgelés."
+  },
+  {
+   "par": "chou_fleur",
+   "conseil": "Pas de brocoli ? Du chou-fleur."
+  }
+ ],
+ "brocoli_surgele": [
+  {
+   "par": "brocoli",
+   "conseil": "Pas de surgelés ? Un brocoli frais."
+  }
+ ],
+ "chou_fleur": [
+  {
+   "par": "brocoli",
+   "conseil": "Pas de chou-fleur ? Un brocoli."
+  }
+ ],
+ "courge": [
+  {
+   "par": "patate_douce",
+   "conseil": "Pas de courge ? De la patate douce."
+  }
+ ],
+ "patate_douce": [
+  {
+   "par": "courge",
+   "conseil": "Pas de patate douce ? De la courge."
+  },
+  {
+   "par": "carotte",
+   "conseil": "Pas de patate douce ? Des carottes."
+  }
+ ],
+ "poireau": [
+  {
+   "par": "oignon",
+   "conseil": "Pas de poireau ? Deux oignons émincés."
+  }
+ ],
+ "echalote": [
+  {
+   "par": "oignon",
+   "conseil": "Pas d'échalote ? Un demi-oignon."
+  }
+ ],
+ "oignon_rouge": [
+  {
+   "par": "oignon",
+   "conseil": "Pas d'oignon rouge ? Un oignon jaune, plus fort : mets-en moins."
+  }
+ ],
+ "oignon": [
+  {
+   "par": "echalote",
+   "conseil": "Plus d'oignon ? Deux échalotes."
+  }
+ ],
+ "champignon": [
+  {
+   "par": "courgette",
+   "conseil": "Pas de champignons ? Une courgette."
+  }
+ ],
+ "salade": [
+  {
+   "par": "mache",
+   "conseil": "Pas de salade ? De la mâche."
+  },
+  {
+   "par": "roquette",
+   "conseil": "Pas de salade ? De la roquette."
+  }
+ ],
+ "mache": [
+  {
+   "par": "salade",
+   "conseil": "Pas de mâche ? De la salade verte."
+  }
+ ],
+ "roquette": [
+  {
+   "par": "salade",
+   "conseil": "Pas de roquette ? De la salade verte."
+  }
+ ],
+ "endive": [
+  {
+   "par": "salade",
+   "conseil": "Pas d'endives ? De la salade verte."
+  }
+ ],
+ "citron": [
+  {
+   "par": "citron_vert",
+   "conseil": "Pas de citron jaune ? Un citron vert."
+  },
+  {
+   "par": "vinaigre",
+   "conseil": "Pas de citron ? Un filet de vinaigre."
+  }
+ ],
+ "citron_vert": [
+  {
+   "par": "citron",
+   "conseil": "Pas de citron vert ? Un citron jaune."
+  }
+ ],
+ "coriandre": [
+  {
+   "par": "persil",
+   "conseil": "Pas de coriandre ? Du persil."
+  }
+ ],
+ "persil": [
+  {
+   "par": "ciboulette",
+   "conseil": "Pas de persil ? De la ciboulette."
+  }
+ ],
+ "basilic": [
+  {
+   "par": "persil",
+   "conseil": "Pas de basilic ? Du persil (ou un peu de pesto)."
+  }
+ ],
+ "ciboulette": [
+  {
+   "par": "persil",
+   "conseil": "Pas de ciboulette ? Du persil."
+  }
+ ],
+ "menthe": [
+  {
+   "par": "persil",
+   "conseil": "Pas de menthe ? Du persil."
+  }
+ ],
+ "aneth": [
+  {
+   "par": "ciboulette",
+   "conseil": "Pas d'aneth ? De la ciboulette."
+  }
+ ],
+ "gingembre": [
+  {
+   "par": "ail",
+   "conseil": "Pas de gingembre ? Une gousse d'ail de plus."
+  }
+ ],
+ "lait_coco": [
+  {
+   "par": "creme",
+   "conseil": "Pas de lait de coco ? De la crème liquide."
+  }
+ ],
+ "pesto": [
+  {
+   "par": "basilic",
+   "conseil": "Pas de pesto ? Du basilic haché, de l'huile d'olive et du parmesan."
+  }
+ ],
+ "mayonnaise": [
+  {
+   "par": "yaourt_grec",
+   "conseil": "Pas de mayonnaise ? Du yaourt grec avec une pointe de moutarde."
+  }
+ ],
+ "vin_blanc": [
+  {
+   "par": "bouillon_cube",
+   "conseil": "Pas de vin blanc ? Du bouillon."
+  }
+ ],
+ "vin_rouge": [
+  {
+   "par": "bouillon_cube",
+   "conseil": "Pas de vin rouge ? Du bouillon avec un trait de vinaigre."
+  }
+ ],
+ "mais": [
+  {
+   "par": "petit_pois",
+   "conseil": "Pas de maïs ? Des petits pois."
+  }
+ ],
+ "petit_pois": [
+  {
+   "par": "haricot_vert_surgele",
+   "conseil": "Pas de petits pois ? Des haricots verts surgelés."
+  }
+ ],
+ "abricot_sec": [
+  {
+   "par": "raisin_sec",
+   "conseil": "Pas d'abricots secs ? Des raisins secs."
+  }
+ ],
+ "noix": [
+  {
+   "par": "amande",
+   "conseil": "Pas de noix ? Des amandes."
+  }
+ ],
+ "cacahuete": [
+  {
+   "par": "noix",
+   "conseil": "Pas de cacahuètes ? Des noix concassées."
+  }
+ ],
+ "tofu": [
+  {
+   "par": "oeuf",
+   "conseil": "Pas de tofu ? Des œufs brouillés."
+  }
+ ],
+ "reblochon": [
+  {
+   "par": "fromage_rape",
+   "conseil": "Pas de reblochon ? Beaucoup d'emmental râpé (le goût sera plus doux)."
+  }
+ ],
+ "gnocchi": [
+  {
+   "par": "pates",
+   "conseil": "Pas de gnocchi ? Des pâtes courtes."
+  }
+ ],
+ "celeri_branche": [
+  {
+   "par": "carotte",
+   "conseil": "Pas de céleri ? Une carotte de plus."
+  }
+ ]
+}

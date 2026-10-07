@@ -87,6 +87,11 @@ DEFAUT_PROFIL: dict[str, Any] = {
             "moutarde",
             "sauce_soja",
             "ail",
+            "thym",
+            "laurier",
+            "muscade",
+            "origan",
+            "curcuma",
         ],
     },
     "semaine": {

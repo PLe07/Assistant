@@ -1,0 +1,3185 @@
+[
+ {
+  "id": "quesadillas",
+  "nom": "Quesadillas fromage et haricots rouges",
+  "famille": "rapides",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "tortilla",
+    "quantite": 4.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "haricot_rouge",
+    "quantite": 250.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "fromage_rape",
+    "quantite": 100.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "mais",
+    "quantite": 100.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "cumin",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "salade",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Écrase grossièrement les haricots rincés avec le cumin, sel et poivre ; ajoute le maïs égoutté.",
+   "Étale sur deux tortillas, couvre de fromage et des deux autres tortillas.",
+   "Fais dorer 3 min par face dans une poêle sèche, jusqu'à ce que le fromage fonde. Coupe en parts et sers avec la salade."
+  ],
+  "preparation_min": 5,
+  "cuisson_min": 10,
+  "temps_total_min": 15,
+  "difficulte": "facile",
+  "cuisine": "mexicaine",
+  "proteine": "legumineuse",
+  "feculent": "tortilla",
+  "cout_total_eur": 3.47,
+  "cout_portion_eur": 1.74,
+  "saisons": [
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "produits_saisonniers": [
+   "salade"
+  ],
+  "etiquettes": [
+   "rapide",
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "sans_four"
+  ],
+  "allergenes": [
+   "gluten",
+   "lait"
+  ],
+  "ustensiles": [
+   "poêle",
+   "saladier"
+  ],
+  "equipement": [],
+  "conservation_jours": 0,
+  "conservation": "Ne se garde pas : à manger tout de suite.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "wraps-poulet",
+  "nom": "Wraps au poulet et crudités",
+  "famille": "rapides",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "tortilla",
+    "quantite": 4.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "poulet_filet",
+    "quantite": 250.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "carotte",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "salade",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "yaourt_grec",
+    "quantite": 80.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "citron",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "paprika",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_neutre",
+    "quantite": 10.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Coupe le poulet en lanières, saupoudre de paprika et fais-le cuire 6 à 8 min dans l'huile, jusqu'à ce qu'il soit cuit à cœur.",
+   "Mélange le yaourt avec le jus de citron, sel et poivre. Râpe la carotte, émince la salade.",
+   "Garnis les tortillas de sauce, de crudités et de poulet, puis roule-les serré."
+  ],
+  "preparation_min": 10,
+  "cuisson_min": 8,
+  "temps_total_min": 18,
+  "difficulte": "facile",
+  "cuisine": "americaine",
+  "proteine": "volaille",
+  "feculent": "tortilla",
+  "cout_total_eur": 5.0,
+  "cout_portion_eur": 2.5,
+  "saisons": [
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "produits_saisonniers": [
+   "carotte",
+   "salade"
+  ],
+  "etiquettes": [
+   "transportable",
+   "rapide",
+   "sans_porc",
+   "sans_four"
+  ],
+  "allergenes": [
+   "gluten",
+   "lait"
+  ],
+  "ustensiles": [
+   "poêle",
+   "râpe"
+  ],
+  "equipement": [],
+  "conservation_jours": 1,
+  "conservation": "Restes : 1 jour au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [
+   "Cuis la volaille à cœur : plus aucune trace rosée, jus clair (74 °C au centre)."
+  ],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "wraps-houmous",
+  "nom": "Wraps houmous, crudités et feta",
+  "famille": "rapides",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "tortilla",
+    "quantite": 4.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "houmous",
+    "quantite": 120.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "carotte",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "concombre",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "salade",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "feta",
+    "quantite": 60.0,
+    "unite": "g",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Râpe les carottes, coupe le concombre en bâtonnets, émince la salade.",
+   "Tartine les tortillas de houmous, garnis de crudités et de feta émiettée, roule-les serré."
+  ],
+  "preparation_min": 10,
+  "cuisson_min": 0,
+  "temps_total_min": 10,
+  "difficulte": "facile",
+  "cuisine": "libanaise",
+  "proteine": "fromage",
+  "feculent": "tortilla",
+  "cout_total_eur": 3.79,
+  "cout_portion_eur": 1.9,
+  "saisons": [
+   5,
+   6,
+   7,
+   8,
+   9
+  ],
+  "produits_saisonniers": [
+   "carotte",
+   "concombre",
+   "salade"
+  ],
+  "etiquettes": [
+   "transportable",
+   "froid",
+   "rapide",
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "sans_four",
+   "sans_cuisson"
+  ],
+  "allergenes": [
+   "gluten",
+   "lait",
+   "sesame"
+  ],
+  "ustensiles": [
+   "râpe"
+  ],
+  "equipement": [],
+  "conservation_jours": 1,
+  "conservation": "Restes : 1 jour au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "omelette-fines-herbes",
+  "nom": "Omelette aux fines herbes et salade",
+  "famille": "rapides",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "oeuf",
+    "quantite": 5.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "ciboulette",
+    "quantite": 10.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "persil",
+    "quantite": 10.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "beurre",
+    "quantite": 10.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "salade",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "pain",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Bats les œufs avec les herbes ciselées, sel et poivre.",
+   "Fais mousser le beurre, verse les œufs et remue 1 min, puis laisse prendre 2 min : le centre doit rester moelleux.",
+   "Plie l'omelette et sers avec la salade et le pain."
+  ],
+  "preparation_min": 5,
+  "cuisson_min": 5,
+  "temps_total_min": 10,
+  "difficulte": "facile",
+  "cuisine": "francaise",
+  "proteine": "oeuf",
+  "feculent": "pain",
+  "cout_total_eur": 3.34,
+  "cout_portion_eur": 1.67,
+  "saisons": [
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "produits_saisonniers": [
+   "salade"
+  ],
+  "etiquettes": [
+   "leger",
+   "rapide",
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "sans_four"
+  ],
+  "allergenes": [
+   "gluten",
+   "oeufs",
+   "lait"
+  ],
+  "ustensiles": [
+   "poêle",
+   "saladier"
+  ],
+  "equipement": [],
+  "conservation_jours": 0,
+  "conservation": "Ne se garde pas : à manger tout de suite.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "oeufs-epinards-creme",
+  "nom": "Œufs au plat sur épinards à la crème",
+  "famille": "rapides",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "oeuf",
+    "quantite": 4.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "epinard_surgele",
+    "quantite": 400.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "creme",
+    "quantite": 50.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "muscade",
+    "quantite": 0.3,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "pain",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais décongeler les épinards 6 min à la poêle avec l'ail, laisse évaporer l'eau, ajoute la crème, la muscade, sel et poivre.",
+   "Creuse 4 puits dans les épinards, casse un œuf dans chacun, couvre et laisse cuire 4 à 5 min, jusqu'à ce que les blancs soient pris.",
+   "Sers avec le pain grillé."
+  ],
+  "preparation_min": 5,
+  "cuisson_min": 12,
+  "temps_total_min": 17,
+  "difficulte": "facile",
+  "cuisine": "francaise",
+  "proteine": "oeuf",
+  "feculent": "pain",
+  "cout_total_eur": 2.94,
+  "cout_portion_eur": 1.47,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [],
+  "etiquettes": [
+   "rapide",
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "sans_four",
+   "pas_cher"
+  ],
+  "allergenes": [
+   "gluten",
+   "oeufs",
+   "lait"
+  ],
+  "ustensiles": [
+   "poêle avec couvercle"
+  ],
+  "equipement": [],
+  "conservation_jours": 0,
+  "conservation": "Ne se garde pas : à manger tout de suite.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "chakchouka",
+  "nom": "Chakchouka",
+  "famille": "rapides",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "oeuf",
+    "quantite": 4.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "poivron",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "tomate_concassee",
+    "quantite": 400.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "cumin",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "paprika",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 20.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "pain",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais revenir l'oignon et les poivrons en lanières 5 min dans l'huile, ajoute l'ail, les épices, les tomates, sel ; laisse mijoter 5 min.",
+   "Creuse 4 puits, casse les œufs dedans, couvre et cuis 5 min, jusqu'à ce que les blancs soient pris. Sers avec le pain."
+  ],
+  "preparation_min": 8,
+  "cuisson_min": 12,
+  "temps_total_min": 20,
+  "difficulte": "facile",
+  "cuisine": "tunisienne",
+  "proteine": "oeuf",
+  "feculent": "pain",
+  "cout_total_eur": 4.59,
+  "cout_portion_eur": 2.29,
+  "saisons": [
+   7,
+   8,
+   9
+  ],
+  "produits_saisonniers": [
+   "poivron"
+  ],
+  "etiquettes": [
+   "epice",
+   "rapide",
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "sans_four"
+  ],
+  "allergenes": [
+   "gluten",
+   "oeufs"
+  ],
+  "ustensiles": [
+   "poêle avec couvercle"
+  ],
+  "equipement": [],
+  "conservation_jours": 0,
+  "conservation": "Ne se garde pas : à manger tout de suite.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "nouilles-sautees-legumes",
+  "nom": "Nouilles sautées aux légumes et à l'œuf",
+  "famille": "rapides",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "nouilles_ble",
+    "quantite": 200.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "carotte",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "champignon",
+    "quantite": 150.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "oeuf",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "sauce_soja",
+    "quantite": 30.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "gingembre",
+    "quantite": 10.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_neutre",
+    "quantite": 15.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Cuis les nouilles selon le paquet, rince-les à l'eau froide.",
+   "Fais sauter à feu vif dans l'huile l'oignon, les carottes en bâtonnets fins et les champignons, 4 min, avec le gingembre râpé.",
+   "Pousse les légumes sur le côté, brouille les œufs dans la poêle jusqu'à ce qu'ils soient pris, puis ajoute les nouilles et la sauce soja. Mélange 2 min."
+  ],
+  "preparation_min": 10,
+  "cuisson_min": 10,
+  "temps_total_min": 20,
+  "difficulte": "facile",
+  "cuisine": "chinoise",
+  "proteine": "oeuf",
+  "feculent": "nouilles",
+  "cout_total_eur": 3.19,
+  "cout_portion_eur": 1.59,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [
+   "carotte",
+   "champignon"
+  ],
+  "etiquettes": [
+   "rapide",
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "sans_four"
+  ],
+  "allergenes": [
+   "gluten",
+   "oeufs",
+   "soja"
+  ],
+  "ustensiles": [
+   "casserole",
+   "wok ou grande poêle"
+  ],
+  "equipement": [],
+  "conservation_jours": 1,
+  "conservation": "Restes : 1 jour au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "riz-cantonais",
+  "nom": "Riz cantonais express",
+  "famille": "rapides",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "riz",
+    "quantite": 140.0,
+    "unite": "g",
+    "note": "déjà cuit et refroidi (environ 400 g cuit), gardé au frigo depuis moins de 24 h"
+   },
+   {
+    "id": "oeuf",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "jambon",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "petit_pois",
+    "quantite": 100.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "sauce_soja",
+    "quantite": 20.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "huile_neutre",
+    "quantite": 15.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais revenir l'oignon haché dans l'huile, ajoute les petits pois et le jambon en dés, 3 min.",
+   "Ajoute les œufs battus et remue jusqu'à ce qu'ils soient pris.",
+   "Ajoute le riz froid, égrène-le et fais-le sauter 4 à 5 min jusqu'à ce qu'il soit bien chaud partout. Assaisonne de sauce soja."
+  ],
+  "preparation_min": 10,
+  "cuisson_min": 10,
+  "temps_total_min": 20,
+  "difficulte": "facile",
+  "cuisine": "chinoise",
+  "proteine": "oeuf",
+  "feculent": "riz",
+  "cout_total_eur": 2.48,
+  "cout_portion_eur": 1.24,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [],
+  "etiquettes": [
+   "rapide",
+   "sans_four",
+   "pas_cher"
+  ],
+  "allergenes": [
+   "gluten",
+   "oeufs",
+   "soja"
+  ],
+  "ustensiles": [
+   "wok ou grande poêle"
+  ],
+  "equipement": [],
+  "conservation_jours": 1,
+  "conservation": "Restes : 1 jour au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [
+   "Riz cuit : refroidis-le vite et garde-le 24 h au frigo au plus."
+  ],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "pates-epinards-fromage-frais",
+  "nom": "Pâtes aux épinards et au fromage frais",
+  "famille": "rapides",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "pates",
+    "quantite": 180.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "epinard",
+    "quantite": 200.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "fromage_frais",
+    "quantite": 100.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "muscade",
+    "quantite": 0.3,
+    "unite": "g",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Cuis les pâtes. Fais tomber les épinards 2 min à la poêle avec l'ail.",
+   "Ajoute le fromage frais, un peu d'eau de cuisson, la muscade, sel et poivre, puis les pâtes."
+  ],
+  "preparation_min": 5,
+  "cuisson_min": 12,
+  "temps_total_min": 17,
+  "difficulte": "facile",
+  "cuisine": "francaise",
+  "proteine": "fromage",
+  "feculent": "pates",
+  "cout_total_eur": 2.53,
+  "cout_portion_eur": 1.26,
+  "saisons": [
+   3,
+   4,
+   5,
+   6,
+   9,
+   10,
+   11
+  ],
+  "produits_saisonniers": [
+   "epinard"
+  ],
+  "etiquettes": [
+   "rapide",
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "sans_four",
+   "pas_cher"
+  ],
+  "allergenes": [
+   "gluten",
+   "lait"
+  ],
+  "ustensiles": [
+   "casserole",
+   "poêle"
+  ],
+  "equipement": [],
+  "conservation_jours": 1,
+  "conservation": "Restes : 1 jour au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "salade-pois-chiches-feta",
+  "nom": "Salade de pois chiches, concombre et feta",
+  "famille": "rapides",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "pois_chiche",
+    "quantite": 265.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "concombre",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "tomate",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "oignon_rouge",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "feta",
+    "quantite": 100.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "persil",
+    "quantite": 10.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "citron",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 30.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "pain",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Rince et égoutte les pois chiches. Coupe le concombre et les tomates en dés, l'oignon en fines lamelles.",
+   "Mélange tout avec la feta en dés, le persil, le jus du citron, l'huile, sel et poivre. Sers avec le pain."
+  ],
+  "preparation_min": 10,
+  "cuisson_min": 0,
+  "temps_total_min": 10,
+  "difficulte": "facile",
+  "cuisine": "grecque",
+  "proteine": "legumineuse",
+  "feculent": "pain",
+  "cout_total_eur": 5.22,
+  "cout_portion_eur": 2.61,
+  "saisons": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "produits_saisonniers": [
+   "concombre",
+   "tomate"
+  ],
+  "etiquettes": [
+   "salade",
+   "froid",
+   "transportable",
+   "leger",
+   "rapide",
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "sans_four",
+   "sans_cuisson"
+  ],
+  "allergenes": [
+   "gluten",
+   "lait"
+  ],
+  "ustensiles": [
+   "saladier"
+  ],
+  "equipement": [],
+  "conservation_jours": 1,
+  "conservation": "Restes : 1 jour au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "salade-mexicaine",
+  "nom": "Salade mexicaine haricots rouges et maïs",
+  "famille": "rapides",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "haricot_rouge",
+    "quantite": 250.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "mais",
+    "quantite": 140.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "poivron",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "tomate",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "oignon_rouge",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "citron_vert",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "coriandre",
+    "quantite": 10.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 20.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "cumin",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "tortilla",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": "grillées en triangles"
+   }
+  ],
+  "etapes": [
+   "Rince les haricots, égoutte le maïs. Coupe poivron et tomate en dés, l'oignon finement.",
+   "Mélange avec le jus de citron vert, l'huile, le cumin, la coriandre, sel et poivre.",
+   "Sers avec les tortillas passées 2 min à la poêle sèche."
+  ],
+  "preparation_min": 10,
+  "cuisson_min": 0,
+  "temps_total_min": 10,
+  "difficulte": "facile",
+  "cuisine": "mexicaine",
+  "proteine": "legumineuse",
+  "feculent": "tortilla",
+  "cout_total_eur": 4.03,
+  "cout_portion_eur": 2.01,
+  "saisons": [
+   7,
+   8,
+   9
+  ],
+  "produits_saisonniers": [
+   "poivron",
+   "tomate"
+  ],
+  "etiquettes": [
+   "salade",
+   "froid",
+   "transportable",
+   "rapide",
+   "vegetarien",
+   "vegan",
+   "sans_porc",
+   "pescetarien",
+   "sans_four",
+   "sans_cuisson"
+  ],
+  "allergenes": [
+   "gluten"
+  ],
+  "ustensiles": [
+   "saladier"
+  ],
+  "equipement": [],
+  "conservation_jours": 2,
+  "conservation": "Restes : 2 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "couscous-express",
+  "nom": "Couscous express aux légumes et pois chiches",
+  "famille": "rapides",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "semoule",
+    "quantite": 140.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "pois_chiche",
+    "quantite": 265.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "courgette",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "carotte",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "ras_el_hanout",
+    "quantite": 3.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "bouillon_cube",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 20.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "raisin_sec",
+    "quantite": 20.0,
+    "unite": "g",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais revenir l'oignon, la carotte et la courgette en petits dés 5 min dans l'huile avec le ras el-hanout.",
+   "Ajoute les pois chiches, les raisins, le cube et 250 ml d'eau ; laisse frémir 5 min.",
+   "Verse 150 ml de ce bouillon bouillant sur la semoule, couvre 5 min puis égraine à la fourchette. Sers avec les légumes."
+  ],
+  "preparation_min": 10,
+  "cuisson_min": 10,
+  "temps_total_min": 20,
+  "difficulte": "facile",
+  "cuisine": "marocaine",
+  "proteine": "legumineuse",
+  "feculent": "semoule",
+  "cout_total_eur": 2.68,
+  "cout_portion_eur": 1.34,
+  "saisons": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "produits_saisonniers": [
+   "courgette",
+   "carotte"
+  ],
+  "etiquettes": [
+   "epice",
+   "rapide",
+   "vegetarien",
+   "vegan",
+   "sans_porc",
+   "pescetarien",
+   "sans_four",
+   "pas_cher"
+  ],
+  "allergenes": [
+   "gluten",
+   "celeri",
+   "sulfites"
+  ],
+  "ustensiles": [
+   "sauteuse",
+   "saladier"
+  ],
+  "equipement": [],
+  "conservation_jours": 2,
+  "conservation": "Restes : 2 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "croque-tomate-mozza",
+  "nom": "Croque tomate-mozzarella",
+  "famille": "rapides",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "pain_mie",
+    "quantite": 4.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "tomate",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "mozzarella",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "basilic",
+    "quantite": 5.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "beurre",
+    "quantite": 15.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "salade",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Garnis deux tranches de pain de mie de tomate et de mozzarella en tranches, de basilic, sel et poivre ; referme.",
+   "Beurre l'extérieur et fais dorer 3 min par face à la poêle en appuyant. Sers avec la salade."
+  ],
+  "preparation_min": 5,
+  "cuisson_min": 8,
+  "temps_total_min": 13,
+  "difficulte": "facile",
+  "cuisine": "italienne",
+  "proteine": "fromage",
+  "feculent": "pain",
+  "cout_total_eur": 2.54,
+  "cout_portion_eur": 1.27,
+  "saisons": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "produits_saisonniers": [
+   "tomate",
+   "salade"
+  ],
+  "etiquettes": [
+   "rapide",
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "sans_four",
+   "pas_cher"
+  ],
+  "allergenes": [
+   "gluten",
+   "soja",
+   "lait"
+  ],
+  "ustensiles": [
+   "poêle"
+  ],
+  "equipement": [],
+  "conservation_jours": 0,
+  "conservation": "Ne se garde pas : à manger tout de suite.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "soupe-miso-tofu",
+  "nom": "Soupe miso aux nouilles et au tofu",
+  "famille": "rapides",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "miso",
+    "quantite": 40.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "tofu",
+    "quantite": 200.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "nouilles_ble",
+    "quantite": 100.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "champignon",
+    "quantite": 100.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "carotte",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "ciboulette",
+    "quantite": 10.0,
+    "unite": "g",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Porte 900 ml d'eau à frémissement avec la carotte en fins bâtonnets et les champignons émincés ; cuis 4 min.",
+   "Ajoute les nouilles et le tofu en dés, cuis le temps indiqué sur le paquet.",
+   "Hors du feu, délaie le miso dans une louche de bouillon et remets-le dans la casserole (il ne doit pas bouillir). Parsème de ciboulette."
+  ],
+  "preparation_min": 5,
+  "cuisson_min": 10,
+  "temps_total_min": 15,
+  "difficulte": "facile",
+  "cuisine": "japonaise",
+  "proteine": "tofu",
+  "feculent": "nouilles",
+  "cout_total_eur": 3.67,
+  "cout_portion_eur": 1.84,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [
+   "champignon",
+   "carotte"
+  ],
+  "etiquettes": [
+   "soupe",
+   "leger",
+   "rapide",
+   "vegetarien",
+   "vegan",
+   "sans_porc",
+   "pescetarien",
+   "sans_four"
+  ],
+  "allergenes": [
+   "gluten",
+   "oeufs",
+   "soja"
+  ],
+  "ustensiles": [
+   "casserole"
+  ],
+  "equipement": [],
+  "conservation_jours": 1,
+  "conservation": "Restes : 1 jour au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "pad-thai-tofu",
+  "nom": "Pad thaï au tofu",
+  "famille": "rapides",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "nouilles_riz",
+    "quantite": 150.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "tofu",
+    "quantite": 200.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "oeuf",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "cacahuete",
+    "quantite": 30.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "citron_vert",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "sauce_soja",
+    "quantite": 30.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "sucre",
+    "quantite": 10.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "carotte",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "coriandre",
+    "quantite": 10.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_neutre",
+    "quantite": 20.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais tremper les nouilles dans l'eau chaude selon le paquet ; égoutte-les.",
+   "Sauce : sauce soja, sucre et jus du citron vert.",
+   "Fais dorer le tofu en dés dans l'huile, ajoute oignon et carotte en julienne 2 min, puis brouille les œufs jusqu'à ce qu'ils soient pris.",
+   "Ajoute les nouilles et la sauce, mélange 2 min. Sers avec les cacahuètes concassées et la coriandre."
+  ],
+  "preparation_min": 10,
+  "cuisson_min": 10,
+  "temps_total_min": 20,
+  "difficulte": "moyen",
+  "cuisine": "thai",
+  "proteine": "tofu",
+  "feculent": "nouilles",
+  "cout_total_eur": 4.87,
+  "cout_portion_eur": 2.44,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [
+   "carotte"
+  ],
+  "etiquettes": [
+   "rapide",
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "sans_four"
+  ],
+  "allergenes": [
+   "gluten",
+   "oeufs",
+   "arachides",
+   "soja"
+  ],
+  "ustensiles": [
+   "saladier",
+   "wok ou grande poêle"
+  ],
+  "equipement": [],
+  "conservation_jours": 1,
+  "conservation": "Restes : 1 jour au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "fajitas-poulet",
+  "nom": "Fajitas de poulet",
+  "famille": "rapides",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "poulet_filet",
+    "quantite": 300.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "poivron",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "tortilla",
+    "quantite": 4.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "paprika",
+    "quantite": 2.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "cumin",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "citron_vert",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "yaourt_grec",
+    "quantite": 80.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_neutre",
+    "quantite": 15.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Coupe poulet, poivrons et oignon en lanières. Saupoudre le poulet des épices.",
+   "Fais sauter le poulet 5 min dans l'huile à feu vif, ajoute les légumes et poursuis 5 min : le poulet doit être cuit à cœur et les légumes encore croquants.",
+   "Arrose de citron vert et sers dans les tortillas chaudes avec le yaourt."
+  ],
+  "preparation_min": 10,
+  "cuisson_min": 10,
+  "temps_total_min": 20,
+  "difficulte": "facile",
+  "cuisine": "mexicaine",
+  "proteine": "volaille",
+  "feculent": "tortilla",
+  "cout_total_eur": 7.03,
+  "cout_portion_eur": 3.51,
+  "saisons": [
+   7,
+   8,
+   9
+  ],
+  "produits_saisonniers": [
+   "poivron"
+  ],
+  "etiquettes": [
+   "epice",
+   "rapide",
+   "sans_porc",
+   "sans_four"
+  ],
+  "allergenes": [
+   "gluten",
+   "lait"
+  ],
+  "ustensiles": [
+   "grande poêle"
+  ],
+  "equipement": [],
+  "conservation_jours": 1,
+  "conservation": "Restes : 1 jour au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [
+   "Cuis la volaille à cœur : plus aucune trace rosée, jus clair (74 °C au centre)."
+  ],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "huevos-rancheros",
+  "nom": "Huevos rancheros",
+  "famille": "rapides",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "oeuf",
+    "quantite": 4.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "tortilla",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "haricot_rouge",
+    "quantite": 250.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "tomate_concassee",
+    "quantite": 400.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "cumin",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "piment",
+    "quantite": 0.5,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "coriandre",
+    "quantite": 10.0,
+    "unite": "g",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais revenir l'oignon, ajoute tomates, cumin, piment, sel ; laisse réduire 6 min.",
+   "Casse les œufs dans la sauce, couvre 5 min jusqu'à ce que les blancs soient pris. Réchauffe les haricots à part.",
+   "Sers sur les tortillas chaudes avec les haricots et la coriandre."
+  ],
+  "preparation_min": 5,
+  "cuisson_min": 15,
+  "temps_total_min": 20,
+  "difficulte": "facile",
+  "cuisine": "mexicaine",
+  "proteine": "oeuf",
+  "feculent": "tortilla",
+  "cout_total_eur": 3.83,
+  "cout_portion_eur": 1.91,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [],
+  "etiquettes": [
+   "epice",
+   "rapide",
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "sans_four"
+  ],
+  "allergenes": [
+   "gluten",
+   "oeufs"
+  ],
+  "ustensiles": [
+   "poêle avec couvercle",
+   "casserole"
+  ],
+  "equipement": [],
+  "conservation_jours": 0,
+  "conservation": "Ne se garde pas : à manger tout de suite.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "tuna-melt",
+  "nom": "Tartines au thon fondant",
+  "famille": "rapides",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "pain_mie",
+    "quantite": 4.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "thon",
+    "quantite": 140.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "mayonnaise",
+    "quantite": 30.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "fromage_rape",
+    "quantite": 60.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "oignon_rouge",
+    "quantite": 0.25,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "salade",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Préchauffe le four en position gril. Mélange le thon, la mayonnaise et l'oignon haché, poivre.",
+   "Étale sur le pain de mie, couvre de fromage et fais gratiner 6 à 8 min. Sers avec la salade."
+  ],
+  "preparation_min": 5,
+  "cuisson_min": 8,
+  "temps_total_min": 13,
+  "difficulte": "facile",
+  "cuisine": "americaine",
+  "proteine": "poisson",
+  "feculent": "pain",
+  "cout_total_eur": 3.11,
+  "cout_portion_eur": 1.56,
+  "saisons": [
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "produits_saisonniers": [
+   "salade"
+  ],
+  "etiquettes": [
+   "airfryer_possible",
+   "rapide",
+   "sans_porc",
+   "pescetarien",
+   "au_four",
+   "poisson"
+  ],
+  "allergenes": [
+   "gluten",
+   "oeufs",
+   "poissons",
+   "soja",
+   "lait",
+   "moutarde"
+  ],
+  "ustensiles": [
+   "four",
+   "saladier"
+  ],
+  "equipement": [
+   "four"
+  ],
+  "conservation_jours": 0,
+  "conservation": "Ne se garde pas : à manger tout de suite.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "salade-cesar",
+  "nom": "Salade César au poulet",
+  "famille": "rapides",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "salade",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": "une romaine si possible"
+   },
+   {
+    "id": "poulet_filet",
+    "quantite": 250.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "pain",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": "en croûtons"
+   },
+   {
+    "id": "parmesan",
+    "quantite": 30.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "mayonnaise",
+    "quantite": 40.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "citron",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 15.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais cuire le poulet 5 min par face dans l'huile (cuit à cœur), puis coupe-le en lamelles. Fais dorer les croûtons 2 min dans la même poêle.",
+   "Sauce : mayonnaise, jus de citron, ail râpé, la moitié du parmesan, poivre.",
+   "Mélange la salade avec la sauce, ajoute poulet, croûtons et copeaux de parmesan."
+  ],
+  "preparation_min": 15,
+  "cuisson_min": 10,
+  "temps_total_min": 25,
+  "difficulte": "facile",
+  "cuisine": "americaine",
+  "proteine": "volaille",
+  "feculent": "pain",
+  "cout_total_eur": 5.78,
+  "cout_portion_eur": 2.89,
+  "saisons": [
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "produits_saisonniers": [
+   "salade"
+  ],
+  "etiquettes": [
+   "salade",
+   "sans_porc",
+   "sans_four"
+  ],
+  "allergenes": [
+   "gluten",
+   "oeufs",
+   "lait",
+   "moutarde"
+  ],
+  "ustensiles": [
+   "poêle",
+   "saladier"
+  ],
+  "equipement": [],
+  "conservation_jours": 0,
+  "conservation": "Ne se garde pas : à manger tout de suite.",
+  "securite": [
+   "Cuis la volaille à cœur : plus aucune trace rosée, jus clair (74 °C au centre)."
+  ],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "pates-chorizo-poivrons",
+  "nom": "Pâtes au chorizo et aux poivrons",
+  "famille": "rapides",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "pates",
+    "quantite": 180.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "chorizo",
+    "quantite": 80.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "poivron",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "tomate_concassee",
+    "quantite": 200.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Cuis les pâtes. Fais revenir le chorizo en dés et l'oignon 3 min, ajoute le poivron en lanières 4 min puis les tomates 5 min.",
+   "Mélange avec les pâtes."
+  ],
+  "preparation_min": 5,
+  "cuisson_min": 15,
+  "temps_total_min": 20,
+  "difficulte": "facile",
+  "cuisine": "espagnole",
+  "proteine": "porc",
+  "feculent": "pates",
+  "cout_total_eur": 2.55,
+  "cout_portion_eur": 1.28,
+  "saisons": [
+   7,
+   8,
+   9
+  ],
+  "produits_saisonniers": [
+   "poivron"
+  ],
+  "etiquettes": [
+   "epice",
+   "rapide",
+   "sans_four",
+   "pas_cher"
+  ],
+  "allergenes": [
+   "gluten",
+   "lait"
+  ],
+  "ustensiles": [
+   "casserole",
+   "sauteuse"
+  ],
+  "equipement": [],
+  "conservation_jours": 1,
+  "conservation": "Restes : 1 jour au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "oeufs-bhurji",
+  "nom": "Œufs brouillés à l'indienne",
+  "famille": "rapides",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "oeuf",
+    "quantite": 5.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "tomate",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "curcuma",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "cumin",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "piment",
+    "quantite": 0.5,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "coriandre",
+    "quantite": 10.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "beurre",
+    "quantite": 15.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "pain_pita",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais revenir l'oignon haché dans le beurre 3 min, ajoute la tomate en dés et les épices, 2 min.",
+   "Verse les œufs battus et remue jusqu'à ce qu'ils soient pris. Ajoute la coriandre et sers avec les pitas chaudes."
+  ],
+  "preparation_min": 10,
+  "cuisson_min": 8,
+  "temps_total_min": 18,
+  "difficulte": "facile",
+  "cuisine": "indienne",
+  "proteine": "oeuf",
+  "feculent": "pain",
+  "cout_total_eur": 3.15,
+  "cout_portion_eur": 1.57,
+  "saisons": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "produits_saisonniers": [
+   "tomate"
+  ],
+  "etiquettes": [
+   "epice",
+   "rapide",
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "sans_four"
+  ],
+  "allergenes": [
+   "gluten",
+   "oeufs",
+   "lait"
+  ],
+  "ustensiles": [
+   "poêle"
+  ],
+  "equipement": [],
+  "conservation_jours": 0,
+  "conservation": "Ne se garde pas : à manger tout de suite.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "gnocchi-champignons-epinards",
+  "nom": "Gnocchi aux champignons et aux épinards",
+  "famille": "rapides",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "gnocchi",
+    "quantite": 400.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "champignon",
+    "quantite": 200.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "epinard",
+    "quantite": 100.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "creme",
+    "quantite": 100.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "fromage_rape",
+    "quantite": 30.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 10.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais dorer les gnocchi 6 min dans l'huile, ajoute les champignons émincés et l'ail, 4 min.",
+   "Ajoute les épinards et la crème ; laisse tomber les épinards 2 min. Sale, poivre et parsème de fromage."
+  ],
+  "preparation_min": 5,
+  "cuisson_min": 15,
+  "temps_total_min": 20,
+  "difficulte": "facile",
+  "cuisine": "italienne",
+  "proteine": "fromage",
+  "feculent": "pates",
+  "cout_total_eur": 3.7,
+  "cout_portion_eur": 1.85,
+  "saisons": [
+   3,
+   4,
+   5,
+   6,
+   9,
+   10,
+   11
+  ],
+  "produits_saisonniers": [
+   "champignon",
+   "epinard"
+  ],
+  "etiquettes": [
+   "rapide",
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "sans_four"
+  ],
+  "allergenes": [
+   "gluten",
+   "lait"
+  ],
+  "ustensiles": [
+   "poêle"
+  ],
+  "equipement": [],
+  "conservation_jours": 1,
+  "conservation": "Restes : 1 jour au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "burger-maison",
+  "nom": "Burger maison et salade",
+  "famille": "rapides",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "boeuf_hache",
+    "quantite": 250.0,
+    "unite": "g",
+    "note": "2 steaks"
+   },
+   {
+    "id": "pain_burger",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "tomate",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "salade",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "oignon_rouge",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "fromage_rape",
+    "quantite": 40.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "mayonnaise",
+    "quantite": 20.0,
+    "unite": "g",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais cuire les steaks 3 à 4 min par face, jusqu'à ce qu'ils ne soient plus rosés au centre ; pose le fromage dessus la dernière minute.",
+   "Toaste les pains coupés. Garnis de mayonnaise, salade, steak, tomate et oignon.",
+   "Sers avec le reste de la salade."
+  ],
+  "preparation_min": 10,
+  "cuisson_min": 10,
+  "temps_total_min": 20,
+  "difficulte": "facile",
+  "cuisine": "americaine",
+  "proteine": "boeuf",
+  "feculent": "pain",
+  "cout_total_eur": 5.32,
+  "cout_portion_eur": 2.66,
+  "saisons": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "produits_saisonniers": [
+   "tomate",
+   "salade"
+  ],
+  "etiquettes": [
+   "rapide",
+   "sans_porc",
+   "sans_four"
+  ],
+  "allergenes": [
+   "gluten",
+   "oeufs",
+   "lait",
+   "moutarde",
+   "sesame"
+  ],
+  "ustensiles": [
+   "poêle"
+  ],
+  "equipement": [],
+  "conservation_jours": 0,
+  "conservation": "Ne se garde pas : à manger tout de suite.",
+  "securite": [
+   "Cuis la viande hachée à cœur : plus de rose au centre (70 °C)."
+  ],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "salade-riz-thon",
+  "nom": "Salade de riz au thon",
+  "famille": "rapides",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "riz",
+    "quantite": 140.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "thon",
+    "quantite": 140.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "tomate",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "mais",
+    "quantite": 100.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "oeuf",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "olive",
+    "quantite": 30.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 30.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "vinaigre",
+    "quantite": 10.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Cuis le riz et les œufs (9 min, durs) ; refroidis-les vite sous l'eau froide.",
+   "Mélange le riz avec les tomates en dés, le maïs, le thon, les olives et les œufs en quartiers.",
+   "Assaisonne d'huile, de vinaigre, sel et poivre. Garde au frais."
+  ],
+  "preparation_min": 8,
+  "cuisson_min": 12,
+  "temps_total_min": 20,
+  "difficulte": "facile",
+  "cuisine": "francaise",
+  "proteine": "poisson",
+  "feculent": "riz",
+  "cout_total_eur": 4.03,
+  "cout_portion_eur": 2.01,
+  "saisons": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "produits_saisonniers": [
+   "tomate"
+  ],
+  "etiquettes": [
+   "salade",
+   "froid",
+   "transportable",
+   "rapide",
+   "sans_porc",
+   "pescetarien",
+   "sans_four",
+   "poisson"
+  ],
+  "allergenes": [
+   "oeufs",
+   "poissons",
+   "sulfites"
+  ],
+  "ustensiles": [
+   "casserole",
+   "saladier"
+  ],
+  "equipement": [],
+  "conservation_jours": 1,
+  "conservation": "Restes : 1 jour au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson.",
+  "securite": [
+   "Riz cuit : refroidis-le vite et garde-le 24 h au frigo au plus."
+  ],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "veloute-petits-pois",
+  "nom": "Velouté express de petits pois à la menthe",
+  "famille": "rapides",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "petit_pois",
+    "quantite": 400.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "bouillon_cube",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "menthe",
+    "quantite": 5.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "creme",
+    "quantite": 50.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "pain",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais fondre l'oignon 2 min, ajoute les petits pois, le cube et 500 ml d'eau ; cuis 8 min.",
+   "Mixe avec la menthe et la crème, sale et poivre. Sers avec le pain."
+  ],
+  "preparation_min": 5,
+  "cuisson_min": 12,
+  "temps_total_min": 17,
+  "difficulte": "facile",
+  "cuisine": "anglaise",
+  "proteine": "legumineuse",
+  "feculent": "pain",
+  "cout_total_eur": 2.06,
+  "cout_portion_eur": 1.03,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [],
+  "etiquettes": [
+   "soupe",
+   "leger",
+   "rapide",
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "sans_four",
+   "pas_cher"
+  ],
+  "allergenes": [
+   "gluten",
+   "lait",
+   "celeri"
+  ],
+  "ustensiles": [
+   "casserole",
+   "mixeur plongeant ou presse-purée"
+  ],
+  "equipement": [],
+  "conservation_jours": 2,
+  "conservation": "Restes : 2 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "tartines-champignons",
+  "nom": "Tartines aux champignons à l'ail",
+  "famille": "rapides",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "pain",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "champignon",
+    "quantite": 300.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "persil",
+    "quantite": 10.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "beurre",
+    "quantite": 15.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "fromage_frais",
+    "quantite": 80.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "salade",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais dorer les champignons émincés 6 min dans le beurre, ajoute l'ail et le persil hachés, sel, poivre.",
+   "Fais griller le pain, tartine-le de fromage frais et couvre de champignons. Sers avec la salade."
+  ],
+  "preparation_min": 5,
+  "cuisson_min": 10,
+  "temps_total_min": 15,
+  "difficulte": "facile",
+  "cuisine": "francaise",
+  "proteine": "fromage",
+  "feculent": "pain",
+  "cout_total_eur": 4.36,
+  "cout_portion_eur": 2.18,
+  "saisons": [
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "produits_saisonniers": [
+   "champignon",
+   "salade"
+  ],
+  "etiquettes": [
+   "rapide",
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "sans_four"
+  ],
+  "allergenes": [
+   "gluten",
+   "lait"
+  ],
+  "ustensiles": [
+   "poêle"
+  ],
+  "equipement": [],
+  "conservation_jours": 0,
+  "conservation": "Ne se garde pas : à manger tout de suite.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "wok-crevettes",
+  "nom": "Wok de crevettes aux légumes",
+  "famille": "rapides",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "crevette",
+    "quantite": 200.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "nouilles_riz",
+    "quantite": 120.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "poelee_surgelee",
+    "quantite": 300.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "sauce_soja",
+    "quantite": 30.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "gingembre",
+    "quantite": 10.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "citron_vert",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "huile_neutre",
+    "quantite": 15.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais tremper les nouilles selon le paquet.",
+   "Fais sauter les légumes surgelés 6 min à feu vif dans l'huile avec l'ail et le gingembre.",
+   "Ajoute les crevettes (décongelées au réfrigérateur), les nouilles et la sauce soja ; mélange 3 min, jusqu'à ce que tout soit bien chaud. Arrose de citron vert."
+  ],
+  "preparation_min": 5,
+  "cuisson_min": 12,
+  "temps_total_min": 17,
+  "difficulte": "facile",
+  "cuisine": "chinoise",
+  "proteine": "fruits_de_mer",
+  "feculent": "nouilles",
+  "cout_total_eur": 6.38,
+  "cout_portion_eur": 3.19,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [],
+  "etiquettes": [
+   "rapide",
+   "sans_porc",
+   "pescetarien",
+   "sans_four",
+   "poisson"
+  ],
+  "allergenes": [
+   "gluten",
+   "crustaces",
+   "soja"
+  ],
+  "ustensiles": [
+   "saladier",
+   "wok ou grande poêle"
+  ],
+  "equipement": [],
+  "conservation_jours": 0,
+  "conservation": "Ne se garde pas : à manger tout de suite.",
+  "securite": [
+   "Crevettes surgelées : décongèle-les au réfrigérateur, jamais à température ambiante, et mange-les dans la journée."
+  ],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "bowl-quinoa-pois-chiches",
+  "nom": "Bowl de quinoa, pois chiches et chou rouge",
+  "famille": "rapides",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "quinoa",
+    "quantite": 120.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "pois_chiche",
+    "quantite": 265.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "carotte",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "chou_rouge",
+    "quantite": 0.15,
+    "unite": "p",
+    "note": "environ 150 g"
+   },
+   {
+    "id": "tahini",
+    "quantite": 30.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "citron",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "cumin",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Rince le quinoa et cuis-le 12 min dans deux fois son volume d'eau salée.",
+   "Râpe les carottes, émince très finement le chou rouge.",
+   "Sauce : tahini, jus de citron, cumin, sel et 3 c. à soupe d'eau.",
+   "Dresse quinoa, pois chiches rincés, légumes, et arrose de sauce."
+  ],
+  "preparation_min": 8,
+  "cuisson_min": 12,
+  "temps_total_min": 20,
+  "difficulte": "facile",
+  "cuisine": "libanaise",
+  "proteine": "legumineuse",
+  "feculent": "quinoa",
+  "cout_total_eur": 2.69,
+  "cout_portion_eur": 1.34,
+  "saisons": [
+   1,
+   2,
+   3,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [
+   "carotte",
+   "chou_rouge"
+  ],
+  "etiquettes": [
+   "transportable",
+   "leger",
+   "rapide",
+   "vegetarien",
+   "vegan",
+   "sans_porc",
+   "pescetarien",
+   "sans_four",
+   "pas_cher"
+  ],
+  "allergenes": [
+   "sesame"
+  ],
+  "ustensiles": [
+   "casserole",
+   "saladier",
+   "râpe"
+  ],
+  "equipement": [],
+  "conservation_jours": 2,
+  "conservation": "Restes : 2 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "pain-perdu-sale",
+  "nom": "Pain perdu salé au jambon et fromage",
+  "famille": "rapides",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "pain",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": "rassis"
+   },
+   {
+    "id": "oeuf",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "lait",
+    "quantite": 100.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "jambon",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "fromage_rape",
+    "quantite": 50.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "beurre",
+    "quantite": 10.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "salade",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Bats les œufs avec le lait, sel et poivre. Trempe les tranches de pain rassis des deux côtés.",
+   "Fais-les dorer 3 min par face dans le beurre ; ajoute jambon et fromage sur le dessus, couvre 1 min pour faire fondre.",
+   "Sers avec la salade."
+  ],
+  "preparation_min": 5,
+  "cuisson_min": 10,
+  "temps_total_min": 15,
+  "difficulte": "facile",
+  "cuisine": "francaise",
+  "proteine": "oeuf",
+  "feculent": "pain",
+  "cout_total_eur": 3.44,
+  "cout_portion_eur": 1.72,
+  "saisons": [
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "produits_saisonniers": [
+   "salade"
+  ],
+  "etiquettes": [
+   "sucre_sale",
+   "rapide",
+   "sans_four"
+  ],
+  "allergenes": [
+   "gluten",
+   "oeufs",
+   "lait"
+  ],
+  "ustensiles": [
+   "poêle",
+   "assiette creuse"
+  ],
+  "equipement": [],
+  "conservation_jours": 0,
+  "conservation": "Ne se garde pas : à manger tout de suite.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "croque-madame",
+  "nom": "Croque-madame",
+  "famille": "rapides",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "pain_mie",
+    "quantite": 4.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "jambon",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "fromage_rape",
+    "quantite": 60.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "oeuf",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "beurre",
+    "quantite": 15.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "salade",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Prépare deux croque-monsieur (pain, jambon, fromage), beurrés à l'extérieur, et dore-les 3 min par face.",
+   "Fais cuire les œufs au plat jusqu'à ce que le blanc soit pris, et pose-en un sur chaque croque. Sers avec la salade."
+  ],
+  "preparation_min": 5,
+  "cuisson_min": 10,
+  "temps_total_min": 15,
+  "difficulte": "facile",
+  "cuisine": "francaise",
+  "proteine": "oeuf",
+  "feculent": "pain",
+  "cout_total_eur": 3.29,
+  "cout_portion_eur": 1.65,
+  "saisons": [
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "produits_saisonniers": [
+   "salade"
+  ],
+  "etiquettes": [
+   "reconfortant",
+   "rapide",
+   "sans_four"
+  ],
+  "allergenes": [
+   "gluten",
+   "oeufs",
+   "soja",
+   "lait"
+  ],
+  "ustensiles": [
+   "poêle"
+  ],
+  "equipement": [],
+  "conservation_jours": 0,
+  "conservation": "Ne se garde pas : à manger tout de suite.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "wrap-oeufs-epinards",
+  "nom": "Tortilla roulée aux œufs, épinards et fromage frais",
+  "famille": "rapides",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "oeuf",
+    "quantite": 4.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "epinard",
+    "quantite": 100.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "tortilla",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "fromage_frais",
+    "quantite": 60.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "ciboulette",
+    "quantite": 5.0,
+    "unite": "g",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais tomber les épinards 1 min à la poêle, ajoute les œufs battus et brouille-les jusqu'à ce qu'ils soient pris.",
+   "Tartine les tortillas de fromage frais, garnis d'œufs aux épinards et de ciboulette, roule."
+  ],
+  "preparation_min": 5,
+  "cuisson_min": 8,
+  "temps_total_min": 13,
+  "difficulte": "facile",
+  "cuisine": "americaine",
+  "proteine": "oeuf",
+  "feculent": "tortilla",
+  "cout_total_eur": 2.97,
+  "cout_portion_eur": 1.48,
+  "saisons": [
+   3,
+   4,
+   5,
+   6,
+   9,
+   10,
+   11
+  ],
+  "produits_saisonniers": [
+   "epinard"
+  ],
+  "etiquettes": [
+   "rapide",
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "sans_four",
+   "pas_cher"
+  ],
+  "allergenes": [
+   "gluten",
+   "oeufs",
+   "lait"
+  ],
+  "ustensiles": [
+   "poêle"
+  ],
+  "equipement": [],
+  "conservation_jours": 0,
+  "conservation": "Ne se garde pas : à manger tout de suite.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "salade-lentilles-corail",
+  "nom": "Salade de lentilles corail, carotte et cumin",
+  "famille": "rapides",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "lentille_corail",
+    "quantite": 150.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "carotte",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "oignon_rouge",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "persil",
+    "quantite": 10.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "citron",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "cumin",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 30.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "pain",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Cuis les lentilles corail 8 à 10 min dans l'eau salée : elles doivent rester un peu fermes. Égoutte et rince à l'eau froide.",
+   "Mélange avec les carottes râpées, l'oignon émincé, le persil, le jus de citron, le cumin et l'huile. Sers avec le pain."
+  ],
+  "preparation_min": 8,
+  "cuisson_min": 10,
+  "temps_total_min": 18,
+  "difficulte": "facile",
+  "cuisine": "turque",
+  "proteine": "legumineuse",
+  "feculent": "legumineuse",
+  "cout_total_eur": 2.48,
+  "cout_portion_eur": 1.24,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [
+   "carotte"
+  ],
+  "etiquettes": [
+   "salade",
+   "transportable",
+   "leger",
+   "rapide",
+   "vegetarien",
+   "vegan",
+   "sans_porc",
+   "pescetarien",
+   "sans_four",
+   "pas_cher"
+  ],
+  "allergenes": [
+   "gluten"
+  ],
+  "ustensiles": [
+   "casserole",
+   "saladier",
+   "râpe"
+  ],
+  "equipement": [],
+  "conservation_jours": 2,
+  "conservation": "Restes : 2 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ }
+]

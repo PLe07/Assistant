@@ -112,3 +112,50 @@ nuit.
 Gel sec annoncé (−3 °C, air sec) : « gel au petit matin », sans parler de verglas ni de tram. Gel humide, pluie
 verglaçante ou pluie la veille suivie de gel : « risque de verglas » et le tram, comme le moteur de règles du
 lendemain. Défaut trouvé par les tests (l'alerte annonçait un verglas que les règles ne voyaient pas).
+
+## 2026-10-07 · P2 — Base de recettes
+
+**D-16 · Les recettes sont écrites dans un format source compact ; un générateur calcule tout ce qui ne doit jamais
+être faux à la main.** `outils/sources/recettes/*.txt` (lisible, une recette = un en-tête, ses ingrédients, ses
+étapes) → `outils/construire_recettes.py` → `quotidien/repas/recettes/*.json`. Le générateur refuse un ingrédient
+inconnu, une unité fausse, un temps absurde, un « batch » qui ne se garde pas ; il calcule les **allergènes** (depuis
+la table des ingrédients), les **régimes**, les **saisons**, le **coût**, les étiquettes (« rapide » = 20 min ou
+moins au total, « au four », « végétarien »…), la **mention de sécurité** et la **conservation des restes**. Un test
+vérifie que les JSON versionnés correspondent exactement aux sources.
+
+**D-17 · Unités : g, ml ou pièces.** Les pièces (œuf, oignon, tranche de jambon, tortilla) ont un poids pour les
+conversions ; les cuillères deviennent des ml ou des g (1 c. à soupe d'huile = 15 ml, 1 c. à café de cumin ≈ 2 g).
+
+**D-18 · Ce qui compte comme « de saison ».** Calendrier France (ADEME, Interfel). Un produit importé (avocat, citron
+vert) n'est jamais de saison. Les alliacées, les herbes, le citron et le gingembre ne comptent pas (on en met trop peu
+pour que ce soit un choix de saison). Carotte, pomme de terre et champignon de Paris sont de saison toute l'année
+(conservation et culture en France). Surgelés et conserves sont neutres. Une recette est « de saison » un mois donné si
+tous ses fruits et légumes qui comptent le sont ; pour le critère « 40 recettes par mois », il faut au moins un fruit ou
+légume qui compte (une recette sans légume ne compte pas).
+
+**D-19 · Végétarien : le parmesan et le pesto n'en sont pas.** Le cahier des charges du Parmigiano Reggiano impose une
+présure animale ; le pesto en contient. Les autres fromages sont considérés végétariens (convention courante en
+France). Recettes végétariennes : 117 sur 228.
+
+**D-20 · Restes : 3 jours au plus, moins pour ce qui est fragile.** Poisson, viande hachée : 2 jours ; crevettes,
+moules : 1 jour ; riz mélangé au plat (riz cantonais, risotto, farce) : 1 jour. Riz servi à part : le plat se garde
+3 jours et le riz se refait (mention « riz cuit : 24 h au frigo au plus »). Toujours : « au frigo moins de 2 h après
+la cuisson », « réchauffe à cœur ».
+
+**D-21 · Allergènes des produits transformés « selon les marques ».** Cube de bouillon (céleri, gluten), chorizo
+(lait), pain de mie (lait, soja), pâte de curry thaï (crevette), pesto (lait, fruits à coque), curry en poudre
+(moutarde) : présents dans la table par prudence. Mieux vaut écarter une recette de trop.
+
+**D-22 · Pas de mixeur obligatoire pour les soupes.** Elles se font aussi au presse-purée (« soupe rustique ») ; seuls
+le gaspacho, le houmous et les falafels exigent un mixeur (équipement vérifié par le planificateur).
+
+**D-23 · Les crevettes sont achetées cuites et surgelées.** Moins chères, sans risque de cuisson insuffisante :
+décongélation au réfrigérateur, consommation dans la journée (mention ajoutée).
+
+**D-24 · Relecture de chef : 20 recettes tirées au hasard (graine 20261007), 8 corrections.**
+Frittata (dés de pommes de terre pas cuits en 6 min → 10 min à couvert), phở (bœuf poché 1 min dans le bouillon
+plutôt que cru sous le bouillon versé), cuisses de poulet au four (35 à 40 min, repère « cuit à cœur »), chowder
+(temps du revenu, poisson décongelé au frigo), gratin de panais (repère de fin de cuisson), soupe d'hiver (le poireau
+se lave, il ne s'épluche pas), nouilles égouttées et rincées, et « d'haricots » → « de haricots » (h aspiré).
+Les tests de validation avaient déjà trouvé : 7 recettes où aucune étape ne disait quand la viande ou le poisson est
+cuit, une mention de sécurité manquante pour les crevettes, et un bogue d'affichage (« 500 g » affiché « 5 g »).

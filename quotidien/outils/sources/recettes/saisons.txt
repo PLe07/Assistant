@@ -1,0 +1,524 @@
+# Recettes de saison : ce que le marché donne, mois après mois. Recettes originales écrites pour Quotidien.
+
+# --- Printemps ---------------------------------------------------------------------------------------------------------
+
+## Asperges vertes, œufs mollets et mouillettes
+id: asperges-oeufs-mollets · portions: 2 · prep: 10 · cuisson: 10 · difficulte: facile · cuisine: francaise · proteine: oeuf · feculent: pain · restes: 0
+tags: leger
+ustensiles: casserole, poêle
+- 500 g asperge
+- 4 oeuf
+- 0.5 pain
+- 15 g beurre
+- 20 g parmesan
+> Casse la base dure des asperges. Fais-les cuire 5 à 7 min dans l'eau bouillante salée : la pointe d'un couteau doit les traverser facilement.
+> Plonge les œufs 6 min dans l'eau bouillante pour qu'ils soient mollets.
+> Fais dorer les mouillettes de pain dans le beurre. Sers les asperges avec les œufs, les mouillettes et le parmesan en copeaux.
+
+## Risotto aux asperges et au citron
+id: risotto-asperges · portions: 2 · prep: 10 · cuisson: 25 · difficulte: moyen · cuisine: italienne · proteine: fromage · feculent: riz · restes: 1
+ustensiles: sauteuse, casserole
+- 160 g riz_rond
+- 300 g asperge
+- 1 echalote
+- 1 bouillon_cube
+- 0.5 citron
+- 20 g beurre
+- 40 g fromage_rape
+> Coupe les pointes des asperges et réserve-les ; coupe les tiges tendres en rondelles. Fais chauffer 800 ml d'eau avec le cube.
+> Fais fondre l'échalote dans le beurre, ajoute le riz et les rondelles d'asperges, remue 2 min.
+> Ajoute le bouillon louche par louche en remuant, 18 min ; ajoute les pointes 6 min avant la fin.
+> Hors du feu : zeste et jus du demi-citron, fromage, poivre.
+
+## Salade de radis, concombre, pois chiches et feta
+id: salade-radis-concombre · portions: 2 · prep: 15 · cuisson: 0 · difficulte: facile · cuisine: francaise · proteine: legumineuse · feculent: pain · restes: 0
+tags: salade, froid, leger
+ustensiles: saladier
+- 150 g radis
+- 1 concombre
+- 265 g pois_chiche
+- 80 g feta
+- 5 g menthe
+- 1 citron
+- 30 ml huile_olive
+- 0.5 pain
+> Coupe les radis en rondelles fines et le concombre en demi-rondelles.
+> Mélange avec les pois chiches rincés, la feta émiettée, la menthe, le jus du citron, l'huile, sel et poivre. Sers avec le pain.
+
+## Poulet aux épinards et à la crème
+id: poulet-epinards-creme · portions: 2 · prep: 10 · cuisson: 15 · difficulte: facile · cuisine: francaise · proteine: volaille · feculent: pates · restes: 2
+ustensiles: poêle, casserole
+- 300 g poulet_filet
+- 200 g epinard
+- 150 ml creme
+- 1 ail
+- 160 g pates
+- 10 ml huile_neutre
+> Mets les pâtes à cuire. Fais dorer le poulet en lanières 6 à 8 min dans l'huile, jusqu'à ce qu'il soit cuit à cœur.
+> Ajoute l'ail et les épinards, laisse-les tomber 2 min, verse la crème, sale et poivre.
+> Mélange avec les pâtes.
+
+## Pâtes printanières, petits pois, épinards et citron
+id: pates-printanieres · portions: 2 · prep: 5 · cuisson: 12 · difficulte: facile · cuisine: italienne · proteine: fromage · feculent: pates · restes: 1
+tags: leger
+ustensiles: casserole, poêle
+- 180 g pates
+- 150 g petit_pois
+- 100 g epinard
+- 0.5 citron
+- 100 g ricotta
+- 15 ml huile_olive
+- 5 g menthe
+> Cuis les pâtes avec les petits pois les 4 dernières minutes.
+> Fais tomber les épinards dans l'huile 1 min. Mélange tout avec la ricotta, le zeste et le jus du citron, la menthe, sel et poivre.
+
+## Carottes nouvelles glacées et poulet rôti
+id: carottes-glacees-poulet · portions: 2 · prep: 10 · cuisson: 30 · difficulte: facile · cuisine: francaise · proteine: volaille · feculent: pomme_de_terre · restes: 3
+ustensiles: sauteuse, poêle, casserole
+- 300 g poulet_filet
+- 6 carotte
+- 15 g beurre
+- 10 g sucre
+- 400 g pomme_de_terre
+- 5 g persil
+- 10 ml huile_neutre
+> Mets les carottes en tronçons dans la sauteuse avec le beurre, le sucre, une pincée de sel et de l'eau à mi-hauteur. Cuis à découvert 20 min, jusqu'à ce que l'eau s'évapore et qu'elles brillent.
+> Cuis les pommes de terre à l'eau 20 min.
+> Fais dorer le poulet 5 à 6 min par face dans l'huile, jusqu'à ce qu'il soit cuit à cœur. Sers avec les légumes et le persil.
+
+## Velouté d'épinards et pommes de terre
+id: veloute-epinards · portions: 4 · prep: 10 · cuisson: 25 · difficulte: facile · cuisine: francaise · proteine: aucune · feculent: pomme_de_terre · restes: 3
+tags: batch, soupe, leger
+ustensiles: cocotte, mixeur plongeant ou presse-purée
+- 400 g epinard
+- 400 g pomme_de_terre
+- 1 oignon
+- 1 bouillon_cube
+- 100 ml creme
+- 0.3 g muscade
+- 1 pain
+> Fais revenir l'oignon, ajoute les pommes de terre en dés, le cube et 1 litre d'eau ; cuis 15 min.
+> Ajoute les épinards lavés, cuis 5 min, mixe avec la crème et la muscade. Sale, poivre, sers avec le pain.
+
+# --- Été ------------------------------------------------------------------------------------------------------------
+
+## Pan bagnat
+id: pan-bagnat · portions: 2 · prep: 15 · cuisson: 10 · difficulte: facile · cuisine: francaise · proteine: poisson · feculent: pain · restes: 0
+tags: froid, transportable
+ustensiles: casserole, planche
+- 1 pain
+- 140 g thon
+- 2 tomate
+- 2 oeuf
+- 0.5 poivron
+- 0.5 oignon_rouge
+- 30 g olive
+- 0.25 salade
+- 20 ml huile_olive
+> Cuis les œufs 9 min, refroidis-les et coupe-les en rondelles.
+> Coupe le pain en deux tronçons, ouvre-les et arrose l'intérieur d'huile.
+> Garnis de salade, tomate, poivron, oignon, thon, œufs et olives ; referme et presse. Mieux vaut le laisser 15 min au frais avant de manger.
+
+## Courgettes sautées, semoule et merguez
+id: courgettes-semoule-merguez · portions: 2 · prep: 10 · cuisson: 15 · difficulte: facile · cuisine: tunisienne · proteine: boeuf · feculent: semoule · restes: 1
+tags: epice
+ustensiles: poêle, saladier
+- 4 merguez
+- 2 courgette
+- 140 g semoule
+- 1 g cumin
+- 5 g menthe
+- 15 ml huile_olive
+> Fais cuire les merguez 10 à 12 min à la poêle, jusqu'à ce qu'elles soient cuites à cœur.
+> Fais sauter les courgettes en dés 6 min dans l'huile avec le cumin, sale.
+> Verse 150 ml d'eau bouillante salée sur la semoule, couvre 5 min, égraine. Sers avec la menthe.
+
+## Haricots verts sautés à l'ail et poulet grillé
+id: haricots-verts-poulet · portions: 2 · prep: 10 · cuisson: 15 · difficulte: facile · cuisine: francaise · proteine: volaille · feculent: pomme_de_terre · restes: 2
+ustensiles: casserole, poêle
+- 300 g haricot_vert
+- 300 g poulet_filet
+- 2 ail
+- 400 g pomme_de_terre
+- 15 g beurre
+- 10 ml huile_neutre
+> Cuis les pommes de terre en morceaux 15 min et les haricots verts 8 min dans l'eau salée.
+> Fais griller le poulet 5 à 6 min par face dans l'huile, jusqu'à ce qu'il soit cuit à cœur.
+> Fais sauter les haricots et les pommes de terre dans le beurre avec l'ail 3 min.
+
+## Brochettes de poulet et légumes au four
+id: brochettes-poulet-legumes · portions: 2 · prep: 20 · cuisson: 20 · difficulte: facile · cuisine: grecque · proteine: volaille · feculent: semoule · restes: 1
+tags: airfryer_possible
+ustensiles: four, plaque, piques à brochette, saladier
+- 300 g poulet_filet
+- 1 poivron
+- 1 courgette
+- 1 oignon_rouge
+- 1 citron
+- 1 g origan
+- 20 ml huile_olive
+- 120 g semoule
+> Préchauffe le four à 220 °C. Coupe poulet et légumes en gros cubes, mélange avec l'huile, le jus du citron, l'origan, sel et poivre.
+> Enfile-les sur les piques et fais-les rôtir 18 à 20 min en les retournant : le poulet doit être cuit à cœur.
+> Sers avec la semoule (même volume d'eau bouillante salée, 5 min à couvert).
+
+## Tomates à la provençale et œufs au plat
+id: tomates-provencale-oeufs · portions: 2 · prep: 10 · cuisson: 20 · difficulte: facile · cuisine: francaise · proteine: oeuf · feculent: pain · restes: 0
+ustensiles: poêle avec couvercle
+- 4 tomate
+- 2 ail
+- 10 g persil
+- 4 oeuf
+- 30 ml huile_olive
+- 1 pain
+> Coupe les tomates en deux, fais-les cuire 10 min face coupée dans l'huile, puis 5 min de l'autre côté ; parsème d'ail et de persil hachés, sale.
+> Fais cuire les œufs au plat à côté jusqu'à ce que le blanc soit pris. Sers avec le pain.
+
+## Salade de quinoa, courgette et feta
+id: salade-quinoa-courgette · portions: 2 · prep: 10 · cuisson: 12 · difficulte: facile · cuisine: grecque · proteine: fromage · feculent: quinoa · restes: 2
+tags: salade, froid, transportable, leger
+ustensiles: casserole, poêle, saladier
+- 120 g quinoa
+- 1 courgette
+- 100 g feta
+- 150 g tomate_cerise
+- 5 g menthe
+- 1 citron
+- 30 ml huile_olive
+> Cuis le quinoa rincé 12 min dans deux fois son volume d'eau salée, laisse tiédir.
+> Fais griller la courgette en demi-rondelles 4 min dans une partie de l'huile.
+> Mélange quinoa, courgette, tomates cerises coupées, feta, menthe, jus de citron et le reste d'huile.
+
+## Poêlée de courgettes au chèvre et aux pâtes
+id: pates-courgettes-chevre · portions: 2 · prep: 5 · cuisson: 15 · difficulte: facile · cuisine: francaise · proteine: fromage · feculent: pates · restes: 1
+ustensiles: casserole, poêle
+- 180 g pates
+- 2 courgette
+- 100 g chevre
+- 1 ail
+- 1 g thym
+- 15 ml huile_olive
+> Cuis les pâtes. Fais sauter les courgettes en dés 8 min dans l'huile avec l'ail et le thym.
+> Mélange avec les pâtes, un peu d'eau de cuisson et le chèvre émietté qui fond doucement.
+
+## Aubergines rôties au yaourt et pois chiches
+id: aubergines-yaourt · portions: 2 · prep: 10 · cuisson: 30 · difficulte: facile · cuisine: turque · proteine: legumineuse · feculent: pain · restes: 1
+tags: airfryer_possible
+ustensiles: four, plaque, saladier
+- 2 aubergine
+- 265 g pois_chiche
+- 150 g yaourt_grec
+- 1 ail
+- 5 g menthe
+- 1 g cumin
+- 30 ml huile_olive
+- 2 pain_pita
+> Préchauffe le four à 210 °C. Coupe les aubergines en cubes, mélange avec l'huile, le cumin et du sel, et rôtis 25 à 30 min ; ajoute les pois chiches pour les 10 dernières minutes.
+> Sauce : yaourt, ail râpé, menthe, sel.
+> Sers les légumes sur la sauce, avec les pitas chaudes.
+
+## Salade de concombre au yaourt et saumon
+id: saumon-concombre-yaourt · portions: 2 · prep: 10 · cuisson: 10 · difficulte: facile · cuisine: francaise · proteine: poisson · feculent: pomme_de_terre · restes: 1
+tags: leger
+ustensiles: poêle, casserole, saladier
+- 2 saumon
+- 1 concombre
+- 100 g yaourt_grec
+- 5 g aneth
+- 300 g pomme_de_terre
+- 0.5 citron
+> Cuis les pommes de terre en morceaux 12 min à l'eau salée.
+> Mélange le concombre en fines rondelles avec le yaourt, l'aneth, le citron, sel et poivre.
+> Fais cuire le saumon 4 min côté peau puis 2 min de l'autre : la chair doit être opaque. Sers avec la salade et les pommes de terre.
+
+## Ratatouille express aux pâtes
+id: pates-ratatouille · portions: 2 · prep: 10 · cuisson: 20 · difficulte: facile · cuisine: francaise · proteine: fromage · feculent: pates · restes: 2
+ustensiles: sauteuse, casserole
+- 160 g pates
+- 1 courgette
+- 1 poivron
+- 0.5 aubergine
+- 2 tomate
+- 1 ail
+- 1 g herbes_de_provence
+- 20 ml huile_olive
+- 30 g fromage_rape
+> Coupe les légumes en petits dés et fais-les revenir 15 min dans l'huile avec l'ail et les herbes, à couvert les 5 dernières minutes.
+> Cuis les pâtes, mélange avec les légumes et le fromage.
+
+## Salade de pâtes au thon et aux légumes du soleil
+id: salade-pates-thon · portions: 2 · prep: 10 · cuisson: 10 · difficulte: facile · cuisine: francaise · proteine: poisson · feculent: pates · restes: 1
+tags: salade, froid, transportable
+ustensiles: casserole, saladier
+- 160 g pates
+- 140 g thon
+- 1 poivron
+- 2 tomate
+- 0.5 concombre
+- 30 g olive
+- 30 ml huile_olive
+- 10 ml vinaigre
+> Cuis les pâtes, rince-les à l'eau froide.
+> Mélange avec le thon émietté, les légumes en dés, les olives, l'huile, le vinaigre, sel et poivre.
+
+# --- Automne --------------------------------------------------------------------------------------------------------
+
+## Gratin de courge et pommes de terre
+id: gratin-courge-pdt · portions: 4 · prep: 20 · cuisson: 45 · difficulte: facile · cuisine: francaise · proteine: fromage · feculent: pomme_de_terre · restes: 3
+tags: batch, gratin, reconfortant
+ustensiles: four, plat à gratin, casserole
+- 0.6 courge
+- 500 g pomme_de_terre
+- 300 ml creme
+- 100 ml lait
+- 1 ail
+- 80 g fromage_rape
+- 0.3 g muscade
+> Préchauffe le four à 180 °C. Coupe courge et pommes de terre en fines tranches.
+> Fais chauffer la crème, le lait, l'ail écrasé, la muscade, sel et poivre ; ajoute les légumes et laisse frémir 8 min.
+> Verse dans le plat, couvre de fromage et enfourne 35 min : la pointe d'un couteau doit traverser les légumes.
+
+## Poêlée de champignons et patates douces, œuf mollet
+id: champignons-patates-douces · portions: 2 · prep: 10 · cuisson: 25 · difficulte: facile · cuisine: francaise · proteine: oeuf · feculent: pomme_de_terre · restes: 0
+ustensiles: poêle, casserole
+- 1 patate_douce
+- 250 g champignon
+- 2 oeuf
+- 1 echalote
+- 5 g persil
+- 20 ml huile_olive
+> Coupe la patate douce en petits cubes et fais-la dorer 15 min dans l'huile, à couvert les 5 premières minutes.
+> Ajoute les champignons émincés et l'échalote, 6 min. Sale, poivre, parsème de persil.
+> Plonge les œufs 6 min dans l'eau bouillante, écale-les et pose-les sur la poêlée.
+
+## Soupe de potiron au lait de coco et au curry
+id: soupe-courge-coco · portions: 4 · prep: 15 · cuisson: 25 · difficulte: facile · cuisine: thai · proteine: aucune · feculent: pain · restes: 3
+tags: batch, soupe, epice
+ustensiles: cocotte, mixeur plongeant ou presse-purée
+- 1 courge
+- 1 oignon
+- 10 g gingembre
+- 6 g curry
+- 400 ml lait_coco
+- 1 bouillon_cube
+- 1 pain
+> Fais revenir l'oignon, le gingembre et le curry, ajoute la courge en cubes, le cube et 700 ml d'eau ; cuis 20 min.
+> Ajoute le lait de coco, mixe, sale. Sers avec le pain.
+
+## Poireaux vinaigrette et œufs mimosa
+id: poireaux-vinaigrette · portions: 2 · prep: 15 · cuisson: 15 · difficulte: facile · cuisine: francaise · proteine: oeuf · feculent: pain · restes: 1
+tags: froid, leger
+ustensiles: casserole, saladier
+- 4 poireau
+- 3 oeuf
+- 10 g moutarde
+- 15 ml vinaigre
+- 40 ml huile_neutre
+- 5 g persil
+- 0.5 pain
+> Garde le blanc et le vert tendre des poireaux, fends-les et lave-les bien. Cuis-les 12 min à l'eau salée, égoutte-les longuement.
+> Cuis les œufs 9 min, écale-les, hache-les.
+> Vinaigrette : moutarde, vinaigre, sel, poivre, huile. Nappe les poireaux tièdes, parsème d'œufs hachés et de persil.
+
+## Velouté de brocoli au fromage frais
+id: veloute-brocoli · portions: 2 · prep: 10 · cuisson: 20 · difficulte: facile · cuisine: francaise · proteine: fromage · feculent: pain · restes: 3
+tags: soupe, leger
+ustensiles: casserole, mixeur plongeant ou presse-purée
+- 1 brocoli
+- 150 g pomme_de_terre
+- 1 oignon
+- 1 bouillon_cube
+- 60 g fromage_frais
+- 0.5 pain
+> Fais revenir l'oignon, ajoute le brocoli en bouquets, la pomme de terre en dés, le cube et 600 ml d'eau ; cuis 15 min.
+> Mixe avec le fromage frais, sale et poivre. Sers avec le pain.
+
+## Saumon rôti à la courge et aux graines
+id: saumon-courge · portions: 2 · prep: 15 · cuisson: 30 · difficulte: facile · cuisine: francaise · proteine: poisson · feculent: aucun · restes: 1
+tags: airfryer_possible
+ustensiles: four, plaque
+- 2 saumon
+- 0.5 courge
+- 1 oignon_rouge
+- 10 g graines_sesame
+- 20 ml huile_olive
+- 1 g thym
+- 50 g roquette
+> Préchauffe le four à 200 °C. Coupe la courge en quartiers fins et l'oignon en lamelles, mélange avec l'huile, le thym, sel et poivre, et rôtis 20 min.
+> Pose le saumon sur les légumes, parsème de sésame et enfourne 10 min : la chair doit être opaque. Sers avec la roquette.
+
+## Poulet aux pommes et aux oignons
+id: poulet-pommes-oignons · portions: 2 · prep: 10 · cuisson: 25 · difficulte: facile · cuisine: francaise · proteine: volaille · feculent: pomme_de_terre · restes: 2
+tags: sucre_sale
+ustensiles: poêle, casserole
+- 300 g poulet_filet
+- 2 pomme
+- 1 oignon
+- 15 g beurre
+- 50 ml creme
+- 400 g pomme_de_terre
+> Cuis les pommes de terre à l'eau 20 min.
+> Fais dorer le poulet en morceaux dans le beurre 6 à 8 min, jusqu'à ce qu'il soit cuit à cœur, et réserve.
+> Dans la même poêle, fais dorer l'oignon et les pommes en quartiers 8 min, ajoute la crème, remets le poulet 1 min. Sale, poivre.
+
+# --- Hiver ----------------------------------------------------------------------------------------------------------
+
+## Salade d'hiver au chou rouge, pomme et carotte
+id: salade-hiver-chou-rouge · portions: 2 · prep: 15 · cuisson: 0 · difficulte: facile · cuisine: francaise · proteine: fromage · feculent: pain · restes: 1
+tags: salade, froid, leger
+ustensiles: saladier, râpe
+- 0.25 chou_rouge
+- 1 pomme
+- 2 carotte
+- 30 g noix
+- 80 g chevre
+- 10 g moutarde
+- 15 ml vinaigre
+- 30 ml huile_olive
+- 0.5 pain
+> Émince très finement le chou, râpe les carottes, coupe la pomme en bâtonnets.
+> Vinaigrette : moutarde, vinaigre, sel, poivre et huile. Mélange avec les légumes, ajoute les noix et le chèvre émietté.
+
+## Gratin de panais et carottes
+id: gratin-panais-carottes · portions: 4 · prep: 15 · cuisson: 40 · difficulte: facile · cuisine: francaise · proteine: fromage · feculent: pomme_de_terre · restes: 3
+tags: batch, gratin
+ustensiles: four, plat à gratin, casserole
+- 3 panais
+- 4 carotte
+- 300 g pomme_de_terre
+- 250 ml creme
+- 80 g fromage_rape
+- 1 g thym
+> Préchauffe le four à 190 °C. Coupe les légumes en rondelles et précuis-les 8 min à l'eau salée.
+> Range-les dans le plat, verse la crème, sale, poivre, ajoute le thym et le fromage.
+> Enfourne 30 min, jusqu'à ce que le dessus soit doré et que les légumes soient fondants.
+
+## Purée de céleri-rave et saucisses
+id: puree-celeri-saucisses · portions: 2 · prep: 15 · cuisson: 25 · difficulte: facile · cuisine: francaise · proteine: porc · feculent: pomme_de_terre · restes: 2
+tags: reconfortant
+ustensiles: casserole, poêle, presse-purée
+- 0.5 celeri_rave
+- 300 g pomme_de_terre
+- 2 saucisse
+- 100 ml lait
+- 20 g beurre
+> Épluche le céleri et les pommes de terre, coupe-les en morceaux et cuis-les 20 min dans l'eau salée.
+> Cuis les saucisses piquées 15 à 20 min à la poêle, jusqu'à ce qu'elles soient cuites à cœur.
+> Écrase les légumes avec le lait chaud et le beurre, sale, poivre.
+
+## Poêlée de navets et carottes, poulet au thym
+id: navets-carottes-poulet · portions: 2 · prep: 15 · cuisson: 25 · difficulte: facile · cuisine: francaise · proteine: volaille · feculent: aucun · restes: 2
+ustensiles: sauteuse, poêle
+- 3 navet
+- 3 carotte
+- 300 g poulet_filet
+- 15 g beurre
+- 1 g thym
+- 0.5 pain
+- 10 ml huile_neutre
+> Coupe navets et carottes en bâtonnets, fais-les cuire 20 min dans le beurre avec un fond d'eau et le thym, à couvert, puis à découvert pour les dorer.
+> Fais dorer le poulet 5 à 6 min par face dans l'huile, jusqu'à ce qu'il soit cuit à cœur. Sers avec le pain.
+
+## Soupe de pois cassés
+id: soupe-pois-casses · portions: 4 · prep: 10 · cuisson: 50 · difficulte: facile · cuisine: francaise · proteine: legumineuse · feculent: legumineuse · restes: 3
+tags: batch, soupe, reconfortant
+ustensiles: cocotte, mixeur plongeant ou presse-purée
+- 300 g pois_casse
+- 2 carotte
+- 1 oignon
+- 1 poireau
+- 1 bouillon_cube
+- 1 laurier
+- 1 pain
+> Rince les pois cassés. Mets-les dans la cocotte avec les légumes coupés, le laurier, le cube et 1,5 litre d'eau.
+> Laisse cuire 45 min à petit feu en remuant de temps en temps, retire le laurier et mixe. Sale et sers avec le pain.
+
+## Velouté de céleri-rave
+id: veloute-celeri · portions: 4 · prep: 15 · cuisson: 25 · difficulte: facile · cuisine: francaise · proteine: aucune · feculent: pomme_de_terre · restes: 3
+tags: batch, soupe, leger
+ustensiles: cocotte, mixeur plongeant ou presse-purée
+- 1 celeri_rave
+- 200 g pomme_de_terre
+- 1 oignon
+- 1 bouillon_cube
+- 100 ml creme
+- 1 pain
+> Épluche et coupe le céleri et la pomme de terre en cubes. Fais revenir l'oignon, ajoute les légumes, le cube et 1 litre d'eau ; cuis 20 min.
+> Mixe avec la crème, sale et poivre. Sers avec le pain.
+
+## Chou farci simplifié en cocotte
+id: chou-farci-cocotte · portions: 4 · prep: 25 · cuisson: 50 · difficulte: moyen · cuisine: francaise · proteine: porc · feculent: pomme_de_terre · restes: 3
+tags: batch, reconfortant
+ustensiles: cocotte, casserole, saladier
+- 0.5 chou_vert
+- 4 saucisse : la chair seulement
+- 1 oignon
+- 1 oeuf
+- 0.25 pain : rassis
+- 400 g tomate_concassee
+- 600 g pomme_de_terre
+- 1 g thym
+> Blanchis les feuilles de chou 5 min dans l'eau bouillante salée ; égoutte-les.
+> Mélange la chair à saucisse avec l'oignon haché, l'œuf, le pain trempé et pressé, le thym, du poivre.
+> Dans la cocotte, alterne feuilles de chou et farce, finis par du chou, verse les tomates et 200 ml d'eau ; couvre et laisse cuire 45 min à feu doux : la farce doit être cuite à cœur.
+> Sers avec les pommes de terre cuites à l'eau.
+
+## Endives braisées et filet de poisson
+id: endives-braisees-poisson · portions: 2 · prep: 10 · cuisson: 25 · difficulte: facile · cuisine: belge · proteine: poisson · feculent: pomme_de_terre · restes: 1
+ustensiles: sauteuse avec couvercle, poêle, casserole
+- 4 endive
+- 250 g poisson_blanc
+- 15 g beurre
+- 0.5 citron
+- 400 g pomme_de_terre
+- 5 g persil
+> Coupe les endives en deux et fais-les braiser 20 min dans le beurre avec le jus du demi-citron, une pincée de sucre et de sel, à couvert.
+> Cuis les pommes de terre à l'eau. Fais cuire le poisson 3 à 4 min par face : la chair doit se détacher en lamelles. Sers avec le persil.
+
+## Curry de tofu aux épinards
+id: curry-tofu-epinards · portions: 2 · prep: 10 · cuisson: 20 · difficulte: facile · cuisine: indienne · proteine: tofu · feculent: riz · restes: 2
+tags: epice
+ustensiles: sauteuse, casserole
+- 250 g tofu
+- 300 g epinard_surgele
+- 200 ml lait_coco
+- 1 oignon
+- 2 ail
+- 10 g gingembre
+- 4 g garam_masala
+- 1 g curcuma
+- 150 g riz
+- 15 ml huile_neutre
+> Mets le riz à cuire. Fais dorer le tofu en cubes 6 min dans l'huile, réserve.
+> Fais revenir l'oignon, l'ail, le gingembre et les épices, ajoute les épinards et le lait de coco ; laisse mijoter 8 min et mixe grossièrement si tu veux.
+> Remets le tofu, sale et sers avec le riz.
+
+## Tofu croustillant, nouilles et chou sauté
+id: tofu-nouilles-chou · portions: 2 · prep: 10 · cuisson: 15 · difficulte: facile · cuisine: chinoise · proteine: tofu · feculent: nouilles · restes: 1
+ustensiles: poêle, casserole, assiette creuse
+- 250 g tofu
+- 20 g farine
+- 160 g nouilles_ble
+- 0.25 chou_vert
+- 1 carotte
+- 30 ml sauce_soja
+- 10 g miel
+- 20 ml huile_neutre
+> Cuis les nouilles, égoutte-les et rince-les. Coupe le tofu en cubes, sèche-le et roule-le dans la farine.
+> Fais-le dorer 8 min dans l'huile, réserve. Fais sauter le chou émincé et la carotte 4 min dans la même poêle.
+> Ajoute nouilles, sauce soja et miel, mélange, puis remets le tofu au dernier moment pour qu'il reste croustillant.
+
+## Hachis de poisson aux poireaux (parmentier de la mer)
+id: parmentier-poisson · portions: 4 · prep: 20 · cuisson: 35 · difficulte: facile · cuisine: francaise · proteine: poisson · feculent: pomme_de_terre · restes: 2
+tags: gratin, reconfortant
+ustensiles: four, plat à gratin, casserole, poêle, presse-purée
+- 400 g poisson_blanc
+- 2 poireau
+- 800 g pomme_de_terre
+- 150 ml lait
+- 100 ml creme
+- 20 g beurre
+- 40 g fromage_rape
+> Cuis les pommes de terre 20 min et écrase-les avec le lait chaud et le beurre.
+> Fais fondre les poireaux émincés 10 min, ajoute le poisson en morceaux et la crème ; cuis 5 min, jusqu'à ce que le poisson soit opaque. Sale, poivre.
+> Préchauffe le four à 200 °C. Étale le poisson dans le plat, couvre de purée et de fromage, et enfourne 15 min.

@@ -1,0 +1,2565 @@
+[
+ {
+  "id": "carbonara",
+  "nom": "Spaghetti à la carbonara",
+  "famille": "italienne",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "pates",
+    "quantite": 200.0,
+    "unite": "g",
+    "note": "des spaghetti"
+   },
+   {
+    "id": "lardons",
+    "quantite": 120.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "oeuf",
+    "quantite": 3.0,
+    "unite": "p",
+    "note": "1 entier et 2 jaunes"
+   },
+   {
+    "id": "parmesan",
+    "quantite": 40.0,
+    "unite": "g",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Mets les spaghetti à cuire dans un grand volume d'eau salée.",
+   "Fais dorer les lardons à sec 5 min ; coupe le feu.",
+   "Bats l'œuf entier et les jaunes avec le parmesan râpé et beaucoup de poivre.",
+   "Égoutte les pâtes en gardant un verre d'eau de cuisson. Hors du feu mais aussitôt, mélange-les avec les lardons, puis la crème d'œufs et un peu d'eau de cuisson : la chaleur des pâtes cuit les œufs et donne une sauce nappante. Sers tout de suite."
+  ],
+  "preparation_min": 5,
+  "cuisson_min": 12,
+  "temps_total_min": 17,
+  "difficulte": "moyen",
+  "cuisine": "italienne",
+  "proteine": "porc",
+  "feculent": "pates",
+  "cout_total_eur": 3.45,
+  "cout_portion_eur": 1.73,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [],
+  "etiquettes": [
+   "rapide",
+   "sans_four"
+  ],
+  "allergenes": [
+   "gluten",
+   "oeufs",
+   "lait"
+  ],
+  "ustensiles": [
+   "casserole",
+   "poêle",
+   "saladier"
+  ],
+  "equipement": [],
+  "conservation_jours": 0,
+  "conservation": "Ne se garde pas : à manger tout de suite.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "bolognaise",
+  "nom": "Spaghetti bolognaise",
+  "famille": "italienne",
+  "portions": 4,
+  "ingredients": [
+   {
+    "id": "boeuf_hache",
+    "quantite": 400.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "tomate_concassee",
+    "quantite": 800.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "carotte",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "concentre_tomate",
+    "quantite": 20.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "origan",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "pates",
+    "quantite": 320.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "parmesan",
+    "quantite": 40.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 15.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Hache l'oignon, l'ail et la carotte, fais-les fondre 5 min dans l'huile.",
+   "Ajoute la viande et fais-la cuire en l'émiettant jusqu'à ce qu'elle ne soit plus rosée.",
+   "Ajoute les tomates, le concentré, l'origan, sel et poivre ; laisse mijoter 35 min à feu doux, à demi couvert.",
+   "Cuis les pâtes, mélange avec la sauce et sers avec le parmesan."
+  ],
+  "preparation_min": 15,
+  "cuisson_min": 45,
+  "temps_total_min": 60,
+  "difficulte": "facile",
+  "cuisine": "italienne",
+  "proteine": "boeuf",
+  "feculent": "pates",
+  "cout_total_eur": 8.69,
+  "cout_portion_eur": 2.17,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [
+   "carotte"
+  ],
+  "etiquettes": [
+   "reconfortant",
+   "sans_porc",
+   "sans_four"
+  ],
+  "allergenes": [
+   "gluten",
+   "lait"
+  ],
+  "ustensiles": [
+   "cocotte",
+   "casserole"
+  ],
+  "equipement": [],
+  "conservation_jours": 2,
+  "conservation": "Restes : 2 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [
+   "Cuis la viande hachée à cœur : plus de rose au centre (70 °C)."
+  ],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "pates-pesto-haricots",
+  "nom": "Pâtes au pesto, haricots verts et pommes de terre",
+  "famille": "italienne",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "pates",
+    "quantite": 180.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "pesto",
+    "quantite": 90.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "haricot_vert",
+    "quantite": 150.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "pomme_de_terre",
+    "quantite": 150.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "parmesan",
+    "quantite": 20.0,
+    "unite": "g",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Coupe la pomme de terre en petits dés et les haricots en tronçons.",
+   "Cuis-les dans l'eau salée avec les pâtes : les dés de pomme de terre d'abord, puis les pâtes et les haricots, pour que tout soit prêt en même temps.",
+   "Égoutte en gardant un peu d'eau, mélange avec le pesto détendu de cette eau. Parsème de parmesan."
+  ],
+  "preparation_min": 5,
+  "cuisson_min": 15,
+  "temps_total_min": 20,
+  "difficulte": "facile",
+  "cuisine": "italienne",
+  "proteine": "fromage",
+  "feculent": "pates",
+  "cout_total_eur": 2.57,
+  "cout_portion_eur": 1.29,
+  "saisons": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "produits_saisonniers": [
+   "haricot_vert",
+   "pomme_de_terre"
+  ],
+  "etiquettes": [
+   "rapide",
+   "sans_porc",
+   "pescetarien",
+   "sans_four",
+   "pas_cher"
+  ],
+  "allergenes": [
+   "gluten",
+   "lait",
+   "fruits_a_coque"
+  ],
+  "ustensiles": [
+   "casserole"
+  ],
+  "equipement": [],
+  "conservation_jours": 1,
+  "conservation": "Restes : 1 jour au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "pates-tomate-basilic",
+  "nom": "Pâtes à la tomate, au basilic et à la mozzarella",
+  "famille": "italienne",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "pates",
+    "quantite": 180.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "tomate_concassee",
+    "quantite": 400.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "basilic",
+    "quantite": 10.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 20.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "mozzarella",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais chauffer l'ail émincé dans l'huile 1 min sans le colorer, ajoute les tomates, sel et poivre ; laisse mijoter 12 min.",
+   "Cuis les pâtes pendant ce temps.",
+   "Mélange pâtes et sauce, ajoute la mozzarella en dés et le basilic ciselé hors du feu."
+  ],
+  "preparation_min": 5,
+  "cuisson_min": 15,
+  "temps_total_min": 20,
+  "difficulte": "facile",
+  "cuisine": "italienne",
+  "proteine": "fromage",
+  "feculent": "pates",
+  "cout_total_eur": 2.81,
+  "cout_portion_eur": 1.41,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [],
+  "etiquettes": [
+   "rapide",
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "sans_four",
+   "pas_cher"
+  ],
+  "allergenes": [
+   "gluten",
+   "lait"
+  ],
+  "ustensiles": [
+   "casserole",
+   "sauteuse"
+  ],
+  "equipement": [],
+  "conservation_jours": 1,
+  "conservation": "Restes : 1 jour au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "arrabbiata",
+  "nom": "Penne all'arrabbiata",
+  "famille": "italienne",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "pates",
+    "quantite": 180.0,
+    "unite": "g",
+    "note": "des penne"
+   },
+   {
+    "id": "tomate_concassee",
+    "quantite": 400.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "piment",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "persil",
+    "quantite": 5.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 20.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais revenir l'ail et le piment 1 min dans l'huile, ajoute les tomates et laisse réduire 12 min ; sale.",
+   "Cuis les penne al dente, mélange avec la sauce et le persil haché."
+  ],
+  "preparation_min": 5,
+  "cuisson_min": 15,
+  "temps_total_min": 20,
+  "difficulte": "facile",
+  "cuisine": "italienne",
+  "proteine": "aucune",
+  "feculent": "pates",
+  "cout_total_eur": 1.61,
+  "cout_portion_eur": 0.8,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [],
+  "etiquettes": [
+   "epice",
+   "rapide",
+   "vegetarien",
+   "vegan",
+   "sans_porc",
+   "pescetarien",
+   "sans_four",
+   "pas_cher"
+  ],
+  "allergenes": [
+   "gluten"
+  ],
+  "ustensiles": [
+   "casserole",
+   "sauteuse"
+  ],
+  "equipement": [],
+  "conservation_jours": 2,
+  "conservation": "Restes : 2 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "pates-courgettes-ricotta",
+  "nom": "Pâtes aux courgettes, citron et ricotta",
+  "famille": "italienne",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "pates",
+    "quantite": 180.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "courgette",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "ricotta",
+    "quantite": 125.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "citron",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "menthe",
+    "quantite": 5.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 15.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Mets les pâtes à cuire. Coupe les courgettes en demi-rondelles fines et fais-les sauter 6 min dans l'huile avec l'ail.",
+   "Mélange la ricotta avec le zeste et le jus du demi-citron, sel et poivre.",
+   "Mélange pâtes, courgettes et ricotta avec un peu d'eau de cuisson ; ajoute la menthe ciselée."
+  ],
+  "preparation_min": 8,
+  "cuisson_min": 12,
+  "temps_total_min": 20,
+  "difficulte": "facile",
+  "cuisine": "italienne",
+  "proteine": "fromage",
+  "feculent": "pates",
+  "cout_total_eur": 3.04,
+  "cout_portion_eur": 1.52,
+  "saisons": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "produits_saisonniers": [
+   "courgette"
+  ],
+  "etiquettes": [
+   "leger",
+   "rapide",
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "sans_four"
+  ],
+  "allergenes": [
+   "gluten",
+   "lait"
+  ],
+  "ustensiles": [
+   "casserole",
+   "poêle"
+  ],
+  "equipement": [],
+  "conservation_jours": 1,
+  "conservation": "Restes : 1 jour au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "pates-thon-tomate",
+  "nom": "Pâtes au thon et à la tomate",
+  "famille": "italienne",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "pates",
+    "quantite": 180.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "thon",
+    "quantite": 140.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "tomate_concassee",
+    "quantite": 400.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "olive",
+    "quantite": 30.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "origan",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 15.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais fondre l'oignon émincé 3 min dans l'huile, ajoute les tomates et l'origan ; laisse mijoter 10 min.",
+   "Cuis les pâtes. Ajoute le thon émietté et les olives à la sauce, réchauffe 2 min et mélange avec les pâtes."
+  ],
+  "preparation_min": 5,
+  "cuisson_min": 15,
+  "temps_total_min": 20,
+  "difficulte": "facile",
+  "cuisine": "italienne",
+  "proteine": "poisson",
+  "feculent": "pates",
+  "cout_total_eur": 3.28,
+  "cout_portion_eur": 1.64,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [],
+  "etiquettes": [
+   "rapide",
+   "sans_porc",
+   "pescetarien",
+   "sans_four",
+   "poisson"
+  ],
+  "allergenes": [
+   "gluten",
+   "poissons"
+  ],
+  "ustensiles": [
+   "casserole",
+   "sauteuse"
+  ],
+  "equipement": [],
+  "conservation_jours": 1,
+  "conservation": "Restes : 1 jour au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "pates-brocolis",
+  "nom": "Pâtes aux brocolis et à l'ail",
+  "famille": "italienne",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "pates",
+    "quantite": 180.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "brocoli",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "piment",
+    "quantite": 0.5,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "fromage_rape",
+    "quantite": 40.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 20.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Détaille le brocoli en petits bouquets et cuis-le avec les pâtes, dans la même eau salée, les 5 dernières minutes.",
+   "Fais dorer l'ail émincé et le piment dans l'huile 1 min.",
+   "Égoutte, mélange tout dans la poêle avec un peu d'eau de cuisson et le fromage."
+  ],
+  "preparation_min": 5,
+  "cuisson_min": 15,
+  "temps_total_min": 20,
+  "difficulte": "facile",
+  "cuisine": "italienne",
+  "proteine": "fromage",
+  "feculent": "pates",
+  "cout_total_eur": 2.52,
+  "cout_portion_eur": 1.26,
+  "saisons": [
+   6,
+   7,
+   8,
+   9,
+   10,
+   11
+  ],
+  "produits_saisonniers": [
+   "brocoli"
+  ],
+  "etiquettes": [
+   "rapide",
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "sans_four",
+   "pas_cher"
+  ],
+  "allergenes": [
+   "gluten",
+   "lait"
+  ],
+  "ustensiles": [
+   "casserole",
+   "poêle"
+  ],
+  "equipement": [],
+  "conservation_jours": 1,
+  "conservation": "Restes : 1 jour au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "lasagnes-bolognaise",
+  "nom": "Lasagnes à la bolognaise",
+  "famille": "italienne",
+  "portions": 6,
+  "ingredients": [
+   {
+    "id": "lasagne",
+    "quantite": 250.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "boeuf_hache",
+    "quantite": 500.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "tomate_concassee",
+    "quantite": 800.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "carotte",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "beurre",
+    "quantite": 40.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "farine",
+    "quantite": 40.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "lait",
+    "quantite": 600.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "muscade",
+    "quantite": 0.5,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "fromage_rape",
+    "quantite": 80.0,
+    "unite": "g",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Bolognaise : fais revenir oignon, carotte et ail hachés, ajoute la viande jusqu'à ce qu'elle ne soit plus rosée, puis les tomates ; sale, poivre, laisse mijoter 20 min.",
+   "Béchamel : beurre fondu, farine, puis le lait froid en fouettant ; laisse épaissir 5 min, sale, muscade.",
+   "Préchauffe le four à 180 °C. Dans le plat, alterne béchamel, feuilles de lasagne et bolognaise, en finissant par la béchamel et le fromage.",
+   "Enfourne 40 à 45 min : la lame d'un couteau doit traverser les pâtes sans résistance. Laisse reposer 10 min."
+  ],
+  "preparation_min": 30,
+  "cuisson_min": 45,
+  "temps_total_min": 75,
+  "difficulte": "moyen",
+  "cuisine": "italienne",
+  "proteine": "boeuf",
+  "feculent": "pates",
+  "cout_total_eur": 10.59,
+  "cout_portion_eur": 1.77,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [
+   "carotte"
+  ],
+  "etiquettes": [
+   "gratin",
+   "reconfortant",
+   "sans_porc",
+   "au_four"
+  ],
+  "allergenes": [
+   "gluten",
+   "oeufs",
+   "lait"
+  ],
+  "ustensiles": [
+   "four",
+   "plat à gratin",
+   "cocotte",
+   "casserole",
+   "fouet"
+  ],
+  "equipement": [
+   "four"
+  ],
+  "conservation_jours": 2,
+  "conservation": "Restes : 2 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [
+   "Cuis la viande hachée à cœur : plus de rose au centre (70 °C)."
+  ],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "lasagnes-epinards-ricotta",
+  "nom": "Lasagnes épinards-ricotta",
+  "famille": "italienne",
+  "portions": 6,
+  "ingredients": [
+   {
+    "id": "lasagne",
+    "quantite": 250.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "epinard_surgele",
+    "quantite": 750.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "ricotta",
+    "quantite": 250.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "coulis_tomate",
+    "quantite": 500.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "mozzarella",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "muscade",
+    "quantite": 0.5,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "fromage_rape",
+    "quantite": 60.0,
+    "unite": "g",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais décongeler les épinards 10 min à la poêle avec l'ail, puis presse-les pour enlever l'eau. Mélange-les avec la ricotta, la muscade, sel et poivre.",
+   "Préchauffe le four à 180 °C. Dans le plat, alterne coulis, feuilles de lasagne, épinards-ricotta et mozzarella en tranches.",
+   "Termine par du coulis, la mozzarella restante et le fromage râpé. Enfourne 40 min."
+  ],
+  "preparation_min": 20,
+  "cuisson_min": 40,
+  "temps_total_min": 60,
+  "difficulte": "facile",
+  "cuisine": "italienne",
+  "proteine": "fromage",
+  "feculent": "pates",
+  "cout_total_eur": 8.05,
+  "cout_portion_eur": 1.34,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [],
+  "etiquettes": [
+   "batch",
+   "gratin",
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "au_four",
+   "se_garde_3j",
+   "pas_cher"
+  ],
+  "allergenes": [
+   "gluten",
+   "oeufs",
+   "lait"
+  ],
+  "ustensiles": [
+   "four",
+   "plat à gratin",
+   "poêle",
+   "saladier"
+  ],
+  "equipement": [
+   "four"
+  ],
+  "conservation_jours": 3,
+  "conservation": "Restes : 3 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "risotto-champignons",
+  "nom": "Risotto aux champignons",
+  "famille": "italienne",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "riz_rond",
+    "quantite": 160.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "champignon",
+    "quantite": 250.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "echalote",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "vin_blanc",
+    "quantite": 80.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "bouillon_cube",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "beurre",
+    "quantite": 20.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "parmesan",
+    "quantite": 30.0,
+    "unite": "g",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais chauffer 800 ml d'eau avec le cube. Fais dorer les champignons émincés dans la moitié du beurre et réserve-les.",
+   "Fais fondre l'échalote hachée, ajoute le riz et remue 2 min jusqu'à ce qu'il soit nacré ; verse le vin.",
+   "Ajoute le bouillon chaud louche par louche, en remuant, en attendant qu'il soit absorbé avant la suivante (18 min environ).",
+   "Hors du feu, ajoute les champignons, le reste du beurre et le parmesan ; couvre 2 min avant de servir."
+  ],
+  "preparation_min": 10,
+  "cuisson_min": 25,
+  "temps_total_min": 35,
+  "difficulte": "moyen",
+  "cuisine": "italienne",
+  "proteine": "fromage",
+  "feculent": "riz",
+  "cout_total_eur": 3.56,
+  "cout_portion_eur": 1.78,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [
+   "champignon"
+  ],
+  "etiquettes": [
+   "reconfortant",
+   "sans_porc",
+   "pescetarien",
+   "sans_four"
+  ],
+  "allergenes": [
+   "gluten",
+   "lait",
+   "celeri",
+   "sulfites"
+  ],
+  "ustensiles": [
+   "sauteuse",
+   "casserole"
+  ],
+  "equipement": [],
+  "conservation_jours": 1,
+  "conservation": "Restes : 1 jour au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [
+   "Riz cuit : refroidis-le vite et garde-le 24 h au frigo au plus."
+  ],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "risotto-courge",
+  "nom": "Risotto à la courge",
+  "famille": "italienne",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "riz_rond",
+    "quantite": 160.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "courge",
+    "quantite": 0.4,
+    "unite": "p",
+    "note": "environ 400 g"
+   },
+   {
+    "id": "oignon",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "bouillon_cube",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "beurre",
+    "quantite": 20.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "fromage_rape",
+    "quantite": 40.0,
+    "unite": "g",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Coupe la courge épluchée en petits dés. Fais chauffer 900 ml d'eau avec le cube.",
+   "Fais fondre l'oignon dans le beurre, ajoute la courge et le riz, remue 2 min.",
+   "Ajoute le bouillon louche par louche en remuant, pendant 20 à 22 min : la courge fond et rend le risotto crémeux.",
+   "Hors du feu, ajoute le fromage, poivre et laisse reposer 2 min."
+  ],
+  "preparation_min": 10,
+  "cuisson_min": 30,
+  "temps_total_min": 40,
+  "difficulte": "moyen",
+  "cuisine": "italienne",
+  "proteine": "fromage",
+  "feculent": "riz",
+  "cout_total_eur": 2.48,
+  "cout_portion_eur": 1.24,
+  "saisons": [
+   1,
+   2,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [
+   "courge"
+  ],
+  "etiquettes": [
+   "reconfortant",
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "sans_four",
+   "pas_cher"
+  ],
+  "allergenes": [
+   "gluten",
+   "lait",
+   "celeri"
+  ],
+  "ustensiles": [
+   "sauteuse",
+   "casserole"
+  ],
+  "equipement": [],
+  "conservation_jours": 1,
+  "conservation": "Restes : 1 jour au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [
+   "Riz cuit : refroidis-le vite et garde-le 24 h au frigo au plus."
+  ],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "gnocchi-tomates-mozza",
+  "nom": "Gnocchi poêlés, tomates cerises et mozzarella",
+  "famille": "italienne",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "gnocchi",
+    "quantite": 400.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "tomate_cerise",
+    "quantite": 250.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "mozzarella",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "basilic",
+    "quantite": 10.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 20.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais dorer les gnocchi 8 min dans l'huile, sans les précuire, en les retournant.",
+   "Ajoute l'ail et les tomates cerises coupées en deux ; laisse-les compoter 4 min, sale, poivre.",
+   "Hors du feu, ajoute la mozzarella en dés et le basilic."
+  ],
+  "preparation_min": 5,
+  "cuisson_min": 15,
+  "temps_total_min": 20,
+  "difficulte": "facile",
+  "cuisine": "italienne",
+  "proteine": "fromage",
+  "feculent": "pates",
+  "cout_total_eur": 4.63,
+  "cout_portion_eur": 2.32,
+  "saisons": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "produits_saisonniers": [
+   "tomate_cerise"
+  ],
+  "etiquettes": [
+   "rapide",
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "sans_four"
+  ],
+  "allergenes": [
+   "gluten",
+   "lait"
+  ],
+  "ustensiles": [
+   "poêle"
+  ],
+  "equipement": [],
+  "conservation_jours": 0,
+  "conservation": "Ne se garde pas : à manger tout de suite.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "minestrone",
+  "nom": "Minestrone",
+  "famille": "italienne",
+  "portions": 4,
+  "ingredients": [
+   {
+    "id": "courgette",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "carotte",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "celeri_branche",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "haricot_vert",
+    "quantite": 100.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "haricot_blanc",
+    "quantite": 265.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "tomate_concassee",
+    "quantite": 400.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "pates",
+    "quantite": 80.0,
+    "unite": "g",
+    "note": "des petites pâtes"
+   },
+   {
+    "id": "oignon",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "bouillon_cube",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 15.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Coupe tous les légumes en petits dés. Fais revenir oignon, carotte et céleri 5 min dans l'huile.",
+   "Ajoute la courgette, les haricots verts, l'ail, les tomates, le cube et 1,2 litre d'eau ; laisse cuire 20 min.",
+   "Ajoute les haricots blancs rincés et les pâtes ; poursuis le temps de cuisson des pâtes. Sale, poivre."
+  ],
+  "preparation_min": 20,
+  "cuisson_min": 35,
+  "temps_total_min": 55,
+  "difficulte": "facile",
+  "cuisine": "italienne",
+  "proteine": "legumineuse",
+  "feculent": "pates",
+  "cout_total_eur": 3.83,
+  "cout_portion_eur": 0.96,
+  "saisons": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "produits_saisonniers": [
+   "courgette",
+   "carotte",
+   "celeri_branche",
+   "haricot_vert"
+  ],
+  "etiquettes": [
+   "batch",
+   "soupe",
+   "vegetarien",
+   "vegan",
+   "sans_porc",
+   "pescetarien",
+   "sans_four",
+   "se_garde_3j",
+   "pas_cher"
+  ],
+  "allergenes": [
+   "gluten",
+   "celeri"
+  ],
+  "ustensiles": [
+   "cocotte"
+  ],
+  "equipement": [],
+  "conservation_jours": 3,
+  "conservation": "Restes : 3 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "pizza-reine",
+  "nom": "Pizza maison jambon-champignons",
+  "famille": "italienne",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "pate_pizza",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "coulis_tomate",
+    "quantite": 120.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "jambon",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "champignon",
+    "quantite": 150.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "mozzarella",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "origan",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Préchauffe le four au maximum (240 °C). Déroule la pâte sur la plaque avec son papier.",
+   "Étale le coulis, ajoute le jambon en morceaux, les champignons émincés finement, la mozzarella en tranches et l'origan.",
+   "Enfourne 12 à 15 min, jusqu'à ce que la pâte soit dorée en dessous."
+  ],
+  "preparation_min": 15,
+  "cuisson_min": 15,
+  "temps_total_min": 30,
+  "difficulte": "facile",
+  "cuisine": "italienne",
+  "proteine": "porc",
+  "feculent": "pate",
+  "cout_total_eur": 4.6,
+  "cout_portion_eur": 2.3,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [
+   "champignon"
+  ],
+  "etiquettes": [
+   "au_four"
+  ],
+  "allergenes": [
+   "gluten",
+   "lait"
+  ],
+  "ustensiles": [
+   "four",
+   "plaque"
+  ],
+  "equipement": [
+   "four"
+  ],
+  "conservation_jours": 1,
+  "conservation": "Restes : 1 jour au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "pizza-tortilla",
+  "nom": "Pizza tortilla margherita",
+  "famille": "italienne",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "tortilla",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "coulis_tomate",
+    "quantite": 80.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "mozzarella",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "tomate",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "basilic",
+    "quantite": 5.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "salade",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Préchauffe le four à 220 °C. Étale le coulis sur les tortillas, ajoute la tomate et la mozzarella en tranches.",
+   "Enfourne 8 à 10 min, jusqu'à ce que les bords soient croustillants. Ajoute le basilic et sers avec la salade."
+  ],
+  "preparation_min": 5,
+  "cuisson_min": 10,
+  "temps_total_min": 15,
+  "difficulte": "facile",
+  "cuisine": "italienne",
+  "proteine": "fromage",
+  "feculent": "tortilla",
+  "cout_total_eur": 2.63,
+  "cout_portion_eur": 1.32,
+  "saisons": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "produits_saisonniers": [
+   "tomate",
+   "salade"
+  ],
+  "etiquettes": [
+   "airfryer_possible",
+   "rapide",
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "au_four",
+   "pas_cher"
+  ],
+  "allergenes": [
+   "gluten",
+   "lait"
+  ],
+  "ustensiles": [
+   "four",
+   "plaque"
+  ],
+  "equipement": [
+   "four"
+  ],
+  "conservation_jours": 0,
+  "conservation": "Ne se garde pas : à manger tout de suite.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "polenta-champignons",
+  "nom": "Polenta crémeuse aux champignons",
+  "famille": "italienne",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "polenta",
+    "quantite": 120.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "lait",
+    "quantite": 250.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "champignon",
+    "quantite": 300.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "persil",
+    "quantite": 5.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "fromage_rape",
+    "quantite": 40.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "beurre",
+    "quantite": 15.0,
+    "unite": "g",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Porte le lait et 250 ml d'eau salée à ébullition, verse la polenta en pluie en fouettant et laisse cuire 5 à 8 min (selon le paquet) en remuant.",
+   "Fais dorer les champignons avec l'ail et le beurre 6 min ; ajoute le persil.",
+   "Ajoute le fromage à la polenta et sers avec les champignons dessus."
+  ],
+  "preparation_min": 5,
+  "cuisson_min": 15,
+  "temps_total_min": 20,
+  "difficulte": "facile",
+  "cuisine": "italienne",
+  "proteine": "fromage",
+  "feculent": "polenta",
+  "cout_total_eur": 2.91,
+  "cout_portion_eur": 1.45,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [
+   "champignon"
+  ],
+  "etiquettes": [
+   "rapide",
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "sans_four",
+   "pas_cher"
+  ],
+  "allergenes": [
+   "lait"
+  ],
+  "ustensiles": [
+   "casserole",
+   "poêle",
+   "fouet"
+  ],
+  "equipement": [],
+  "conservation_jours": 1,
+  "conservation": "Restes : 1 jour au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "aubergines-parmigiana",
+  "nom": "Aubergines à la parmigiana",
+  "famille": "italienne",
+  "portions": 4,
+  "ingredients": [
+   {
+    "id": "aubergine",
+    "quantite": 3.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "coulis_tomate",
+    "quantite": 500.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "mozzarella",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "parmesan",
+    "quantite": 50.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "basilic",
+    "quantite": 10.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 60.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "pain",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Préchauffe le four à 200 °C. Coupe les aubergines en tranches de 1 cm, badigeonne-les d'huile, sale et fais-les rôtir 20 min sur la plaque.",
+   "Dans le plat, alterne aubergines, coulis, mozzarella, basilic et parmesan.",
+   "Enfourne 20 min à 180 °C. Sers avec le pain."
+  ],
+  "preparation_min": 25,
+  "cuisson_min": 40,
+  "temps_total_min": 65,
+  "difficulte": "moyen",
+  "cuisine": "italienne",
+  "proteine": "fromage",
+  "feculent": "pain",
+  "cout_total_eur": 9.07,
+  "cout_portion_eur": 2.27,
+  "saisons": [
+   7,
+   8,
+   9
+  ],
+  "produits_saisonniers": [
+   "aubergine"
+  ],
+  "etiquettes": [
+   "batch",
+   "gratin",
+   "sans_porc",
+   "pescetarien",
+   "au_four",
+   "se_garde_3j"
+  ],
+  "allergenes": [
+   "gluten",
+   "lait"
+  ],
+  "ustensiles": [
+   "four",
+   "plat à gratin",
+   "plaque"
+  ],
+  "equipement": [
+   "four"
+  ],
+  "conservation_jours": 3,
+  "conservation": "Restes : 3 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "salade-pates-caprese",
+  "nom": "Salade de pâtes à la caprese",
+  "famille": "italienne",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "pates",
+    "quantite": 160.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "tomate_cerise",
+    "quantite": 250.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "mozzarella",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "basilic",
+    "quantite": 10.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "roquette",
+    "quantite": 50.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 30.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Cuis les pâtes, rince-les à l'eau froide et égoutte-les.",
+   "Mélange avec les tomates cerises coupées en deux, la mozzarella en dés, la roquette, le basilic, l'huile, sel et poivre."
+  ],
+  "preparation_min": 8,
+  "cuisson_min": 10,
+  "temps_total_min": 18,
+  "difficulte": "facile",
+  "cuisine": "italienne",
+  "proteine": "fromage",
+  "feculent": "pates",
+  "cout_total_eur": 4.4,
+  "cout_portion_eur": 2.2,
+  "saisons": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "produits_saisonniers": [
+   "tomate_cerise",
+   "roquette"
+  ],
+  "etiquettes": [
+   "salade",
+   "froid",
+   "transportable",
+   "rapide",
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "sans_four"
+  ],
+  "allergenes": [
+   "gluten",
+   "lait"
+  ],
+  "ustensiles": [
+   "casserole",
+   "saladier"
+  ],
+  "equipement": [],
+  "conservation_jours": 1,
+  "conservation": "Restes : 1 jour au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "pasta-fagioli",
+  "nom": "Pasta e fagioli",
+  "famille": "italienne",
+  "portions": 4,
+  "ingredients": [
+   {
+    "id": "haricot_blanc",
+    "quantite": 530.0,
+    "unite": "g",
+    "note": "2 boîtes"
+   },
+   {
+    "id": "tomate_concassee",
+    "quantite": 400.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "carotte",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "pates",
+    "quantite": 150.0,
+    "unite": "g",
+    "note": "des petites pâtes"
+   },
+   {
+    "id": "thym",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "bouillon_cube",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 20.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais revenir oignon, carotte et ail hachés 5 min dans l'huile.",
+   "Ajoute les tomates, le thym, le cube, 1 litre d'eau et la moitié des haricots écrasés à la fourchette ; laisse cuire 15 min.",
+   "Ajoute le reste des haricots et les pâtes ; cuis le temps indiqué sur le paquet. La soupe doit être épaisse."
+  ],
+  "preparation_min": 10,
+  "cuisson_min": 30,
+  "temps_total_min": 40,
+  "difficulte": "facile",
+  "cuisine": "italienne",
+  "proteine": "legumineuse",
+  "feculent": "pates",
+  "cout_total_eur": 3.62,
+  "cout_portion_eur": 0.9,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [
+   "carotte"
+  ],
+  "etiquettes": [
+   "batch",
+   "soupe",
+   "reconfortant",
+   "vegetarien",
+   "vegan",
+   "sans_porc",
+   "pescetarien",
+   "sans_four",
+   "se_garde_3j",
+   "pas_cher"
+  ],
+  "allergenes": [
+   "gluten",
+   "celeri"
+  ],
+  "ustensiles": [
+   "cocotte"
+  ],
+  "equipement": [],
+  "conservation_jours": 3,
+  "conservation": "Restes : 3 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "aglio-olio",
+  "nom": "Spaghetti à l'ail, à l'huile et au piment",
+  "famille": "italienne",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "pates",
+    "quantite": 200.0,
+    "unite": "g",
+    "note": "des spaghetti"
+   },
+   {
+    "id": "ail",
+    "quantite": 4.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "piment",
+    "quantite": 1.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "persil",
+    "quantite": 10.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 40.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Cuis les spaghetti al dente.",
+   "Fais chauffer doucement l'huile avec l'ail en fines lamelles et le piment : l'ail doit blondir, pas brûler.",
+   "Mélange les pâtes égouttées avec l'huile parfumée, un peu d'eau de cuisson et le persil."
+  ],
+  "preparation_min": 5,
+  "cuisson_min": 10,
+  "temps_total_min": 15,
+  "difficulte": "facile",
+  "cuisine": "italienne",
+  "proteine": "aucune",
+  "feculent": "pates",
+  "cout_total_eur": 1.32,
+  "cout_portion_eur": 0.66,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [],
+  "etiquettes": [
+   "epice",
+   "rapide",
+   "vegetarien",
+   "vegan",
+   "sans_porc",
+   "pescetarien",
+   "sans_four",
+   "pas_cher"
+  ],
+  "allergenes": [
+   "gluten"
+  ],
+  "ustensiles": [
+   "casserole",
+   "poêle"
+  ],
+  "equipement": [],
+  "conservation_jours": 0,
+  "conservation": "Ne se garde pas : à manger tout de suite.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "pates-norma",
+  "nom": "Pâtes alla Norma",
+  "famille": "italienne",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "pates",
+    "quantite": 180.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "aubergine",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "tomate_concassee",
+    "quantite": 400.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "basilic",
+    "quantite": 10.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "ricotta",
+    "quantite": 80.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 40.0,
+    "unite": "ml",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Coupe l'aubergine en cubes et fais-la dorer 10 min dans l'huile ; sale.",
+   "Ajoute l'ail et les tomates, laisse mijoter 12 min.",
+   "Mélange avec les pâtes, le basilic, et dépose la ricotta en petites cuillerées."
+  ],
+  "preparation_min": 10,
+  "cuisson_min": 25,
+  "temps_total_min": 35,
+  "difficulte": "facile",
+  "cuisine": "italienne",
+  "proteine": "fromage",
+  "feculent": "pates",
+  "cout_total_eur": 3.55,
+  "cout_portion_eur": 1.78,
+  "saisons": [
+   7,
+   8,
+   9
+  ],
+  "produits_saisonniers": [
+   "aubergine"
+  ],
+  "etiquettes": [
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "sans_four"
+  ],
+  "allergenes": [
+   "gluten",
+   "lait"
+  ],
+  "ustensiles": [
+   "casserole",
+   "sauteuse"
+  ],
+  "equipement": [],
+  "conservation_jours": 2,
+  "conservation": "Restes : 2 jours au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "pates-crevettes",
+  "nom": "Pâtes aux crevettes, ail et citron",
+  "famille": "italienne",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "pates",
+    "quantite": 180.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "crevette",
+    "quantite": 200.0,
+    "unite": "g",
+    "note": "décongelées au réfrigérateur la veille"
+   },
+   {
+    "id": "ail",
+    "quantite": 2.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "citron",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "persil",
+    "quantite": 10.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 20.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "piment",
+    "quantite": 0.5,
+    "unite": "g",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Cuis les pâtes.",
+   "Fais revenir l'ail et le piment dans l'huile 1 min, ajoute les crevettes et réchauffe-les 3 min : elles doivent être bien chaudes.",
+   "Mélange avec les pâtes, le jus et le zeste du citron et le persil."
+  ],
+  "preparation_min": 5,
+  "cuisson_min": 12,
+  "temps_total_min": 17,
+  "difficulte": "facile",
+  "cuisine": "italienne",
+  "proteine": "fruits_de_mer",
+  "feculent": "pates",
+  "cout_total_eur": 5.13,
+  "cout_portion_eur": 2.57,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [],
+  "etiquettes": [
+   "rapide",
+   "sans_porc",
+   "pescetarien",
+   "sans_four",
+   "poisson"
+  ],
+  "allergenes": [
+   "gluten",
+   "crustaces"
+  ],
+  "ustensiles": [
+   "casserole",
+   "poêle"
+  ],
+  "equipement": [],
+  "conservation_jours": 0,
+  "conservation": "Ne se garde pas : à manger tout de suite.",
+  "securite": [
+   "Crevettes surgelées : décongèle-les au réfrigérateur, jamais à température ambiante, et mange-les dans la journée."
+  ],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "pates-champignons-creme",
+  "nom": "Pâtes aux champignons et à la crème",
+  "famille": "italienne",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "pates",
+    "quantite": 180.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "champignon",
+    "quantite": 300.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "creme",
+    "quantite": 150.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "echalote",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "fromage_rape",
+    "quantite": 30.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "persil",
+    "quantite": 5.0,
+    "unite": "g",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Cuis les pâtes. Fais dorer l'échalote et les champignons émincés 6 min.",
+   "Verse la crème, laisse réduire 2 min, sale et poivre.",
+   "Mélange avec les pâtes, le fromage et le persil."
+  ],
+  "preparation_min": 5,
+  "cuisson_min": 15,
+  "temps_total_min": 20,
+  "difficulte": "facile",
+  "cuisine": "italienne",
+  "proteine": "fromage",
+  "feculent": "pates",
+  "cout_total_eur": 3.19,
+  "cout_portion_eur": 1.6,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [
+   "champignon"
+  ],
+  "etiquettes": [
+   "reconfortant",
+   "rapide",
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "sans_four"
+  ],
+  "allergenes": [
+   "gluten",
+   "lait"
+  ],
+  "ustensiles": [
+   "casserole",
+   "poêle"
+  ],
+  "equipement": [],
+  "conservation_jours": 1,
+  "conservation": "Restes : 1 jour au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "frittata-courgette",
+  "nom": "Frittata pommes de terre et courgette",
+  "famille": "italienne",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "oeuf",
+    "quantite": 5.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "pomme_de_terre",
+    "quantite": 200.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "courgette",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "oignon",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "fromage_rape",
+    "quantite": 40.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 15.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "salade",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Coupe la pomme de terre en dés de 1 cm et fais-la cuire 10 min dans l'huile avec l'oignon, à couvert, en remuant : elle doit être tendre. Ajoute la courgette en dés 3 min.",
+   "Bats les œufs avec le fromage, sel et poivre, verse sur les légumes.",
+   "Laisse prendre 5 min à feu doux à couvert, puis 2 min sous le gril du four pour cuire le dessus. Sers avec la salade."
+  ],
+  "preparation_min": 10,
+  "cuisson_min": 20,
+  "temps_total_min": 30,
+  "difficulte": "facile",
+  "cuisine": "italienne",
+  "proteine": "oeuf",
+  "feculent": "pomme_de_terre",
+  "cout_total_eur": 3.44,
+  "cout_portion_eur": 1.72,
+  "saisons": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "produits_saisonniers": [
+   "pomme_de_terre",
+   "courgette",
+   "salade"
+  ],
+  "etiquettes": [
+   "transportable",
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "sans_four"
+  ],
+  "allergenes": [
+   "oeufs",
+   "lait"
+  ],
+  "ustensiles": [
+   "poêle allant au four",
+   "saladier"
+  ],
+  "equipement": [],
+  "conservation_jours": 1,
+  "conservation": "Restes : 1 jour au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ },
+ {
+  "id": "frittata-epinards-feta",
+  "nom": "Frittata aux épinards et à la feta",
+  "famille": "italienne",
+  "portions": 2,
+  "ingredients": [
+   {
+    "id": "oeuf",
+    "quantite": 5.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "epinard_surgele",
+    "quantite": 200.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "feta",
+    "quantite": 80.0,
+    "unite": "g",
+    "note": ""
+   },
+   {
+    "id": "ail",
+    "quantite": 1.0,
+    "unite": "p",
+    "note": ""
+   },
+   {
+    "id": "huile_olive",
+    "quantite": 15.0,
+    "unite": "ml",
+    "note": ""
+   },
+   {
+    "id": "pain",
+    "quantite": 0.5,
+    "unite": "p",
+    "note": ""
+   }
+  ],
+  "etapes": [
+   "Fais décongeler les épinards à la poêle avec l'ail 5 min, puis presse-les.",
+   "Bats les œufs, ajoute épinards et feta émiettée, poivre (peu de sel : la feta l'est).",
+   "Verse dans la poêle huilée, laisse prendre 5 min à couvert, finis 2 min sous le gril. Sers avec le pain."
+  ],
+  "preparation_min": 5,
+  "cuisson_min": 12,
+  "temps_total_min": 17,
+  "difficulte": "facile",
+  "cuisine": "italienne",
+  "proteine": "oeuf",
+  "feculent": "pain",
+  "cout_total_eur": 3.57,
+  "cout_portion_eur": 1.78,
+  "saisons": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "produits_saisonniers": [],
+  "etiquettes": [
+   "transportable",
+   "rapide",
+   "vegetarien",
+   "sans_porc",
+   "pescetarien",
+   "sans_four"
+  ],
+  "allergenes": [
+   "gluten",
+   "oeufs",
+   "lait"
+  ],
+  "ustensiles": [
+   "poêle allant au four",
+   "saladier"
+  ],
+  "equipement": [],
+  "conservation_jours": 1,
+  "conservation": "Restes : 1 jour au réfrigérateur dans une boîte fermée, mis au frais moins de 2 h après la cuisson. Réchauffe à cœur, jusqu'à ce que ce soit bien chaud au centre.",
+  "securite": [],
+  "source": "originale (Quotidien)"
+ }
+]

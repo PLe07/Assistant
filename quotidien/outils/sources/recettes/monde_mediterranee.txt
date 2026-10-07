@@ -1,0 +1,451 @@
+# Cuisines de la Méditerranée et du Maghreb. Recettes originales écrites pour Quotidien.
+
+## Tortilla de patatas
+id: tortilla-patatas · portions: 4 · prep: 15 · cuisson: 30 · difficulte: moyen · cuisine: espagnole · proteine: oeuf · feculent: pomme_de_terre · restes: 2
+tags: transportable
+ustensiles: poêle avec couvercle, saladier
+- 600 g pomme_de_terre
+- 1 oignon
+- 6 oeuf
+- 60 ml huile_olive
+- 1 salade
+> Coupe les pommes de terre en fines lamelles et l'oignon en lanières. Fais-les cuire 20 min à feu doux dans l'huile, à couvert, sans les dorer : elles doivent être tendres.
+> Bats les œufs avec du sel, ajoute les pommes de terre égouttées et laisse reposer 5 min.
+> Verse dans la poêle chaude, laisse prendre 5 min à feu doux, retourne la tortilla à l'aide d'une assiette et cuis encore 3 à 4 min : le centre doit être pris.
+> Sers tiède ou froide, avec la salade.
+
+## Gaspacho
+id: gaspacho · portions: 4 · prep: 20 · cuisson: 0 · difficulte: facile · cuisine: espagnole · proteine: aucune · feculent: pain · restes: 2
+tags: soupe, froid, leger
+ustensiles: mixeur, saladier
+- 6 tomate
+- 1 concombre
+- 1 poivron
+- 0.5 oignon_rouge
+- 1 ail
+- 30 ml huile_olive
+- 15 ml vinaigre
+- 1 pain : un peu pour mixer, le reste en accompagnement
+> Coupe grossièrement les tomates, le concombre épluché, le poivron, l'oignon et l'ail.
+> Mixe très finement avec un morceau de pain, l'huile, le vinaigre, sel et poivre ; ajoute un peu d'eau froide si c'est trop épais.
+> Laisse au moins 1 h au frais et sers bien froid avec le pain.
+
+## Paella au poulet, chorizo et crevettes
+id: paella · portions: 4 · prep: 20 · cuisson: 35 · difficulte: moyen · cuisine: espagnole · proteine: volaille · feculent: riz · restes: 1 · riz: melange
+ustensiles: grande poêle ou sauteuse
+- 300 g riz_rond
+- 300 g poulet_filet
+- 100 g chorizo
+- 200 g crevette
+- 1 poivron
+- 150 g petit_pois
+- 1 oignon
+- 2 ail
+- 400 g tomate_concassee
+- 2 g paprika
+- 1 g curcuma
+- 1 bouillon_cube
+- 30 ml huile_olive
+> Fais dorer le poulet en cubes et le chorizo en rondelles dans l'huile 6 min ; réserve.
+> Fais revenir l'oignon, l'ail et le poivron 5 min, ajoute les tomates, le paprika et le curcuma.
+> Ajoute le riz, mélange, puis 800 ml d'eau chaude avec le cube. Remets poulet et chorizo et cuis 18 min sans remuer.
+> Ajoute crevettes et petits pois 5 min avant la fin. Le riz doit être tendre et le poulet cuit à cœur ; laisse reposer 5 min sous un torchon.
+
+## Pois chiches aux épinards à l'andalouse
+id: espinacas-garbanzos · portions: 2 · prep: 10 · cuisson: 15 · difficulte: facile · cuisine: espagnole · proteine: legumineuse · feculent: pain · restes: 3
+tags: epice
+ustensiles: sauteuse
+- 265 g pois_chiche
+- 300 g epinard_surgele
+- 2 ail
+- 2 g cumin
+- 2 g paprika
+- 200 g tomate_concassee
+- 30 ml huile_olive
+- 0.5 pain
+> Fais dorer l'ail et le pain en petits cubes dans l'huile, puis les épices 30 secondes.
+> Ajoute les tomates, les épinards et les pois chiches ; laisse mijoter 10 min. Sale. Sers chaud avec le reste du pain.
+
+## Patatas bravas et œufs au plat
+id: patatas-bravas · portions: 2 · prep: 10 · cuisson: 35 · difficulte: facile · cuisine: espagnole · proteine: oeuf · feculent: pomme_de_terre · restes: 0
+tags: airfryer_possible, epice
+ustensiles: four, plaque, casserole, poêle
+- 600 g pomme_de_terre
+- 30 ml huile_olive
+- 200 g tomate_concassee
+- 2 g paprika
+- 1 g piment
+- 1 ail
+- 4 oeuf
+- 0.5 salade
+> Préchauffe le four à 220 °C. Coupe les pommes de terre en cubes, mélange-les avec l'huile et du sel, et fais-les rôtir 30 à 35 min en les retournant.
+> Sauce : fais réduire les tomates avec l'ail, le paprika et le piment 10 min.
+> Fais cuire les œufs au plat jusqu'à ce que le blanc soit pris. Sers les pommes de terre nappées de sauce, avec les œufs et la salade.
+
+## Caldo verde (soupe au chou et au chorizo)
+id: caldo-verde · portions: 4 · prep: 15 · cuisson: 30 · difficulte: facile · cuisine: portugaise · proteine: porc · feculent: pomme_de_terre · restes: 3
+tags: batch, soupe, reconfortant
+ustensiles: cocotte, mixeur plongeant ou presse-purée
+- 0.3 chou_vert
+- 600 g pomme_de_terre
+- 1 oignon
+- 2 ail
+- 100 g chorizo
+- 1 bouillon_cube
+- 30 ml huile_olive
+- 1 pain
+> Fais revenir l'oignon et l'ail dans l'huile, ajoute les pommes de terre en cubes, le cube et 1,2 litre d'eau ; cuis 20 min.
+> Écrase ou mixe grossièrement. Ajoute le chou émincé en très fines lanières et le chorizo en rondelles ; poursuis 8 min.
+> Sale, poivre, sers avec le pain.
+
+## Salade grecque et pain pita
+id: salade-grecque · portions: 2 · prep: 15 · cuisson: 0 · difficulte: facile · cuisine: grecque · proteine: fromage · feculent: pain · restes: 0
+tags: salade, leger, froid
+ustensiles: saladier
+- 3 tomate
+- 1 concombre
+- 1 poivron
+- 0.5 oignon_rouge
+- 150 g feta
+- 40 g olive
+- 1 g origan
+- 30 ml huile_olive
+- 2 pain_pita
+> Coupe tomates, concombre et poivron en gros morceaux, l'oignon en fines lamelles.
+> Ajoute les olives, la feta en tranche entière ou en cubes, l'origan, l'huile, poivre. Sers avec les pitas chaudes.
+
+## Moussaka
+id: moussaka · portions: 6 · prep: 30 · cuisson: 60 · difficulte: avance · cuisine: grecque · proteine: boeuf · feculent: pomme_de_terre · restes: 2
+tags: gratin, reconfortant
+ustensiles: four, plat à gratin, plaque, sauteuse, casserole, fouet
+- 3 aubergine
+- 400 g pomme_de_terre
+- 500 g boeuf_hache
+- 400 g tomate_concassee
+- 1 oignon
+- 2 ail
+- 1 g cannelle
+- 40 g beurre
+- 40 g farine
+- 500 ml lait
+- 1 oeuf
+- 50 g fromage_rape
+- 60 ml huile_olive
+> Préchauffe le four à 200 °C. Coupe aubergines et pommes de terre en tranches, badigeonne-les d'huile et fais-les rôtir 20 min.
+> Fais revenir l'oignon et l'ail, ajoute la viande jusqu'à ce qu'elle ne soit plus rosée, puis les tomates et la cannelle ; laisse réduire 15 min.
+> Béchamel : beurre, farine, lait ; laisse épaissir, puis ajoute hors du feu l'œuf battu et la moitié du fromage.
+> Monte : pommes de terre, aubergines, viande, aubergines, béchamel, fromage. Enfourne 35 min à 180 °C et laisse reposer 15 min.
+
+## Souvlaki de poulet et tzatziki
+id: souvlaki-poulet · portions: 2 · prep: 15 · cuisson: 15 · difficulte: facile · cuisine: grecque · proteine: volaille · feculent: pain · restes: 1
+ustensiles: poêle ou gril, saladier, râpe
+- 300 g poulet_filet
+- 0.5 citron
+- 1 g origan
+- 1 ail
+- 150 g yaourt_grec
+- 0.5 concombre
+- 5 g menthe
+- 2 pain_pita
+- 1 tomate
+- 0.5 oignon_rouge
+- 15 ml huile_olive
+> Coupe le poulet en cubes, mélange avec le jus de citron, l'origan, l'huile, sel et poivre.
+> Tzatziki : concombre râpé et pressé, yaourt, ail râpé, menthe, sel.
+> Fais griller le poulet 10 à 12 min en le retournant, jusqu'à ce qu'il soit cuit à cœur.
+> Sers dans les pitas chaudes avec la tomate, l'oignon et le tzatziki.
+
+## Haricots blancs à la grecque au four
+id: gigantes · portions: 4 · prep: 10 · cuisson: 40 · difficulte: facile · cuisine: grecque · proteine: legumineuse · feculent: pain · restes: 3
+tags: batch, airfryer_possible
+ustensiles: four, plat à four
+- 530 g haricot_blanc
+- 400 g tomate_concassee
+- 1 oignon
+- 2 ail
+- 1 carotte
+- 1 g origan
+- 40 ml huile_olive
+- 100 g feta
+- 1 pain
+> Préchauffe le four à 190 °C. Mélange dans le plat les haricots rincés, les tomates, l'oignon et la carotte émincés, l'ail, l'origan, l'huile, sel et poivre.
+> Enfourne 40 min en remuant à mi-cuisson : la sauce doit être confite. Émiette la feta dessus et sers avec le pain.
+
+## Soupe turque aux lentilles corail
+id: mercimek-corba · portions: 4 · prep: 10 · cuisson: 25 · difficulte: facile · cuisine: turque · proteine: legumineuse · feculent: pain · restes: 3
+tags: batch, soupe, leger
+ustensiles: cocotte, mixeur plongeant ou presse-purée
+- 250 g lentille_corail
+- 1 oignon
+- 1 carotte
+- 150 g pomme_de_terre
+- 20 g concentre_tomate
+- 2 g cumin
+- 1 g paprika
+- 1 bouillon_cube
+- 1 citron
+- 20 ml huile_olive
+- 1 pain
+> Fais revenir l'oignon, la carotte et la pomme de terre en dés 5 min dans l'huile, ajoute le concentré et les épices.
+> Ajoute les lentilles rincées, le cube et 1,2 litre d'eau ; laisse cuire 20 min.
+> Mixe, sale, et sers avec le citron et le pain.
+
+## Boulettes de bœuf à la turque et boulgour
+id: kofte-boulgour · portions: 2 · prep: 15 · cuisson: 20 · difficulte: facile · cuisine: turque · proteine: boeuf · feculent: boulgour · restes: 2
+ustensiles: saladier, poêle, casserole
+- 250 g boeuf_hache
+- 0.5 oignon
+- 10 g persil
+- 1 g cumin
+- 1 g paprika
+- 140 g boulgour
+- 200 g tomate_concassee
+- 100 g yaourt_grec
+- 15 ml huile_olive
+> Mélange la viande avec l'oignon râpé, le persil, les épices, sel et poivre ; forme 8 petites boulettes.
+> Cuis le boulgour avec les tomates et 200 ml d'eau salée 12 min à couvert.
+> Fais dorer les boulettes 8 à 10 min dans l'huile : elles doivent être cuites à cœur, sans trace rosée. Sers avec le boulgour et le yaourt.
+
+## Aubergines farcies à l'oignon et à la tomate
+id: imam-bayildi · portions: 2 · prep: 15 · cuisson: 45 · difficulte: moyen · cuisine: turque · proteine: aucune · feculent: boulgour · restes: 3
+ustensiles: four, plat à four, poêle, casserole
+- 2 aubergine
+- 2 oignon
+- 2 tomate
+- 2 ail
+- 10 g persil
+- 40 ml huile_olive
+- 120 g boulgour
+> Préchauffe le four à 190 °C. Coupe les aubergines en deux, entaille la chair en croisillons, huile et fais rôtir 20 min, face coupée en dessous.
+> Fais fondre les oignons émincés 10 min dans l'huile, ajoute l'ail, les tomates en dés et le persil ; sale.
+> Creuse un peu les aubergines, garnis-les de la fondue et remets au four 20 min. Sers avec le boulgour cuit 12 min.
+
+## Taboulé libanais
+id: taboule · portions: 2 · prep: 20 · cuisson: 0 · difficulte: facile · cuisine: libanaise · proteine: aucune · feculent: boulgour · restes: 1
+tags: salade, froid, leger, transportable
+ustensiles: saladier
+- 60 g boulgour : fin
+- 60 g persil
+- 15 g menthe
+- 3 tomate
+- 0.5 concombre
+- 0.5 oignon_rouge
+- 1 citron
+- 40 ml huile_olive
+- 265 g pois_chiche
+> Fais gonfler le boulgour 15 min dans le jus du citron et 3 c. à soupe d'eau froide.
+> Hache finement le persil et la menthe, coupe tomates, concombre et oignon en petits dés.
+> Mélange tout avec l'huile, sel et poivre ; ajoute les pois chiches rincés pour en faire un plat complet.
+
+## Fattoush (salade au pain grillé)
+id: fattoush · portions: 2 · prep: 15 · cuisson: 5 · difficulte: facile · cuisine: libanaise · proteine: fromage · feculent: pain · restes: 0
+tags: salade, leger
+ustensiles: poêle, saladier
+- 2 pain_pita
+- 0.5 salade
+- 2 tomate
+- 0.5 concombre
+- 50 g radis
+- 10 g menthe
+- 1 citron
+- 30 ml huile_olive
+- 100 g feta
+> Coupe les pitas en morceaux et fais-les griller 4 min à la poêle sèche.
+> Coupe la salade, les tomates, le concombre et les radis.
+> Mélange avec la menthe, le jus de citron, l'huile, sel et poivre, puis le pain grillé et la feta au dernier moment.
+
+## Houmous maison, crudités et pita
+id: houmous-maison · portions: 4 · prep: 20 · cuisson: 60 · difficulte: moyen · cuisine: libanaise · proteine: legumineuse · feculent: pain · restes: 3
+tags: froid, transportable
+ustensiles: casserole, mixeur
+- 250 g pois_chiche_sec : trempés 12 h la veille
+- 60 g tahini
+- 1 citron
+- 1 ail
+- 30 ml huile_olive
+- 1 g cumin
+- 4 carotte
+- 1 concombre
+- 6 pain_pita
+> La veille : fais tremper les pois chiches dans trois fois leur volume d'eau.
+> Jette l'eau de trempage, couvre d'eau neuve et cuis 1 h à petits bouillons, jusqu'à ce qu'ils s'écrasent facilement. Sale en fin de cuisson.
+> Mixe les pois chiches tièdes avec le tahini, le citron, l'ail, le cumin, l'huile et assez d'eau de cuisson pour une crème lisse.
+> Sers avec les carottes et le concombre en bâtonnets et les pitas chaudes.
+
+## Falafels au four
+id: falafels-four · portions: 4 · prep: 25 · cuisson: 25 · difficulte: moyen · cuisine: libanaise · proteine: legumineuse · feculent: pain · restes: 2
+tags: airfryer_possible
+ustensiles: four, plaque, mixeur, saladier
+- 250 g pois_chiche_sec : trempés 12 h la veille, crus
+- 1 oignon
+- 2 ail
+- 20 g persil
+- 10 g coriandre
+- 2 g cumin
+- 20 g farine
+- 30 ml huile_olive
+- 150 g yaourt_grec
+- 4 pain_pita
+- 0.5 salade
+> La veille : fais tremper les pois chiches. Jette l'eau et sèche-les (ils se mixent crus).
+> Préchauffe le four à 200 °C. Mixe les pois chiches avec l'oignon, l'ail, les herbes, le cumin, la farine et du sel, en une pâte granuleuse qui se tient.
+> Forme 20 boulettes aplaties, badigeonne-les d'huile et fais-les cuire 25 min en les retournant : elles doivent être bien dorées et cuites au centre.
+> Sers dans les pitas avec la salade et le yaourt salé.
+
+## Mujaddara (lentilles, riz et oignons dorés)
+id: mujaddara · portions: 4 · prep: 10 · cuisson: 35 · difficulte: facile · cuisine: libanaise · proteine: legumineuse · feculent: riz · restes: 1 · riz: melange
+tags: reconfortant
+ustensiles: casserole, poêle
+- 200 g lentille_verte
+- 150 g riz
+- 3 oignon
+- 2 g cumin
+- 40 ml huile_olive
+- 200 g yaourt_grec
+- 1 salade
+> Cuis les lentilles 15 min dans l'eau, ajoute le riz, le cumin, du sel et un peu d'eau si besoin ; poursuis 15 min à couvert.
+> Pendant ce temps, fais dorer les oignons émincés dans l'huile 20 min à feu moyen, jusqu'à ce qu'ils soient bruns et croustillants.
+> Sers les lentilles au riz couvertes d'oignons, avec le yaourt et la salade.
+
+## Chich taouk (poulet mariné au citron)
+id: chich-taouk · portions: 2 · prep: 15 · cuisson: 15 · difficulte: facile · cuisine: libanaise · proteine: volaille · feculent: riz · restes: 2
+ustensiles: saladier, poêle, casserole
+- 300 g poulet_filet
+- 100 g yaourt_grec
+- 1 citron
+- 2 ail
+- 2 g paprika
+- 150 g riz
+- 2 tomate
+- 0.5 concombre
+- 15 ml huile_olive
+> Coupe le poulet en cubes et mélange-le avec le yaourt, le jus de citron, l'ail, le paprika et du sel ; laisse au moins 10 min.
+> Mets le riz à cuire. Fais dorer le poulet égoutté 10 à 12 min dans l'huile, jusqu'à ce qu'il soit cuit à cœur.
+> Sers avec le riz et une salade de tomates et concombre.
+
+## Tajine de poulet au citron et aux olives
+id: tajine-poulet-citron · portions: 4 · prep: 20 · cuisson: 50 · difficulte: moyen · cuisine: marocaine · proteine: volaille · feculent: semoule · restes: 3
+tags: batch
+ustensiles: cocotte, saladier
+- 4 poulet_cuisse
+- 2 oignon
+- 2 ail
+- 1 citron
+- 80 g olive
+- 2 g curcuma
+- 2 g gingembre
+- 1 g cumin
+- 10 g coriandre
+- 300 g semoule
+- 30 ml huile_olive
+> Fais dorer les cuisses dans l'huile, réserve. Fais fondre les oignons émincés avec l'ail et les épices 5 min.
+> Remets le poulet, ajoute 300 ml d'eau, le citron en quartiers ; couvre et laisse mijoter 40 min : la viande doit se détacher de l'os, jus clair.
+> Ajoute les olives 5 min avant la fin. Prépare la semoule (même volume d'eau bouillante salée, 5 min à couvert) et sers avec la coriandre.
+
+## Couscous aux légumes et merguez
+id: couscous-legumes-merguez · portions: 4 · prep: 25 · cuisson: 40 · difficulte: moyen · cuisine: marocaine · proteine: boeuf · feculent: semoule · restes: 3
+tags: batch, epice
+ustensiles: cocotte, poêle, saladier
+- 6 merguez
+- 3 carotte
+- 2 courgette
+- 2 navet
+- 265 g pois_chiche
+- 400 g tomate_concassee
+- 1 oignon
+- 4 g ras_el_hanout
+- 1 bouillon_cube
+- 300 g semoule
+- 20 ml huile_olive
+> Fais revenir l'oignon et le ras el-hanout dans l'huile, ajoute carottes et navets en tronçons, les tomates, le cube et 1 litre d'eau ; cuis 20 min.
+> Ajoute les courgettes et les pois chiches, poursuis 15 min.
+> Fais griller les merguez 10 min à la poêle, jusqu'à ce qu'elles soient cuites à cœur.
+> Prépare la semoule avec un peu de bouillon des légumes. Sers le tout ensemble.
+
+## Harira
+id: harira · portions: 4 · prep: 15 · cuisson: 40 · difficulte: facile · cuisine: marocaine · proteine: legumineuse · feculent: legumineuse · restes: 3
+tags: batch, soupe, epice
+ustensiles: cocotte
+- 100 g lentille_verte
+- 265 g pois_chiche
+- 400 g tomate_concassee
+- 1 oignon
+- 1 celeri_branche
+- 20 g persil
+- 10 g coriandre
+- 2 g gingembre
+- 1 g curcuma
+- 1 g cannelle
+- 30 g farine
+- 1 citron
+- 20 ml huile_olive
+- 1 pain
+> Fais revenir l'oignon et le céleri hachés dans l'huile avec les épices.
+> Ajoute lentilles, tomates, la moitié des herbes et 1,3 litre d'eau ; laisse cuire 30 min.
+> Ajoute les pois chiches. Délaie la farine dans un peu d'eau froide et verse-la en remuant : la soupe épaissit en 5 min.
+> Ajoute le reste des herbes, sale, et sers avec le citron et le pain.
+
+## Tajine de kefta aux œufs
+id: tajine-kefta-oeufs · portions: 2 · prep: 15 · cuisson: 25 · difficulte: facile · cuisine: marocaine · proteine: boeuf · feculent: pain · restes: 0
+tags: epice
+ustensiles: saladier, sauteuse avec couvercle
+- 250 g boeuf_hache
+- 1 oignon
+- 10 g persil
+- 2 g cumin
+- 2 g paprika
+- 400 g tomate_concassee
+- 2 oeuf
+- 1 pain
+> Mélange la viande avec la moitié de l'oignon haché, le persil, la moitié des épices, sel ; forme de petites boulettes.
+> Fais revenir le reste de l'oignon, ajoute tomates et épices, laisse mijoter 10 min, puis les boulettes 10 min à couvert : elles doivent être cuites à cœur.
+> Casse les œufs dans la sauce, couvre et cuis 4 min jusqu'à ce que les blancs soient pris. Sers avec le pain.
+
+## Tajine de légumes aux abricots secs
+id: tajine-legumes-abricots · portions: 4 · prep: 20 · cuisson: 40 · difficulte: facile · cuisine: marocaine · proteine: legumineuse · feculent: semoule · restes: 3
+tags: batch, sucre_sale
+ustensiles: cocotte, saladier
+- 3 carotte
+- 1 courge : petite
+- 265 g pois_chiche
+- 80 g abricot_sec
+- 1 oignon
+- 2 g cannelle
+- 2 g cumin
+- 1 g curcuma
+- 30 g amande
+- 300 g semoule
+- 20 ml huile_olive
+> Fais revenir l'oignon et les épices dans l'huile, ajoute les carottes en tronçons et la courge en cubes.
+> Ajoute les pois chiches, les abricots et 400 ml d'eau salée ; laisse mijoter 35 min à couvert.
+> Sers avec la semoule et les amandes grillées à sec.
+
+## Salade de carottes au cumin et pois chiches
+id: salade-carottes-cumin · portions: 2 · prep: 10 · cuisson: 5 · difficulte: facile · cuisine: marocaine · proteine: legumineuse · feculent: pain · restes: 2
+tags: salade, froid, leger, transportable
+ustensiles: casserole, saladier
+- 5 carotte
+- 265 g pois_chiche
+- 2 g cumin
+- 1 citron
+- 10 g persil
+- 30 ml huile_olive
+- 0.5 pain
+> Coupe les carottes en rondelles et cuis-les 5 min : elles doivent rester croquantes. Refroidis-les.
+> Mélange avec les pois chiches, le cumin, le jus de citron, l'huile, le persil, sel et poivre. Sers avec le pain.
+
+## Lablabi (soupe tunisienne de pois chiches)
+id: lablabi · portions: 2 · prep: 10 · cuisson: 15 · difficulte: facile · cuisine: tunisienne · proteine: legumineuse · feculent: pain · restes: 2
+tags: soupe, epice
+ustensiles: casserole
+- 530 g pois_chiche
+- 3 ail
+- 2 g cumin
+- 10 g harissa
+- 1 citron
+- 20 ml huile_olive
+- 2 oeuf
+- 0.5 pain
+> Fais chauffer les pois chiches dans 800 ml d'eau avec l'ail écrasé et le cumin, 10 min ; sale.
+> Plonge les œufs 6 min dans l'eau bouillante (mollets), écale-les.
+> Mets du pain rassis en morceaux dans les bols, verse la soupe, ajoute la harissa, l'huile, le citron et un œuf coupé en deux.

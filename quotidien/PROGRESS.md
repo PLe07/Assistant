@@ -7,7 +7,7 @@ Chaque phase se termine par `./check.sh` vert, l'intégrité identique, un commi
 |---|---|---|
 | P0 — environnement, intégrité, squelette, check.sh, réseau | ✅ | « Quotidien P0 » |
 | P1 — météo « habille-toi » | ✅ | « Quotidien P1 » |
-| P2 — base de recettes | ⏳ | |
+| P2 — base de recettes | ✅ | « Quotidien P2 » |
 | P3 — planificateur et courses | ⏳ | |
 | P4 — vide-frigo | ⏳ | |
 | P5 — anniversaires | ⏳ | |
@@ -64,6 +64,29 @@ INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 593 fichiers, …)
 All checks passed!
 41 passed · 77 passed (météo) · 25 passed (sécurité)
 TOTAL                            1070     31    97%
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 593 fichiers, …)
+CHECK OK
+```
+
+## P2 — 2026-10-07
+
+- **228 recettes originales** (7 familles : française du quotidien, italienne, rapides, Asie, Méditerranée, Amériques
+  et Afrique, saisons), 165 ingrédients (rayon, formats vendus, prix, allergènes, saison, conservation, synonymes),
+  calendrier des saisons, 104 substitutions, 12 rayons. Générateur + vérificateur (`outils/construire_recettes.py`).
+- Validation (`tests/repas/test_base_recettes.py`, 1 632 vérifications) : schéma strict, unités métriques, quantités
+  par portion plausibles, allergènes égaux à ceux des ingrédients et conformes à une table d'attendus écrite à la main,
+  régimes, sécurité (une étape dit quand c'est cuit), restes ≤ 3 jours, saisons justes, tutoiement.
+- Couverture : 73 rapides (≥ 60), 117 végétariennes (≥ 50), de 81 à 170 recettes de saison selon le mois (≥ 40),
+  53 plats « batch », 19 cuisines.
+- Relecture de chef sur 20 recettes tirées au hasard : 8 corrections (D-24).
+
+Preuve (`./check.sh`, extrait) :
+
+```
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 593 fichiers, …)
+All checks passed!
+41 passed · 77 passed (météo) · 1632 passed (recettes) · 25 passed (sécurité)
+TOTAL                            1237     33    97%
 INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 593 fichiers, …)
 CHECK OK
 ```

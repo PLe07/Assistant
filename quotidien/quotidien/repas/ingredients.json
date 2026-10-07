@@ -1,0 +1,5831 @@
+{
+ "tomate": {
+  "id": "tomate",
+  "nom": "tomate",
+  "pluriel": "tomates",
+  "rayon": "fruits_legumes",
+  "unite": "p",
+  "poids_piece_g": 120.0,
+  "formats": [
+   {
+    "quantite": 1.0,
+    "prix": 0.45,
+    "libelle": ""
+   },
+   {
+    "quantite": 6.0,
+    "prix": 2.4,
+    "libelle": "barquette de 6"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "legume",
+  "saison": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "compte_saison": true,
+  "conservation_jours": 6,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "tomates grappe",
+   "tomates rondes",
+   "tomate ronde"
+  ]
+ },
+ "tomate_cerise": {
+  "id": "tomate_cerise",
+  "nom": "tomate cerise",
+  "pluriel": "tomates cerises",
+  "rayon": "fruits_legumes",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 250.0,
+    "prix": 1.79,
+    "libelle": "barquette de 250 g"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "legume",
+  "saison": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "compte_saison": true,
+  "conservation_jours": 6,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "cerises tomates",
+   "tomates-cerises"
+  ]
+ },
+ "courgette": {
+  "id": "courgette",
+  "nom": "courgette",
+  "pluriel": "courgettes",
+  "rayon": "fruits_legumes",
+  "unite": "p",
+  "poids_piece_g": 200.0,
+  "formats": [
+   {
+    "quantite": 1.0,
+    "prix": 0.6,
+    "libelle": ""
+   }
+  ],
+  "allergenes": [],
+  "categorie": "legume",
+  "saison": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "compte_saison": true,
+  "conservation_jours": 7,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "courgette verte"
+  ]
+ },
+ "aubergine": {
+  "id": "aubergine",
+  "nom": "aubergine",
+  "pluriel": "aubergines",
+  "rayon": "fruits_legumes",
+  "unite": "p",
+  "poids_piece_g": 300.0,
+  "formats": [
+   {
+    "quantite": 1.0,
+    "prix": 1.0,
+    "libelle": ""
+   }
+  ],
+  "allergenes": [],
+  "categorie": "legume",
+  "saison": [
+   7,
+   8,
+   9
+  ],
+  "compte_saison": true,
+  "conservation_jours": 7,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": []
+ },
+ "poivron": {
+  "id": "poivron",
+  "nom": "poivron",
+  "pluriel": "poivrons",
+  "rayon": "fruits_legumes",
+  "unite": "p",
+  "poids_piece_g": 170.0,
+  "formats": [
+   {
+    "quantite": 1.0,
+    "prix": 0.9,
+    "libelle": ""
+   },
+   {
+    "quantite": 3.0,
+    "prix": 2.29,
+    "libelle": "sachet tricolore"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "legume",
+  "saison": [
+   7,
+   8,
+   9
+  ],
+  "compte_saison": true,
+  "conservation_jours": 10,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "poivron rouge",
+   "poivron vert",
+   "poivron jaune",
+   "poivrons rouges"
+  ]
+ },
+ "concombre": {
+  "id": "concombre",
+  "nom": "concombre",
+  "pluriel": "concombres",
+  "rayon": "fruits_legumes",
+  "unite": "p",
+  "poids_piece_g": 350.0,
+  "formats": [
+   {
+    "quantite": 1.0,
+    "prix": 0.79,
+    "libelle": ""
+   }
+  ],
+  "allergenes": [],
+  "categorie": "legume",
+  "saison": [
+   5,
+   6,
+   7,
+   8,
+   9
+  ],
+  "compte_saison": true,
+  "conservation_jours": 7,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": []
+ },
+ "carotte": {
+  "id": "carotte",
+  "nom": "carotte",
+  "pluriel": "carottes",
+  "rayon": "fruits_legumes",
+  "unite": "p",
+  "poids_piece_g": 100.0,
+  "formats": [
+   {
+    "quantite": 10.0,
+    "prix": 1.39,
+    "libelle": "sachet de 1 kg"
+   },
+   {
+    "quantite": 1.0,
+    "prix": 0.2,
+    "libelle": ""
+   }
+  ],
+  "allergenes": [],
+  "categorie": "legume",
+  "saison": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "compte_saison": true,
+  "conservation_jours": 21,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "carottes nouvelles"
+  ]
+ },
+ "pomme_de_terre": {
+  "id": "pomme_de_terre",
+  "nom": "pomme de terre",
+  "pluriel": "pommes de terre",
+  "rayon": "fruits_legumes",
+  "unite": "g",
+  "poids_piece_g": 150.0,
+  "formats": [
+   {
+    "quantite": 1000.0,
+    "prix": 1.29,
+    "libelle": "sac de 1 kg"
+   },
+   {
+    "quantite": 2500.0,
+    "prix": 2.49,
+    "libelle": "sac de 2,5 kg"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "legume",
+  "saison": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "compte_saison": true,
+  "conservation_jours": 30,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "patate",
+   "patates",
+   "pdt",
+   "pomme-de-terre",
+   "pommes-de-terre",
+   "grenaille"
+  ]
+ },
+ "oignon": {
+  "id": "oignon",
+  "nom": "oignon",
+  "pluriel": "oignons",
+  "rayon": "fruits_legumes",
+  "unite": "p",
+  "poids_piece_g": 125.0,
+  "formats": [
+   {
+    "quantite": 1.0,
+    "prix": 0.25,
+    "libelle": ""
+   },
+   {
+    "quantite": 8.0,
+    "prix": 1.49,
+    "libelle": "filet de 1 kg"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "allium",
+  "saison": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "compte_saison": false,
+  "conservation_jours": 30,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "oignon jaune",
+   "oignons jaunes",
+   "oignon blanc"
+  ]
+ },
+ "oignon_rouge": {
+  "id": "oignon_rouge",
+  "nom": "oignon rouge",
+  "pluriel": "oignons rouges",
+  "rayon": "fruits_legumes",
+  "unite": "p",
+  "poids_piece_g": 125.0,
+  "formats": [
+   {
+    "quantite": 1.0,
+    "prix": 0.4,
+    "libelle": ""
+   },
+   {
+    "quantite": 4.0,
+    "prix": 1.39,
+    "libelle": "filet de 500 g"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "allium",
+  "saison": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "compte_saison": false,
+  "conservation_jours": 30,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": []
+ },
+ "echalote": {
+  "id": "echalote",
+  "nom": "échalote",
+  "pluriel": "échalotes",
+  "rayon": "fruits_legumes",
+  "unite": "p",
+  "poids_piece_g": 30.0,
+  "formats": [
+   {
+    "quantite": 8.0,
+    "prix": 1.49,
+    "libelle": "filet de 250 g"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "allium",
+  "saison": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "compte_saison": false,
+  "conservation_jours": 30,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": []
+ },
+ "ail": {
+  "id": "ail",
+  "nom": "gousse d'ail",
+  "pluriel": "gousses d'ail",
+  "rayon": "fruits_legumes",
+  "unite": "p",
+  "poids_piece_g": 5.0,
+  "formats": [
+   {
+    "quantite": 10.0,
+    "prix": 0.69,
+    "libelle": "tête d'ail"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "allium",
+  "saison": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "compte_saison": false,
+  "conservation_jours": 60,
+  "placard": true,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "ail",
+   "gousse ail",
+   "tete d'ail"
+  ]
+ },
+ "poireau": {
+  "id": "poireau",
+  "nom": "poireau",
+  "pluriel": "poireaux",
+  "rayon": "fruits_legumes",
+  "unite": "p",
+  "poids_piece_g": 250.0,
+  "formats": [
+   {
+    "quantite": 1.0,
+    "prix": 0.8,
+    "libelle": ""
+   },
+   {
+    "quantite": 3.0,
+    "prix": 1.99,
+    "libelle": "botte de 3"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "legume",
+  "saison": [
+   1,
+   2,
+   3,
+   4,
+   9,
+   10,
+   11,
+   12
+  ],
+  "compte_saison": true,
+  "conservation_jours": 10,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": []
+ },
+ "chou_fleur": {
+  "id": "chou_fleur",
+  "nom": "chou-fleur",
+  "pluriel": "choux-fleurs",
+  "rayon": "fruits_legumes",
+  "unite": "p",
+  "poids_piece_g": 900.0,
+  "formats": [
+   {
+    "quantite": 1.0,
+    "prix": 2.29,
+    "libelle": ""
+   }
+  ],
+  "allergenes": [],
+  "categorie": "legume",
+  "saison": [
+   1,
+   2,
+   3,
+   4,
+   9,
+   10,
+   11,
+   12
+  ],
+  "compte_saison": true,
+  "conservation_jours": 7,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "chou fleur",
+   "choufleur"
+  ]
+ },
+ "brocoli": {
+  "id": "brocoli",
+  "nom": "brocoli",
+  "pluriel": "brocolis",
+  "rayon": "fruits_legumes",
+  "unite": "p",
+  "poids_piece_g": 400.0,
+  "formats": [
+   {
+    "quantite": 1.0,
+    "prix": 1.49,
+    "libelle": ""
+   }
+  ],
+  "allergenes": [],
+  "categorie": "legume",
+  "saison": [
+   6,
+   7,
+   8,
+   9,
+   10,
+   11
+  ],
+  "compte_saison": true,
+  "conservation_jours": 6,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "brocolli",
+   "broccoli"
+  ]
+ },
+ "chou_vert": {
+  "id": "chou_vert",
+  "nom": "chou vert",
+  "pluriel": "choux verts",
+  "rayon": "fruits_legumes",
+  "unite": "p",
+  "poids_piece_g": 1200.0,
+  "formats": [
+   {
+    "quantite": 1.0,
+    "prix": 1.8,
+    "libelle": ""
+   }
+  ],
+  "allergenes": [],
+  "categorie": "legume",
+  "saison": [
+   1,
+   2,
+   3,
+   10,
+   11,
+   12
+  ],
+  "compte_saison": true,
+  "conservation_jours": 14,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "chou pomme",
+   "chou frisé",
+   "chou blanc"
+  ]
+ },
+ "chou_rouge": {
+  "id": "chou_rouge",
+  "nom": "chou rouge",
+  "pluriel": "choux rouges",
+  "rayon": "fruits_legumes",
+  "unite": "p",
+  "poids_piece_g": 1000.0,
+  "formats": [
+   {
+    "quantite": 1.0,
+    "prix": 1.5,
+    "libelle": ""
+   }
+  ],
+  "allergenes": [],
+  "categorie": "legume",
+  "saison": [
+   1,
+   2,
+   3,
+   9,
+   10,
+   11,
+   12
+  ],
+  "compte_saison": true,
+  "conservation_jours": 21,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": []
+ },
+ "chou_bruxelles": {
+  "id": "chou_bruxelles",
+  "nom": "chou de Bruxelles",
+  "pluriel": "choux de Bruxelles",
+  "rayon": "fruits_legumes",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 500.0,
+    "prix": 2.29,
+    "libelle": "barquette de 500 g"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "legume",
+  "saison": [
+   1,
+   2,
+   10,
+   11,
+   12
+  ],
+  "compte_saison": true,
+  "conservation_jours": 7,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "choux de bruxelles",
+   "chou bruxelles"
+  ]
+ },
+ "champignon": {
+  "id": "champignon",
+  "nom": "champignon de Paris",
+  "pluriel": "champignons de Paris",
+  "rayon": "fruits_legumes",
+  "unite": "g",
+  "poids_piece_g": 20.0,
+  "formats": [
+   {
+    "quantite": 250.0,
+    "prix": 1.49,
+    "libelle": "barquette de 250 g"
+   },
+   {
+    "quantite": 500.0,
+    "prix": 2.49,
+    "libelle": "barquette de 500 g"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "legume",
+  "saison": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "compte_saison": true,
+  "conservation_jours": 4,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "champignons",
+   "champignon",
+   "champis",
+   "champi",
+   "champignons blancs"
+  ]
+ },
+ "epinard": {
+  "id": "epinard",
+  "nom": "épinards frais",
+  "pluriel": "épinards frais",
+  "rayon": "fruits_legumes",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 400.0,
+    "prix": 2.29,
+    "libelle": "sachet de 400 g"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "legume",
+  "saison": [
+   3,
+   4,
+   5,
+   6,
+   9,
+   10,
+   11
+  ],
+  "compte_saison": true,
+  "conservation_jours": 3,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "épinards",
+   "epinards",
+   "pousses d'épinards"
+  ]
+ },
+ "haricot_vert": {
+  "id": "haricot_vert",
+  "nom": "haricots verts",
+  "pluriel": "haricots verts",
+  "rayon": "fruits_legumes",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 500.0,
+    "prix": 2.25,
+    "libelle": "barquette de 500 g"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "legume",
+  "saison": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "compte_saison": true,
+  "conservation_jours": 4,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "haricot vert",
+   "haricots verts frais"
+  ]
+ },
+ "courge": {
+  "id": "courge",
+  "nom": "courge (butternut ou potiron)",
+  "pluriel": "courges",
+  "rayon": "fruits_legumes",
+  "unite": "p",
+  "poids_piece_g": 1000.0,
+  "formats": [
+   {
+    "quantite": 1.0,
+    "prix": 2.2,
+    "libelle": ""
+   }
+  ],
+  "allergenes": [],
+  "categorie": "legume",
+  "saison": [
+   1,
+   2,
+   9,
+   10,
+   11,
+   12
+  ],
+  "compte_saison": true,
+  "conservation_jours": 45,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "butternut",
+   "potiron",
+   "citrouille",
+   "potimarron",
+   "courge butternut"
+  ]
+ },
+ "patate_douce": {
+  "id": "patate_douce",
+  "nom": "patate douce",
+  "pluriel": "patates douces",
+  "rayon": "fruits_legumes",
+  "unite": "p",
+  "poids_piece_g": 300.0,
+  "formats": [
+   {
+    "quantite": 1.0,
+    "prix": 0.99,
+    "libelle": ""
+   }
+  ],
+  "allergenes": [],
+  "categorie": "legume",
+  "saison": [
+   9,
+   10,
+   11,
+   12
+  ],
+  "compte_saison": true,
+  "conservation_jours": 21,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "patates douces"
+  ]
+ },
+ "navet": {
+  "id": "navet",
+  "nom": "navet",
+  "pluriel": "navets",
+  "rayon": "fruits_legumes",
+  "unite": "p",
+  "poids_piece_g": 150.0,
+  "formats": [
+   {
+    "quantite": 1.0,
+    "prix": 0.35,
+    "libelle": ""
+   },
+   {
+    "quantite": 6.0,
+    "prix": 1.79,
+    "libelle": "botte"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "legume",
+  "saison": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   10,
+   11,
+   12
+  ],
+  "compte_saison": true,
+  "conservation_jours": 14,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "navets nouveaux"
+  ]
+ },
+ "panais": {
+  "id": "panais",
+  "nom": "panais",
+  "pluriel": "panais",
+  "rayon": "fruits_legumes",
+  "unite": "p",
+  "poids_piece_g": 200.0,
+  "formats": [
+   {
+    "quantite": 1.0,
+    "prix": 0.6,
+    "libelle": ""
+   }
+  ],
+  "allergenes": [],
+  "categorie": "legume",
+  "saison": [
+   1,
+   2,
+   3,
+   10,
+   11,
+   12
+  ],
+  "compte_saison": true,
+  "conservation_jours": 14,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": []
+ },
+ "betterave": {
+  "id": "betterave",
+  "nom": "betterave cuite",
+  "pluriel": "betteraves cuites",
+  "rayon": "fruits_legumes",
+  "unite": "p",
+  "poids_piece_g": 250.0,
+  "formats": [
+   {
+    "quantite": 2.0,
+    "prix": 1.29,
+    "libelle": "sachet sous vide de 500 g"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "legume",
+  "saison": [
+   1,
+   2,
+   3,
+   9,
+   10,
+   11,
+   12
+  ],
+  "compte_saison": true,
+  "conservation_jours": 7,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "betteraves",
+   "betterave rouge"
+  ]
+ },
+ "celeri_rave": {
+  "id": "celeri_rave",
+  "nom": "céleri-rave",
+  "pluriel": "céleris-raves",
+  "rayon": "fruits_legumes",
+  "unite": "p",
+  "poids_piece_g": 700.0,
+  "formats": [
+   {
+    "quantite": 1.0,
+    "prix": 1.99,
+    "libelle": ""
+   }
+  ],
+  "allergenes": [
+   "celeri"
+  ],
+  "categorie": "legume",
+  "saison": [
+   1,
+   2,
+   3,
+   9,
+   10,
+   11,
+   12
+  ],
+  "compte_saison": true,
+  "conservation_jours": 21,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "celeri rave",
+   "céleri rave"
+  ]
+ },
+ "celeri_branche": {
+  "id": "celeri_branche",
+  "nom": "branche de céleri",
+  "pluriel": "branches de céleri",
+  "rayon": "fruits_legumes",
+  "unite": "p",
+  "poids_piece_g": 50.0,
+  "formats": [
+   {
+    "quantite": 8.0,
+    "prix": 1.49,
+    "libelle": "pied de céleri"
+   }
+  ],
+  "allergenes": [
+   "celeri"
+  ],
+  "categorie": "legume",
+  "saison": [
+   6,
+   7,
+   8,
+   9,
+   10,
+   11
+  ],
+  "compte_saison": true,
+  "conservation_jours": 10,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "celeri",
+   "céleri branche",
+   "celeri branche"
+  ]
+ },
+ "endive": {
+  "id": "endive",
+  "nom": "endive",
+  "pluriel": "endives",
+  "rayon": "fruits_legumes",
+  "unite": "p",
+  "poids_piece_g": 125.0,
+  "formats": [
+   {
+    "quantite": 8.0,
+    "prix": 2.49,
+    "libelle": "sachet de 1 kg"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "legume",
+  "saison": [
+   1,
+   2,
+   3,
+   4,
+   10,
+   11,
+   12
+  ],
+  "compte_saison": true,
+  "conservation_jours": 7,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "chicon",
+   "chicons"
+  ]
+ },
+ "salade": {
+  "id": "salade",
+  "nom": "salade verte",
+  "pluriel": "salades vertes",
+  "rayon": "fruits_legumes",
+  "unite": "p",
+  "poids_piece_g": 300.0,
+  "formats": [
+   {
+    "quantite": 1.0,
+    "prix": 0.99,
+    "libelle": ""
+   }
+  ],
+  "allergenes": [],
+  "categorie": "legume",
+  "saison": [
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "compte_saison": true,
+  "conservation_jours": 4,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "laitue",
+   "batavia",
+   "salade",
+   "feuille de chêne",
+   "romaine"
+  ]
+ },
+ "mache": {
+  "id": "mache",
+  "nom": "mâche",
+  "pluriel": "mâche",
+  "rayon": "fruits_legumes",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 150.0,
+    "prix": 1.79,
+    "libelle": "sachet de 150 g"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "legume",
+  "saison": [
+   1,
+   2,
+   3,
+   10,
+   11,
+   12
+  ],
+  "compte_saison": true,
+  "conservation_jours": 4,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "mache"
+  ]
+ },
+ "roquette": {
+  "id": "roquette",
+  "nom": "roquette",
+  "pluriel": "roquette",
+  "rayon": "fruits_legumes",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 125.0,
+    "prix": 1.69,
+    "libelle": "sachet de 125 g"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "legume",
+  "saison": [
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "compte_saison": true,
+  "conservation_jours": 4,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": []
+ },
+ "radis": {
+  "id": "radis",
+  "nom": "radis",
+  "pluriel": "radis",
+  "rayon": "fruits_legumes",
+  "unite": "g",
+  "poids_piece_g": 10.0,
+  "formats": [
+   {
+    "quantite": 250.0,
+    "prix": 1.2,
+    "libelle": "botte"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "legume",
+  "saison": [
+   4,
+   5,
+   6,
+   7
+  ],
+  "compte_saison": true,
+  "conservation_jours": 5,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "botte de radis"
+  ]
+ },
+ "fenouil": {
+  "id": "fenouil",
+  "nom": "fenouil",
+  "pluriel": "fenouils",
+  "rayon": "fruits_legumes",
+  "unite": "p",
+  "poids_piece_g": 300.0,
+  "formats": [
+   {
+    "quantite": 1.0,
+    "prix": 1.2,
+    "libelle": ""
+   }
+  ],
+  "allergenes": [],
+  "categorie": "legume",
+  "saison": [
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "compte_saison": true,
+  "conservation_jours": 10,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": []
+ },
+ "asperge": {
+  "id": "asperge",
+  "nom": "asperge verte",
+  "pluriel": "asperges vertes",
+  "rayon": "fruits_legumes",
+  "unite": "g",
+  "poids_piece_g": 25.0,
+  "formats": [
+   {
+    "quantite": 500.0,
+    "prix": 3.99,
+    "libelle": "botte de 500 g"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "legume",
+  "saison": [
+   4,
+   5,
+   6
+  ],
+  "compte_saison": true,
+  "conservation_jours": 3,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "asperges"
+  ]
+ },
+ "avocat": {
+  "id": "avocat",
+  "nom": "avocat",
+  "pluriel": "avocats",
+  "rayon": "fruits_legumes",
+  "unite": "p",
+  "poids_piece_g": 200.0,
+  "formats": [
+   {
+    "quantite": 1.0,
+    "prix": 0.99,
+    "libelle": ""
+   }
+  ],
+  "allergenes": [],
+  "categorie": "fruit",
+  "saison": "imp",
+  "compte_saison": true,
+  "conservation_jours": 5,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": []
+ },
+ "mais": {
+  "id": "mais",
+  "nom": "maïs doux (boîte)",
+  "pluriel": "maïs doux",
+  "rayon": "conserves",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 285.0,
+    "prix": 0.99,
+    "libelle": "boîte (285 g égouttés)"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "conserve",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "maïs",
+   "mais"
+  ]
+ },
+ "gingembre": {
+  "id": "gingembre",
+  "nom": "gingembre frais",
+  "pluriel": "gingembre frais",
+  "rayon": "fruits_legumes",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 100.0,
+    "prix": 0.8,
+    "libelle": "morceau de 100 g"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "condiment",
+  "saison": "imp",
+  "compte_saison": false,
+  "conservation_jours": 21,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "gingembre"
+  ]
+ },
+ "citron": {
+  "id": "citron",
+  "nom": "citron",
+  "pluriel": "citrons",
+  "rayon": "fruits_legumes",
+  "unite": "p",
+  "poids_piece_g": 120.0,
+  "formats": [
+   {
+    "quantite": 1.0,
+    "prix": 0.4,
+    "libelle": ""
+   },
+   {
+    "quantite": 4.0,
+    "prix": 1.49,
+    "libelle": "filet de 4"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "condiment",
+  "saison": [
+   1,
+   2,
+   3,
+   4,
+   11,
+   12
+  ],
+  "compte_saison": false,
+  "conservation_jours": 21,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "citron jaune",
+   "jus de citron"
+  ]
+ },
+ "citron_vert": {
+  "id": "citron_vert",
+  "nom": "citron vert",
+  "pluriel": "citrons verts",
+  "rayon": "fruits_legumes",
+  "unite": "p",
+  "poids_piece_g": 70.0,
+  "formats": [
+   {
+    "quantite": 1.0,
+    "prix": 0.45,
+    "libelle": ""
+   }
+  ],
+  "allergenes": [],
+  "categorie": "condiment",
+  "saison": "imp",
+  "compte_saison": false,
+  "conservation_jours": 14,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "lime"
+  ]
+ },
+ "pomme": {
+  "id": "pomme",
+  "nom": "pomme",
+  "pluriel": "pommes",
+  "rayon": "fruits_legumes",
+  "unite": "p",
+  "poids_piece_g": 170.0,
+  "formats": [
+   {
+    "quantite": 6.0,
+    "prix": 2.19,
+    "libelle": "sachet de 1 kg"
+   },
+   {
+    "quantite": 1.0,
+    "prix": 0.4,
+    "libelle": ""
+   }
+  ],
+  "allergenes": [],
+  "categorie": "fruit",
+  "saison": [
+   1,
+   2,
+   3,
+   4,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "compte_saison": true,
+  "conservation_jours": 21,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": []
+ },
+ "poire": {
+  "id": "poire",
+  "nom": "poire",
+  "pluriel": "poires",
+  "rayon": "fruits_legumes",
+  "unite": "p",
+  "poids_piece_g": 170.0,
+  "formats": [
+   {
+    "quantite": 1.0,
+    "prix": 0.5,
+    "libelle": ""
+   }
+  ],
+  "allergenes": [],
+  "categorie": "fruit",
+  "saison": [
+   1,
+   2,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "compte_saison": true,
+  "conservation_jours": 10,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": []
+ },
+ "persil": {
+  "id": "persil",
+  "nom": "persil plat",
+  "pluriel": "persil plat",
+  "rayon": "fruits_legumes",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 30.0,
+    "prix": 0.99,
+    "libelle": "botte"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "herbe",
+  "saison": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "compte_saison": false,
+  "conservation_jours": 5,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "persil"
+  ]
+ },
+ "coriandre": {
+  "id": "coriandre",
+  "nom": "coriandre fraîche",
+  "pluriel": "coriandre fraîche",
+  "rayon": "fruits_legumes",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 30.0,
+    "prix": 0.99,
+    "libelle": "botte"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "herbe",
+  "saison": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "compte_saison": false,
+  "conservation_jours": 5,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "coriandre"
+  ]
+ },
+ "basilic": {
+  "id": "basilic",
+  "nom": "basilic frais",
+  "pluriel": "basilic frais",
+  "rayon": "fruits_legumes",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 30.0,
+    "prix": 1.29,
+    "libelle": "botte"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "herbe",
+  "saison": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "compte_saison": false,
+  "conservation_jours": 5,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "basilic",
+   "feuilles de basilic"
+  ]
+ },
+ "ciboulette": {
+  "id": "ciboulette",
+  "nom": "ciboulette",
+  "pluriel": "ciboulette",
+  "rayon": "fruits_legumes",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 25.0,
+    "prix": 0.99,
+    "libelle": "botte"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "herbe",
+  "saison": [
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "compte_saison": false,
+  "conservation_jours": 5,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": []
+ },
+ "menthe": {
+  "id": "menthe",
+  "nom": "menthe fraîche",
+  "pluriel": "menthe fraîche",
+  "rayon": "fruits_legumes",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 30.0,
+    "prix": 0.99,
+    "libelle": "botte"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "herbe",
+  "saison": [
+   5,
+   6,
+   7,
+   8,
+   9
+  ],
+  "compte_saison": false,
+  "conservation_jours": 5,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "menthe"
+  ]
+ },
+ "aneth": {
+  "id": "aneth",
+  "nom": "aneth",
+  "pluriel": "aneth",
+  "rayon": "fruits_legumes",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 20.0,
+    "prix": 1.19,
+    "libelle": "botte"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "herbe",
+  "saison": [
+   5,
+   6,
+   7,
+   8,
+   9
+  ],
+  "compte_saison": false,
+  "conservation_jours": 5,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": []
+ },
+ "poulet_filet": {
+  "id": "poulet_filet",
+  "nom": "filet de poulet",
+  "pluriel": "filets de poulet",
+  "rayon": "boucherie",
+  "unite": "g",
+  "poids_piece_g": 130.0,
+  "formats": [
+   {
+    "quantite": 400.0,
+    "prix": 5.49,
+    "libelle": "barquette de 400 g"
+   },
+   {
+    "quantite": 1000.0,
+    "prix": 11.9,
+    "libelle": "barquette de 1 kg"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "volaille",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 2,
+  "placard": false,
+  "congeler": true,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": false,
+  "vegan": false,
+  "pescetarien": false,
+  "porc": false,
+  "synonymes": [
+   "poulet",
+   "blanc de poulet",
+   "blancs de poulet",
+   "escalope de poulet",
+   "escalopes de poulet",
+   "aiguillettes de poulet"
+  ]
+ },
+ "poulet_cuisse": {
+  "id": "poulet_cuisse",
+  "nom": "cuisse de poulet",
+  "pluriel": "cuisses de poulet",
+  "rayon": "boucherie",
+  "unite": "p",
+  "poids_piece_g": 250.0,
+  "formats": [
+   {
+    "quantite": 4.0,
+    "prix": 4.99,
+    "libelle": "barquette de 4 (1 kg)"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "volaille",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 2,
+  "placard": false,
+  "congeler": true,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": false,
+  "vegan": false,
+  "pescetarien": false,
+  "porc": false,
+  "synonymes": [
+   "cuisse poulet",
+   "pilon",
+   "pilons",
+   "haut de cuisse"
+  ]
+ },
+ "dinde": {
+  "id": "dinde",
+  "nom": "escalope de dinde",
+  "pluriel": "escalopes de dinde",
+  "rayon": "boucherie",
+  "unite": "g",
+  "poids_piece_g": 130.0,
+  "formats": [
+   {
+    "quantite": 400.0,
+    "prix": 4.99,
+    "libelle": "barquette de 400 g"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "volaille",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 2,
+  "placard": false,
+  "congeler": true,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": false,
+  "vegan": false,
+  "pescetarien": false,
+  "porc": false,
+  "synonymes": [
+   "dinde",
+   "escalopes de dinde"
+  ]
+ },
+ "boeuf_hache": {
+  "id": "boeuf_hache",
+  "nom": "viande hachée de bœuf",
+  "pluriel": "viande hachée de bœuf",
+  "rayon": "boucherie",
+  "unite": "g",
+  "poids_piece_g": 125.0,
+  "formats": [
+   {
+    "quantite": 250.0,
+    "prix": 3.29,
+    "libelle": "barquette de 250 g"
+   },
+   {
+    "quantite": 500.0,
+    "prix": 5.99,
+    "libelle": "barquette de 500 g"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "boeuf",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 1,
+  "placard": false,
+  "congeler": true,
+  "hache": true,
+  "trempage_heures": 0,
+  "vegetarien": false,
+  "vegan": false,
+  "pescetarien": false,
+  "porc": false,
+  "synonymes": [
+   "steak haché",
+   "steaks hachés",
+   "viande hachée",
+   "boeuf haché",
+   "bœuf haché",
+   "hache"
+  ]
+ },
+ "boeuf_braiser": {
+  "id": "boeuf_braiser",
+  "nom": "bœuf à braiser",
+  "pluriel": "bœuf à braiser",
+  "rayon": "boucherie",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 500.0,
+    "prix": 7.99,
+    "libelle": "barquette de 500 g"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "boeuf",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 2,
+  "placard": false,
+  "congeler": true,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": false,
+  "vegan": false,
+  "pescetarien": false,
+  "porc": false,
+  "synonymes": [
+   "paleron",
+   "joue de boeuf",
+   "boeuf bourguignon",
+   "viande à bourguignon"
+  ]
+ },
+ "boeuf_emince": {
+  "id": "boeuf_emince",
+  "nom": "bœuf émincé",
+  "pluriel": "bœuf émincé",
+  "rayon": "boucherie",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 300.0,
+    "prix": 5.49,
+    "libelle": "barquette de 300 g"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "boeuf",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 2,
+  "placard": false,
+  "congeler": true,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": false,
+  "vegan": false,
+  "pescetarien": false,
+  "porc": false,
+  "synonymes": [
+   "emincé de boeuf",
+   "lamelles de boeuf",
+   "boeuf"
+  ]
+ },
+ "porc_echine": {
+  "id": "porc_echine",
+  "nom": "échine de porc",
+  "pluriel": "échine de porc",
+  "rayon": "boucherie",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 500.0,
+    "prix": 5.49,
+    "libelle": "barquette de 500 g"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "porc",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 2,
+  "placard": false,
+  "congeler": true,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": false,
+  "vegan": false,
+  "pescetarien": false,
+  "porc": true,
+  "synonymes": [
+   "porc",
+   "côte de porc",
+   "cotes de porc",
+   "sauté de porc",
+   "filet de porc"
+  ]
+ },
+ "saucisse": {
+  "id": "saucisse",
+  "nom": "saucisse de Toulouse",
+  "pluriel": "saucisses de Toulouse",
+  "rayon": "boucherie",
+  "unite": "p",
+  "poids_piece_g": 110.0,
+  "formats": [
+   {
+    "quantite": 4.0,
+    "prix": 3.99,
+    "libelle": "barquette de 4 (450 g)"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "porc",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 3,
+  "placard": false,
+  "congeler": true,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": false,
+  "vegan": false,
+  "pescetarien": false,
+  "porc": true,
+  "synonymes": [
+   "saucisses",
+   "saucisse",
+   "chipolatas",
+   "chipolata"
+  ]
+ },
+ "merguez": {
+  "id": "merguez",
+  "nom": "merguez",
+  "pluriel": "merguez",
+  "rayon": "boucherie",
+  "unite": "p",
+  "poids_piece_g": 60.0,
+  "formats": [
+   {
+    "quantite": 6.0,
+    "prix": 3.99,
+    "libelle": "barquette de 6"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "boeuf",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 3,
+  "placard": false,
+  "congeler": true,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": false,
+  "vegan": false,
+  "pescetarien": false,
+  "porc": false,
+  "synonymes": []
+ },
+ "agneau": {
+  "id": "agneau",
+  "nom": "épaule d'agneau en morceaux",
+  "pluriel": "épaule d'agneau en morceaux",
+  "rayon": "boucherie",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 500.0,
+    "prix": 9.9,
+    "libelle": "barquette de 500 g"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "agneau",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 2,
+  "placard": false,
+  "congeler": true,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": false,
+  "vegan": false,
+  "pescetarien": false,
+  "porc": false,
+  "synonymes": [
+   "agneau",
+   "mouton",
+   "sauté d'agneau"
+  ]
+ },
+ "lardons": {
+  "id": "lardons",
+  "nom": "lardons fumés",
+  "pluriel": "lardons fumés",
+  "rayon": "frais",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 200.0,
+    "prix": 1.99,
+    "libelle": "2 barquettes de 100 g"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "charcuterie",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 10,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": false,
+  "vegan": false,
+  "pescetarien": false,
+  "porc": true,
+  "synonymes": [
+   "lardons",
+   "lardon",
+   "poitrine fumée",
+   "allumettes de bacon",
+   "bacon"
+  ]
+ },
+ "jambon": {
+  "id": "jambon",
+  "nom": "tranche de jambon blanc",
+  "pluriel": "tranches de jambon blanc",
+  "rayon": "frais",
+  "unite": "p",
+  "poids_piece_g": 40.0,
+  "formats": [
+   {
+    "quantite": 4.0,
+    "prix": 2.29,
+    "libelle": "paquet de 4 tranches"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "charcuterie",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 5,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": false,
+  "vegan": false,
+  "pescetarien": false,
+  "porc": true,
+  "synonymes": [
+   "jambon",
+   "jambon blanc",
+   "jambon de paris"
+  ]
+ },
+ "chorizo": {
+  "id": "chorizo",
+  "nom": "chorizo",
+  "pluriel": "chorizo",
+  "rayon": "frais",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 200.0,
+    "prix": 2.49,
+    "libelle": "chorizo de 200 g"
+   }
+  ],
+  "allergenes": [
+   "lait"
+  ],
+  "categorie": "charcuterie",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 30,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": false,
+  "vegan": false,
+  "pescetarien": false,
+  "porc": true,
+  "synonymes": []
+ },
+ "saumon": {
+  "id": "saumon",
+  "nom": "pavé de saumon",
+  "pluriel": "pavés de saumon",
+  "rayon": "poissonnerie",
+  "unite": "p",
+  "poids_piece_g": 125.0,
+  "formats": [
+   {
+    "quantite": 2.0,
+    "prix": 5.99,
+    "libelle": "barquette de 2 pavés"
+   }
+  ],
+  "allergenes": [
+   "poissons"
+  ],
+  "categorie": "poisson",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 1,
+  "placard": false,
+  "congeler": true,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": false,
+  "vegan": false,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "saumon",
+   "pavés de saumon",
+   "filet de saumon"
+  ]
+ },
+ "poisson_blanc": {
+  "id": "poisson_blanc",
+  "nom": "filet de poisson blanc surgelé",
+  "pluriel": "filets de poisson blanc surgelés",
+  "rayon": "surgeles",
+  "unite": "g",
+  "poids_piece_g": 100.0,
+  "formats": [
+   {
+    "quantite": 400.0,
+    "prix": 3.99,
+    "libelle": "sachet de 400 g"
+   }
+  ],
+  "allergenes": [
+   "poissons"
+  ],
+  "categorie": "poisson",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 180,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": false,
+  "vegan": false,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "cabillaud",
+   "colin",
+   "lieu",
+   "merlu",
+   "poisson blanc",
+   "filet de poisson",
+   "filets de cabillaud",
+   "dos de cabillaud"
+  ]
+ },
+ "thon": {
+  "id": "thon",
+  "nom": "thon au naturel (boîte)",
+  "pluriel": "thon au naturel",
+  "rayon": "conserves",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 140.0,
+    "prix": 1.49,
+    "libelle": "boîte (140 g égouttés)"
+   }
+  ],
+  "allergenes": [
+   "poissons"
+  ],
+  "categorie": "poisson",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": false,
+  "vegan": false,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "thon",
+   "thon en boite",
+   "thon en boîte",
+   "miettes de thon"
+  ]
+ },
+ "sardine": {
+  "id": "sardine",
+  "nom": "sardines à l'huile (boîte)",
+  "pluriel": "sardines à l'huile",
+  "rayon": "conserves",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 115.0,
+    "prix": 1.29,
+    "libelle": "boîte de 115 g"
+   }
+  ],
+  "allergenes": [
+   "poissons"
+  ],
+  "categorie": "poisson",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": false,
+  "vegan": false,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "sardines",
+   "sardine"
+  ]
+ },
+ "crevette": {
+  "id": "crevette",
+  "nom": "crevettes cuites décortiquées surgelées",
+  "pluriel": "crevettes",
+  "rayon": "surgeles",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 200.0,
+    "prix": 3.99,
+    "libelle": "sachet de 200 g"
+   }
+  ],
+  "allergenes": [
+   "crustaces"
+  ],
+  "categorie": "crustace",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 180,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": false,
+  "vegan": false,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "crevettes",
+   "gambas",
+   "crevette"
+  ]
+ },
+ "moules": {
+  "id": "moules",
+  "nom": "moules prêtes à cuire",
+  "pluriel": "moules",
+  "rayon": "poissonnerie",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 1000.0,
+    "prix": 4.49,
+    "libelle": "barquette de 1 kg"
+   }
+  ],
+  "allergenes": [
+   "mollusques"
+  ],
+  "categorie": "mollusque",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 1,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": false,
+  "vegan": false,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "moule"
+  ]
+ },
+ "oeuf": {
+  "id": "oeuf",
+  "nom": "œuf",
+  "pluriel": "œufs",
+  "rayon": "cremerie",
+  "unite": "p",
+  "poids_piece_g": 55.0,
+  "formats": [
+   {
+    "quantite": 6.0,
+    "prix": 1.99,
+    "libelle": "boîte de 6"
+   },
+   {
+    "quantite": 12.0,
+    "prix": 3.69,
+    "libelle": "boîte de 12"
+   }
+  ],
+  "allergenes": [
+   "oeufs"
+  ],
+  "categorie": "oeuf",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 28,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": false,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "oeuf",
+   "oeufs",
+   "œuf",
+   "œufs",
+   "oeufs frais"
+  ]
+ },
+ "tofu": {
+  "id": "tofu",
+  "nom": "tofu ferme",
+  "pluriel": "tofu ferme",
+  "rayon": "frais",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 250.0,
+    "prix": 1.99,
+    "libelle": "bloc de 250 g"
+   }
+  ],
+  "allergenes": [
+   "soja"
+  ],
+  "categorie": "tofu",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 10,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "tofu",
+   "tofu nature",
+   "tofu fumé"
+  ]
+ },
+ "pois_chiche": {
+  "id": "pois_chiche",
+  "nom": "pois chiches cuits (boîte)",
+  "pluriel": "pois chiches cuits",
+  "rayon": "conserves",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 265.0,
+    "prix": 0.89,
+    "libelle": "boîte (265 g égouttés)"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "legumineuse",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "pois chiches",
+   "pois chiche",
+   "pois-chiches",
+   "pois chiches en boite"
+  ]
+ },
+ "pois_chiche_sec": {
+  "id": "pois_chiche_sec",
+  "nom": "pois chiches secs",
+  "pluriel": "pois chiches secs",
+  "rayon": "epicerie",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 500.0,
+    "prix": 1.59,
+    "libelle": "sachet de 500 g"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "legumineuse",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 12,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": []
+ },
+ "haricot_rouge": {
+  "id": "haricot_rouge",
+  "nom": "haricots rouges (boîte)",
+  "pluriel": "haricots rouges",
+  "rayon": "conserves",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 250.0,
+    "prix": 0.85,
+    "libelle": "boîte (250 g égouttés)"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "legumineuse",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "haricots rouges",
+   "haricot rouge",
+   "red kidney"
+  ]
+ },
+ "haricot_blanc": {
+  "id": "haricot_blanc",
+  "nom": "haricots blancs (boîte)",
+  "pluriel": "haricots blancs",
+  "rayon": "conserves",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 265.0,
+    "prix": 0.85,
+    "libelle": "boîte (265 g égouttés)"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "legumineuse",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "haricots blancs",
+   "haricot blanc",
+   "cocos",
+   "lingots"
+  ]
+ },
+ "haricot_blanc_sec": {
+  "id": "haricot_blanc_sec",
+  "nom": "haricots blancs secs",
+  "pluriel": "haricots blancs secs",
+  "rayon": "epicerie",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 500.0,
+    "prix": 1.99,
+    "libelle": "sachet de 500 g"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "legumineuse",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 12,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "lingots secs"
+  ]
+ },
+ "lentille_verte": {
+  "id": "lentille_verte",
+  "nom": "lentilles vertes",
+  "pluriel": "lentilles vertes",
+  "rayon": "epicerie",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 500.0,
+    "prix": 1.49,
+    "libelle": "sachet de 500 g"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "legumineuse",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "lentilles",
+   "lentille",
+   "lentilles du puy"
+  ]
+ },
+ "lentille_corail": {
+  "id": "lentille_corail",
+  "nom": "lentilles corail",
+  "pluriel": "lentilles corail",
+  "rayon": "epicerie",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 500.0,
+    "prix": 1.89,
+    "libelle": "sachet de 500 g"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "legumineuse",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "lentilles rouges",
+   "lentilles corails"
+  ]
+ },
+ "pois_casse": {
+  "id": "pois_casse",
+  "nom": "pois cassés",
+  "pluriel": "pois cassés",
+  "rayon": "epicerie",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 500.0,
+    "prix": 1.29,
+    "libelle": "sachet de 500 g"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "legumineuse",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "pois casses"
+  ]
+ },
+ "lait": {
+  "id": "lait",
+  "nom": "lait demi-écrémé",
+  "pluriel": "lait demi-écrémé",
+  "rayon": "cremerie",
+  "unite": "ml",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 1000.0,
+    "prix": 1.05,
+    "libelle": "brique de 1 l"
+   }
+  ],
+  "allergenes": [
+   "lait"
+  ],
+  "categorie": "laitier",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 4,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": false,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "lait",
+   "lait demi ecreme",
+   "lait entier"
+  ]
+ },
+ "beurre": {
+  "id": "beurre",
+  "nom": "beurre",
+  "pluriel": "beurre",
+  "rayon": "cremerie",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 250.0,
+    "prix": 2.69,
+    "libelle": "plaquette de 250 g"
+   }
+  ],
+  "allergenes": [
+   "lait"
+  ],
+  "categorie": "laitier",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 30,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": false,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "beurre doux",
+   "beurre demi-sel"
+  ]
+ },
+ "creme": {
+  "id": "creme",
+  "nom": "crème liquide",
+  "pluriel": "crème liquide",
+  "rayon": "cremerie",
+  "unite": "ml",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 200.0,
+    "prix": 0.99,
+    "libelle": "brique de 20 cl"
+   }
+  ],
+  "allergenes": [
+   "lait"
+  ],
+  "categorie": "laitier",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 5,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": false,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "crème",
+   "creme",
+   "crème fraîche liquide",
+   "creme liquide",
+   "crème entière",
+   "reste de crème"
+  ]
+ },
+ "creme_epaisse": {
+  "id": "creme_epaisse",
+  "nom": "crème fraîche épaisse",
+  "pluriel": "crème fraîche épaisse",
+  "rayon": "cremerie",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 200.0,
+    "prix": 1.39,
+    "libelle": "pot de 20 cl"
+   }
+  ],
+  "allergenes": [
+   "lait"
+  ],
+  "categorie": "laitier",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 7,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": false,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "crème fraîche",
+   "creme fraiche",
+   "crème épaisse"
+  ]
+ },
+ "yaourt_grec": {
+  "id": "yaourt_grec",
+  "nom": "yaourt à la grecque",
+  "pluriel": "yaourt à la grecque",
+  "rayon": "cremerie",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 500.0,
+    "prix": 2.49,
+    "libelle": "pot de 500 g"
+   }
+  ],
+  "allergenes": [
+   "lait"
+  ],
+  "categorie": "laitier",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 10,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": false,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "yaourt grec",
+   "yaourt",
+   "yaourts",
+   "fromage blanc"
+  ]
+ },
+ "fromage_rape": {
+  "id": "fromage_rape",
+  "nom": "emmental râpé",
+  "pluriel": "emmental râpé",
+  "rayon": "cremerie",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 200.0,
+    "prix": 1.99,
+    "libelle": "sachet de 200 g"
+   }
+  ],
+  "allergenes": [
+   "lait"
+  ],
+  "categorie": "fromage",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 21,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": false,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "fromage râpé",
+   "gruyère",
+   "gruyère râpé",
+   "emmental",
+   "rapé",
+   "comté râpé"
+  ]
+ },
+ "parmesan": {
+  "id": "parmesan",
+  "nom": "parmesan",
+  "pluriel": "parmesan",
+  "rayon": "cremerie",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 100.0,
+    "prix": 2.49,
+    "libelle": "pointe de 100 g"
+   }
+  ],
+  "allergenes": [
+   "lait"
+  ],
+  "categorie": "fromage",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 30,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": false,
+  "vegan": false,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "parmigiano",
+   "grana padano"
+  ]
+ },
+ "mozzarella": {
+  "id": "mozzarella",
+  "nom": "mozzarella",
+  "pluriel": "mozzarellas",
+  "rayon": "cremerie",
+  "unite": "p",
+  "poids_piece_g": 125.0,
+  "formats": [
+   {
+    "quantite": 1.0,
+    "prix": 0.99,
+    "libelle": "boule de 125 g"
+   }
+  ],
+  "allergenes": [
+   "lait"
+  ],
+  "categorie": "fromage",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 10,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": false,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "mozza",
+   "boule de mozzarella"
+  ]
+ },
+ "feta": {
+  "id": "feta",
+  "nom": "feta",
+  "pluriel": "feta",
+  "rayon": "cremerie",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 200.0,
+    "prix": 2.29,
+    "libelle": "bloc de 200 g"
+   }
+  ],
+  "allergenes": [
+   "lait"
+  ],
+  "categorie": "fromage",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 14,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": false,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "féta"
+  ]
+ },
+ "chevre": {
+  "id": "chevre",
+  "nom": "bûche de chèvre",
+  "pluriel": "bûche de chèvre",
+  "rayon": "cremerie",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 180.0,
+    "prix": 2.19,
+    "libelle": "bûche de 180 g"
+   }
+  ],
+  "allergenes": [
+   "lait"
+  ],
+  "categorie": "fromage",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 14,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": false,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "chèvre",
+   "fromage de chèvre",
+   "buche de chevre",
+   "chevre"
+  ]
+ },
+ "reblochon": {
+  "id": "reblochon",
+  "nom": "reblochon",
+  "pluriel": "reblochons",
+  "rayon": "cremerie",
+  "unite": "p",
+  "poids_piece_g": 450.0,
+  "formats": [
+   {
+    "quantite": 1.0,
+    "prix": 5.99,
+    "libelle": "reblochon de 450 g"
+   }
+  ],
+  "allergenes": [
+   "lait"
+  ],
+  "categorie": "fromage",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 14,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": false,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": []
+ },
+ "ricotta": {
+  "id": "ricotta",
+  "nom": "ricotta",
+  "pluriel": "ricotta",
+  "rayon": "cremerie",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 250.0,
+    "prix": 1.99,
+    "libelle": "pot de 250 g"
+   }
+  ],
+  "allergenes": [
+   "lait"
+  ],
+  "categorie": "fromage",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 7,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": false,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": []
+ },
+ "fromage_frais": {
+  "id": "fromage_frais",
+  "nom": "fromage frais à tartiner",
+  "pluriel": "fromage frais",
+  "rayon": "cremerie",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 150.0,
+    "prix": 1.49,
+    "libelle": "pot de 150 g"
+   }
+  ],
+  "allergenes": [
+   "lait"
+  ],
+  "categorie": "fromage",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 10,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": false,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "saint moret",
+   "fromage à tartiner",
+   "cream cheese",
+   "philadelphia",
+   "carré frais"
+  ]
+ },
+ "pates": {
+  "id": "pates",
+  "nom": "pâtes sèches",
+  "pluriel": "pâtes sèches",
+  "rayon": "epicerie",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 500.0,
+    "prix": 0.85,
+    "libelle": "paquet de 500 g"
+   }
+  ],
+  "allergenes": [
+   "gluten"
+  ],
+  "categorie": "feculent",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": true,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "pâtes",
+   "pates",
+   "spaghetti",
+   "spaghettis",
+   "penne",
+   "coquillettes",
+   "fusilli",
+   "tagliatelles",
+   "macaroni",
+   "linguine",
+   "farfalle"
+  ]
+ },
+ "riz": {
+  "id": "riz",
+  "nom": "riz long",
+  "pluriel": "riz long",
+  "rayon": "epicerie",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 1000.0,
+    "prix": 1.59,
+    "libelle": "paquet de 1 kg"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "feculent",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": true,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "riz",
+   "riz basmati",
+   "riz thaï",
+   "reste de riz",
+   "riz cuit"
+  ]
+ },
+ "riz_rond": {
+  "id": "riz_rond",
+  "nom": "riz à risotto",
+  "pluriel": "riz à risotto",
+  "rayon": "epicerie",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 500.0,
+    "prix": 1.99,
+    "libelle": "paquet de 500 g"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "feculent",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "arborio",
+   "riz arborio",
+   "riz rond"
+  ]
+ },
+ "semoule": {
+  "id": "semoule",
+  "nom": "semoule moyenne",
+  "pluriel": "semoule moyenne",
+  "rayon": "epicerie",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 500.0,
+    "prix": 0.99,
+    "libelle": "paquet de 500 g"
+   }
+  ],
+  "allergenes": [
+   "gluten"
+  ],
+  "categorie": "feculent",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "semoule",
+   "couscous"
+  ]
+ },
+ "boulgour": {
+  "id": "boulgour",
+  "nom": "boulgour",
+  "pluriel": "boulgour",
+  "rayon": "epicerie",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 500.0,
+    "prix": 1.69,
+    "libelle": "paquet de 500 g"
+   }
+  ],
+  "allergenes": [
+   "gluten"
+  ],
+  "categorie": "feculent",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "boulghour",
+   "bulgur"
+  ]
+ },
+ "quinoa": {
+  "id": "quinoa",
+  "nom": "quinoa",
+  "pluriel": "quinoa",
+  "rayon": "epicerie",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 500.0,
+    "prix": 2.99,
+    "libelle": "paquet de 500 g"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "feculent",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": []
+ },
+ "polenta": {
+  "id": "polenta",
+  "nom": "polenta",
+  "pluriel": "polenta",
+  "rayon": "epicerie",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 500.0,
+    "prix": 1.49,
+    "libelle": "paquet de 500 g"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "feculent",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": []
+ },
+ "nouilles_riz": {
+  "id": "nouilles_riz",
+  "nom": "nouilles de riz",
+  "pluriel": "nouilles de riz",
+  "rayon": "monde",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 200.0,
+    "prix": 1.49,
+    "libelle": "paquet de 200 g"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "feculent",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "vermicelles de riz",
+   "vermicelle de riz",
+   "pad thai",
+   "nouilles de riz plates"
+  ]
+ },
+ "nouilles_ble": {
+  "id": "nouilles_ble",
+  "nom": "nouilles chinoises aux œufs",
+  "pluriel": "nouilles chinoises",
+  "rayon": "monde",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 250.0,
+    "prix": 1.29,
+    "libelle": "paquet de 250 g"
+   }
+  ],
+  "allergenes": [
+   "gluten",
+   "oeufs"
+  ],
+  "categorie": "feculent",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "nouilles",
+   "nouilles chinoises",
+   "nouilles aux oeufs",
+   "ramen"
+  ]
+ },
+ "gnocchi": {
+  "id": "gnocchi",
+  "nom": "gnocchi",
+  "pluriel": "gnocchi",
+  "rayon": "frais",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 500.0,
+    "prix": 1.49,
+    "libelle": "paquet de 500 g"
+   }
+  ],
+  "allergenes": [
+   "gluten"
+  ],
+  "categorie": "feculent",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 30,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "gnocchis"
+  ]
+ },
+ "lasagne": {
+  "id": "lasagne",
+  "nom": "feuilles de lasagne",
+  "pluriel": "feuilles de lasagne",
+  "rayon": "epicerie",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 500.0,
+    "prix": 1.29,
+    "libelle": "paquet de 500 g"
+   }
+  ],
+  "allergenes": [
+   "gluten",
+   "oeufs"
+  ],
+  "categorie": "feculent",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "lasagnes"
+  ]
+ },
+ "tortilla": {
+  "id": "tortilla",
+  "nom": "galette de blé (tortilla)",
+  "pluriel": "galettes de blé (tortillas)",
+  "rayon": "monde",
+  "unite": "p",
+  "poids_piece_g": 40.0,
+  "formats": [
+   {
+    "quantite": 8.0,
+    "prix": 1.49,
+    "libelle": "paquet de 8"
+   }
+  ],
+  "allergenes": [
+   "gluten"
+  ],
+  "categorie": "pain",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 30,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "tortillas",
+   "wraps",
+   "wrap",
+   "galettes de blé"
+  ]
+ },
+ "pain": {
+  "id": "pain",
+  "nom": "baguette",
+  "pluriel": "baguettes",
+  "rayon": "boulangerie",
+  "unite": "p",
+  "poids_piece_g": 250.0,
+  "formats": [
+   {
+    "quantite": 1.0,
+    "prix": 0.95,
+    "libelle": ""
+   }
+  ],
+  "allergenes": [
+   "gluten"
+  ],
+  "categorie": "pain",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 2,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "pain",
+   "baguette",
+   "reste de pain",
+   "pain rassis"
+  ]
+ },
+ "pain_mie": {
+  "id": "pain_mie",
+  "nom": "tranche de pain de mie",
+  "pluriel": "tranches de pain de mie",
+  "rayon": "boulangerie",
+  "unite": "p",
+  "poids_piece_g": 25.0,
+  "formats": [
+   {
+    "quantite": 20.0,
+    "prix": 1.39,
+    "libelle": "paquet de 500 g"
+   }
+  ],
+  "allergenes": [
+   "gluten",
+   "lait",
+   "soja"
+  ],
+  "categorie": "pain",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 14,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "pain de mie"
+  ]
+ },
+ "pain_burger": {
+  "id": "pain_burger",
+  "nom": "pain à burger",
+  "pluriel": "pains à burger",
+  "rayon": "boulangerie",
+  "unite": "p",
+  "poids_piece_g": 75.0,
+  "formats": [
+   {
+    "quantite": 4.0,
+    "prix": 1.49,
+    "libelle": "paquet de 4"
+   }
+  ],
+  "allergenes": [
+   "gluten",
+   "lait",
+   "sesame"
+  ],
+  "categorie": "pain",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 10,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "buns",
+   "pain burger",
+   "pains burger"
+  ]
+ },
+ "galette_riz": {
+  "id": "galette_riz",
+  "nom": "galette de riz",
+  "pluriel": "galettes de riz",
+  "rayon": "monde",
+  "unite": "p",
+  "poids_piece_g": 9.0,
+  "formats": [
+   {
+    "quantite": 22.0,
+    "prix": 1.99,
+    "libelle": "paquet de 200 g"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "feculent",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "feuilles de riz",
+   "galettes de riz"
+  ]
+ },
+ "pain_pita": {
+  "id": "pain_pita",
+  "nom": "pain pita",
+  "pluriel": "pains pita",
+  "rayon": "monde",
+  "unite": "p",
+  "poids_piece_g": 60.0,
+  "formats": [
+   {
+    "quantite": 6.0,
+    "prix": 1.29,
+    "libelle": "paquet de 6"
+   }
+  ],
+  "allergenes": [
+   "gluten"
+  ],
+  "categorie": "pain",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 21,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "pita",
+   "pitas"
+  ]
+ },
+ "pate_feuilletee": {
+  "id": "pate_feuilletee",
+  "nom": "pâte feuilletée",
+  "pluriel": "pâtes feuilletées",
+  "rayon": "frais",
+  "unite": "p",
+  "poids_piece_g": 230.0,
+  "formats": [
+   {
+    "quantite": 1.0,
+    "prix": 1.19,
+    "libelle": "rouleau de 230 g"
+   }
+  ],
+  "allergenes": [
+   "gluten",
+   "lait"
+  ],
+  "categorie": "pate",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 10,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "pate feuilletee"
+  ]
+ },
+ "pate_brisee": {
+  "id": "pate_brisee",
+  "nom": "pâte brisée",
+  "pluriel": "pâtes brisées",
+  "rayon": "frais",
+  "unite": "p",
+  "poids_piece_g": 230.0,
+  "formats": [
+   {
+    "quantite": 1.0,
+    "prix": 1.09,
+    "libelle": "rouleau de 230 g"
+   }
+  ],
+  "allergenes": [
+   "gluten",
+   "lait"
+  ],
+  "categorie": "pate",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 10,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "pate brisee"
+  ]
+ },
+ "pate_pizza": {
+  "id": "pate_pizza",
+  "nom": "pâte à pizza",
+  "pluriel": "pâtes à pizza",
+  "rayon": "frais",
+  "unite": "p",
+  "poids_piece_g": 260.0,
+  "formats": [
+   {
+    "quantite": 1.0,
+    "prix": 1.39,
+    "libelle": "rouleau de 260 g"
+   }
+  ],
+  "allergenes": [
+   "gluten"
+  ],
+  "categorie": "pate",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 10,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "pate a pizza"
+  ]
+ },
+ "farine": {
+  "id": "farine",
+  "nom": "farine de blé",
+  "pluriel": "farine de blé",
+  "rayon": "epicerie",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 1000.0,
+    "prix": 0.85,
+    "libelle": "paquet de 1 kg"
+   }
+  ],
+  "allergenes": [
+   "gluten"
+  ],
+  "categorie": "feculent",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": true,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "farine"
+  ]
+ },
+ "levure": {
+  "id": "levure",
+  "nom": "sachet de levure chimique",
+  "pluriel": "sachets de levure chimique",
+  "rayon": "sucre",
+  "unite": "p",
+  "poids_piece_g": 11.0,
+  "formats": [
+   {
+    "quantite": 6.0,
+    "prix": 0.89,
+    "libelle": "boîte de 6 sachets"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "sucre",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "levure"
+  ]
+ },
+ "houmous": {
+  "id": "houmous",
+  "nom": "houmous",
+  "pluriel": "houmous",
+  "rayon": "frais",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 200.0,
+    "prix": 1.99,
+    "libelle": "pot de 200 g"
+   }
+  ],
+  "allergenes": [
+   "sesame"
+  ],
+  "categorie": "sauce",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 7,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "hoummous",
+   "humus",
+   "houmos"
+  ]
+ },
+ "tomate_concassee": {
+  "id": "tomate_concassee",
+  "nom": "tomates concassées (boîte)",
+  "pluriel": "tomates concassées",
+  "rayon": "conserves",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 400.0,
+    "prix": 0.79,
+    "libelle": "boîte de 400 g"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "conserve",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "tomates pelées",
+   "tomates en boîte",
+   "pulpe de tomate",
+   "tomates concassees",
+   "boite de tomates"
+  ]
+ },
+ "coulis_tomate": {
+  "id": "coulis_tomate",
+  "nom": "coulis de tomate",
+  "pluriel": "coulis de tomate",
+  "rayon": "conserves",
+  "unite": "ml",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 500.0,
+    "prix": 0.99,
+    "libelle": "bouteille de 500 ml"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "conserve",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "passata",
+   "sauce tomate",
+   "coulis"
+  ]
+ },
+ "concentre_tomate": {
+  "id": "concentre_tomate",
+  "nom": "concentré de tomate",
+  "pluriel": "concentré de tomate",
+  "rayon": "conserves",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 140.0,
+    "prix": 0.79,
+    "libelle": "boîte de 140 g"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "conserve",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "concentre de tomate",
+   "double concentré"
+  ]
+ },
+ "lait_coco": {
+  "id": "lait_coco",
+  "nom": "lait de coco",
+  "pluriel": "lait de coco",
+  "rayon": "monde",
+  "unite": "ml",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 400.0,
+    "prix": 1.39,
+    "libelle": "boîte de 40 cl"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "conserve",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "lait de coco",
+   "crème de coco"
+  ]
+ },
+ "olive": {
+  "id": "olive",
+  "nom": "olives noires",
+  "pluriel": "olives noires",
+  "rayon": "conserves",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 150.0,
+    "prix": 1.49,
+    "libelle": "bocal de 150 g"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "conserve",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "olives",
+   "olive",
+   "olives vertes"
+  ]
+ },
+ "pesto": {
+  "id": "pesto",
+  "nom": "pesto vert",
+  "pluriel": "pesto vert",
+  "rayon": "conserves",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 190.0,
+    "prix": 1.99,
+    "libelle": "pot de 190 g"
+   }
+  ],
+  "allergenes": [
+   "lait",
+   "fruits_a_coque"
+  ],
+  "categorie": "sauce",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 30,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": false,
+  "vegan": false,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "pesto",
+   "pesto au basilic"
+  ]
+ },
+ "sauce_soja": {
+  "id": "sauce_soja",
+  "nom": "sauce soja",
+  "pluriel": "sauce soja",
+  "rayon": "condiments",
+  "unite": "ml",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 250.0,
+    "prix": 1.79,
+    "libelle": "bouteille de 25 cl"
+   }
+  ],
+  "allergenes": [
+   "soja",
+   "gluten"
+  ],
+  "categorie": "condiment",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": true,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "soja",
+   "sauce soya"
+  ]
+ },
+ "moutarde": {
+  "id": "moutarde",
+  "nom": "moutarde de Dijon",
+  "pluriel": "moutarde de Dijon",
+  "rayon": "condiments",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 200.0,
+    "prix": 0.99,
+    "libelle": "pot de 200 g"
+   }
+  ],
+  "allergenes": [
+   "moutarde"
+  ],
+  "categorie": "condiment",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": true,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "moutarde"
+  ]
+ },
+ "mayonnaise": {
+  "id": "mayonnaise",
+  "nom": "mayonnaise",
+  "pluriel": "mayonnaise",
+  "rayon": "condiments",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 235.0,
+    "prix": 1.29,
+    "libelle": "tube de 235 g"
+   }
+  ],
+  "allergenes": [
+   "oeufs",
+   "moutarde"
+  ],
+  "categorie": "condiment",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 60,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "mayo"
+  ]
+ },
+ "vinaigre": {
+  "id": "vinaigre",
+  "nom": "vinaigre de vin",
+  "pluriel": "vinaigre de vin",
+  "rayon": "condiments",
+  "unite": "ml",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 500.0,
+    "prix": 0.79,
+    "libelle": "bouteille de 50 cl"
+   }
+  ],
+  "allergenes": [
+   "sulfites"
+  ],
+  "categorie": "condiment",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": true,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "vinaigre",
+   "vinaigre balsamique"
+  ]
+ },
+ "huile_olive": {
+  "id": "huile_olive",
+  "nom": "huile d'olive",
+  "pluriel": "huile d'olive",
+  "rayon": "condiments",
+  "unite": "ml",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 750.0,
+    "prix": 5.99,
+    "libelle": "bouteille de 75 cl"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "huile",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": true,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "huile d'olive",
+   "huile olive"
+  ]
+ },
+ "huile_neutre": {
+  "id": "huile_neutre",
+  "nom": "huile de tournesol",
+  "pluriel": "huile de tournesol",
+  "rayon": "condiments",
+  "unite": "ml",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 1000.0,
+    "prix": 2.19,
+    "libelle": "bouteille de 1 l"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "huile",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": true,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "huile",
+   "huile de colza",
+   "huile tournesol"
+  ]
+ },
+ "huile_sesame": {
+  "id": "huile_sesame",
+  "nom": "huile de sésame",
+  "pluriel": "huile de sésame",
+  "rayon": "monde",
+  "unite": "ml",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 150.0,
+    "prix": 2.49,
+    "libelle": "bouteille de 15 cl"
+   }
+  ],
+  "allergenes": [
+   "sesame"
+  ],
+  "categorie": "huile",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": []
+ },
+ "bouillon_cube": {
+  "id": "bouillon_cube",
+  "nom": "bouillon de légumes (cube)",
+  "pluriel": "cubes de bouillon de légumes",
+  "rayon": "condiments",
+  "unite": "p",
+  "poids_piece_g": 10.0,
+  "formats": [
+   {
+    "quantite": 8.0,
+    "prix": 1.29,
+    "libelle": "boîte de 8 cubes"
+   }
+  ],
+  "allergenes": [
+   "celeri",
+   "gluten"
+  ],
+  "categorie": "condiment",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": true,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "bouillon",
+   "cube",
+   "cube de bouillon",
+   "bouillon cube"
+  ]
+ },
+ "miel": {
+  "id": "miel",
+  "nom": "miel",
+  "pluriel": "miel",
+  "rayon": "sucre",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 250.0,
+    "prix": 2.99,
+    "libelle": "pot de 250 g"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "sucre",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": false,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": []
+ },
+ "sucre": {
+  "id": "sucre",
+  "nom": "sucre en poudre",
+  "pluriel": "sucre en poudre",
+  "rayon": "sucre",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 1000.0,
+    "prix": 1.09,
+    "libelle": "paquet de 1 kg"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "sucre",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": true,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "sucre"
+  ]
+ },
+ "sel": {
+  "id": "sel",
+  "nom": "sel",
+  "pluriel": "sel",
+  "rayon": "condiments",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 1000.0,
+    "prix": 0.49,
+    "libelle": "paquet de 1 kg"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "condiment",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": true,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "sel fin",
+   "gros sel"
+  ]
+ },
+ "poivre": {
+  "id": "poivre",
+  "nom": "poivre",
+  "pluriel": "poivre",
+  "rayon": "condiments",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 50.0,
+    "prix": 1.49,
+    "libelle": "moulin"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "epice",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": true,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "poivre noir"
+  ]
+ },
+ "vin_blanc": {
+  "id": "vin_blanc",
+  "nom": "vin blanc sec",
+  "pluriel": "vin blanc sec",
+  "rayon": "conserves",
+  "unite": "ml",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 750.0,
+    "prix": 3.49,
+    "libelle": "bouteille de 75 cl"
+   }
+  ],
+  "allergenes": [
+   "sulfites"
+  ],
+  "categorie": "condiment",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "vin blanc"
+  ]
+ },
+ "vin_rouge": {
+  "id": "vin_rouge",
+  "nom": "vin rouge",
+  "pluriel": "vin rouge",
+  "rayon": "conserves",
+  "unite": "ml",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 750.0,
+    "prix": 3.99,
+    "libelle": "bouteille de 75 cl"
+   }
+  ],
+  "allergenes": [
+   "sulfites"
+  ],
+  "categorie": "condiment",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": []
+ },
+ "pate_curry": {
+  "id": "pate_curry",
+  "nom": "pâte de curry thaï",
+  "pluriel": "pâte de curry thaï",
+  "rayon": "monde",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 110.0,
+    "prix": 2.49,
+    "libelle": "pot de 110 g"
+   }
+  ],
+  "allergenes": [
+   "crustaces"
+  ],
+  "categorie": "condiment",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 60,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": false,
+  "vegan": false,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "pâte de curry rouge",
+   "pâte de curry vert",
+   "pate de curry"
+  ]
+ },
+ "nuoc_mam": {
+  "id": "nuoc_mam",
+  "nom": "nuoc-mâm",
+  "pluriel": "nuoc-mâm",
+  "rayon": "monde",
+  "unite": "ml",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 250.0,
+    "prix": 2.29,
+    "libelle": "bouteille de 25 cl"
+   }
+  ],
+  "allergenes": [
+   "poissons"
+  ],
+  "categorie": "condiment",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": false,
+  "vegan": false,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "sauce poisson",
+   "nuoc mam"
+  ]
+ },
+ "sauce_huitre": {
+  "id": "sauce_huitre",
+  "nom": "sauce huître",
+  "pluriel": "sauce huître",
+  "rayon": "monde",
+  "unite": "ml",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 150.0,
+    "prix": 1.99,
+    "libelle": "bouteille de 15 cl"
+   }
+  ],
+  "allergenes": [
+   "mollusques",
+   "gluten",
+   "soja"
+  ],
+  "categorie": "condiment",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": false,
+  "vegan": false,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "sauce huitre"
+  ]
+ },
+ "tahini": {
+  "id": "tahini",
+  "nom": "purée de sésame (tahini)",
+  "pluriel": "purée de sésame",
+  "rayon": "monde",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 300.0,
+    "prix": 3.49,
+    "libelle": "pot de 300 g"
+   }
+  ],
+  "allergenes": [
+   "sesame"
+  ],
+  "categorie": "condiment",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "tahin",
+   "crème de sésame"
+  ]
+ },
+ "beurre_cacahuete": {
+  "id": "beurre_cacahuete",
+  "nom": "beurre de cacahuète",
+  "pluriel": "beurre de cacahuète",
+  "rayon": "sucre",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 340.0,
+    "prix": 2.49,
+    "libelle": "pot de 340 g"
+   }
+  ],
+  "allergenes": [
+   "arachides"
+  ],
+  "categorie": "condiment",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "beurre de cacahuete",
+   "beurre d'arachide"
+  ]
+ },
+ "cacahuete": {
+  "id": "cacahuete",
+  "nom": "cacahuètes grillées",
+  "pluriel": "cacahuètes grillées",
+  "rayon": "sucre",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 200.0,
+    "prix": 1.79,
+    "libelle": "sachet de 200 g"
+   }
+  ],
+  "allergenes": [
+   "arachides"
+  ],
+  "categorie": "noix",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "cacahuètes",
+   "cacahuetes",
+   "arachides"
+  ]
+ },
+ "noix": {
+  "id": "noix",
+  "nom": "cerneaux de noix",
+  "pluriel": "cerneaux de noix",
+  "rayon": "sucre",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 100.0,
+    "prix": 1.99,
+    "libelle": "sachet de 100 g"
+   }
+  ],
+  "allergenes": [
+   "fruits_a_coque"
+  ],
+  "categorie": "noix",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 180,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "noix",
+   "cerneaux"
+  ]
+ },
+ "amande": {
+  "id": "amande",
+  "nom": "amandes effilées",
+  "pluriel": "amandes effilées",
+  "rayon": "sucre",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 100.0,
+    "prix": 1.79,
+    "libelle": "sachet de 100 g"
+   }
+  ],
+  "allergenes": [
+   "fruits_a_coque"
+  ],
+  "categorie": "noix",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 180,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "amandes"
+  ]
+ },
+ "graines_sesame": {
+  "id": "graines_sesame",
+  "nom": "graines de sésame",
+  "pluriel": "graines de sésame",
+  "rayon": "monde",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 75.0,
+    "prix": 1.29,
+    "libelle": "sachet de 75 g"
+   }
+  ],
+  "allergenes": [
+   "sesame"
+  ],
+  "categorie": "graine",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "sésame",
+   "sesame"
+  ]
+ },
+ "miso": {
+  "id": "miso",
+  "nom": "pâte miso",
+  "pluriel": "pâte miso",
+  "rayon": "monde",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 300.0,
+    "prix": 3.99,
+    "libelle": "pot de 300 g"
+   }
+  ],
+  "allergenes": [
+   "soja"
+  ],
+  "categorie": "condiment",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 180,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "miso"
+  ]
+ },
+ "harissa": {
+  "id": "harissa",
+  "nom": "harissa",
+  "pluriel": "harissa",
+  "rayon": "monde",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 70.0,
+    "prix": 1.29,
+    "libelle": "tube de 70 g"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "condiment",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 180,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": []
+ },
+ "raisin_sec": {
+  "id": "raisin_sec",
+  "nom": "raisins secs",
+  "pluriel": "raisins secs",
+  "rayon": "sucre",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 250.0,
+    "prix": 1.79,
+    "libelle": "sachet de 250 g"
+   }
+  ],
+  "allergenes": [
+   "sulfites"
+  ],
+  "categorie": "fruit_sec",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "raisins secs"
+  ]
+ },
+ "abricot_sec": {
+  "id": "abricot_sec",
+  "nom": "abricots secs",
+  "pluriel": "abricots secs",
+  "rayon": "sucre",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 250.0,
+    "prix": 2.49,
+    "libelle": "sachet de 250 g"
+   }
+  ],
+  "allergenes": [
+   "sulfites"
+  ],
+  "categorie": "fruit_sec",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": []
+ },
+ "petit_pois": {
+  "id": "petit_pois",
+  "nom": "petits pois surgelés",
+  "pluriel": "petits pois surgelés",
+  "rayon": "surgeles",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 1000.0,
+    "prix": 2.29,
+    "libelle": "sachet de 1 kg"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "surgele",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 180,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "petits pois",
+   "petit pois"
+  ]
+ },
+ "haricot_vert_surgele": {
+  "id": "haricot_vert_surgele",
+  "nom": "haricots verts surgelés",
+  "pluriel": "haricots verts surgelés",
+  "rayon": "surgeles",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 1000.0,
+    "prix": 2.19,
+    "libelle": "sachet de 1 kg"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "surgele",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 180,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "haricots verts surgeles"
+  ]
+ },
+ "epinard_surgele": {
+  "id": "epinard_surgele",
+  "nom": "épinards hachés surgelés",
+  "pluriel": "épinards surgelés",
+  "rayon": "surgeles",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 750.0,
+    "prix": 1.69,
+    "libelle": "sachet de 750 g"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "surgele",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 180,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "épinards surgelés",
+   "epinards surgeles"
+  ]
+ },
+ "brocoli_surgele": {
+  "id": "brocoli_surgele",
+  "nom": "brocolis surgelés",
+  "pluriel": "brocolis surgelés",
+  "rayon": "surgeles",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 750.0,
+    "prix": 1.89,
+    "libelle": "sachet de 750 g"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "surgele",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 180,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "brocolis surgelés"
+  ]
+ },
+ "poelee_surgelee": {
+  "id": "poelee_surgelee",
+  "nom": "poêlée de légumes surgelée",
+  "pluriel": "poêlée de légumes surgelée",
+  "rayon": "surgeles",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 750.0,
+    "prix": 2.19,
+    "libelle": "sachet de 750 g"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "surgele",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 180,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "légumes surgelés",
+   "poêlée de légumes",
+   "legumes surgeles"
+  ]
+ },
+ "cumin": {
+  "id": "cumin",
+  "nom": "cumin moulu",
+  "pluriel": "cumin moulu",
+  "rayon": "condiments",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 35.0,
+    "prix": 1.49,
+    "libelle": "pot"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "epice",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": true,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "cumin"
+  ]
+ },
+ "curry": {
+  "id": "curry",
+  "nom": "curry en poudre",
+  "pluriel": "curry en poudre",
+  "rayon": "condiments",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 40.0,
+    "prix": 1.49,
+    "libelle": "pot"
+   }
+  ],
+  "allergenes": [
+   "moutarde"
+  ],
+  "categorie": "epice",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": true,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "curry"
+  ]
+ },
+ "paprika": {
+  "id": "paprika",
+  "nom": "paprika",
+  "pluriel": "paprika",
+  "rayon": "condiments",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 40.0,
+    "prix": 1.49,
+    "libelle": "pot"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "epice",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": true,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "paprika fumé"
+  ]
+ },
+ "herbes_de_provence": {
+  "id": "herbes_de_provence",
+  "nom": "herbes de Provence",
+  "pluriel": "herbes de Provence",
+  "rayon": "condiments",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 20.0,
+    "prix": 1.29,
+    "libelle": "pot"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "epice",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": true,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "herbes de provence"
+  ]
+ },
+ "piment": {
+  "id": "piment",
+  "nom": "piment en flocons",
+  "pluriel": "piment en flocons",
+  "rayon": "condiments",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 30.0,
+    "prix": 1.49,
+    "libelle": "pot"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "epice",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": true,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "piment",
+   "piment d'espelette",
+   "piment de cayenne"
+  ]
+ },
+ "thym": {
+  "id": "thym",
+  "nom": "thym séché",
+  "pluriel": "thym séché",
+  "rayon": "condiments",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 15.0,
+    "prix": 1.29,
+    "libelle": "pot"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "epice",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": true,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "thym"
+  ]
+ },
+ "laurier": {
+  "id": "laurier",
+  "nom": "feuille de laurier",
+  "pluriel": "feuilles de laurier",
+  "rayon": "condiments",
+  "unite": "p",
+  "poids_piece_g": 0.2,
+  "formats": [
+   {
+    "quantite": 10.0,
+    "prix": 1.29,
+    "libelle": "sachet"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "epice",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": true,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "laurier"
+  ]
+ },
+ "muscade": {
+  "id": "muscade",
+  "nom": "noix de muscade moulue",
+  "pluriel": "noix de muscade moulue",
+  "rayon": "condiments",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 30.0,
+    "prix": 1.49,
+    "libelle": "pot"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "epice",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": true,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "muscade"
+  ]
+ },
+ "origan": {
+  "id": "origan",
+  "nom": "origan séché",
+  "pluriel": "origan séché",
+  "rayon": "condiments",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 15.0,
+    "prix": 1.29,
+    "libelle": "pot"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "epice",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": true,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "origan"
+  ]
+ },
+ "curcuma": {
+  "id": "curcuma",
+  "nom": "curcuma",
+  "pluriel": "curcuma",
+  "rayon": "condiments",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 40.0,
+    "prix": 1.49,
+    "libelle": "pot"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "epice",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": true,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": []
+ },
+ "ras_el_hanout": {
+  "id": "ras_el_hanout",
+  "nom": "ras el-hanout",
+  "pluriel": "ras el-hanout",
+  "rayon": "condiments",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 40.0,
+    "prix": 1.69,
+    "libelle": "pot"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "epice",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "ras el hanout"
+  ]
+ },
+ "garam_masala": {
+  "id": "garam_masala",
+  "nom": "garam masala",
+  "pluriel": "garam masala",
+  "rayon": "condiments",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 40.0,
+    "prix": 1.89,
+    "libelle": "pot"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "epice",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": []
+ },
+ "cannelle": {
+  "id": "cannelle",
+  "nom": "cannelle moulue",
+  "pluriel": "cannelle moulue",
+  "rayon": "condiments",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 35.0,
+    "prix": 1.49,
+    "libelle": "pot"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "epice",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "cannelle"
+  ]
+ },
+ "cinq_epices": {
+  "id": "cinq_epices",
+  "nom": "cinq-épices",
+  "pluriel": "cinq-épices",
+  "rayon": "monde",
+  "unite": "g",
+  "poids_piece_g": null,
+  "formats": [
+   {
+    "quantite": 30.0,
+    "prix": 1.69,
+    "libelle": "pot"
+   }
+  ],
+  "allergenes": [],
+  "categorie": "epice",
+  "saison": null,
+  "compte_saison": false,
+  "conservation_jours": 365,
+  "placard": false,
+  "congeler": false,
+  "hache": false,
+  "trempage_heures": 0,
+  "vegetarien": true,
+  "vegan": true,
+  "pescetarien": true,
+  "porc": false,
+  "synonymes": [
+   "5 épices",
+   "cinq epices"
+  ]
+ }
+}

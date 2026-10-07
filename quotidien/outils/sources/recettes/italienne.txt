@@ -1,0 +1,379 @@
+# Cuisine italienne du quotidien. Recettes originales écrites pour Quotidien.
+
+## Spaghetti à la carbonara
+id: carbonara · portions: 2 · prep: 5 · cuisson: 12 · difficulte: moyen · cuisine: italienne · proteine: porc · feculent: pates · restes: 0
+ustensiles: casserole, poêle, saladier
+- 200 g pates : des spaghetti
+- 120 g lardons
+- 3 oeuf : 1 entier et 2 jaunes
+- 40 g parmesan
+> Mets les spaghetti à cuire dans un grand volume d'eau salée.
+> Fais dorer les lardons à sec 5 min ; coupe le feu.
+> Bats l'œuf entier et les jaunes avec le parmesan râpé et beaucoup de poivre.
+> Égoutte les pâtes en gardant un verre d'eau de cuisson. Hors du feu mais aussitôt, mélange-les avec les lardons, puis la crème d'œufs et un peu d'eau de cuisson : la chaleur des pâtes cuit les œufs et donne une sauce nappante. Sers tout de suite.
+
+## Spaghetti bolognaise
+id: bolognaise · portions: 4 · prep: 15 · cuisson: 45 · difficulte: facile · cuisine: italienne · proteine: boeuf · feculent: pates · restes: 2
+tags: reconfortant
+ustensiles: cocotte, casserole
+- 400 g boeuf_hache
+- 800 g tomate_concassee
+- 1 oignon
+- 1 carotte
+- 2 ail
+- 20 g concentre_tomate
+- 1 g origan
+- 320 g pates
+- 40 g parmesan
+- 15 ml huile_olive
+> Hache l'oignon, l'ail et la carotte, fais-les fondre 5 min dans l'huile.
+> Ajoute la viande et fais-la cuire en l'émiettant jusqu'à ce qu'elle ne soit plus rosée.
+> Ajoute les tomates, le concentré, l'origan, sel et poivre ; laisse mijoter 35 min à feu doux, à demi couvert.
+> Cuis les pâtes, mélange avec la sauce et sers avec le parmesan.
+
+## Pâtes au pesto, haricots verts et pommes de terre
+id: pates-pesto-haricots · portions: 2 · prep: 5 · cuisson: 15 · difficulte: facile · cuisine: italienne · proteine: fromage · feculent: pates · restes: 1
+ustensiles: casserole
+- 180 g pates
+- 90 g pesto
+- 150 g haricot_vert
+- 150 g pomme_de_terre
+- 20 g parmesan
+> Coupe la pomme de terre en petits dés et les haricots en tronçons.
+> Cuis-les dans l'eau salée avec les pâtes : les dés de pomme de terre d'abord, puis les pâtes et les haricots, pour que tout soit prêt en même temps.
+> Égoutte en gardant un peu d'eau, mélange avec le pesto détendu de cette eau. Parsème de parmesan.
+
+## Pâtes à la tomate, au basilic et à la mozzarella
+id: pates-tomate-basilic · portions: 2 · prep: 5 · cuisson: 15 · difficulte: facile · cuisine: italienne · proteine: fromage · feculent: pates · restes: 1
+ustensiles: casserole, sauteuse
+- 180 g pates
+- 400 g tomate_concassee
+- 2 ail
+- 10 g basilic
+- 20 ml huile_olive
+- 1 mozzarella
+> Fais chauffer l'ail émincé dans l'huile 1 min sans le colorer, ajoute les tomates, sel et poivre ; laisse mijoter 12 min.
+> Cuis les pâtes pendant ce temps.
+> Mélange pâtes et sauce, ajoute la mozzarella en dés et le basilic ciselé hors du feu.
+
+## Penne all'arrabbiata
+id: arrabbiata · portions: 2 · prep: 5 · cuisson: 15 · difficulte: facile · cuisine: italienne · proteine: aucune · feculent: pates · restes: 2
+tags: epice
+ustensiles: casserole, sauteuse
+- 180 g pates : des penne
+- 400 g tomate_concassee
+- 2 ail
+- 1 g piment
+- 5 g persil
+- 20 ml huile_olive
+> Fais revenir l'ail et le piment 1 min dans l'huile, ajoute les tomates et laisse réduire 12 min ; sale.
+> Cuis les penne al dente, mélange avec la sauce et le persil haché.
+
+## Pâtes aux courgettes, citron et ricotta
+id: pates-courgettes-ricotta · portions: 2 · prep: 8 · cuisson: 12 · difficulte: facile · cuisine: italienne · proteine: fromage · feculent: pates · restes: 1
+tags: leger
+ustensiles: casserole, poêle
+- 180 g pates
+- 2 courgette
+- 125 g ricotta
+- 0.5 citron
+- 1 ail
+- 5 g menthe
+- 15 ml huile_olive
+> Mets les pâtes à cuire. Coupe les courgettes en demi-rondelles fines et fais-les sauter 6 min dans l'huile avec l'ail.
+> Mélange la ricotta avec le zeste et le jus du demi-citron, sel et poivre.
+> Mélange pâtes, courgettes et ricotta avec un peu d'eau de cuisson ; ajoute la menthe ciselée.
+
+## Pâtes au thon et à la tomate
+id: pates-thon-tomate · portions: 2 · prep: 5 · cuisson: 15 · difficulte: facile · cuisine: italienne · proteine: poisson · feculent: pates · restes: 1
+ustensiles: casserole, sauteuse
+- 180 g pates
+- 140 g thon
+- 400 g tomate_concassee
+- 1 oignon
+- 30 g olive
+- 1 g origan
+- 15 ml huile_olive
+> Fais fondre l'oignon émincé 3 min dans l'huile, ajoute les tomates et l'origan ; laisse mijoter 10 min.
+> Cuis les pâtes. Ajoute le thon émietté et les olives à la sauce, réchauffe 2 min et mélange avec les pâtes.
+
+## Pâtes aux brocolis et à l'ail
+id: pates-brocolis · portions: 2 · prep: 5 · cuisson: 15 · difficulte: facile · cuisine: italienne · proteine: fromage · feculent: pates · restes: 1
+ustensiles: casserole, poêle
+- 180 g pates
+- 1 brocoli
+- 2 ail
+- 0.5 g piment
+- 40 g fromage_rape
+- 20 ml huile_olive
+> Détaille le brocoli en petits bouquets et cuis-le avec les pâtes, dans la même eau salée, les 5 dernières minutes.
+> Fais dorer l'ail émincé et le piment dans l'huile 1 min.
+> Égoutte, mélange tout dans la poêle avec un peu d'eau de cuisson et le fromage.
+
+## Lasagnes à la bolognaise
+id: lasagnes-bolognaise · portions: 6 · prep: 30 · cuisson: 45 · difficulte: moyen · cuisine: italienne · proteine: boeuf · feculent: pates · restes: 2
+tags: gratin, reconfortant
+ustensiles: four, plat à gratin, cocotte, casserole, fouet
+- 250 g lasagne
+- 500 g boeuf_hache
+- 800 g tomate_concassee
+- 1 oignon
+- 1 carotte
+- 2 ail
+- 40 g beurre
+- 40 g farine
+- 600 ml lait
+- 0.5 g muscade
+- 80 g fromage_rape
+> Bolognaise : fais revenir oignon, carotte et ail hachés, ajoute la viande jusqu'à ce qu'elle ne soit plus rosée, puis les tomates ; sale, poivre, laisse mijoter 20 min.
+> Béchamel : beurre fondu, farine, puis le lait froid en fouettant ; laisse épaissir 5 min, sale, muscade.
+> Préchauffe le four à 180 °C. Dans le plat, alterne béchamel, feuilles de lasagne et bolognaise, en finissant par la béchamel et le fromage.
+> Enfourne 40 à 45 min : la lame d'un couteau doit traverser les pâtes sans résistance. Laisse reposer 10 min.
+
+## Lasagnes épinards-ricotta
+id: lasagnes-epinards-ricotta · portions: 6 · prep: 20 · cuisson: 40 · difficulte: facile · cuisine: italienne · proteine: fromage · feculent: pates · restes: 3
+tags: batch, gratin
+ustensiles: four, plat à gratin, poêle, saladier
+- 250 g lasagne
+- 750 g epinard_surgele
+- 250 g ricotta
+- 500 ml coulis_tomate
+- 2 mozzarella
+- 2 ail
+- 0.5 g muscade
+- 60 g fromage_rape
+> Fais décongeler les épinards 10 min à la poêle avec l'ail, puis presse-les pour enlever l'eau. Mélange-les avec la ricotta, la muscade, sel et poivre.
+> Préchauffe le four à 180 °C. Dans le plat, alterne coulis, feuilles de lasagne, épinards-ricotta et mozzarella en tranches.
+> Termine par du coulis, la mozzarella restante et le fromage râpé. Enfourne 40 min.
+
+## Risotto aux champignons
+id: risotto-champignons · portions: 2 · prep: 10 · cuisson: 25 · difficulte: moyen · cuisine: italienne · proteine: fromage · feculent: riz · restes: 1
+tags: reconfortant
+ustensiles: sauteuse, casserole
+- 160 g riz_rond
+- 250 g champignon
+- 1 echalote
+- 80 ml vin_blanc
+- 1 bouillon_cube
+- 20 g beurre
+- 30 g parmesan
+> Fais chauffer 800 ml d'eau avec le cube. Fais dorer les champignons émincés dans la moitié du beurre et réserve-les.
+> Fais fondre l'échalote hachée, ajoute le riz et remue 2 min jusqu'à ce qu'il soit nacré ; verse le vin.
+> Ajoute le bouillon chaud louche par louche, en remuant, en attendant qu'il soit absorbé avant la suivante (18 min environ).
+> Hors du feu, ajoute les champignons, le reste du beurre et le parmesan ; couvre 2 min avant de servir.
+
+## Risotto à la courge
+id: risotto-courge · portions: 2 · prep: 10 · cuisson: 30 · difficulte: moyen · cuisine: italienne · proteine: fromage · feculent: riz · restes: 1
+tags: reconfortant
+ustensiles: sauteuse, casserole
+- 160 g riz_rond
+- 0.4 courge : environ 400 g
+- 1 oignon
+- 1 bouillon_cube
+- 20 g beurre
+- 40 g fromage_rape
+> Coupe la courge épluchée en petits dés. Fais chauffer 900 ml d'eau avec le cube.
+> Fais fondre l'oignon dans le beurre, ajoute la courge et le riz, remue 2 min.
+> Ajoute le bouillon louche par louche en remuant, pendant 20 à 22 min : la courge fond et rend le risotto crémeux.
+> Hors du feu, ajoute le fromage, poivre et laisse reposer 2 min.
+
+## Gnocchi poêlés, tomates cerises et mozzarella
+id: gnocchi-tomates-mozza · portions: 2 · prep: 5 · cuisson: 15 · difficulte: facile · cuisine: italienne · proteine: fromage · feculent: pates · restes: 0
+ustensiles: poêle
+- 400 g gnocchi
+- 250 g tomate_cerise
+- 1 mozzarella
+- 10 g basilic
+- 1 ail
+- 20 ml huile_olive
+> Fais dorer les gnocchi 8 min dans l'huile, sans les précuire, en les retournant.
+> Ajoute l'ail et les tomates cerises coupées en deux ; laisse-les compoter 4 min, sale, poivre.
+> Hors du feu, ajoute la mozzarella en dés et le basilic.
+
+## Minestrone
+id: minestrone · portions: 4 · prep: 20 · cuisson: 35 · difficulte: facile · cuisine: italienne · proteine: legumineuse · feculent: pates · restes: 3
+tags: batch, soupe
+ustensiles: cocotte
+- 1 courgette
+- 2 carotte
+- 1 celeri_branche
+- 100 g haricot_vert
+- 265 g haricot_blanc
+- 400 g tomate_concassee
+- 80 g pates : des petites pâtes
+- 1 oignon
+- 1 ail
+- 1 bouillon_cube
+- 15 ml huile_olive
+> Coupe tous les légumes en petits dés. Fais revenir oignon, carotte et céleri 5 min dans l'huile.
+> Ajoute la courgette, les haricots verts, l'ail, les tomates, le cube et 1,2 litre d'eau ; laisse cuire 20 min.
+> Ajoute les haricots blancs rincés et les pâtes ; poursuis le temps de cuisson des pâtes. Sale, poivre.
+
+## Pizza maison jambon-champignons
+id: pizza-reine · portions: 2 · prep: 15 · cuisson: 15 · difficulte: facile · cuisine: italienne · proteine: porc · feculent: pate · restes: 1
+ustensiles: four, plaque
+- 1 pate_pizza
+- 120 ml coulis_tomate
+- 2 jambon
+- 150 g champignon
+- 1 mozzarella
+- 1 g origan
+> Préchauffe le four au maximum (240 °C). Déroule la pâte sur la plaque avec son papier.
+> Étale le coulis, ajoute le jambon en morceaux, les champignons émincés finement, la mozzarella en tranches et l'origan.
+> Enfourne 12 à 15 min, jusqu'à ce que la pâte soit dorée en dessous.
+
+## Pizza tortilla margherita
+id: pizza-tortilla · portions: 2 · prep: 5 · cuisson: 10 · difficulte: facile · cuisine: italienne · proteine: fromage · feculent: tortilla · restes: 0
+tags: airfryer_possible
+ustensiles: four, plaque
+- 2 tortilla
+- 80 ml coulis_tomate
+- 1 mozzarella
+- 1 tomate
+- 5 g basilic
+- 0.5 salade
+> Préchauffe le four à 220 °C. Étale le coulis sur les tortillas, ajoute la tomate et la mozzarella en tranches.
+> Enfourne 8 à 10 min, jusqu'à ce que les bords soient croustillants. Ajoute le basilic et sers avec la salade.
+
+## Polenta crémeuse aux champignons
+id: polenta-champignons · portions: 2 · prep: 5 · cuisson: 15 · difficulte: facile · cuisine: italienne · proteine: fromage · feculent: polenta · restes: 1
+ustensiles: casserole, poêle, fouet
+- 120 g polenta
+- 250 ml lait
+- 300 g champignon
+- 1 ail
+- 5 g persil
+- 40 g fromage_rape
+- 15 g beurre
+> Porte le lait et 250 ml d'eau salée à ébullition, verse la polenta en pluie en fouettant et laisse cuire 5 à 8 min (selon le paquet) en remuant.
+> Fais dorer les champignons avec l'ail et le beurre 6 min ; ajoute le persil.
+> Ajoute le fromage à la polenta et sers avec les champignons dessus.
+
+## Aubergines à la parmigiana
+id: aubergines-parmigiana · portions: 4 · prep: 25 · cuisson: 40 · difficulte: moyen · cuisine: italienne · proteine: fromage · feculent: pain · restes: 3
+tags: batch, gratin
+ustensiles: four, plat à gratin, plaque
+- 3 aubergine
+- 500 ml coulis_tomate
+- 2 mozzarella
+- 50 g parmesan
+- 10 g basilic
+- 60 ml huile_olive
+- 1 pain
+> Préchauffe le four à 200 °C. Coupe les aubergines en tranches de 1 cm, badigeonne-les d'huile, sale et fais-les rôtir 20 min sur la plaque.
+> Dans le plat, alterne aubergines, coulis, mozzarella, basilic et parmesan.
+> Enfourne 20 min à 180 °C. Sers avec le pain.
+
+## Salade de pâtes à la caprese
+id: salade-pates-caprese · portions: 2 · prep: 8 · cuisson: 10 · difficulte: facile · cuisine: italienne · proteine: fromage · feculent: pates · restes: 1
+tags: salade, froid, transportable
+ustensiles: casserole, saladier
+- 160 g pates
+- 250 g tomate_cerise
+- 1 mozzarella
+- 10 g basilic
+- 50 g roquette
+- 30 ml huile_olive
+> Cuis les pâtes, rince-les à l'eau froide et égoutte-les.
+> Mélange avec les tomates cerises coupées en deux, la mozzarella en dés, la roquette, le basilic, l'huile, sel et poivre.
+
+## Pasta e fagioli
+id: pasta-fagioli · portions: 4 · prep: 10 · cuisson: 30 · difficulte: facile · cuisine: italienne · proteine: legumineuse · feculent: pates · restes: 3
+tags: batch, soupe, reconfortant
+ustensiles: cocotte
+- 530 g haricot_blanc : 2 boîtes
+- 400 g tomate_concassee
+- 1 carotte
+- 1 oignon
+- 2 ail
+- 150 g pates : des petites pâtes
+- 1 g thym
+- 1 bouillon_cube
+- 20 ml huile_olive
+> Fais revenir oignon, carotte et ail hachés 5 min dans l'huile.
+> Ajoute les tomates, le thym, le cube, 1 litre d'eau et la moitié des haricots écrasés à la fourchette ; laisse cuire 15 min.
+> Ajoute le reste des haricots et les pâtes ; cuis le temps indiqué sur le paquet. La soupe doit être épaisse.
+
+## Spaghetti à l'ail, à l'huile et au piment
+id: aglio-olio · portions: 2 · prep: 5 · cuisson: 10 · difficulte: facile · cuisine: italienne · proteine: aucune · feculent: pates · restes: 0
+tags: epice
+ustensiles: casserole, poêle
+- 200 g pates : des spaghetti
+- 4 ail
+- 1 g piment
+- 10 g persil
+- 40 ml huile_olive
+> Cuis les spaghetti al dente.
+> Fais chauffer doucement l'huile avec l'ail en fines lamelles et le piment : l'ail doit blondir, pas brûler.
+> Mélange les pâtes égouttées avec l'huile parfumée, un peu d'eau de cuisson et le persil.
+
+## Pâtes alla Norma
+id: pates-norma · portions: 2 · prep: 10 · cuisson: 25 · difficulte: facile · cuisine: italienne · proteine: fromage · feculent: pates · restes: 2
+ustensiles: casserole, sauteuse
+- 180 g pates
+- 1 aubergine
+- 400 g tomate_concassee
+- 1 ail
+- 10 g basilic
+- 80 g ricotta
+- 40 ml huile_olive
+> Coupe l'aubergine en cubes et fais-la dorer 10 min dans l'huile ; sale.
+> Ajoute l'ail et les tomates, laisse mijoter 12 min.
+> Mélange avec les pâtes, le basilic, et dépose la ricotta en petites cuillerées.
+
+## Pâtes aux crevettes, ail et citron
+id: pates-crevettes · portions: 2 · prep: 5 · cuisson: 12 · difficulte: facile · cuisine: italienne · proteine: fruits_de_mer · feculent: pates · restes: 0
+ustensiles: casserole, poêle
+- 180 g pates
+- 200 g crevette : décongelées au réfrigérateur la veille
+- 2 ail
+- 0.5 citron
+- 10 g persil
+- 20 ml huile_olive
+- 0.5 g piment
+> Cuis les pâtes.
+> Fais revenir l'ail et le piment dans l'huile 1 min, ajoute les crevettes et réchauffe-les 3 min : elles doivent être bien chaudes.
+> Mélange avec les pâtes, le jus et le zeste du citron et le persil.
+
+## Pâtes aux champignons et à la crème
+id: pates-champignons-creme · portions: 2 · prep: 5 · cuisson: 15 · difficulte: facile · cuisine: italienne · proteine: fromage · feculent: pates · restes: 1
+tags: reconfortant
+ustensiles: casserole, poêle
+- 180 g pates
+- 300 g champignon
+- 150 ml creme
+- 1 echalote
+- 30 g fromage_rape
+- 5 g persil
+> Cuis les pâtes. Fais dorer l'échalote et les champignons émincés 6 min.
+> Verse la crème, laisse réduire 2 min, sale et poivre.
+> Mélange avec les pâtes, le fromage et le persil.
+
+## Frittata pommes de terre et courgette
+id: frittata-courgette · portions: 2 · prep: 10 · cuisson: 20 · difficulte: facile · cuisine: italienne · proteine: oeuf · feculent: pomme_de_terre · restes: 1
+tags: transportable
+ustensiles: poêle allant au four, saladier
+- 5 oeuf
+- 200 g pomme_de_terre
+- 1 courgette
+- 0.5 oignon
+- 40 g fromage_rape
+- 15 ml huile_olive
+- 0.5 salade
+> Coupe la pomme de terre en dés de 1 cm et fais-la cuire 10 min dans l'huile avec l'oignon, à couvert, en remuant : elle doit être tendre. Ajoute la courgette en dés 3 min.
+> Bats les œufs avec le fromage, sel et poivre, verse sur les légumes.
+> Laisse prendre 5 min à feu doux à couvert, puis 2 min sous le gril du four pour cuire le dessus. Sers avec la salade.
+
+## Frittata aux épinards et à la feta
+id: frittata-epinards-feta · portions: 2 · prep: 5 · cuisson: 12 · difficulte: facile · cuisine: italienne · proteine: oeuf · feculent: pain · restes: 1
+tags: transportable
+ustensiles: poêle allant au four, saladier
+- 5 oeuf
+- 200 g epinard_surgele
+- 80 g feta
+- 1 ail
+- 15 ml huile_olive
+- 0.5 pain
+> Fais décongeler les épinards à la poêle avec l'ail 5 min, puis presse-les.
+> Bats les œufs, ajoute épinards et feta émiettée, poivre (peu de sel : la feta l'est).
+> Verse dans la poêle huilée, laisse prendre 5 min à couvert, finis 2 min sous le gril. Sers avec le pain.

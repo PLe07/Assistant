@@ -1,0 +1,470 @@
+# Cuisines d'Asie et d'Inde, version du quotidien. Recettes originales écrites pour Quotidien.
+
+## Curry de pois chiches au lait de coco
+id: curry-pois-chiches · portions: 4 · prep: 10 · cuisson: 20 · difficulte: facile · cuisine: indienne · proteine: legumineuse · feculent: riz · restes: 3
+tags: batch, epice, transportable
+ustensiles: sauteuse, casserole
+- 530 g pois_chiche : 2 boîtes, rincés
+- 400 ml lait_coco
+- 400 g tomate_concassee
+- 1 oignon
+- 2 ail
+- 10 g gingembre
+- 8 g curry
+- 300 g riz
+- 10 g coriandre
+- 15 ml huile_neutre
+> Fais revenir l'oignon émincé 4 min dans l'huile, ajoute l'ail, le gingembre râpé et le curry, remue 1 min.
+> Ajoute les pois chiches, les tomates et le lait de coco ; laisse mijoter 15 min à feu doux. Sale.
+> Cuis le riz pendant ce temps. Sers le curry parsemé de coriandre.
+
+## Dal de lentilles corail aux épinards
+id: dal-lentilles-corail · portions: 4 · prep: 10 · cuisson: 25 · difficulte: facile · cuisine: indienne · proteine: legumineuse · feculent: riz · restes: 3
+tags: batch, epice, reconfortant
+ustensiles: cocotte, casserole
+- 250 g lentille_corail
+- 400 g tomate_concassee
+- 200 ml lait_coco
+- 200 g epinard_surgele
+- 1 oignon
+- 2 ail
+- 15 g gingembre
+- 2 g curcuma
+- 2 g cumin
+- 2 g garam_masala
+- 300 g riz
+- 15 ml huile_neutre
+> Fais revenir l'oignon dans l'huile, puis l'ail, le gingembre et les épices 1 min.
+> Ajoute les lentilles rincées, les tomates et 600 ml d'eau ; laisse cuire 15 min en remuant.
+> Ajoute le lait de coco et les épinards, poursuis 8 min : le dal doit être épais et fondant. Sale.
+> Sers avec le riz.
+
+## Poulet tikka masala
+id: poulet-tikka-masala · portions: 4 · prep: 15 · cuisson: 30 · difficulte: moyen · cuisine: indienne · proteine: volaille · feculent: riz · restes: 3
+tags: batch, epice
+ustensiles: saladier, cocotte, casserole
+- 600 g poulet_filet
+- 150 g yaourt_grec
+- 400 g tomate_concassee
+- 150 ml creme
+- 1 oignon
+- 3 ail
+- 15 g gingembre
+- 6 g garam_masala
+- 2 g curcuma
+- 2 g paprika
+- 300 g riz
+- 15 ml huile_neutre
+> Coupe le poulet en cubes, mélange-le avec le yaourt, la moitié des épices et une pincée de sel ; laisse 10 min.
+> Fais dorer le poulet égoutté 6 min dans l'huile, réserve.
+> Fais revenir l'oignon, l'ail et le gingembre, ajoute le reste des épices, les tomates ; laisse réduire 10 min.
+> Remets le poulet, ajoute la crème et laisse mijoter 10 min : le poulet doit être cuit à cœur. Sers avec le riz.
+
+## Curry de légumes d'automne au lait de coco
+id: curry-legumes-coco · portions: 4 · prep: 15 · cuisson: 25 · difficulte: facile · cuisine: indienne · proteine: legumineuse · feculent: riz · restes: 3
+tags: batch, epice
+ustensiles: cocotte, casserole
+- 1 patate_douce
+- 2 carotte
+- 0.5 chou_fleur
+- 265 g pois_chiche
+- 400 ml lait_coco
+- 8 g curry
+- 1 oignon
+- 2 ail
+- 10 g gingembre
+- 300 g riz
+- 15 ml huile_neutre
+> Coupe la patate douce et les carottes en cubes, le chou-fleur en petits bouquets.
+> Fais revenir l'oignon, l'ail, le gingembre et le curry 2 min, ajoute les légumes et remue.
+> Verse le lait de coco et 200 ml d'eau, ajoute les pois chiches et laisse mijoter 20 min. Sale.
+> Sers avec le riz.
+
+## Aloo gobi
+id: aloo-gobi · portions: 2 · prep: 10 · cuisson: 25 · difficulte: facile · cuisine: indienne · proteine: aucune · feculent: pomme_de_terre · restes: 3
+tags: epice
+ustensiles: sauteuse avec couvercle
+- 0.5 chou_fleur
+- 400 g pomme_de_terre
+- 1 oignon
+- 200 g tomate_concassee
+- 2 g curcuma
+- 2 g cumin
+- 2 g garam_masala
+- 10 g gingembre
+- 10 g coriandre
+- 30 ml huile_neutre
+- 100 g yaourt_grec : en raïta
+> Fais revenir l'oignon et le gingembre dans l'huile, ajoute les épices 1 min.
+> Ajoute les pommes de terre en cubes et le chou-fleur en bouquets, remue pour les enrober, puis les tomates et 100 ml d'eau.
+> Couvre et cuis 20 min à feu doux, jusqu'à ce que les pommes de terre soient tendres. Sale.
+> Sers avec la coriandre et le yaourt salé.
+
+## Biryani de légumes aux œufs
+id: biryani-legumes · portions: 4 · prep: 20 · cuisson: 30 · difficulte: moyen · cuisine: indienne · proteine: oeuf · feculent: riz · restes: 1 · riz: melange
+tags: epice
+ustensiles: cocotte avec couvercle, casserole
+- 300 g riz
+- 2 carotte
+- 150 g petit_pois
+- 2 oignon
+- 150 g yaourt_grec
+- 6 g garam_masala
+- 2 g curcuma
+- 30 g raisin_sec
+- 30 g amande
+- 4 oeuf
+- 20 ml huile_neutre
+> Cuis les œufs 9 min, écale-les. Rince le riz.
+> Fais dorer les oignons émincés dans l'huile, ajoute les carottes en dés, les épices, le yaourt, et mélange 3 min.
+> Ajoute le riz, les petits pois, les raisins et 600 ml d'eau salée ; couvre et cuis 15 min à feu doux, puis 5 min hors du feu.
+> Sers avec les œufs coupés en deux et les amandes grillées à sec.
+
+## Curry d'œufs à la tomate
+id: curry-oeufs · portions: 2 · prep: 10 · cuisson: 20 · difficulte: facile · cuisine: indienne · proteine: oeuf · feculent: riz · restes: 2
+tags: epice
+ustensiles: sauteuse, casserole
+- 4 oeuf
+- 400 g tomate_concassee
+- 200 ml lait_coco
+- 1 oignon
+- 2 ail
+- 10 g gingembre
+- 6 g curry
+- 150 g riz
+- 10 g coriandre
+- 15 ml huile_neutre
+> Cuis les œufs 9 min, refroidis-les et écale-les. Mets le riz à cuire.
+> Fais revenir l'oignon, l'ail, le gingembre et le curry, ajoute tomates et lait de coco ; laisse réduire 10 min. Sale.
+> Ajoute les œufs entiers, laisse-les 3 min dans la sauce. Sers avec le riz et la coriandre.
+
+## Chana masala
+id: chana-masala · portions: 4 · prep: 10 · cuisson: 25 · difficulte: facile · cuisine: indienne · proteine: legumineuse · feculent: riz · restes: 3
+tags: batch, epice
+ustensiles: cocotte, casserole
+- 530 g pois_chiche
+- 400 g tomate_concassee
+- 2 oignon
+- 3 ail
+- 15 g gingembre
+- 6 g garam_masala
+- 2 g cumin
+- 1 g curcuma
+- 10 g coriandre
+- 0.5 citron
+- 300 g riz
+- 20 ml huile_neutre
+> Fais dorer les oignons hachés 8 min dans l'huile, ajoute l'ail, le gingembre et les épices 1 min.
+> Ajoute les tomates et laisse réduire 5 min, puis les pois chiches et 200 ml d'eau ; laisse mijoter 15 min en écrasant quelques pois chiches pour épaissir.
+> Sale, ajoute le jus de citron et la coriandre. Sers avec le riz.
+
+## Pad thaï aux crevettes
+id: pad-thai-crevettes · portions: 2 · prep: 10 · cuisson: 10 · difficulte: moyen · cuisine: thai · proteine: fruits_de_mer · feculent: nouilles · restes: 0
+ustensiles: saladier, wok ou grande poêle
+- 150 g nouilles_riz
+- 200 g crevette
+- 2 oeuf
+- 30 g cacahuete
+- 1 citron_vert
+- 20 ml nuoc_mam
+- 10 g sucre
+- 1 carotte
+- 0.5 oignon
+- 10 g coriandre
+- 20 ml huile_neutre
+> Fais tremper les nouilles dans l'eau chaude selon le paquet ; égoutte.
+> Sauce : nuoc-mâm, sucre, jus du citron vert.
+> Fais revenir oignon et carotte en julienne 2 min dans l'huile, brouille les œufs jusqu'à ce qu'ils soient pris, ajoute les crevettes (décongelées au réfrigérateur) 2 min, jusqu'à ce qu'elles soient bien chaudes.
+> Ajoute nouilles et sauce, mélange 2 min. Sers avec cacahuètes concassées et coriandre.
+
+## Curry vert de poulet
+id: curry-vert-poulet · portions: 2 · prep: 10 · cuisson: 20 · difficulte: facile · cuisine: thai · proteine: volaille · feculent: riz · restes: 3
+tags: epice
+ustensiles: sauteuse, casserole
+- 300 g poulet_filet
+- 30 g pate_curry
+- 400 ml lait_coco
+- 1 courgette
+- 100 g haricot_vert
+- 10 g basilic
+- 10 ml nuoc_mam
+- 5 g sucre
+- 150 g riz
+> Mets le riz à cuire. Fais chauffer 3 c. à soupe de lait de coco avec la pâte de curry 2 min.
+> Ajoute le poulet en lamelles et fais-le saisir, puis le reste du lait de coco, la courgette en dés et les haricots en tronçons.
+> Laisse mijoter 10 min : le poulet doit être cuit à cœur. Assaisonne avec le nuoc-mâm et le sucre, ajoute le basilic.
+
+## Porc au caramel
+id: porc-caramel · portions: 2 · prep: 10 · cuisson: 30 · difficulte: moyen · cuisine: vietnamienne · proteine: porc · feculent: riz · restes: 3
+ustensiles: sauteuse, casserole
+- 400 g porc_echine
+- 40 g sucre
+- 30 ml nuoc_mam
+- 1 oignon
+- 2 ail
+- 150 g riz
+- 200 g haricot_vert_surgele
+> Coupe le porc en cubes de 2 cm.
+> Fais fondre le sucre à sec jusqu'à un caramel blond. Hors du feu, ajoute 100 ml d'eau (attention aux projections), puis le nuoc-mâm.
+> Ajoute le porc, l'oignon émincé et l'ail, couvre et laisse mijoter 25 min, puis découvre pour faire réduire la sauce : le porc doit être cuit à cœur et laqué.
+> Sers avec le riz et les haricots verts cuits 8 min à l'eau.
+
+## Bo bun au bœuf
+id: bo-bun · portions: 2 · prep: 20 · cuisson: 10 · difficulte: moyen · cuisine: vietnamienne · proteine: boeuf · feculent: nouilles · restes: 0
+tags: salade
+ustensiles: casserole, poêle, saladiers
+- 150 g nouilles_riz
+- 250 g boeuf_emince
+- 0.5 salade
+- 2 carotte
+- 0.5 concombre
+- 30 g cacahuete
+- 10 g menthe
+- 10 g coriandre
+- 30 ml nuoc_mam
+- 1 citron_vert
+- 15 g sucre
+- 1 ail
+- 0.5 oignon
+> Sauce : nuoc-mâm, jus de citron vert, sucre, ail râpé et 4 c. à soupe d'eau.
+> Cuis les vermicelles selon le paquet, rince-les à l'eau froide.
+> Fais sauter le bœuf avec l'oignon 3 à 4 min à feu vif avec un peu de sauce.
+> Dans des bols : salade, vermicelles, carottes râpées, concombre en bâtonnets, herbes, bœuf chaud et cacahuètes. Arrose de sauce.
+
+## Rouleaux de printemps aux crevettes
+id: rouleaux-printemps · portions: 2 · prep: 25 · cuisson: 5 · difficulte: moyen · cuisine: vietnamienne · proteine: fruits_de_mer · feculent: nouilles · restes: 0
+tags: froid, leger
+ustensiles: casserole, assiette creuse
+- 8 galette_riz
+- 150 g crevette : cuites, décongelées au réfrigérateur la veille
+- 60 g nouilles_riz
+- 0.5 salade
+- 1 carotte
+- 10 g menthe
+- 10 g coriandre
+- 20 ml sauce_soja
+- 30 g beurre_cacahuete
+- 0.5 citron_vert
+> Cuis les vermicelles, rince-les à l'eau froide. Râpe la carotte.
+> Trempe une galette 5 secondes dans l'eau tiède, pose-la à plat. Garnis de salade, vermicelles, carotte, herbes et crevettes, plie les côtés et roule serré.
+> Sauce : beurre de cacahuète détendu avec la sauce soja, le citron vert et un peu d'eau chaude.
+
+## Bibimbap au bœuf
+id: bibimbap · portions: 2 · prep: 20 · cuisson: 15 · difficulte: moyen · cuisine: coreenne · proteine: boeuf · feculent: riz · restes: 1 · riz: melange
+ustensiles: casserole, poêle
+- 160 g riz
+- 150 g boeuf_hache
+- 2 oeuf
+- 1 carotte
+- 120 g champignon
+- 150 g epinard_surgele
+- 20 ml sauce_soja
+- 10 ml huile_sesame
+- 5 g graines_sesame
+- 1 g piment
+- 10 g miel
+> Cuis le riz. Sauce : sauce soja, miel, piment et la moitié de l'huile de sésame.
+> Fais sauter séparément la carotte en julienne, les champignons et les épinards, 3 min chacun, avec un filet d'huile.
+> Fais cuire la viande en l'émiettant jusqu'à ce qu'elle ne soit plus rosée, avec la moitié de la sauce. Fais cuire les œufs au plat (blanc pris).
+> Dans des bols : riz, légumes en petits tas, viande, œuf ; arrose du reste de sauce et parsème de sésame.
+
+## Ramen express au poulet
+id: ramen-poulet · portions: 2 · prep: 10 · cuisson: 15 · difficulte: facile · cuisine: japonaise · proteine: volaille · feculent: nouilles · restes: 1
+tags: soupe, reconfortant
+ustensiles: casserole
+- 160 g nouilles_ble
+- 200 g poulet_filet
+- 2 oeuf
+- 1 bouillon_cube
+- 30 ml sauce_soja
+- 20 g miso
+- 10 g gingembre
+- 1 ail
+- 100 g champignon
+- 10 g ciboulette
+- 5 ml huile_sesame
+> Porte 1 litre d'eau à ébullition avec le cube, le gingembre et l'ail râpés et la sauce soja.
+> Plonge les œufs 7 min dans une autre casserole, refroidis et écale-les.
+> Fais pocher le poulet en fines lamelles et les champignons 6 min dans le bouillon frémissant : le poulet doit être cuit à cœur. Ajoute les nouilles pour leur temps de cuisson.
+> Hors du feu, délaie le miso dans le bouillon. Sers avec les œufs coupés en deux, la ciboulette et un filet d'huile de sésame.
+
+## Saumon teriyaki, riz et brocoli
+id: saumon-teriyaki · portions: 2 · prep: 10 · cuisson: 15 · difficulte: facile · cuisine: japonaise · proteine: poisson · feculent: riz · restes: 1
+ustensiles: poêle, casserole
+- 2 saumon
+- 30 ml sauce_soja
+- 20 g miel
+- 5 g gingembre
+- 1 ail
+- 150 g riz
+- 1 brocoli
+- 5 g graines_sesame
+> Mets le riz à cuire ; cuis le brocoli en bouquets 5 min à la vapeur ou à l'eau.
+> Mélange sauce soja, miel, gingembre et ail râpés.
+> Fais cuire le saumon 4 min côté peau, retourne-le, verse la sauce et laisse caraméliser 2 à 3 min en l'arrosant : la chair doit être opaque.
+> Sers avec le riz, le brocoli et le sésame.
+
+## Bowl de riz au thon et concombre
+id: bowl-thon-concombre · portions: 2 · prep: 15 · cuisson: 15 · difficulte: facile · cuisine: japonaise · proteine: poisson · feculent: riz · restes: 1 · riz: melange
+tags: froid, transportable
+ustensiles: casserole, saladier
+- 150 g riz
+- 140 g thon
+- 1 concombre
+- 1 carotte
+- 80 g mais
+- 20 ml sauce_soja
+- 5 ml huile_sesame
+- 5 g graines_sesame
+- 0.5 citron_vert
+> Cuis le riz et laisse-le tiédir.
+> Coupe le concombre en dés, râpe la carotte.
+> Sauce : sauce soja, huile de sésame, jus de citron vert.
+> Dans des bols : riz, thon émietté, légumes, maïs ; arrose de sauce et parsème de sésame.
+
+## Tofu sauté aux brocolis, sauce cacahuète
+id: tofu-brocoli-cacahuete · portions: 2 · prep: 10 · cuisson: 15 · difficulte: facile · cuisine: thai · proteine: tofu · feculent: riz · restes: 2
+ustensiles: poêle, casserole
+- 250 g tofu
+- 1 brocoli
+- 40 g beurre_cacahuete
+- 30 ml sauce_soja
+- 0.5 citron_vert
+- 1 ail
+- 10 g gingembre
+- 150 g riz
+- 15 ml huile_neutre
+> Mets le riz à cuire. Coupe le tofu en cubes, sèche-le et fais-le dorer 8 min dans l'huile.
+> Ajoute le brocoli en petits bouquets, l'ail et le gingembre, et 3 c. à soupe d'eau ; couvre 4 min.
+> Sauce : beurre de cacahuète, sauce soja, citron vert et un peu d'eau chaude. Verse sur le tofu, mélange et sers avec le riz.
+
+## Poulet à la courge et au lait de coco
+id: poulet-courge-coco · portions: 4 · prep: 15 · cuisson: 30 · difficulte: facile · cuisine: thai · proteine: volaille · feculent: riz · restes: 3
+tags: batch, epice
+ustensiles: cocotte, casserole
+- 500 g poulet_filet
+- 0.5 courge
+- 400 ml lait_coco
+- 8 g curry
+- 1 oignon
+- 10 g gingembre
+- 300 g riz
+- 10 g coriandre
+- 15 ml huile_neutre
+> Fais revenir l'oignon, le gingembre et le curry dans l'huile, ajoute le poulet en cubes et fais-le saisir 3 min.
+> Ajoute la courge en cubes et le lait de coco ; laisse mijoter 20 min : la courge doit être fondante et le poulet cuit à cœur. Sale.
+> Sers avec le riz et la coriandre.
+
+## Soupe thaïe au lait de coco et poulet
+id: soupe-coco-poulet · portions: 2 · prep: 10 · cuisson: 15 · difficulte: facile · cuisine: thai · proteine: volaille · feculent: nouilles · restes: 2
+tags: soupe, epice
+ustensiles: casserole
+- 200 g poulet_filet
+- 400 ml lait_coco
+- 150 g champignon
+- 1 citron_vert
+- 15 g gingembre
+- 15 ml nuoc_mam
+- 10 g coriandre
+- 1 bouillon_cube
+- 10 g pate_curry
+- 80 g nouilles_riz
+> Porte à frémissement 400 ml d'eau avec le cube, le gingembre en lamelles et la pâte de curry.
+> Ajoute le lait de coco, le poulet en fines lamelles et les champignons ; laisse frémir 8 min, jusqu'à ce que le poulet soit cuit à cœur.
+> Ajoute les nouilles pour leur temps de cuisson. Assaisonne de nuoc-mâm et de jus de citron vert, parsème de coriandre.
+
+## Okonomiyaki au chou
+id: okonomiyaki · portions: 2 · prep: 15 · cuisson: 15 · difficulte: facile · cuisine: japonaise · proteine: oeuf · feculent: pate · restes: 0
+ustensiles: poêle, saladier
+- 0.25 chou_vert : environ 300 g
+- 100 g farine
+- 3 oeuf
+- 1 carotte
+- 30 g mayonnaise
+- 15 ml sauce_soja
+- 15 ml huile_neutre
+> Émince très finement le chou, râpe la carotte.
+> Mélange la farine, les œufs et 100 ml d'eau, puis les légumes, sel et poivre.
+> Fais cuire deux grosses galettes 5 min par face à feu moyen, à couvert, jusqu'à ce qu'elles soient dorées et cuites au centre.
+> Sers avec un filet de mayonnaise et de sauce soja.
+
+## Gyudon (bol de riz au bœuf)
+id: gyudon · portions: 2 · prep: 10 · cuisson: 15 · difficulte: facile · cuisine: japonaise · proteine: boeuf · feculent: riz · restes: 1 · riz: melange
+ustensiles: casserole, poêle
+- 250 g boeuf_emince
+- 1 oignon
+- 40 ml sauce_soja
+- 10 g sucre
+- 5 g gingembre
+- 160 g riz
+- 0.5 concombre
+> Cuis le riz.
+> Fais fondre l'oignon émincé 4 min dans 100 ml d'eau avec la sauce soja, le sucre et le gingembre.
+> Ajoute le bœuf et cuis 3 min en remuant. Sers sur le riz, avec le concombre en fines rondelles.
+
+## Poulet satay et salade de concombre
+id: poulet-satay · portions: 2 · prep: 15 · cuisson: 15 · difficulte: facile · cuisine: thai · proteine: volaille · feculent: riz · restes: 2
+ustensiles: poêle, casserole, saladier
+- 300 g poulet_filet
+- 50 g beurre_cacahuete
+- 100 ml lait_coco
+- 20 ml sauce_soja
+- 3 g curry
+- 1 citron_vert
+- 1 concombre
+- 150 g riz
+- 10 ml huile_neutre
+> Mets le riz à cuire. Coupe le poulet en lanières, saupoudre de curry et fais-le dorer 6 à 8 min dans l'huile, jusqu'à ce qu'il soit cuit à cœur.
+> Sauce : chauffe le lait de coco avec le beurre de cacahuète, la sauce soja et la moitié du citron vert.
+> Salade : concombre en fines rondelles, jus du reste du citron vert, une pincée de sel. Sers le poulet nappé de sauce, avec le riz et la salade.
+
+## Yakisoba au porc et au chou
+id: yakisoba · portions: 2 · prep: 10 · cuisson: 10 · difficulte: facile · cuisine: japonaise · proteine: porc · feculent: nouilles · restes: 1
+ustensiles: casserole, wok ou grande poêle
+- 200 g nouilles_ble
+- 200 g porc_echine
+- 0.25 chou_vert
+- 1 carotte
+- 1 oignon
+- 30 ml sauce_soja
+- 15 ml sauce_huitre
+- 15 ml huile_neutre
+> Cuis les nouilles selon le paquet, rince-les.
+> Fais sauter le porc en fines lanières 4 min à feu vif dans l'huile, jusqu'à ce qu'il soit cuit à cœur.
+> Ajoute l'oignon, la carotte en julienne et le chou émincé, 4 min, puis les nouilles et les sauces ; mélange 2 min.
+
+## Phở au bœuf (version rapide)
+id: pho-boeuf · portions: 2 · prep: 15 · cuisson: 20 · difficulte: moyen · cuisine: vietnamienne · proteine: boeuf · feculent: nouilles · restes: 1
+tags: soupe
+ustensiles: casserole, poêle
+- 150 g nouilles_riz
+- 200 g boeuf_emince
+- 2 bouillon_cube
+- 1 g cannelle
+- 20 g gingembre
+- 1 oignon
+- 20 ml nuoc_mam
+- 1 citron_vert
+- 10 g coriandre
+- 10 g menthe
+- 0.5 g piment
+> Fais noircir l'oignon coupé en deux et le gingembre en tranches 5 min dans une poêle sèche.
+> Mets-les dans 1,2 litre d'eau avec les cubes et la cannelle ; laisse frémir 15 min, puis assaisonne de nuoc-mâm.
+> Cuis les nouilles à part et répartis-les dans les bols.
+> Plonge le bœuf en tranches très fines 1 min dans le bouillon frémissant, jusqu'à ce qu'il ne soit plus rosé, puis verse bouillon et bœuf sur les nouilles. Sers avec herbes, citron vert et piment.
+
+## Riz sauté au chou et à l'œuf (kimchi doux)
+id: riz-saute-chou · portions: 2 · prep: 10 · cuisson: 10 · difficulte: facile · cuisine: coreenne · proteine: oeuf · feculent: riz · restes: 1 · riz: melange
+tags: epice
+ustensiles: wok ou grande poêle
+- 140 g riz : déjà cuit et refroidi (environ 400 g cuit), gardé au frigo depuis moins de 24 h
+- 0.2 chou_vert
+- 1 carotte
+- 3 oeuf
+- 20 ml sauce_soja
+- 1 g piment
+- 10 ml vinaigre
+- 15 ml huile_neutre
+> Émince le chou, mélange-le avec le vinaigre, le piment et une pincée de sel, laisse 5 min.
+> Fais sauter le chou et la carotte râpée 3 min dans l'huile, ajoute le riz froid et fais-le sauter 4 min jusqu'à ce qu'il soit brûlant.
+> Assaisonne de sauce soja. Fais cuire les œufs au plat et pose-les sur le riz.

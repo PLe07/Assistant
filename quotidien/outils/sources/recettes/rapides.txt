@@ -1,0 +1,466 @@
+# Plats rapides (20 minutes ou moins pour la plupart), pour les soirs chargés. Recettes originales.
+
+## Quesadillas fromage et haricots rouges
+id: quesadillas · portions: 2 · prep: 5 · cuisson: 10 · difficulte: facile · cuisine: mexicaine · proteine: legumineuse · feculent: tortilla · restes: 0
+ustensiles: poêle, saladier
+- 4 tortilla
+- 250 g haricot_rouge
+- 100 g fromage_rape
+- 100 g mais
+- 1 g cumin
+- 0.5 salade
+> Écrase grossièrement les haricots rincés avec le cumin, sel et poivre ; ajoute le maïs égoutté.
+> Étale sur deux tortillas, couvre de fromage et des deux autres tortillas.
+> Fais dorer 3 min par face dans une poêle sèche, jusqu'à ce que le fromage fonde. Coupe en parts et sers avec la salade.
+
+## Wraps au poulet et crudités
+id: wraps-poulet · portions: 2 · prep: 10 · cuisson: 8 · difficulte: facile · cuisine: americaine · proteine: volaille · feculent: tortilla · restes: 1
+tags: transportable
+ustensiles: poêle, râpe
+- 4 tortilla
+- 250 g poulet_filet
+- 1 carotte
+- 0.5 salade
+- 80 g yaourt_grec
+- 0.5 citron
+- 1 g paprika
+- 10 ml huile_neutre
+> Coupe le poulet en lanières, saupoudre de paprika et fais-le cuire 6 à 8 min dans l'huile, jusqu'à ce qu'il soit cuit à cœur.
+> Mélange le yaourt avec le jus de citron, sel et poivre. Râpe la carotte, émince la salade.
+> Garnis les tortillas de sauce, de crudités et de poulet, puis roule-les serré.
+
+## Wraps houmous, crudités et feta
+id: wraps-houmous · portions: 2 · prep: 10 · cuisson: 0 · difficulte: facile · cuisine: libanaise · proteine: fromage · feculent: tortilla · restes: 1
+tags: transportable, froid
+ustensiles: râpe
+- 4 tortilla
+- 120 g houmous
+- 2 carotte
+- 0.5 concombre
+- 0.5 salade
+- 60 g feta
+> Râpe les carottes, coupe le concombre en bâtonnets, émince la salade.
+> Tartine les tortillas de houmous, garnis de crudités et de feta émiettée, roule-les serré.
+
+## Omelette aux fines herbes et salade
+id: omelette-fines-herbes · portions: 2 · prep: 5 · cuisson: 5 · difficulte: facile · cuisine: francaise · proteine: oeuf · feculent: pain · restes: 0
+tags: leger
+ustensiles: poêle, saladier
+- 5 oeuf
+- 10 g ciboulette
+- 10 g persil
+- 10 g beurre
+- 0.5 salade
+- 0.5 pain
+> Bats les œufs avec les herbes ciselées, sel et poivre.
+> Fais mousser le beurre, verse les œufs et remue 1 min, puis laisse prendre 2 min : le centre doit rester moelleux.
+> Plie l'omelette et sers avec la salade et le pain.
+
+## Œufs au plat sur épinards à la crème
+id: oeufs-epinards-creme · portions: 2 · prep: 5 · cuisson: 12 · difficulte: facile · cuisine: francaise · proteine: oeuf · feculent: pain · restes: 0
+ustensiles: poêle avec couvercle
+- 4 oeuf
+- 400 g epinard_surgele
+- 50 ml creme
+- 1 ail
+- 0.3 g muscade
+- 0.5 pain
+> Fais décongeler les épinards 6 min à la poêle avec l'ail, laisse évaporer l'eau, ajoute la crème, la muscade, sel et poivre.
+> Creuse 4 puits dans les épinards, casse un œuf dans chacun, couvre et laisse cuire 4 à 5 min, jusqu'à ce que les blancs soient pris.
+> Sers avec le pain grillé.
+
+## Chakchouka
+id: chakchouka · portions: 2 · prep: 8 · cuisson: 12 · difficulte: facile · cuisine: tunisienne · proteine: oeuf · feculent: pain · restes: 0
+tags: epice
+ustensiles: poêle avec couvercle
+- 4 oeuf
+- 2 poivron
+- 400 g tomate_concassee
+- 1 oignon
+- 2 ail
+- 1 g cumin
+- 1 g paprika
+- 20 ml huile_olive
+- 0.5 pain
+> Fais revenir l'oignon et les poivrons en lanières 5 min dans l'huile, ajoute l'ail, les épices, les tomates, sel ; laisse mijoter 5 min.
+> Creuse 4 puits, casse les œufs dedans, couvre et cuis 5 min, jusqu'à ce que les blancs soient pris. Sers avec le pain.
+
+## Nouilles sautées aux légumes et à l'œuf
+id: nouilles-sautees-legumes · portions: 2 · prep: 10 · cuisson: 10 · difficulte: facile · cuisine: chinoise · proteine: oeuf · feculent: nouilles · restes: 1
+ustensiles: casserole, wok ou grande poêle
+- 200 g nouilles_ble
+- 2 carotte
+- 150 g champignon
+- 1 oignon
+- 2 oeuf
+- 30 ml sauce_soja
+- 10 g gingembre
+- 15 ml huile_neutre
+> Cuis les nouilles selon le paquet, rince-les à l'eau froide.
+> Fais sauter à feu vif dans l'huile l'oignon, les carottes en bâtonnets fins et les champignons, 4 min, avec le gingembre râpé.
+> Pousse les légumes sur le côté, brouille les œufs dans la poêle jusqu'à ce qu'ils soient pris, puis ajoute les nouilles et la sauce soja. Mélange 2 min.
+
+## Riz cantonais express
+id: riz-cantonais · portions: 2 · prep: 10 · cuisson: 10 · difficulte: facile · cuisine: chinoise · proteine: oeuf · feculent: riz · restes: 1 · riz: melange
+ustensiles: wok ou grande poêle
+- 140 g riz : déjà cuit et refroidi (environ 400 g cuit), gardé au frigo depuis moins de 24 h
+- 2 oeuf
+- 2 jambon
+- 100 g petit_pois
+- 0.5 oignon
+- 20 ml sauce_soja
+- 15 ml huile_neutre
+> Fais revenir l'oignon haché dans l'huile, ajoute les petits pois et le jambon en dés, 3 min.
+> Ajoute les œufs battus et remue jusqu'à ce qu'ils soient pris.
+> Ajoute le riz froid, égrène-le et fais-le sauter 4 à 5 min jusqu'à ce qu'il soit bien chaud partout. Assaisonne de sauce soja.
+
+## Pâtes aux épinards et au fromage frais
+id: pates-epinards-fromage-frais · portions: 2 · prep: 5 · cuisson: 12 · difficulte: facile · cuisine: francaise · proteine: fromage · feculent: pates · restes: 1
+ustensiles: casserole, poêle
+- 180 g pates
+- 200 g epinard
+- 100 g fromage_frais
+- 1 ail
+- 0.3 g muscade
+> Cuis les pâtes. Fais tomber les épinards 2 min à la poêle avec l'ail.
+> Ajoute le fromage frais, un peu d'eau de cuisson, la muscade, sel et poivre, puis les pâtes.
+
+## Salade de pois chiches, concombre et feta
+id: salade-pois-chiches-feta · portions: 2 · prep: 10 · cuisson: 0 · difficulte: facile · cuisine: grecque · proteine: legumineuse · feculent: pain · restes: 1
+tags: salade, froid, transportable, leger
+ustensiles: saladier
+- 265 g pois_chiche
+- 1 concombre
+- 2 tomate
+- 0.5 oignon_rouge
+- 100 g feta
+- 10 g persil
+- 1 citron
+- 30 ml huile_olive
+- 0.5 pain
+> Rince et égoutte les pois chiches. Coupe le concombre et les tomates en dés, l'oignon en fines lamelles.
+> Mélange tout avec la feta en dés, le persil, le jus du citron, l'huile, sel et poivre. Sers avec le pain.
+
+## Salade mexicaine haricots rouges et maïs
+id: salade-mexicaine · portions: 2 · prep: 10 · cuisson: 0 · difficulte: facile · cuisine: mexicaine · proteine: legumineuse · feculent: tortilla · restes: 2
+tags: salade, froid, transportable
+ustensiles: saladier
+- 250 g haricot_rouge
+- 140 g mais
+- 1 poivron
+- 1 tomate
+- 0.5 oignon_rouge
+- 1 citron_vert
+- 10 g coriandre
+- 20 ml huile_olive
+- 1 g cumin
+- 2 tortilla : grillées en triangles
+> Rince les haricots, égoutte le maïs. Coupe poivron et tomate en dés, l'oignon finement.
+> Mélange avec le jus de citron vert, l'huile, le cumin, la coriandre, sel et poivre.
+> Sers avec les tortillas passées 2 min à la poêle sèche.
+
+## Couscous express aux légumes et pois chiches
+id: couscous-express · portions: 2 · prep: 10 · cuisson: 10 · difficulte: facile · cuisine: marocaine · proteine: legumineuse · feculent: semoule · restes: 2
+tags: epice
+ustensiles: sauteuse, saladier
+- 140 g semoule
+- 265 g pois_chiche
+- 1 courgette
+- 1 carotte
+- 1 oignon
+- 3 g ras_el_hanout
+- 1 bouillon_cube
+- 20 ml huile_olive
+- 20 g raisin_sec
+> Fais revenir l'oignon, la carotte et la courgette en petits dés 5 min dans l'huile avec le ras el-hanout.
+> Ajoute les pois chiches, les raisins, le cube et 250 ml d'eau ; laisse frémir 5 min.
+> Verse 150 ml de ce bouillon bouillant sur la semoule, couvre 5 min puis égraine à la fourchette. Sers avec les légumes.
+
+## Croque tomate-mozzarella
+id: croque-tomate-mozza · portions: 2 · prep: 5 · cuisson: 8 · difficulte: facile · cuisine: italienne · proteine: fromage · feculent: pain · restes: 0
+ustensiles: poêle
+- 4 pain_mie
+- 1 tomate
+- 1 mozzarella
+- 5 g basilic
+- 15 g beurre
+- 0.5 salade
+> Garnis deux tranches de pain de mie de tomate et de mozzarella en tranches, de basilic, sel et poivre ; referme.
+> Beurre l'extérieur et fais dorer 3 min par face à la poêle en appuyant. Sers avec la salade.
+
+## Soupe miso aux nouilles et au tofu
+id: soupe-miso-tofu · portions: 2 · prep: 5 · cuisson: 10 · difficulte: facile · cuisine: japonaise · proteine: tofu · feculent: nouilles · restes: 1
+tags: soupe, leger
+ustensiles: casserole
+- 40 g miso
+- 200 g tofu
+- 100 g nouilles_ble
+- 100 g champignon
+- 1 carotte
+- 10 g ciboulette
+> Porte 900 ml d'eau à frémissement avec la carotte en fins bâtonnets et les champignons émincés ; cuis 4 min.
+> Ajoute les nouilles et le tofu en dés, cuis le temps indiqué sur le paquet.
+> Hors du feu, délaie le miso dans une louche de bouillon et remets-le dans la casserole (il ne doit pas bouillir). Parsème de ciboulette.
+
+## Pad thaï au tofu
+id: pad-thai-tofu · portions: 2 · prep: 10 · cuisson: 10 · difficulte: moyen · cuisine: thai · proteine: tofu · feculent: nouilles · restes: 1
+ustensiles: saladier, wok ou grande poêle
+- 150 g nouilles_riz
+- 200 g tofu
+- 2 oeuf
+- 30 g cacahuete
+- 1 citron_vert
+- 30 ml sauce_soja
+- 10 g sucre
+- 1 carotte
+- 0.5 oignon
+- 10 g coriandre
+- 20 ml huile_neutre
+> Fais tremper les nouilles dans l'eau chaude selon le paquet ; égoutte-les.
+> Sauce : sauce soja, sucre et jus du citron vert.
+> Fais dorer le tofu en dés dans l'huile, ajoute oignon et carotte en julienne 2 min, puis brouille les œufs jusqu'à ce qu'ils soient pris.
+> Ajoute les nouilles et la sauce, mélange 2 min. Sers avec les cacahuètes concassées et la coriandre.
+
+## Fajitas de poulet
+id: fajitas-poulet · portions: 2 · prep: 10 · cuisson: 10 · difficulte: facile · cuisine: mexicaine · proteine: volaille · feculent: tortilla · restes: 1
+tags: epice
+ustensiles: grande poêle
+- 300 g poulet_filet
+- 2 poivron
+- 1 oignon
+- 4 tortilla
+- 2 g paprika
+- 1 g cumin
+- 1 citron_vert
+- 80 g yaourt_grec
+- 15 ml huile_neutre
+> Coupe poulet, poivrons et oignon en lanières. Saupoudre le poulet des épices.
+> Fais sauter le poulet 5 min dans l'huile à feu vif, ajoute les légumes et poursuis 5 min : le poulet doit être cuit à cœur et les légumes encore croquants.
+> Arrose de citron vert et sers dans les tortillas chaudes avec le yaourt.
+
+## Huevos rancheros
+id: huevos-rancheros · portions: 2 · prep: 5 · cuisson: 15 · difficulte: facile · cuisine: mexicaine · proteine: oeuf · feculent: tortilla · restes: 0
+tags: epice
+ustensiles: poêle avec couvercle, casserole
+- 4 oeuf
+- 2 tortilla
+- 250 g haricot_rouge
+- 400 g tomate_concassee
+- 1 oignon
+- 1 g cumin
+- 0.5 g piment
+- 10 g coriandre
+> Fais revenir l'oignon, ajoute tomates, cumin, piment, sel ; laisse réduire 6 min.
+> Casse les œufs dans la sauce, couvre 5 min jusqu'à ce que les blancs soient pris. Réchauffe les haricots à part.
+> Sers sur les tortillas chaudes avec les haricots et la coriandre.
+
+## Tartines au thon fondant
+id: tuna-melt · portions: 2 · prep: 5 · cuisson: 8 · difficulte: facile · cuisine: americaine · proteine: poisson · feculent: pain · restes: 0
+tags: airfryer_possible
+ustensiles: four, saladier
+- 4 pain_mie
+- 140 g thon
+- 30 g mayonnaise
+- 60 g fromage_rape
+- 0.25 oignon_rouge
+- 0.5 salade
+> Préchauffe le four en position gril. Mélange le thon, la mayonnaise et l'oignon haché, poivre.
+> Étale sur le pain de mie, couvre de fromage et fais gratiner 6 à 8 min. Sers avec la salade.
+
+## Salade César au poulet
+id: salade-cesar · portions: 2 · prep: 15 · cuisson: 10 · difficulte: facile · cuisine: americaine · proteine: volaille · feculent: pain · restes: 0
+tags: salade
+ustensiles: poêle, saladier
+- 1 salade : une romaine si possible
+- 250 g poulet_filet
+- 0.5 pain : en croûtons
+- 30 g parmesan
+- 40 g mayonnaise
+- 0.5 citron
+- 1 ail
+- 15 ml huile_olive
+> Fais cuire le poulet 5 min par face dans l'huile (cuit à cœur), puis coupe-le en lamelles. Fais dorer les croûtons 2 min dans la même poêle.
+> Sauce : mayonnaise, jus de citron, ail râpé, la moitié du parmesan, poivre.
+> Mélange la salade avec la sauce, ajoute poulet, croûtons et copeaux de parmesan.
+
+## Pâtes au chorizo et aux poivrons
+id: pates-chorizo-poivrons · portions: 2 · prep: 5 · cuisson: 15 · difficulte: facile · cuisine: espagnole · proteine: porc · feculent: pates · restes: 1
+tags: epice
+ustensiles: casserole, sauteuse
+- 180 g pates
+- 80 g chorizo
+- 1 poivron
+- 200 g tomate_concassee
+- 0.5 oignon
+> Cuis les pâtes. Fais revenir le chorizo en dés et l'oignon 3 min, ajoute le poivron en lanières 4 min puis les tomates 5 min.
+> Mélange avec les pâtes.
+
+## Œufs brouillés à l'indienne
+id: oeufs-bhurji · portions: 2 · prep: 10 · cuisson: 8 · difficulte: facile · cuisine: indienne · proteine: oeuf · feculent: pain · restes: 0
+tags: epice
+ustensiles: poêle
+- 5 oeuf
+- 1 oignon
+- 1 tomate
+- 1 g curcuma
+- 1 g cumin
+- 0.5 g piment
+- 10 g coriandre
+- 15 g beurre
+- 2 pain_pita
+> Fais revenir l'oignon haché dans le beurre 3 min, ajoute la tomate en dés et les épices, 2 min.
+> Verse les œufs battus et remue jusqu'à ce qu'ils soient pris. Ajoute la coriandre et sers avec les pitas chaudes.
+
+## Gnocchi aux champignons et aux épinards
+id: gnocchi-champignons-epinards · portions: 2 · prep: 5 · cuisson: 15 · difficulte: facile · cuisine: italienne · proteine: fromage · feculent: pates · restes: 1
+ustensiles: poêle
+- 400 g gnocchi
+- 200 g champignon
+- 100 g epinard
+- 100 ml creme
+- 1 ail
+- 30 g fromage_rape
+- 10 ml huile_olive
+> Fais dorer les gnocchi 6 min dans l'huile, ajoute les champignons émincés et l'ail, 4 min.
+> Ajoute les épinards et la crème ; laisse tomber les épinards 2 min. Sale, poivre et parsème de fromage.
+
+## Burger maison et salade
+id: burger-maison · portions: 2 · prep: 10 · cuisson: 10 · difficulte: facile · cuisine: americaine · proteine: boeuf · feculent: pain · restes: 0
+ustensiles: poêle
+- 250 g boeuf_hache : 2 steaks
+- 2 pain_burger
+- 1 tomate
+- 0.5 salade
+- 0.5 oignon_rouge
+- 40 g fromage_rape
+- 20 g mayonnaise
+> Fais cuire les steaks 3 à 4 min par face, jusqu'à ce qu'ils ne soient plus rosés au centre ; pose le fromage dessus la dernière minute.
+> Toaste les pains coupés. Garnis de mayonnaise, salade, steak, tomate et oignon.
+> Sers avec le reste de la salade.
+
+## Salade de riz au thon
+id: salade-riz-thon · portions: 2 · prep: 8 · cuisson: 12 · difficulte: facile · cuisine: francaise · proteine: poisson · feculent: riz · restes: 1 · riz: melange
+tags: salade, froid, transportable
+ustensiles: casserole, saladier
+- 140 g riz
+- 140 g thon
+- 2 tomate
+- 100 g mais
+- 2 oeuf
+- 30 g olive
+- 30 ml huile_olive
+- 10 ml vinaigre
+> Cuis le riz et les œufs (9 min, durs) ; refroidis-les vite sous l'eau froide.
+> Mélange le riz avec les tomates en dés, le maïs, le thon, les olives et les œufs en quartiers.
+> Assaisonne d'huile, de vinaigre, sel et poivre. Garde au frais.
+
+## Velouté express de petits pois à la menthe
+id: veloute-petits-pois · portions: 2 · prep: 5 · cuisson: 12 · difficulte: facile · cuisine: anglaise · proteine: legumineuse · feculent: pain · restes: 2
+tags: soupe, leger
+ustensiles: casserole, mixeur plongeant ou presse-purée
+- 400 g petit_pois
+- 0.5 oignon
+- 1 bouillon_cube
+- 5 g menthe
+- 50 ml creme
+- 0.5 pain
+> Fais fondre l'oignon 2 min, ajoute les petits pois, le cube et 500 ml d'eau ; cuis 8 min.
+> Mixe avec la menthe et la crème, sale et poivre. Sers avec le pain.
+
+## Tartines aux champignons à l'ail
+id: tartines-champignons · portions: 2 · prep: 5 · cuisson: 10 · difficulte: facile · cuisine: francaise · proteine: fromage · feculent: pain · restes: 0
+ustensiles: poêle
+- 1 pain
+- 300 g champignon
+- 2 ail
+- 10 g persil
+- 15 g beurre
+- 80 g fromage_frais
+- 0.5 salade
+> Fais dorer les champignons émincés 6 min dans le beurre, ajoute l'ail et le persil hachés, sel, poivre.
+> Fais griller le pain, tartine-le de fromage frais et couvre de champignons. Sers avec la salade.
+
+## Wok de crevettes aux légumes
+id: wok-crevettes · portions: 2 · prep: 5 · cuisson: 12 · difficulte: facile · cuisine: chinoise · proteine: fruits_de_mer · feculent: nouilles · restes: 0
+ustensiles: saladier, wok ou grande poêle
+- 200 g crevette
+- 120 g nouilles_riz
+- 300 g poelee_surgelee
+- 30 ml sauce_soja
+- 1 ail
+- 10 g gingembre
+- 0.5 citron_vert
+- 15 ml huile_neutre
+> Fais tremper les nouilles selon le paquet.
+> Fais sauter les légumes surgelés 6 min à feu vif dans l'huile avec l'ail et le gingembre.
+> Ajoute les crevettes (décongelées au réfrigérateur), les nouilles et la sauce soja ; mélange 3 min, jusqu'à ce que tout soit bien chaud. Arrose de citron vert.
+
+## Bowl de quinoa, pois chiches et chou rouge
+id: bowl-quinoa-pois-chiches · portions: 2 · prep: 8 · cuisson: 12 · difficulte: facile · cuisine: libanaise · proteine: legumineuse · feculent: quinoa · restes: 2
+tags: transportable, leger
+ustensiles: casserole, saladier, râpe
+- 120 g quinoa
+- 265 g pois_chiche
+- 2 carotte
+- 0.15 chou_rouge : environ 150 g
+- 30 g tahini
+- 0.5 citron
+- 1 g cumin
+> Rince le quinoa et cuis-le 12 min dans deux fois son volume d'eau salée.
+> Râpe les carottes, émince très finement le chou rouge.
+> Sauce : tahini, jus de citron, cumin, sel et 3 c. à soupe d'eau.
+> Dresse quinoa, pois chiches rincés, légumes, et arrose de sauce.
+
+## Pain perdu salé au jambon et fromage
+id: pain-perdu-sale · portions: 2 · prep: 5 · cuisson: 10 · difficulte: facile · cuisine: francaise · proteine: oeuf · feculent: pain · restes: 0
+tags: sucre_sale
+ustensiles: poêle, assiette creuse
+- 0.5 pain : rassis
+- 2 oeuf
+- 100 ml lait
+- 2 jambon
+- 50 g fromage_rape
+- 10 g beurre
+- 0.5 salade
+> Bats les œufs avec le lait, sel et poivre. Trempe les tranches de pain rassis des deux côtés.
+> Fais-les dorer 3 min par face dans le beurre ; ajoute jambon et fromage sur le dessus, couvre 1 min pour faire fondre.
+> Sers avec la salade.
+
+## Croque-madame
+id: croque-madame · portions: 2 · prep: 5 · cuisson: 10 · difficulte: facile · cuisine: francaise · proteine: oeuf · feculent: pain · restes: 0
+tags: reconfortant
+ustensiles: poêle
+- 4 pain_mie
+- 2 jambon
+- 60 g fromage_rape
+- 2 oeuf
+- 15 g beurre
+- 0.5 salade
+> Prépare deux croque-monsieur (pain, jambon, fromage), beurrés à l'extérieur, et dore-les 3 min par face.
+> Fais cuire les œufs au plat jusqu'à ce que le blanc soit pris, et pose-en un sur chaque croque. Sers avec la salade.
+
+## Tortilla roulée aux œufs, épinards et fromage frais
+id: wrap-oeufs-epinards · portions: 2 · prep: 5 · cuisson: 8 · difficulte: facile · cuisine: americaine · proteine: oeuf · feculent: tortilla · restes: 0
+ustensiles: poêle
+- 4 oeuf
+- 100 g epinard
+- 2 tortilla
+- 60 g fromage_frais
+- 5 g ciboulette
+> Fais tomber les épinards 1 min à la poêle, ajoute les œufs battus et brouille-les jusqu'à ce qu'ils soient pris.
+> Tartine les tortillas de fromage frais, garnis d'œufs aux épinards et de ciboulette, roule.
+
+## Salade de lentilles corail, carotte et cumin
+id: salade-lentilles-corail · portions: 2 · prep: 8 · cuisson: 10 · difficulte: facile · cuisine: turque · proteine: legumineuse · feculent: legumineuse · restes: 2
+tags: salade, transportable, leger
+ustensiles: casserole, saladier, râpe
+- 150 g lentille_corail
+- 2 carotte
+- 0.5 oignon_rouge
+- 10 g persil
+- 1 citron
+- 1 g cumin
+- 30 ml huile_olive
+- 0.5 pain
+> Cuis les lentilles corail 8 à 10 min dans l'eau salée : elles doivent rester un peu fermes. Égoutte et rince à l'eau froide.
+> Mélange avec les carottes râpées, l'oignon émincé, le persil, le jus de citron, le cumin et l'huile. Sers avec le pain.

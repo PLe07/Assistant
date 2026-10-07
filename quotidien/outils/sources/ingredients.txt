@@ -1,0 +1,194 @@
+# Table des ingrédients de Quotidien (source ; `outils/construire_recettes.py` en tire quotidien/repas/*.json).
+#
+# id | nom | pluriel | rayon | unité | formats vendus | allergènes | catégorie | saison | jours | options | synonymes
+#
+# - unité de base des recettes : g, ml ou p (pièce) ; `p=120g` donne le poids d'une pièce (conversions).
+# - formats : quantité (en unité de base) @ prix en euros [= libellé], séparés par des virgules ; `vrac` : au poids.
+# - allergènes : parmi les 14 réglementaires ; « selon les marques » compte comme présent (prudence).
+# - saison : mois de saison en France (calendriers ADEME / Interfel) ; `-` : pas un fruit ou légume ;
+#   `imp` : importé (jamais de saison en France) ; l'option `sans_saison` (aromates, alliacées, agrumes en filet)
+#   l'exclut du calcul des « produits de saison » (on en met trop peu pour qu'il compte).
+# - jours : combien de temps il se garde une fois acheté (frigo pour le frais, placard pour le reste).
+# - options : placard (dans le placard de base), congeler (viande ou poisson frais, à congeler en rentrant s'il sert
+#   plus tard), hache (viande hachée), trempage=12 (légumineuse sèche, heures de trempage), non_vege (contient un
+#   produit animal caché : présure, poisson…), animal (produit animal non carné : pas vegan).
+#
+# Prix : relevés indicatifs d'enseigne de supermarché en France, marques distributeur, automne 2026.
+
+# --- Légumes ---------------------------------------------------------------------------------------------------------
+tomate | tomate | tomates | fruits_legumes | p | 1p@0.45, 6p@2.40=barquette de 6 | - | legume | 6-9 | 6 | p=120g | tomates grappe, tomates rondes, tomate ronde
+tomate_cerise | tomate cerise | tomates cerises | fruits_legumes | g | 250g@1.79=barquette de 250 g | - | legume | 6-9 | 6 | | cerises tomates, tomates-cerises
+courgette | courgette | courgettes | fruits_legumes | p | 1p@0.60 | - | legume | 6-9 | 7 | p=200g | courgette verte
+aubergine | aubergine | aubergines | fruits_legumes | p | 1p@1.00 | - | legume | 7-9 | 7 | p=300g |
+poivron | poivron | poivrons | fruits_legumes | p | 1p@0.90, 3p@2.29=sachet tricolore | - | legume | 7-9 | 10 | p=170g | poivron rouge, poivron vert, poivron jaune, poivrons rouges
+concombre | concombre | concombres | fruits_legumes | p | 1p@0.79 | - | legume | 5-9 | 7 | p=350g |
+carotte | carotte | carottes | fruits_legumes | p | 10p@1.39=sachet de 1 kg, 1p@0.20 | - | legume | 1-12 | 21 | p=100g | carottes nouvelles
+pomme_de_terre | pomme de terre | pommes de terre | fruits_legumes | g | 1000g@1.29=sac de 1 kg, 2500g@2.49=sac de 2,5 kg | - | legume | 1-12 | 30 | p=150g | patate, patates, pdt, pomme-de-terre, pommes-de-terre, grenaille
+oignon | oignon | oignons | fruits_legumes | p | 1p@0.25, 8p@1.49=filet de 1 kg | - | allium | 1-12 | 30 | p=125g sans_saison | oignon jaune, oignons jaunes, oignon blanc
+oignon_rouge | oignon rouge | oignons rouges | fruits_legumes | p | 1p@0.40, 4p@1.39=filet de 500 g | - | allium | 1-12 | 30 | p=125g sans_saison |
+echalote | échalote | échalotes | fruits_legumes | p | 8p@1.49=filet de 250 g | - | allium | 1-12 | 30 | p=30g sans_saison |
+ail | gousse d'ail | gousses d'ail | fruits_legumes | p | 10p@0.69=tête d'ail | - | allium | 1-12 | 60 | p=5g sans_saison placard | ail, gousse ail, tete d'ail
+poireau | poireau | poireaux | fruits_legumes | p | 1p@0.80, 3p@1.99=botte de 3 | - | legume | 9-4 | 10 | p=250g |
+chou_fleur | chou-fleur | choux-fleurs | fruits_legumes | p | 1p@2.29 | - | legume | 9-4 | 7 | p=900g | chou fleur, choufleur
+brocoli | brocoli | brocolis | fruits_legumes | p | 1p@1.49 | - | legume | 6-11 | 6 | p=400g | brocolli, broccoli
+chou_vert | chou vert | choux verts | fruits_legumes | p | 1p@1.80 | - | legume | 10-3 | 14 | p=1200g | chou pomme, chou frisé, chou blanc
+chou_rouge | chou rouge | choux rouges | fruits_legumes | p | 1p@1.50 | - | legume | 9-3 | 21 | p=1000g |
+chou_bruxelles | chou de Bruxelles | choux de Bruxelles | fruits_legumes | g | 500g@2.29=barquette de 500 g | - | legume | 10-2 | 7 | | choux de bruxelles, chou bruxelles
+champignon | champignon de Paris | champignons de Paris | fruits_legumes | g | 250g@1.49=barquette de 250 g, 500g@2.49=barquette de 500 g | - | legume | 1-12 | 4 | p=20g | champignons, champignon, champis, champi, champignons blancs
+epinard | épinards frais | épinards frais | fruits_legumes | g | 400g@2.29=sachet de 400 g | - | legume | 3-6,9-11 | 3 | | épinards, epinards, pousses d'épinards
+haricot_vert | haricots verts | haricots verts | fruits_legumes | g | 500g@2.25=barquette de 500 g | - | legume | 6-9 | 4 | | haricot vert, haricots verts frais
+courge | courge (butternut ou potiron) | courges | fruits_legumes | p | 1p@2.20 | - | legume | 9-2 | 45 | p=1000g | butternut, potiron, citrouille, potimarron, courge butternut
+patate_douce | patate douce | patates douces | fruits_legumes | p | 1p@0.99 | - | legume | 9-12 | 21 | p=300g | patates douces
+navet | navet | navets | fruits_legumes | p | 1p@0.35, 6p@1.79=botte | - | legume | 10-6 | 14 | p=150g | navets nouveaux
+panais | panais | panais | fruits_legumes | p | 1p@0.60 | - | legume | 10-3 | 14 | p=200g |
+betterave | betterave cuite | betteraves cuites | fruits_legumes | p | 2p@1.29=sachet sous vide de 500 g | - | legume | 9-3 | 7 | p=250g | betteraves, betterave rouge
+celeri_rave | céleri-rave | céleris-raves | fruits_legumes | p | 1p@1.99 | celeri | legume | 9-3 | 21 | p=700g | celeri rave, céleri rave
+celeri_branche | branche de céleri | branches de céleri | fruits_legumes | p | 8p@1.49=pied de céleri | celeri | legume | 6-11 | 10 | p=50g | celeri, céleri branche, celeri branche
+endive | endive | endives | fruits_legumes | p | 8p@2.49=sachet de 1 kg | - | legume | 10-4 | 7 | p=125g | chicon, chicons
+salade | salade verte | salades vertes | fruits_legumes | p | 1p@0.99 | - | legume | 4-10 | 4 | p=300g | laitue, batavia, salade, feuille de chêne, romaine
+mache | mâche | mâche | fruits_legumes | g | 150g@1.79=sachet de 150 g | - | legume | 10-3 | 4 | | mache
+roquette | roquette | roquette | fruits_legumes | g | 125g@1.69=sachet de 125 g | - | legume | 4-10 | 4 | |
+radis | radis | radis | fruits_legumes | g | 250g@1.20=botte | - | legume | 4-7 | 5 | p=10g | botte de radis
+fenouil | fenouil | fenouils | fruits_legumes | p | 1p@1.20 | - | legume | 6-10 | 10 | p=300g |
+asperge | asperge verte | asperges vertes | fruits_legumes | g | 500g@3.99=botte de 500 g | - | legume | 4-6 | 3 | p=25g | asperges
+avocat | avocat | avocats | fruits_legumes | p | 1p@0.99 | - | fruit | imp | 5 | p=200g |
+mais | maïs doux (boîte) | maïs doux | conserves | g | 285g@0.99=boîte (285 g égouttés) | - | conserve | - | 365 | | maïs, mais
+gingembre | gingembre frais | gingembre frais | fruits_legumes | g | 100g@0.80=morceau de 100 g | - | condiment | imp | 21 | sans_saison | gingembre
+citron | citron | citrons | fruits_legumes | p | 1p@0.40, 4p@1.49=filet de 4 | - | condiment | 11-4 | 21 | p=120g sans_saison | citron jaune, jus de citron
+citron_vert | citron vert | citrons verts | fruits_legumes | p | 1p@0.45 | - | condiment | imp | 14 | p=70g sans_saison | lime
+pomme | pomme | pommes | fruits_legumes | p | 6p@2.19=sachet de 1 kg, 1p@0.40 | - | fruit | 8-4 | 21 | p=170g |
+poire | poire | poires | fruits_legumes | p | 1p@0.50 | - | fruit | 8-2 | 10 | p=170g |
+persil | persil plat | persil plat | fruits_legumes | g | 30g@0.99=botte | - | herbe | 1-12 | 5 | sans_saison | persil
+coriandre | coriandre fraîche | coriandre fraîche | fruits_legumes | g | 30g@0.99=botte | - | herbe | 1-12 | 5 | sans_saison | coriandre
+basilic | basilic frais | basilic frais | fruits_legumes | g | 30g@1.29=botte | - | herbe | 6-9 | 5 | sans_saison | basilic, feuilles de basilic
+ciboulette | ciboulette | ciboulette | fruits_legumes | g | 25g@0.99=botte | - | herbe | 3-10 | 5 | sans_saison |
+menthe | menthe fraîche | menthe fraîche | fruits_legumes | g | 30g@0.99=botte | - | herbe | 5-9 | 5 | sans_saison | menthe
+aneth | aneth | aneth | fruits_legumes | g | 20g@1.19=botte | - | herbe | 5-9 | 5 | sans_saison |
+
+# --- Viandes, poissons, œufs, protéines végétales -------------------------------------------------------------------
+poulet_filet | filet de poulet | filets de poulet | boucherie | g | 400g@5.49=barquette de 400 g, 1000g@11.90=barquette de 1 kg | - | volaille | - | 2 | p=130g congeler | poulet, blanc de poulet, blancs de poulet, escalope de poulet, escalopes de poulet, aiguillettes de poulet
+poulet_cuisse | cuisse de poulet | cuisses de poulet | boucherie | p | 4p@4.99=barquette de 4 (1 kg) | - | volaille | - | 2 | p=250g congeler | cuisse poulet, pilon, pilons, haut de cuisse
+dinde | escalope de dinde | escalopes de dinde | boucherie | g | 400g@4.99=barquette de 400 g | - | volaille | - | 2 | p=130g congeler | dinde, escalopes de dinde
+boeuf_hache | viande hachée de bœuf | viande hachée de bœuf | boucherie | g | 250g@3.29=barquette de 250 g, 500g@5.99=barquette de 500 g | - | boeuf | - | 1 | p=125g congeler hache | steak haché, steaks hachés, viande hachée, boeuf haché, bœuf haché, hache
+boeuf_braiser | bœuf à braiser | bœuf à braiser | boucherie | g | 500g@7.99=barquette de 500 g | - | boeuf | - | 2 | congeler | paleron, joue de boeuf, boeuf bourguignon, viande à bourguignon
+boeuf_emince | bœuf émincé | bœuf émincé | boucherie | g | 300g@5.49=barquette de 300 g | - | boeuf | - | 2 | congeler | emincé de boeuf, lamelles de boeuf, boeuf
+porc_echine | échine de porc | échine de porc | boucherie | g | 500g@5.49=barquette de 500 g | - | porc | - | 2 | congeler | porc, côte de porc, cotes de porc, sauté de porc, filet de porc
+saucisse | saucisse de Toulouse | saucisses de Toulouse | boucherie | p | 4p@3.99=barquette de 4 (450 g) | - | porc | - | 3 | p=110g congeler | saucisses, saucisse, chipolatas, chipolata
+merguez | merguez | merguez | boucherie | p | 6p@3.99=barquette de 6 | - | boeuf | - | 3 | p=60g congeler |
+agneau | épaule d'agneau en morceaux | épaule d'agneau en morceaux | boucherie | g | 500g@9.90=barquette de 500 g | - | agneau | - | 2 | congeler | agneau, mouton, sauté d'agneau
+lardons | lardons fumés | lardons fumés | frais | g | 200g@1.99=2 barquettes de 100 g | - | charcuterie | - | 10 | | lardons, lardon, poitrine fumée, allumettes de bacon, bacon
+jambon | tranche de jambon blanc | tranches de jambon blanc | frais | p | 4p@2.29=paquet de 4 tranches | - | charcuterie | - | 5 | p=40g | jambon, jambon blanc, jambon de paris
+chorizo | chorizo | chorizo | frais | g | 200g@2.49=chorizo de 200 g | lait | charcuterie | - | 30 | |
+saumon | pavé de saumon | pavés de saumon | poissonnerie | p | 2p@5.99=barquette de 2 pavés | poissons | poisson | - | 1 | p=125g congeler | saumon, pavés de saumon, filet de saumon
+poisson_blanc | filet de poisson blanc surgelé | filets de poisson blanc surgelés | surgeles | g | 400g@3.99=sachet de 400 g | poissons | poisson | - | 180 | p=100g | cabillaud, colin, lieu, merlu, poisson blanc, filet de poisson, filets de cabillaud, dos de cabillaud
+thon | thon au naturel (boîte) | thon au naturel | conserves | g | 140g@1.49=boîte (140 g égouttés) | poissons | poisson | - | 365 | | thon, thon en boite, thon en boîte, miettes de thon
+sardine | sardines à l'huile (boîte) | sardines à l'huile | conserves | g | 115g@1.29=boîte de 115 g | poissons | poisson | - | 365 | | sardines, sardine
+crevette | crevettes cuites décortiquées surgelées | crevettes | surgeles | g | 200g@3.99=sachet de 200 g | crustaces | crustace | - | 180 | | crevettes, gambas, crevette
+moules | moules prêtes à cuire | moules | poissonnerie | g | 1000g@4.49=barquette de 1 kg | mollusques | mollusque | - | 1 | | moule
+oeuf | œuf | œufs | cremerie | p | 6p@1.99=boîte de 6, 12p@3.69=boîte de 12 | oeufs | oeuf | - | 28 | p=55g | oeuf, oeufs, œuf, œufs, oeufs frais
+tofu | tofu ferme | tofu ferme | frais | g | 250g@1.99=bloc de 250 g | soja | tofu | - | 10 | | tofu, tofu nature, tofu fumé
+pois_chiche | pois chiches cuits (boîte) | pois chiches cuits | conserves | g | 265g@0.89=boîte (265 g égouttés) | - | legumineuse | - | 365 | | pois chiches, pois chiche, pois-chiches, pois chiches en boite
+pois_chiche_sec | pois chiches secs | pois chiches secs | epicerie | g | 500g@1.59=sachet de 500 g | - | legumineuse | - | 365 | trempage=12 |
+haricot_rouge | haricots rouges (boîte) | haricots rouges | conserves | g | 250g@0.85=boîte (250 g égouttés) | - | legumineuse | - | 365 | | haricots rouges, haricot rouge, red kidney
+haricot_blanc | haricots blancs (boîte) | haricots blancs | conserves | g | 265g@0.85=boîte (265 g égouttés) | - | legumineuse | - | 365 | | haricots blancs, haricot blanc, cocos, lingots
+haricot_blanc_sec | haricots blancs secs | haricots blancs secs | epicerie | g | 500g@1.99=sachet de 500 g | - | legumineuse | - | 365 | trempage=12 | lingots secs
+lentille_verte | lentilles vertes | lentilles vertes | epicerie | g | 500g@1.49=sachet de 500 g | - | legumineuse | - | 365 | | lentilles, lentille, lentilles du puy
+lentille_corail | lentilles corail | lentilles corail | epicerie | g | 500g@1.89=sachet de 500 g | - | legumineuse | - | 365 | | lentilles rouges, lentilles corails
+pois_casse | pois cassés | pois cassés | epicerie | g | 500g@1.29=sachet de 500 g | - | legumineuse | - | 365 | | pois casses
+
+# --- Crèmerie ---------------------------------------------------------------------------------------------------------
+lait | lait demi-écrémé | lait demi-écrémé | cremerie | ml | 1000ml@1.05=brique de 1 l | lait | laitier | - | 4 | | lait, lait demi ecreme, lait entier
+beurre | beurre | beurre | cremerie | g | 250g@2.69=plaquette de 250 g | lait | laitier | - | 30 | | beurre doux, beurre demi-sel
+creme | crème liquide | crème liquide | cremerie | ml | 200ml@0.99=brique de 20 cl | lait | laitier | - | 5 | | crème, creme, crème fraîche liquide, creme liquide, crème entière, reste de crème
+creme_epaisse | crème fraîche épaisse | crème fraîche épaisse | cremerie | g | 200g@1.39=pot de 20 cl | lait | laitier | - | 7 | | crème fraîche, creme fraiche, crème épaisse
+yaourt_grec | yaourt à la grecque | yaourt à la grecque | cremerie | g | 500g@2.49=pot de 500 g | lait | laitier | - | 10 | | yaourt grec, yaourt, yaourts, fromage blanc
+fromage_rape | emmental râpé | emmental râpé | cremerie | g | 200g@1.99=sachet de 200 g | lait | fromage | - | 21 | | fromage râpé, gruyère, gruyère râpé, emmental, rapé, comté râpé
+parmesan | parmesan | parmesan | cremerie | g | 100g@2.49=pointe de 100 g | lait | fromage | - | 30 | non_vege | parmigiano, grana padano
+mozzarella | mozzarella | mozzarellas | cremerie | p | 1p@0.99=boule de 125 g | lait | fromage | - | 10 | p=125g | mozza, boule de mozzarella
+feta | feta | feta | cremerie | g | 200g@2.29=bloc de 200 g | lait | fromage | - | 14 | | féta
+chevre | bûche de chèvre | bûche de chèvre | cremerie | g | 180g@2.19=bûche de 180 g | lait | fromage | - | 14 | | chèvre, fromage de chèvre, buche de chevre, chevre
+reblochon | reblochon | reblochons | cremerie | p | 1p@5.99=reblochon de 450 g | lait | fromage | - | 14 | p=450g |
+ricotta | ricotta | ricotta | cremerie | g | 250g@1.99=pot de 250 g | lait | fromage | - | 7 | |
+fromage_frais | fromage frais à tartiner | fromage frais | cremerie | g | 150g@1.49=pot de 150 g | lait | fromage | - | 10 | | saint moret, fromage à tartiner, cream cheese, philadelphia, carré frais
+
+# --- Féculents ---------------------------------------------------------------------------------------------------------
+pates | pâtes sèches | pâtes sèches | epicerie | g | 500g@0.85=paquet de 500 g | gluten | feculent | - | 365 | placard | pâtes, pates, spaghetti, spaghettis, penne, coquillettes, fusilli, tagliatelles, macaroni, linguine, farfalle
+riz | riz long | riz long | epicerie | g | 1000g@1.59=paquet de 1 kg | - | feculent | - | 365 | placard | riz, riz basmati, riz thaï, reste de riz, riz cuit
+riz_rond | riz à risotto | riz à risotto | epicerie | g | 500g@1.99=paquet de 500 g | - | feculent | - | 365 | | arborio, riz arborio, riz rond
+semoule | semoule moyenne | semoule moyenne | epicerie | g | 500g@0.99=paquet de 500 g | gluten | feculent | - | 365 | | semoule, couscous
+boulgour | boulgour | boulgour | epicerie | g | 500g@1.69=paquet de 500 g | gluten | feculent | - | 365 | | boulghour, bulgur
+quinoa | quinoa | quinoa | epicerie | g | 500g@2.99=paquet de 500 g | - | feculent | - | 365 | |
+polenta | polenta | polenta | epicerie | g | 500g@1.49=paquet de 500 g | - | feculent | - | 365 | |
+nouilles_riz | nouilles de riz | nouilles de riz | monde | g | 200g@1.49=paquet de 200 g | - | feculent | - | 365 | | vermicelles de riz, vermicelle de riz, pad thai, nouilles de riz plates
+nouilles_ble | nouilles chinoises aux œufs | nouilles chinoises | monde | g | 250g@1.29=paquet de 250 g | gluten, oeufs | feculent | - | 365 | | nouilles, nouilles chinoises, nouilles aux oeufs, ramen
+gnocchi | gnocchi | gnocchi | frais | g | 500g@1.49=paquet de 500 g | gluten | feculent | - | 30 | | gnocchis
+lasagne | feuilles de lasagne | feuilles de lasagne | epicerie | g | 500g@1.29=paquet de 500 g | gluten, oeufs | feculent | - | 365 | | lasagnes
+tortilla | galette de blé (tortilla) | galettes de blé (tortillas) | monde | p | 8p@1.49=paquet de 8 | gluten | pain | - | 30 | p=40g | tortillas, wraps, wrap, galettes de blé
+pain | baguette | baguettes | boulangerie | p | 1p@0.95 | gluten | pain | - | 2 | p=250g | pain, baguette, reste de pain, pain rassis
+pain_mie | tranche de pain de mie | tranches de pain de mie | boulangerie | p | 20p@1.39=paquet de 500 g | gluten, lait, soja | pain | - | 14 | p=25g | pain de mie
+pain_burger | pain à burger | pains à burger | boulangerie | p | 4p@1.49=paquet de 4 | gluten, lait, sesame | pain | - | 10 | p=75g | buns, pain burger, pains burger
+galette_riz | galette de riz | galettes de riz | monde | p | 22p@1.99=paquet de 200 g | - | feculent | - | 365 | p=9g | feuilles de riz, galettes de riz
+pain_pita | pain pita | pains pita | monde | p | 6p@1.29=paquet de 6 | gluten | pain | - | 21 | p=60g | pita, pitas
+pate_feuilletee | pâte feuilletée | pâtes feuilletées | frais | p | 1p@1.19=rouleau de 230 g | gluten, lait | pate | - | 10 | p=230g | pate feuilletee
+pate_brisee | pâte brisée | pâtes brisées | frais | p | 1p@1.09=rouleau de 230 g | gluten, lait | pate | - | 10 | p=230g | pate brisee
+pate_pizza | pâte à pizza | pâtes à pizza | frais | p | 1p@1.39=rouleau de 260 g | gluten | pate | - | 10 | p=260g | pate a pizza
+farine | farine de blé | farine de blé | epicerie | g | 1000g@0.85=paquet de 1 kg | gluten | feculent | - | 365 | placard | farine
+
+levure | sachet de levure chimique | sachets de levure chimique | sucre | p | 6p@0.89=boîte de 6 sachets | - | sucre | - | 365 | p=11g | levure
+houmous | houmous | houmous | frais | g | 200g@1.99=pot de 200 g | sesame | sauce | - | 7 | | hoummous, humus, houmos
+
+# --- Conserves, sauces, condiments ------------------------------------------------------------------------------------
+tomate_concassee | tomates concassées (boîte) | tomates concassées | conserves | g | 400g@0.79=boîte de 400 g | - | conserve | - | 365 | | tomates pelées, tomates en boîte, pulpe de tomate, tomates concassees, boite de tomates
+coulis_tomate | coulis de tomate | coulis de tomate | conserves | ml | 500ml@0.99=bouteille de 500 ml | - | conserve | - | 365 | | passata, sauce tomate, coulis
+concentre_tomate | concentré de tomate | concentré de tomate | conserves | g | 140g@0.79=boîte de 140 g | - | conserve | - | 365 | | concentre de tomate, double concentré
+lait_coco | lait de coco | lait de coco | monde | ml | 400ml@1.39=boîte de 40 cl | - | conserve | - | 365 | | lait de coco, crème de coco
+olive | olives noires | olives noires | conserves | g | 150g@1.49=bocal de 150 g | - | conserve | - | 365 | | olives, olive, olives vertes
+pesto | pesto vert | pesto vert | conserves | g | 190g@1.99=pot de 190 g | lait, fruits_a_coque | sauce | - | 30 | non_vege | pesto, pesto au basilic
+sauce_soja | sauce soja | sauce soja | condiments | ml | 250ml@1.79=bouteille de 25 cl | soja, gluten | condiment | - | 365 | placard | soja, sauce soya
+moutarde | moutarde de Dijon | moutarde de Dijon | condiments | g | 200g@0.99=pot de 200 g | moutarde | condiment | - | 365 | placard | moutarde
+mayonnaise | mayonnaise | mayonnaise | condiments | g | 235g@1.29=tube de 235 g | oeufs, moutarde | condiment | - | 60 | | mayo
+vinaigre | vinaigre de vin | vinaigre de vin | condiments | ml | 500ml@0.79=bouteille de 50 cl | sulfites | condiment | - | 365 | placard | vinaigre, vinaigre balsamique
+huile_olive | huile d'olive | huile d'olive | condiments | ml | 750ml@5.99=bouteille de 75 cl | - | huile | - | 365 | placard | huile d'olive, huile olive
+huile_neutre | huile de tournesol | huile de tournesol | condiments | ml | 1000ml@2.19=bouteille de 1 l | - | huile | - | 365 | placard | huile, huile de colza, huile tournesol
+huile_sesame | huile de sésame | huile de sésame | monde | ml | 150ml@2.49=bouteille de 15 cl | sesame | huile | - | 365 | |
+bouillon_cube | bouillon de légumes (cube) | cubes de bouillon de légumes | condiments | p | 8p@1.29=boîte de 8 cubes | celeri, gluten | condiment | - | 365 | p=10g placard | bouillon, cube, cube de bouillon, bouillon cube
+miel | miel | miel | sucre | g | 250g@2.99=pot de 250 g | - | sucre | - | 365 | animal |
+sucre | sucre en poudre | sucre en poudre | sucre | g | 1000g@1.09=paquet de 1 kg | - | sucre | - | 365 | placard | sucre
+sel | sel | sel | condiments | g | 1000g@0.49=paquet de 1 kg | - | condiment | - | 365 | placard | sel fin, gros sel
+poivre | poivre | poivre | condiments | g | 50g@1.49=moulin | - | epice | - | 365 | placard | poivre noir
+vin_blanc | vin blanc sec | vin blanc sec | conserves | ml | 750ml@3.49=bouteille de 75 cl | sulfites | condiment | - | 365 | | vin blanc
+vin_rouge | vin rouge | vin rouge | conserves | ml | 750ml@3.99=bouteille de 75 cl | sulfites | condiment | - | 365 | |
+pate_curry | pâte de curry thaï | pâte de curry thaï | monde | g | 110g@2.49=pot de 110 g | crustaces | condiment | - | 60 | non_vege | pâte de curry rouge, pâte de curry vert, pate de curry
+nuoc_mam | nuoc-mâm | nuoc-mâm | monde | ml | 250ml@2.29=bouteille de 25 cl | poissons | condiment | - | 365 | non_vege | sauce poisson, nuoc mam
+sauce_huitre | sauce huître | sauce huître | monde | ml | 150ml@1.99=bouteille de 15 cl | mollusques, gluten, soja | condiment | - | 365 | non_vege | sauce huitre
+tahini | purée de sésame (tahini) | purée de sésame | monde | g | 300g@3.49=pot de 300 g | sesame | condiment | - | 365 | | tahin, crème de sésame
+beurre_cacahuete | beurre de cacahuète | beurre de cacahuète | sucre | g | 340g@2.49=pot de 340 g | arachides | condiment | - | 365 | | beurre de cacahuete, beurre d'arachide
+cacahuete | cacahuètes grillées | cacahuètes grillées | sucre | g | 200g@1.79=sachet de 200 g | arachides | noix | - | 365 | | cacahuètes, cacahuetes, arachides
+noix | cerneaux de noix | cerneaux de noix | sucre | g | 100g@1.99=sachet de 100 g | fruits_a_coque | noix | - | 180 | | noix, cerneaux
+amande | amandes effilées | amandes effilées | sucre | g | 100g@1.79=sachet de 100 g | fruits_a_coque | noix | - | 180 | | amandes
+graines_sesame | graines de sésame | graines de sésame | monde | g | 75g@1.29=sachet de 75 g | sesame | graine | - | 365 | | sésame, sesame
+miso | pâte miso | pâte miso | monde | g | 300g@3.99=pot de 300 g | soja | condiment | - | 180 | | miso
+harissa | harissa | harissa | monde | g | 70g@1.29=tube de 70 g | - | condiment | - | 180 | |
+raisin_sec | raisins secs | raisins secs | sucre | g | 250g@1.79=sachet de 250 g | sulfites | fruit_sec | - | 365 | | raisins secs
+abricot_sec | abricots secs | abricots secs | sucre | g | 250g@2.49=sachet de 250 g | sulfites | fruit_sec | - | 365 | |
+petit_pois | petits pois surgelés | petits pois surgelés | surgeles | g | 1000g@2.29=sachet de 1 kg | - | surgele | - | 180 | | petits pois, petit pois
+haricot_vert_surgele | haricots verts surgelés | haricots verts surgelés | surgeles | g | 1000g@2.19=sachet de 1 kg | - | surgele | - | 180 | | haricots verts surgeles
+epinard_surgele | épinards hachés surgelés | épinards surgelés | surgeles | g | 750g@1.69=sachet de 750 g | - | surgele | - | 180 | | épinards surgelés, epinards surgeles
+brocoli_surgele | brocolis surgelés | brocolis surgelés | surgeles | g | 750g@1.89=sachet de 750 g | - | surgele | - | 180 | | brocolis surgelés
+poelee_surgelee | poêlée de légumes surgelée | poêlée de légumes surgelée | surgeles | g | 750g@2.19=sachet de 750 g | - | surgele | - | 180 | | légumes surgelés, poêlée de légumes, legumes surgeles
+
+# --- Épices (pots) ------------------------------------------------------------------------------------------------------
+cumin | cumin moulu | cumin moulu | condiments | g | 35g@1.49=pot | - | epice | - | 365 | placard | cumin
+curry | curry en poudre | curry en poudre | condiments | g | 40g@1.49=pot | moutarde | epice | - | 365 | placard | curry
+paprika | paprika | paprika | condiments | g | 40g@1.49=pot | - | epice | - | 365 | placard | paprika fumé
+herbes_de_provence | herbes de Provence | herbes de Provence | condiments | g | 20g@1.29=pot | - | epice | - | 365 | placard | herbes de provence
+piment | piment en flocons | piment en flocons | condiments | g | 30g@1.49=pot | - | epice | - | 365 | placard | piment, piment d'espelette, piment de cayenne
+thym | thym séché | thym séché | condiments | g | 15g@1.29=pot | - | epice | - | 365 | placard | thym
+laurier | feuille de laurier | feuilles de laurier | condiments | p | 10p@1.29=sachet | - | epice | - | 365 | p=0.2g placard | laurier
+muscade | noix de muscade moulue | noix de muscade moulue | condiments | g | 30g@1.49=pot | - | epice | - | 365 | placard | muscade
+origan | origan séché | origan séché | condiments | g | 15g@1.29=pot | - | epice | - | 365 | placard | origan
+curcuma | curcuma | curcuma | condiments | g | 40g@1.49=pot | - | epice | - | 365 | placard |
+ras_el_hanout | ras el-hanout | ras el-hanout | condiments | g | 40g@1.69=pot | - | epice | - | 365 | | ras el hanout
+garam_masala | garam masala | garam masala | condiments | g | 40g@1.89=pot | - | epice | - | 365 | |
+cannelle | cannelle moulue | cannelle moulue | condiments | g | 35g@1.49=pot | - | epice | - | 365 | | cannelle
+cinq_epices | cinq-épices | cinq-épices | monde | g | 30g@1.69=pot | - | epice | - | 365 | | 5 épices, cinq epices

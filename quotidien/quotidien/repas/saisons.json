@@ -1,0 +1,317 @@
+{
+ "1": {
+  "mois": [
+   "janvier"
+  ],
+  "legumes": [
+   "betterave",
+   "carotte",
+   "celeri_rave",
+   "champignon",
+   "chou_bruxelles",
+   "chou_fleur",
+   "chou_rouge",
+   "chou_vert",
+   "courge",
+   "endive",
+   "mache",
+   "navet",
+   "panais",
+   "poireau",
+   "pomme_de_terre"
+  ],
+  "fruits": [
+   "poire",
+   "pomme"
+  ]
+ },
+ "2": {
+  "mois": [
+   "février"
+  ],
+  "legumes": [
+   "betterave",
+   "carotte",
+   "celeri_rave",
+   "champignon",
+   "chou_bruxelles",
+   "chou_fleur",
+   "chou_rouge",
+   "chou_vert",
+   "courge",
+   "endive",
+   "mache",
+   "navet",
+   "panais",
+   "poireau",
+   "pomme_de_terre"
+  ],
+  "fruits": [
+   "poire",
+   "pomme"
+  ]
+ },
+ "3": {
+  "mois": [
+   "mars"
+  ],
+  "legumes": [
+   "betterave",
+   "carotte",
+   "celeri_rave",
+   "champignon",
+   "chou_fleur",
+   "chou_rouge",
+   "chou_vert",
+   "endive",
+   "epinard",
+   "mache",
+   "navet",
+   "panais",
+   "poireau",
+   "pomme_de_terre"
+  ],
+  "fruits": [
+   "pomme"
+  ]
+ },
+ "4": {
+  "mois": [
+   "avril"
+  ],
+  "legumes": [
+   "asperge",
+   "carotte",
+   "champignon",
+   "chou_fleur",
+   "endive",
+   "epinard",
+   "navet",
+   "poireau",
+   "pomme_de_terre",
+   "radis",
+   "roquette",
+   "salade"
+  ],
+  "fruits": [
+   "pomme"
+  ]
+ },
+ "5": {
+  "mois": [
+   "mai"
+  ],
+  "legumes": [
+   "asperge",
+   "carotte",
+   "champignon",
+   "concombre",
+   "epinard",
+   "navet",
+   "pomme_de_terre",
+   "radis",
+   "roquette",
+   "salade"
+  ],
+  "fruits": []
+ },
+ "6": {
+  "mois": [
+   "juin"
+  ],
+  "legumes": [
+   "asperge",
+   "brocoli",
+   "carotte",
+   "celeri_branche",
+   "champignon",
+   "concombre",
+   "courgette",
+   "epinard",
+   "fenouil",
+   "haricot_vert",
+   "navet",
+   "pomme_de_terre",
+   "radis",
+   "roquette",
+   "salade",
+   "tomate",
+   "tomate_cerise"
+  ],
+  "fruits": []
+ },
+ "7": {
+  "mois": [
+   "juillet"
+  ],
+  "legumes": [
+   "aubergine",
+   "brocoli",
+   "carotte",
+   "celeri_branche",
+   "champignon",
+   "concombre",
+   "courgette",
+   "fenouil",
+   "haricot_vert",
+   "poivron",
+   "pomme_de_terre",
+   "radis",
+   "roquette",
+   "salade",
+   "tomate",
+   "tomate_cerise"
+  ],
+  "fruits": []
+ },
+ "8": {
+  "mois": [
+   "août"
+  ],
+  "legumes": [
+   "aubergine",
+   "brocoli",
+   "carotte",
+   "celeri_branche",
+   "champignon",
+   "concombre",
+   "courgette",
+   "fenouil",
+   "haricot_vert",
+   "poivron",
+   "pomme_de_terre",
+   "roquette",
+   "salade",
+   "tomate",
+   "tomate_cerise"
+  ],
+  "fruits": [
+   "poire",
+   "pomme"
+  ]
+ },
+ "9": {
+  "mois": [
+   "septembre"
+  ],
+  "legumes": [
+   "aubergine",
+   "betterave",
+   "brocoli",
+   "carotte",
+   "celeri_branche",
+   "celeri_rave",
+   "champignon",
+   "chou_fleur",
+   "chou_rouge",
+   "concombre",
+   "courge",
+   "courgette",
+   "epinard",
+   "fenouil",
+   "haricot_vert",
+   "patate_douce",
+   "poireau",
+   "poivron",
+   "pomme_de_terre",
+   "roquette",
+   "salade",
+   "tomate",
+   "tomate_cerise"
+  ],
+  "fruits": [
+   "poire",
+   "pomme"
+  ]
+ },
+ "10": {
+  "mois": [
+   "octobre"
+  ],
+  "legumes": [
+   "betterave",
+   "brocoli",
+   "carotte",
+   "celeri_branche",
+   "celeri_rave",
+   "champignon",
+   "chou_bruxelles",
+   "chou_fleur",
+   "chou_rouge",
+   "chou_vert",
+   "courge",
+   "endive",
+   "epinard",
+   "fenouil",
+   "mache",
+   "navet",
+   "panais",
+   "patate_douce",
+   "poireau",
+   "pomme_de_terre",
+   "roquette",
+   "salade"
+  ],
+  "fruits": [
+   "poire",
+   "pomme"
+  ]
+ },
+ "11": {
+  "mois": [
+   "novembre"
+  ],
+  "legumes": [
+   "betterave",
+   "brocoli",
+   "carotte",
+   "celeri_branche",
+   "celeri_rave",
+   "champignon",
+   "chou_bruxelles",
+   "chou_fleur",
+   "chou_rouge",
+   "chou_vert",
+   "courge",
+   "endive",
+   "epinard",
+   "mache",
+   "navet",
+   "panais",
+   "patate_douce",
+   "poireau",
+   "pomme_de_terre"
+  ],
+  "fruits": [
+   "poire",
+   "pomme"
+  ]
+ },
+ "12": {
+  "mois": [
+   "décembre"
+  ],
+  "legumes": [
+   "betterave",
+   "carotte",
+   "celeri_rave",
+   "champignon",
+   "chou_bruxelles",
+   "chou_fleur",
+   "chou_rouge",
+   "chou_vert",
+   "courge",
+   "endive",
+   "mache",
+   "navet",
+   "panais",
+   "patate_douce",
+   "poireau",
+   "pomme_de_terre"
+  ],
+  "fruits": [
+   "poire",
+   "pomme"
+  ]
+ }
+}

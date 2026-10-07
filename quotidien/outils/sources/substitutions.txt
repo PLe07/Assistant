@@ -1,0 +1,106 @@
+# Table de substitutions du vide-frigo : il te manque X ? Y fait l'affaire.
+# manquant | remplaçant | conseil (court, tutoyé)
+creme | yaourt_grec | Pas de crème ? Un yaourt à la grecque fait l'affaire, ajouté hors du feu pour qu'il ne tranche pas.
+creme | creme_epaisse | Pas de crème liquide ? La crème épaisse va très bien, détendue d'un peu d'eau.
+creme | lait_coco | Pas de crème ? Le lait de coco donne une sauce aussi onctueuse, avec un goût plus doux.
+creme_epaisse | yaourt_grec | Pas de crème fraîche ? Du yaourt à la grecque, hors du feu.
+creme_epaisse | creme | Pas de crème épaisse ? La crème liquide, en faisant un peu réduire.
+creme_epaisse | fromage_frais | Pas de crème fraîche ? Du fromage frais à tartiner fond très bien dans une sauce.
+yaourt_grec | creme_epaisse | Pas de yaourt grec ? De la crème fraîche, un peu plus riche.
+lait | lait_coco | Plus de lait ? Du lait de coco coupé d'eau, pour une sauce ou une soupe.
+beurre | huile_olive | Plus de beurre ? De l'huile d'olive pour la cuisson.
+fromage_rape | parmesan | Plus d'emmental ? Du parmesan râpé, en mettant un peu moins.
+fromage_rape | mozzarella | Plus de fromage râpé ? De la mozzarella coupée en petits dés pour gratiner.
+parmesan | fromage_rape | Plus de parmesan ? De l'emmental râpé.
+mozzarella | fromage_rape | Pas de mozzarella ? De l'emmental râpé gratine aussi bien.
+feta | chevre | Pas de feta ? Du chèvre émietté.
+chevre | feta | Pas de chèvre ? De la feta.
+ricotta | fromage_frais | Pas de ricotta ? Du fromage frais à tartiner.
+ricotta | yaourt_grec | Pas de ricotta ? Du yaourt à la grecque bien égoutté.
+poulet_filet | dinde | Pas de poulet ? Des escalopes de dinde, même cuisson.
+dinde | poulet_filet | Pas de dinde ? Du filet de poulet.
+poulet_filet | tofu | Pas de poulet ? Du tofu ferme en dés, bien doré à la poêle.
+boeuf_hache | lentille_corail | Pas de viande hachée ? Des lentilles corail : 80 g sèches remplacent 125 g de viande.
+boeuf_emince | poulet_filet | Pas de bœuf ? Du poulet émincé, cuit à cœur.
+lardons | jambon | Pas de lardons ? Du jambon coupé en dés.
+lardons | chorizo | Pas de lardons ? Du chorizo en petits dés, pour un goût plus relevé.
+jambon | lardons | Pas de jambon ? Des lardons poêlés.
+saumon | poisson_blanc | Pas de saumon ? Un filet de poisson blanc.
+poisson_blanc | saumon | Pas de poisson blanc ? Un pavé de saumon.
+thon | sardine | Pas de thon ? Des sardines à l'huile égouttées.
+crevette | poisson_blanc | Pas de crevettes ? Du poisson blanc en morceaux.
+pois_chiche | haricot_blanc | Pas de pois chiches ? Des haricots blancs en boîte.
+haricot_rouge | haricot_blanc | Pas de haricots rouges ? Des haricots blancs.
+haricot_blanc | pois_chiche | Pas de haricots blancs ? Des pois chiches.
+lentille_verte | lentille_corail | Pas de lentilles vertes ? Des lentilles corail, cuites 10 min seulement.
+lentille_corail | lentille_verte | Pas de lentilles corail ? Des lentilles vertes, cuites 25 min.
+pates | riz | Plus de pâtes ? Du riz.
+riz | quinoa | Plus de riz ? Du quinoa, cuit 12 min.
+riz | semoule | Plus de riz ? De la semoule, prête en 5 min.
+riz | boulgour | Plus de riz ? Du boulgour.
+riz_rond | riz | Pas de riz à risotto ? Du riz long, en remuant souvent : moins crémeux, mais bon.
+semoule | boulgour | Pas de semoule ? Du boulgour.
+boulgour | semoule | Pas de boulgour ? De la semoule.
+quinoa | boulgour | Pas de quinoa ? Du boulgour.
+nouilles_riz | pates | Pas de nouilles de riz ? Des spaghetti fins.
+nouilles_ble | pates | Pas de nouilles chinoises ? Des spaghetti.
+tortilla | pain_pita | Pas de tortillas ? Des pains pita.
+pain_pita | tortilla | Pas de pain pita ? Des tortillas.
+pain | pain_mie | Plus de baguette ? Du pain de mie grillé.
+pain_mie | pain | Pas de pain de mie ? De la baguette en tranches.
+pate_brisee | pate_feuilletee | Pas de pâte brisée ? Une pâte feuilletée.
+pate_feuilletee | pate_brisee | Pas de pâte feuilletée ? Une pâte brisée.
+tomate_concassee | coulis_tomate | Pas de tomates concassées ? Du coulis de tomate.
+coulis_tomate | tomate_concassee | Pas de coulis ? Des tomates concassées, mixées ou non.
+tomate | tomate_concassee | Pas de tomates fraîches ? Des tomates en boîte pour un plat cuit.
+tomate | tomate_cerise | Pas de grosses tomates ? Des tomates cerises.
+tomate_cerise | tomate | Pas de tomates cerises ? Une tomate en dés.
+courgette | aubergine | Pas de courgette ? Une aubergine.
+aubergine | courgette | Pas d'aubergine ? Une courgette.
+poivron | courgette | Pas de poivron ? Une courgette.
+epinard | epinard_surgele | Pas d'épinards frais ? Des surgelés, bien égouttés.
+epinard_surgele | epinard | Pas d'épinards surgelés ? Des frais, tombés à la poêle.
+haricot_vert | haricot_vert_surgele | Pas de haricots verts frais ? Des surgelés.
+haricot_vert_surgele | haricot_vert | Pas de surgelés ? Des haricots verts frais.
+brocoli | brocoli_surgele | Pas de brocoli frais ? Des surgelés.
+brocoli_surgele | brocoli | Pas de surgelés ? Un brocoli frais.
+brocoli | chou_fleur | Pas de brocoli ? Du chou-fleur.
+chou_fleur | brocoli | Pas de chou-fleur ? Un brocoli.
+courge | patate_douce | Pas de courge ? De la patate douce.
+patate_douce | courge | Pas de patate douce ? De la courge.
+patate_douce | carotte | Pas de patate douce ? Des carottes.
+poireau | oignon | Pas de poireau ? Deux oignons émincés.
+echalote | oignon | Pas d'échalote ? Un demi-oignon.
+oignon_rouge | oignon | Pas d'oignon rouge ? Un oignon jaune, plus fort : mets-en moins.
+oignon | echalote | Plus d'oignon ? Deux échalotes.
+champignon | courgette | Pas de champignons ? Une courgette.
+salade | mache | Pas de salade ? De la mâche.
+salade | roquette | Pas de salade ? De la roquette.
+mache | salade | Pas de mâche ? De la salade verte.
+roquette | salade | Pas de roquette ? De la salade verte.
+endive | salade | Pas d'endives ? De la salade verte.
+citron | citron_vert | Pas de citron jaune ? Un citron vert.
+citron_vert | citron | Pas de citron vert ? Un citron jaune.
+citron | vinaigre | Pas de citron ? Un filet de vinaigre.
+coriandre | persil | Pas de coriandre ? Du persil.
+persil | ciboulette | Pas de persil ? De la ciboulette.
+basilic | persil | Pas de basilic ? Du persil (ou un peu de pesto).
+ciboulette | persil | Pas de ciboulette ? Du persil.
+menthe | persil | Pas de menthe ? Du persil.
+aneth | ciboulette | Pas d'aneth ? De la ciboulette.
+gingembre | ail | Pas de gingembre ? Une gousse d'ail de plus.
+lait_coco | creme | Pas de lait de coco ? De la crème liquide.
+pesto | basilic | Pas de pesto ? Du basilic haché, de l'huile d'olive et du parmesan.
+mayonnaise | yaourt_grec | Pas de mayonnaise ? Du yaourt grec avec une pointe de moutarde.
+vin_blanc | bouillon_cube | Pas de vin blanc ? Du bouillon.
+vin_rouge | bouillon_cube | Pas de vin rouge ? Du bouillon avec un trait de vinaigre.
+mais | petit_pois | Pas de maïs ? Des petits pois.
+petit_pois | haricot_vert_surgele | Pas de petits pois ? Des haricots verts surgelés.
+abricot_sec | raisin_sec | Pas d'abricots secs ? Des raisins secs.
+noix | amande | Pas de noix ? Des amandes.
+cacahuete | noix | Pas de cacahuètes ? Des noix concassées.
+tofu | oeuf | Pas de tofu ? Des œufs brouillés.
+quinoa | riz | Pas de quinoa ? Du riz.
+reblochon | fromage_rape | Pas de reblochon ? Beaucoup d'emmental râpé (le goût sera plus doux).
+gnocchi | pates | Pas de gnocchi ? Des pâtes courtes.
+celeri_branche | carotte | Pas de céleri ? Une carotte de plus.

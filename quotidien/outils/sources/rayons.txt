@@ -1,0 +1,13 @@
+# id | nom | emoji | ordre (parcours d'un supermarché)
+fruits_legumes | Fruits et légumes | 🥬 | 1
+boucherie | Boucherie, volaille | 🥩 | 2
+poissonnerie | Poissonnerie | 🐟 | 3
+cremerie | Crèmerie, œufs, fromages | 🧀 | 4
+frais | Charcuterie, traiteur, frais | 🥓 | 5
+boulangerie | Pain | 🥖 | 6
+epicerie | Pâtes, riz, féculents | 🍝 | 7
+conserves | Conserves, sauces | 🥫 | 8
+monde | Produits du monde | 🌮 | 9
+condiments | Épices, huiles, condiments | 🧂 | 10
+sucre | Épicerie sucrée, fruits secs | 🍯 | 11
+surgeles | Surgelés | ❄️ | 12
