@@ -14,8 +14,8 @@ Chaque phase se termine par `./check.sh` vert, l'intégrité identique, un commi
 | P6 — barre des menus, instantané iCloud, CLI | ✅ | « Tableau de bord P6 » |
 | P7 — faux écosystème complet | ✅ | « Tableau de bord P7-P8 » |
 | P8 — installation | ✅ (scripts et tests) ; réelle sur ton Mac : ACTIONS_HUMAINES §1 | « Tableau de bord P7-P8 » |
-| P9 — 30 min réelles, performance | ⏳ | |
-| P10 — revue hostile en deux passes | ⏳ | |
+| P9 — 30 min réelles, performance | ✅ ici (faux écosystème) ; avec tes vrais modules : ACTIONS_HUMAINES §3 | « Tableau de bord P9-P10 » |
+| P10 — revue hostile en deux passes | ✅ | « Tableau de bord P10 », « P9-P10 » |
 
 ## P0 — 2026-10-07
 
@@ -315,6 +315,43 @@ Success: no issues found in 54 source files
 23 passed in 24.22s
 19 passed in 15.35s
 TOTAL                                 5294    136    97%
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 730 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
+CHECK OK
+```
+
+## P9 — 2026-10-08 · 30 minutes réelles, performance
+
+Le vrai démon, réglages normaux (un tour par minute), 30 minutes face au faux écosystème (7 vrais processus + 1
+absent) : processeur moyen **0,227 %** (0,326 % avec les commandes qu'il lance), mémoire
+**31,8 Mo** au plus et stable (29,9 → 30,1 Mo), page en **3,9 ms** (médiane,
+9,4 ms au plus), aucune alerte pour le module sain, espion vide, aucun verrou. Avec tes vrais modules
+et de vrais LaunchAgents de test : `TDB_VRAI_LAUNCHD=1 ./check.sh --complet` sur ton Mac (ACTIONS_HUMAINES §3).
+
+## P10 — 2026-10-08 · Revue hostile en deux passes
+
+Passe 1 (lecture de tout le code, angle par angle) et passe 2 (après corrections, de bout en bout : veille de 8 h
+et redémarrage du démon sans fausse alerte). Trouvé et corrigé, un test chacun : une panne qui donnait plusieurs
+alertes (D-43), le seuil de file du module ignoré (D-44), les passages d'un agent périodique comptés comme plantages
+et le démon qui aurait planté sans rumps (D-55), iCloud lisible via un registre mal rempli (D-51), une notification
+qui pouvait partir deux fois après un arrêt brutal (D-52), des copies de grosses bases trop fréquentes (D-53), deux
+trous de la page (D-54). Détail et preuves : RAPPORT_FINAL.md.
+
+Preuve finale (`./check.sh --complet`, code final) :
+
+```
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 730 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
+All checks passed!
+Success: no issues found in 54 source files
+172 passed in 13.16s                (unitaires)
+16 passed in 13.41s                 (lecture seule)
+44 passed in 5.54s                  (adaptateurs)
+20 passed in 5.92s                  (empreinte + gardien)
+39 passed in 21.86s                 (page : sécurité)
+23 passed in 24.89s                 (page : rendu, navigateur)
+20 passed in 20.46s                 (bout en bout)
+1 passed in 374.09s (0:06:14)       (faux écosystème, §9.1)
+1 passed in 1801.19s (0:30:01)      (performance 30 min, §9.5)
+TOTAL                                 5325    134    97%
 INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 730 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
 CHECK OK
 ```
