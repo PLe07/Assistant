@@ -145,6 +145,31 @@ def test_un_module_connu_retire_puis_installe_revient(mac: Any) -> None:
     assert ajoutes == ["ambiance"] and next(m for m in modules if m.id == "ambiance").adaptateur == "ambiance"
 
 
+def test_aide_tapable_sur_un_mac_meme_dans_un_ancien_registre(mac: Any) -> None:
+    # Sur un Mac, `python` n'existe pas : l'aide passe par le `.venv` de l'assistant, même si ton registre a été
+    # écrit avant (il n'est pas réécrit pour autant). Une aide que tu as changée toi-même reste la tienne.
+    chemins = config.Chemins(mac.maison)
+    registre.synchroniser(chemins.registre, PREFIXE, decouvrir(chemins), mac.maison)
+    neuf = chemins.registre.read_text()
+    assert 'aide = "python ' not in neuf
+    ancien = neuf.replace(
+        'aide = "cd ~/Assistant && .venv/bin/python assistant.py etat"',
+        'aide = "python assistant.py etat (dans ~/Assistant)"',
+    ).replace(
+        'aide = "cd ~/Assistant && .venv/bin/python trieur.py doctor"',
+        'aide = "python3 trieur.py doctor --mon-option"',
+    )
+    assert ancien != neuf
+    chemins.registre.write_text(ancien)
+    modules, _, _ = registre.synchroniser(chemins.registre, PREFIXE, decouvrir(chemins), mac.maison)
+    par_id = {m.id: m for m in modules}
+    assert par_id["assistant"].aide == "cd ~/Assistant && .venv/bin/python assistant.py etat"
+    assert par_id["corvees"].aide == "cd ~/Assistant && .venv/bin/python corvees.py doctor"
+    assert par_id["trieur"].aide == "python3 trieur.py doctor --mon-option"
+    assert chemins.registre.read_text() == ancien
+    assert registre.aide_a_jour("bouclier doctor") == "bouclier doctor"
+
+
 def test_registre_tolerant(tmp_path: Path) -> None:
     modules, erreurs = registre.lire("ceci n'est pas du TOML [")
     assert modules == [] and "illisible" in erreurs[0]
@@ -246,6 +271,24 @@ def test_tous_les_modules_en_bonne_sante(mac: Any, base: Base, horloge: Any) -> 
         assert o.tailles is not None
 
 
+def test_taille_de_l_assistant_sans_modeles_telecharges_ni_doublons(mac: Any, base: Base, horloge: Any) -> None:
+    # Les modèles de traduction (~1,4 Go, téléchargés une fois) et les données de Corvées, Nettoyeur, Trieur (comptées
+    # chez eux) ne font pas « gonfler » l'assistant ; ses vraies données, si.
+    ctx = fabrique.contexte(mac, base, horloge)
+    avant = observer(ctx, "assistant").tailles[0]
+    donnees = mac.assistant / "donnees"
+    gros = 3 * 1024 * 1024
+    for dossier in ("traduction/nllb", "traduction/modele", "oreilles/modeles", "corvees", "demarrage", "trieur"):
+        (donnees / dossier).mkdir(parents=True, exist_ok=True)
+        (donnees / dossier / "gros.bin").write_bytes(b"0" * gros)
+    ctx.nouveau_tour(mesurer_tailles=True)
+    assert observer(ctx, "assistant").tailles[0] == avant
+    assert observer(ctx, "corvees").tailles[0] >= gros and observer(ctx, "trieur").tailles[0] >= gros
+    (donnees / "memoire-en-plus.bin").write_bytes(b"0" * gros)
+    ctx.nouveau_tour(mesurer_tailles=True)
+    assert observer(ctx, "assistant").tailles[0] == avant + gros
+
+
 def test_journal_partage_reparti_entre_les_modules(mac: Any, base: Base, horloge: Any) -> None:
     ctx = fabrique.contexte(mac, base, horloge)
     with open(mac.assistant / "logs" / "assistant.log", "a") as f:
@@ -293,7 +336,7 @@ def test_module_eteint_ou_en_pause_n_est_pas_une_panne(mac: Any, base: Base, hor
     corvees.execute("INSERT INTO etat VALUES ('pause', ?, 0)", (json.dumps({"jusqua": horloge() + 3600}),))
     ctx = fabrique.contexte(mac, base, horloge)
     n = observer(ctx, "nettoyeur")
-    assert n.actif is False and "python assistant.py activer demarrage" in n.raison_inactif
+    assert n.actif is False and ".venv/bin/python assistant.py activer demarrage" in n.raison_inactif
     t = observer(ctx, "trieur")
     assert t.actif is False and "micro coupé" in t.raison_inactif
     c = observer(ctx, "corvees")

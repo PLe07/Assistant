@@ -26,6 +26,7 @@ LIBELLE = {
     Pastille.GRIS: "éteint ou pas installé",
 }
 ORDRE = {Pastille.ROUGE: 0, Pastille.JAUNE: 1, Pastille.VERT: 2, Pastille.GRIS: 3}
+PYTHON_DU_PROJET = ".venv/bin/python"  # le Python d'un projet de l'assistant, relatif à son dossier
 
 
 @dataclass

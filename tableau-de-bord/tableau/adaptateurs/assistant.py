@@ -15,6 +15,7 @@ from __future__ import annotations
 import sqlite3
 import time
 from datetime import datetime
+from pathlib import Path
 from typing import Any
 
 from tableau.adaptateurs.base import Adaptateur, debut_du_mois, en_nombre
@@ -23,6 +24,10 @@ from tableau.analyse import credits as credits_
 from tableau.module import Credits, DefModule, Observation
 from tableau.sondes.logs import Ligne
 from tableau.sondes.sqlite_copie import colonnes, tables
+
+# Sous `donnees/` : téléchargés une fois, de taille fixe (traduction ~1,4 Go, transcription) : pas des données qui
+# gonflent (D-59).
+MODELES_TELECHARGES = ("traduction/modele", "traduction/nllb", "oreilles/modeles")
 
 
 def lire_appels(debut_mois: float, debut_jour: float) -> Any:
@@ -76,6 +81,20 @@ class Assistant(Adaptateur):
     def dossiers_donnees(self, defn: DefModule, ctx: Contexte) -> list:
         racine = ctx.racine_assistant()
         return [racine / "donnees"] if racine else []
+
+    def dossiers_exclus(self, defn: DefModule, ctx: Contexte) -> list[Path]:
+        """Les modèles téléchargés une fois (taille fixe), et les données des modules qu'il supervise (comptées
+        chez eux)."""
+        from tableau.adaptateurs import obtenir  # ici : le registre des adaptateurs importe celui-ci
+
+        racine = ctx.racine_assistant()
+        if racine is None:
+            return []
+        exclus = [racine / "donnees" / modele for modele in MODELES_TELECHARGES]
+        for autre in ctx.modules:
+            if autre.id != defn.id and autre.superviseur:
+                exclus += obtenir(autre.adaptateur).dossiers_donnees(autre, ctx)
+        return exclus
 
     def lire_base(self, defn: DefModule, ctx: Contexte, obs: Observation) -> None:
         racine = ctx.racine_assistant()

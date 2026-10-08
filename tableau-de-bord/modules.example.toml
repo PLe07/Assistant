@@ -15,7 +15,7 @@ file_max_min = 15                   # au-delà, un document en attente est « bl
 perimetre_code = ["modules/trieur", "trieur.py"]   # ce que le gardien d'intégrité surveille
 plafond_usd = 1.0                   # plafond de crédits Claude du mois (le sien, lu dans ses réglages, prime)
 commande_diagnostic = [".venv/bin/python", "trieur.py", "doctor"]  # lancée seulement à ta demande (bouton)
-aide = "python trieur.py doctor (dans ~/Assistant)"
+aide = "cd ~/Assistant && .venv/bin/python trieur.py doctor"
 
 [[module]]
 id = "bouclier"

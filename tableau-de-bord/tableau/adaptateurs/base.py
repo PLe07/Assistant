@@ -164,10 +164,14 @@ class Adaptateur:
         resultat += [p.parent for p in (ctx.chemin(defn, b) for b in defn.bases) if p is not None]
         return [p for p in resultat if p is not None]
 
+    def dossiers_exclus(self, defn: DefModule, ctx: Contexte) -> list[Path]:
+        """Ce qui, dans ses dossiers de données, ne compte pas dans sa taille (D-59)."""
+        return []
+
     def lire_tailles(self, defn: DefModule, ctx: Contexte, obs: Observation) -> None:
         if not ctx.mesurer_tailles:
             return
-        donnees = tailles.taille(self.dossiers_donnees(defn, ctx))
+        donnees = tailles.taille(self.dossiers_donnees(defn, ctx), self.dossiers_exclus(defn, ctx))
         journaux = tailles.taille([f for f in self.fichiers_journaux(defn, ctx) if f.exists()])
         tailles.noter(ctx.base, defn.id, ctx.maintenant, donnees, journaux)
         obs.tailles = (donnees or 0, journaux or 0)

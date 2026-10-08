@@ -404,3 +404,10 @@ Notifications : silence de nuit jusqu'à 8h
 Lu de près : le 🟡 de Bouclier est **vrai** (sa relève Gmail n'a pas réussi depuis un jour : Bouclier n'en note la date
 qu'après une relève réussie) ; le chiffre de l'Assistant venait d'un défaut du tableau de bord (les erreurs sans date
 de l'historique comptées « maintenant », D-56), corrigé et testé. L'alerte de Bouclier cite désormais sa raison (D-57).
+
+Deuxième lecture (`tableau module assistant`, `bouclier doctor`, `tableau credits`) : les erreurs de l'Assistant
+étaient d'anciennes erreurs de son icône (un défaut de sous-menu déjà corrigé dans l'assistant), comptées à
+l'installation ; la raison de Bouclier est une panne de réseau (nom du serveur Gmail introuvable), pas un mot de passe.
+Deux défauts du tableau de bord en sont sortis, corrigés avec un test chacun : l'aide citait `python`, absent d'un
+Mac (D-58) ; la taille de l'Assistant comptait ses modèles de traduction (~1,4 Go, taille fixe) et les données de
+Corvées, Nettoyeur et Trieur une deuxième fois (D-59).

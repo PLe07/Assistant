@@ -21,10 +21,18 @@ from pathlib import Path
 from typing import Any
 
 from tableau.decouverte import Decouverte
-from tableau.module import Attente, DefModule
+from tableau.module import PYTHON_DU_PROJET, Attente, DefModule
 
 AUTO = "auto"
-PYTHON_DU_PROJET = ".venv/bin/python"
+# L'aide écrite par les premières versions (« python x.py doctor (dans ~/Assistant) ») : `python` n'existe pas sur un
+# Mac (seulement `python3`), et les outils de l'assistant sont dans son `.venv` (D-58).
+_AIDE_PERIMEE = re.compile(r"^python (\S+\.py(?: \S+)*) \(dans (\S+)\)$")
+
+
+def aide_a_jour(aide: str) -> str:
+    """L'aide d'un registre déjà écrit, rendue tapable telle quelle (sans toucher au fichier)."""
+    m = _AIDE_PERIMEE.match(aide)
+    return f"cd {m[2]} && {PYTHON_DU_PROJET} {m[1]}" if m else aide
 
 
 def _assistant(prefixe: str) -> list[DefModule]:
@@ -52,7 +60,7 @@ def _assistant(prefixe: str) -> list[DefModule]:
                 "tableau-de-bord",
             ],  # fmt: skip
             commande_diagnostic=[PYTHON_DU_PROJET, "assistant.py", "etat"],
-            aide="python assistant.py etat (dans ~/Assistant)",
+            aide="cd ~/Assistant && .venv/bin/python assistant.py etat",
             attendu=True,
         ),
         DefModule(
@@ -66,7 +74,7 @@ def _assistant(prefixe: str) -> list[DefModule]:
             perimetre_code=["modules/corvees", "corvees.py"],
             plafond_usd=2.0,
             commande_diagnostic=[PYTHON_DU_PROJET, "corvees.py", "doctor"],
-            aide="python corvees.py doctor (dans ~/Assistant)",
+            aide="cd ~/Assistant && .venv/bin/python corvees.py doctor",
             attentes=[
                 Attente("analyse", "quotidienne", "analyse quotidienne vers 21h", heure="21:00", tolerance_min=60)
             ],
@@ -82,7 +90,7 @@ def _assistant(prefixe: str) -> list[DefModule]:
             dossier_projet=AUTO,
             perimetre_code=["modules/demarrage", "demarrage.py"],
             commande_diagnostic=[PYTHON_DU_PROJET, "demarrage.py", "doctor"],
-            aide="python demarrage.py doctor (dans ~/Assistant)",
+            aide="cd ~/Assistant && .venv/bin/python demarrage.py doctor",
             attentes=[
                 Attente("releve", "periodique", "un relevé toutes les 2 min", toutes_les_min=2, tolerance_min=10)
             ],
@@ -101,7 +109,7 @@ def _assistant(prefixe: str) -> list[DefModule]:
             perimetre_code=["modules/trieur", "trieur.py"],
             plafond_usd=1.0,
             commande_diagnostic=[PYTHON_DU_PROJET, "trieur.py", "doctor"],
-            aide="python trieur.py doctor (dans ~/Assistant)",
+            aide="cd ~/Assistant && .venv/bin/python trieur.py doctor",
             attendu=True,
         ),
     ]
@@ -340,7 +348,7 @@ def lire(texte: str) -> tuple[list[DefModule], list[str]]:
 
 
 def resoudre(modules: list[DefModule], decouverte: Decouverte, maison: Path) -> list[DefModule]:
-    """Remplace « auto » par ce que la découverte a trouvé (sans toucher au fichier)."""
+    """Remplace « auto » par ce que la découverte a trouvé, et met à jour une aide périmée (sans toucher au fichier)."""
     resultat = []
     assistant = vers_tilde(decouverte.assistant, maison)
     for m in modules:
@@ -356,6 +364,8 @@ def resoudre(modules: list[DefModule], decouverte: Decouverte, maison: Path) -> 
             if projet is None and assistant and m.adaptateur in ("bouclier", "quotidien"):
                 projet = f"{assistant}/{m.adaptateur}"
             m = _copie(m, dossier_projet=projet)
+        if aide_a_jour(m.aide) != m.aide:
+            m = _copie(m, aide=aide_a_jour(m.aide))
         resultat.append(m)
     return resultat
 

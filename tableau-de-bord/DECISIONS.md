@@ -337,3 +337,15 @@ d'elles-mêmes, sans notification (silence de nuit, et jamais annoncées).
 relève **réussie** et note la cause d'un échec dans `gmail_erreur` : l'alerte « relève Gmail … n'a pas eu lieu » dit
 désormais « … ; Bouclier dit : <sa raison> » (caviardée). Mécanisme général : un adaptateur peut donner
 `raison:<id de l'attente>`.
+
+**D-58 · Une aide qu'on peut taper telle quelle sur un Mac.** macOS n'a pas de commande `python` (seulement `python3`),
+et les outils de l'assistant sont dans son `.venv` : l'aide devient `cd ~/Assistant && .venv/bin/python assistant.py
+etat` (idem Corvées, Nettoyeur, Trieur, et « pour l'allumer : … activer … »). Un registre déjà écrit avec l'ancienne
+forme (`python x.py commande (dans dossier)`) est corrigé à la lecture, sans réécrire le fichier (D-17) ; une aide
+que tu as changée toi-même ne bouge pas.
+
+**D-59 · La taille de l'assistant : ses vraies données seulement.** Sur ton Mac, « 1,9 Go » venait surtout des modèles
+de traduction (téléchargés une fois, ~1,4 Go, taille fixe) et des données de Corvées, Nettoyeur et Trieur, déjà
+comptées chez eux. Ne comptent plus pour l'assistant : `donnees/traduction/modele`, `donnees/traduction/nllb`,
+`donnees/oreilles/modeles`, et le dossier de données de chaque module qu'il supervise. Le reste (mémoire, captures,
+état…) compte toujours, seuil (500 Mo) et croissance inchangés.

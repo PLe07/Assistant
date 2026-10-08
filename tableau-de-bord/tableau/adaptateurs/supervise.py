@@ -14,7 +14,7 @@ from typing import Any
 from tableau.adaptateurs.base import Adaptateur, noter_relances
 from tableau.adaptateurs.contexte import Contexte
 from tableau.caviardage import caviarder
-from tableau.module import DefModule, Observation
+from tableau.module import PYTHON_DU_PROJET, DefModule, Observation
 from tableau.sondes.logs import Ligne
 
 
@@ -65,8 +65,10 @@ class AdaptateurSupervise(Adaptateur):
         valeur_statut = str(statut.get("statut") or "") if statut else ""
         if valeur_statut == "désactivé" or (not valeur_statut and actif_reglages is False):
             obs.actif = False
+            dossier = defn.dossier_projet or "~/Assistant"
             obs.raison_inactif = (
-                f"éteint dans l'assistant (pour l'allumer : python assistant.py activer {defn.superviseur})"
+                "éteint dans l'assistant (pour l'allumer : "
+                f"cd {dossier} && {PYTHON_DU_PROJET} assistant.py activer {defn.superviseur})"
             )
         elif valeur_statut == "en pause":
             obs.actif = False
