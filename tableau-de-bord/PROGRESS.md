@@ -416,3 +416,8 @@ Troisième lecture (`tableau etat` après la mise à jour) : l'alerte « Nettoye
 fausse (copie de sa base vieille de 25 min, D-60) ; la page est passée au port 47616 parce que l'ancien refroidissait
 encore (D-61). Les deux sont corrigés, avec un test chacun ; le faux écosystème reste vert. La raison de Bouclier
 s'affiche bien dans l'alerte (D-57) : le Mac ne trouvait pas l'adresse de Gmail au moment de ses essais.
+
+Quatrième lecture (après D-60 et D-61) : Nettoyeur 🟢, l'alerte de taille de l'Assistant a disparu, la page est
+restée sur son port. Restent les anciennes erreurs de l'Assistant (comptées à 23h32, elles sortent de la fenêtre
+d'une heure) et Bouclier, dont la raison est affichée ; le Mac trouve bien `imap.gmail.com` (ping), donc Bouclier
+devrait réussir à son prochain essai automatique.
