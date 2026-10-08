@@ -368,3 +368,23 @@ def test_sans_rumps_le_demon_tourne_quand_meme(maison: Path, monkeypatch: pytest
     assert daemon.lancer() == 0 and tours == [1]
     journal = (config.chemins().logs / "tableau.log").read_text(encoding="utf-8")
     assert "icône de la barre des menus impossible (ImportError)" in journal and "arrêté proprement" in journal
+
+
+def test_aucune_fausse_alerte_au_reveil_ni_apres_un_redemarrage(eco: Ecosysteme) -> None:
+    """8 h de veille (l'horloge murale avance, l'horloge monotone non), puis le réveil : les modules reprennent, rien
+    n'est signalé. Puis le démon arrêté 3 h et relancé : rien non plus."""
+    eco.tours(10)
+    eco.t[0] += 8 * 3600  # le Mac dort : ni les modules ni le tableau de bord ne tournent
+    eco.mono[0] += 1
+    eco.tours(20)
+    assert eco.notif.envoyees == []
+    assert eco.demon.base.valeur("SELECT COUNT(*) FROM veilles") >= 1
+    assert all(str(e.pastille) in ("vert", "gris") for e in eco.etats.values()), {
+        i: e.phrase for i, e in eco.etats.items()
+    }
+    eco.demon.fermer()
+    eco.t[0] += 3 * 3600
+    eco.mono[0] += 3 * 3600
+    eco.redemarrer()
+    eco.tours(20)
+    assert eco.notif.envoyees == []

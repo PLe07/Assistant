@@ -22,7 +22,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-from tableau import systeme
+from tableau import config, systeme
 from tableau.db import Base
 from tableau.module import DefModule
 
@@ -102,6 +102,8 @@ class Gardien:
         """(nom dans la référence, chemin) de chaque fichier du périmètre."""
         racine = self.racine(defn)
         vus = 0
+        if racine is not None and config.dans_icloud(racine, self.maison):
+            racine = None  # du code dans iCloud : le relire forcerait son téléchargement, on ne le surveille pas
         if racine is not None and racine.is_dir():
             exclus = {(racine / e).resolve() for e in defn.perimetre_exclu}
             exclus.add(RACINE_TABLEAU)
@@ -127,7 +129,7 @@ class Gardien:
             if plist.is_file():
                 yield f"plist:{label}", plist
         support = defn.chemin(defn.dossier_donnees, self.maison) if defn.dossier_donnees else None
-        if support is not None and support.is_dir():
+        if support is not None and support.is_dir() and not config.dans_icloud(support, self.maison):
             for chemin in sorted(support.rglob("*")):
                 rel = chemin.relative_to(support).as_posix()
                 reglage = chemin.suffix.lower() in EXTENSIONS_REGLAGES

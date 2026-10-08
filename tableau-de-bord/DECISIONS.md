@@ -301,3 +301,25 @@ facultative seulement si tu dis oui. Ce qui n'est pas à nous (même nom, autre 
 
 **D-50 · `etat.json` pour l'assistant.** Un résumé de quelques lignes (bandeau, pastille et phrase de chaque module,
 caviardées) dans notre dossier, réécrit à chaque tour : l'assistant peut le lire sans rien appeler (INTEGRATION.md).
+
+## 2026-10-08 · P10 — Revue hostile
+
+**D-51 · iCloud : jamais un contenu lu, même si le registre y pointe.** Les files d'attente iCloud ne sont que
+listées (`scandir`, `stat`). Si un jour un `modules.toml` faisait pointer un code, une base ou un journal sous iCloud
+Drive, le gardien, la copie des bases et la lecture des journaux le refusent : le lire forcerait son téléchargement.
+
+**D-52 · Noter d'abord, notifier ensuite.** Si le démon s'arrêtait pile entre l'envoi et l'écriture, la
+notification serait envoyée deux fois au redémarrage. L'ordre est inversé : la notification est notée (« envoi en
+cours ») dans la même transaction que les problèmes qu'elle annonce, puis envoyée. Au pire une notification perdue
+(visible dans le journal et la page), jamais un doublon.
+
+**D-53 · Une grosse base est recopiée au plus 50 Mo par heure.** Corvées garde 30 jours d'événements : recopier une
+base de 50 Mo toutes les 10 min userait le disque et la batterie (7 Go par jour). Au-delà de 4 Mo, l'intervalle
+grandit avec la taille (40 Mo : toutes les 48 min ; 200 Mo : toutes les 4 h ; 6 h au plus). Entre deux copies, la
+date du fichier donne le battement (D-18).
+
+**D-54 · La page : HEAD sur le direct ne l'ouvre pas, une longueur illisible est un 400.** Petits trous trouvés en
+relisant ; testés.
+
+**D-55 · Les passages d'un agent périodique ne sont pas des plantages ; sans rumps, pas de boucle de plantages.**
+Voir P8 (trouvés pendant la revue, avant le juge final).

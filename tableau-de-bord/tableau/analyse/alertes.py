@@ -351,14 +351,15 @@ class Alertes:
         if not elements:
             return None
         titre, texte = self.composer(elements)
-        ok, motif = self.notificateur.envoyer(titre, texte)
         cles = [e.cle for e in elements]
+        # D'abord noter (dans une transaction) que c'est dit, ensuite le dire : si le démon s'arrêtait entre les deux,
+        # une notification serait perdue (la page et le journal la montrent), jamais envoyée deux fois.
         with self.base.transaction():
             db = self.base.db
-            db.execute(
-                "INSERT INTO notifications (ts, titre, texte, cles, envoyee, motif) VALUES (?, ?, ?, ?, ?, ?)",
-                (maintenant, titre, texte, json.dumps(cles, ensure_ascii=False), int(ok), motif),
-            )
+            numero = db.execute(
+                "INSERT INTO notifications (ts, titre, texte, cles, envoyee, motif) VALUES (?, ?, ?, ?, 0, ?)",
+                (maintenant, titre, texte, json.dumps(cles, ensure_ascii=False), "envoi en cours"),
+            ).lastrowid
             # Même en cas d'échec, on ne réessaie pas en boucle : la page et le journal les montrent.
             for e in elements:
                 if e.genre == "alerte":
@@ -381,11 +382,15 @@ class Alertes:
                     "ON CONFLICT(cle) DO UPDATE SET valeur = excluded.valeur",
                     (json.dumps(parties, ensure_ascii=False),),
                 )
-            details = "" if ok else f"non affichée : {motif}"
-            db.execute(
+        ok, motif = self.notificateur.envoyer(titre, texte)
+        with self.base.transaction():
+            self.base.db.execute(
+                "UPDATE notifications SET envoyee = ?, motif = ? WHERE id = ?", (int(ok), motif, numero)
+            )
+            self.base.db.execute(
                 "INSERT INTO evenements (ts, module, genre, gravite, message, details) "
                 "VALUES (?, 'tableau', 'notification', 'info', ?, ?)",
-                (maintenant, texte.replace("\n", " · "), details),
+                (maintenant, texte.replace("\n", " · "), "" if ok else f"non affichée : {motif}"),
             )
         return Envoi(titre, texte, elements, ok, motif)
 

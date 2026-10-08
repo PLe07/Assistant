@@ -262,3 +262,50 @@ def test_signature_et_derniere_ecriture(tmp_path: Path) -> None:
     base_wal(tmp_path / "m.db").close()
     sig = sqlite_copie.signature(tmp_path / "m.db")
     assert sig.derniere_ecriture is not None and abs(sig.derniere_ecriture - time.time()) < 60
+
+
+def test_jamais_une_base_dans_icloud(tmp_path: Path) -> None:
+    """Une base sous iCloud Drive n'est jamais copiée : la lire forcerait son téléchargement."""
+    icloud = tmp_path / "Library" / "Mobile Documents" / "com~apple~CloudDocs" / "Module"
+    icloud.mkdir(parents=True)
+    db = base_wal(icloud / "m.db")
+    from tableau import config
+
+    lecteur = sqlite_copie.LecteurBases(tmp_path / "copies", intervalle_s=0,
+                                        interdits=lambda p: config.dans_icloud(p, tmp_path))  # fmt: skip
+    avant = empreintes(icloud)
+    assert lecteur.lire(icloud / "m.db", "x", lambda d: 1) is None
+    assert "iCloud" in lecteur.erreurs[str(icloud / "m.db")] and empreintes(icloud) == avant
+    assert not (tmp_path / "copies").exists() or not any((tmp_path / "copies").iterdir())
+    db.close()
+
+
+def test_grosse_base_un_budget_de_copie_par_heure(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """40 Mo : recopiée au plus toutes les 48 min, même si elle bouge à chaque tour (disque et batterie)."""
+    source = tmp_path / "grosse.db"
+    db = base_wal(source)
+    t = [1000.0]
+    taille = [40 * 1024 * 1024]
+    vraie = sqlite_copie.signature
+
+    def signature(chemin: Path) -> sqlite_copie.Signature:
+        s = vraie(chemin)
+        principal = s.fichiers[0]
+        assert principal is not None
+        return sqlite_copie.Signature(((taille[0], principal[1] + int(t[0]), principal[2]), *s.fichiers[1:]))
+
+    monkeypatch.setattr(sqlite_copie, "signature", signature)
+    lecteur = sqlite_copie.LecteurBases(tmp_path / "copies", intervalle_s=600, horloge=lambda: t[0],
+                                        dormir=lambda _s: None)  # fmt: skip
+    lectures: list[float] = []
+    for _ in range(60):  # une heure, un tour par minute, la base bouge à chaque fois
+        lecteur.lire(source, "x", lambda d: lectures.append(t[0]) or len(lectures))
+        t[0] += 60
+    assert len(lectures) == 2 and lectures[1] - lectures[0] >= 40 / 50 * 3600
+    taille[0] = 2 * 1024 * 1024  # petite : à chaque tour si elle a bougé
+    n = len(lectures)
+    for _ in range(3):
+        lecteur.lire(source, "x", lambda d: lectures.append(t[0]) or len(lectures))
+        t[0] += 60
+    assert len(lectures) == n + 3
+    db.close()

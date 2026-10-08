@@ -142,6 +142,23 @@ class Chemins:
             os.chmod(d, 0o700)
 
 
+def racines_icloud(maison_: Path) -> list[Path]:
+    """Où vivent les fichiers iCloud : y lire un contenu forcerait son téléchargement (§1.2 : jamais)."""
+    racines = [maison_ / "Library" / "Mobile Documents"]
+    surcharge = os.environ.get("TABLEAU_ICLOUD")
+    if surcharge:
+        racines.append(Path(surcharge))
+    return racines
+
+
+def dans_icloud(chemin: Path, maison_: Path) -> bool:
+    try:
+        reel = chemin.resolve()
+    except OSError:
+        return False
+    return any(reel == r.resolve() or r.resolve() in reel.parents for r in racines_icloud(maison_))
+
+
 def chemins() -> Chemins:
     return Chemins(maison())
 

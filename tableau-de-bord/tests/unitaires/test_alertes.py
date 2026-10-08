@@ -309,3 +309,26 @@ def test_notificateur_mac(monkeypatch: pytest.MonkeyPatch) -> None:
     assert NotificateurMac().envoyer("Tableau de bord", 'Le "Trieur"') == (True, "")
     assert vues[0] == ["osascript", "-e", 'display notification "Le \\"Trieur\\"" with title "Tableau de bord"']
     assert NotificateurMac().envoyer("t", "x") == (False, "execution error: refusé")
+
+
+def test_demon_qui_meurt_pendant_l_envoi_jamais_de_doublon(base: Base, reglages: config.Reglages) -> None:
+    """Noté d'abord, envoyé ensuite : un arrêt brutal entre les deux perd une notification, jamais ne la double."""
+
+    class Coupure(Exception):
+        pass
+
+    class MeurtEnEnvoyant:
+        def envoyer(self, titre: str, texte: str) -> tuple[bool, str]:
+            raise Coupure
+
+    m = Monde(base, reglages, local(2026, 10, 7, 10))
+    m.a = Alertes(base, reglages, MeurtEnEnvoyant(), lambda: m.t)
+    m.tours(1, [boucle()])
+    with pytest.raises(Coupure):
+        m.tours(5, [boucle()])
+    note = m.a.dernieres_notifications()[0]
+    assert note["envoyee"] == 0 and note["motif"] == "envoi en cours"
+    # Le démon redémarre : rien n'est renvoyé.
+    m.a = Alertes(base, reglages, m.notif, lambda: m.t)
+    m.tours(20, [boucle()])
+    assert m.notif.envoyees == []

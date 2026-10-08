@@ -261,3 +261,15 @@ def test_surveillance_fsevents(tmp_path: Path, monde: tuple[Path, Path, DefModul
     finally:
         s.arreter()
     s.arreter()
+
+
+def test_jamais_de_code_dans_icloud(tmp_path: Path) -> None:
+    """Un périmètre sous iCloud Drive n'est jamais relu (ce serait forcer son téléchargement)."""
+    maison = tmp_path / "m"
+    projet = maison / "Library" / "Mobile Documents" / "com~apple~CloudDocs" / "Projet"
+    projet.mkdir(parents=True)
+    (projet / "code.py").write_text("x = 1\n")
+    defn = DefModule(id="p", nom="P", dossier_projet=str(projet), perimetre_code=["."],
+                     dossier_donnees=str(projet))  # fmt: skip
+    g = gardien(maison, Base(tmp_path / "t.db"), Horloge())
+    assert list(g.fichiers(defn)) == []

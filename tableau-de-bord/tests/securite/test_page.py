@@ -7,6 +7,7 @@ import html
 import os
 import socket
 import subprocess
+import time
 from typing import Any
 
 import pytest
@@ -187,3 +188,17 @@ def test_port_pris_un_autre_est_choisi_et_retenu(site: Any, maison: Any) -> None
             serveur.ouvrir(site.source, JETON, pris, None, range(pris, pris + 1))
     finally:
         occupe.close()
+
+
+def test_head_sur_le_direct_et_longueur_illisible(site: Any) -> None:
+    debut = time.monotonic()
+    r = requete(site.port, "/evenements", "HEAD")
+    assert r.code == 200 and r.corps == b"" and time.monotonic() - debut < 2
+    assert site.source.diffuseur.clients == 0
+    for longueur in ("abc", "-5"):
+        with socket.create_connection(("127.0.0.1", site.port), timeout=5) as s:
+            s.sendall((f"POST /action/sourdine?t={JETON} HTTP/1.1\r\nHost: 127.0.0.1:{site.port}\r\n"
+                       f"X-Jeton: {JETON}\r\nContent-Type: application/json\r\nContent-Length: {longueur}\r\n"
+                       "Connection: close\r\n\r\n").encode())  # fmt: skip
+            reponse = s.recv(4096)
+        assert reponse.split(b"\r\n", 1)[0].endswith(b" 400 Bad Request"), longueur

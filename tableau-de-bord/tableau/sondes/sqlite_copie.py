@@ -30,6 +30,8 @@ MARGE_DISQUE = 50 * 1024 * 1024
 BLOC = 1 << 20
 PETITE_BASE = 4 * 1024 * 1024
 PETITE_INTERVALLE_S = 55.0
+BUDGET_PAR_HEURE = 50 * 1024 * 1024  # octets recopiés par heure et par base, au plus (disque et batterie)
+INTERVALLE_MAX_S = 6 * 3600
 
 
 class CopieImpossible(Exception):
@@ -178,8 +180,10 @@ class LecteurBases:
         taille_max: int = 256 * 1024 * 1024,
         horloge: Callable[[], float] = time.time,
         dormir: Callable[[float], None] = time.sleep,
+        interdits: Callable[[Path], bool] = lambda _p: False,
     ) -> None:
         self.dossier = dossier_copies
+        self.interdits = interdits
         self.intervalle_s = intervalle_s
         self.taille_max = taille_max
         self.horloge = horloge
@@ -191,6 +195,9 @@ class LecteurBases:
         """Le résultat de `fonction(copie)`, recalculé seulement si la base a bougé et que le délai est passé.
 
         Renvoie None si la base n'existe pas ou n'a jamais pu être lue (inconnu)."""
+        if self.interdits(source):
+            self.erreurs[str(source)] = "dans iCloud : jamais copiée (ce serait un téléchargement forcé)"
+            return None
         sig = signature(source)
         if sig.fichiers[0] is None:
             return None
@@ -198,7 +205,11 @@ class LecteurBases:
         maintenant = self.horloge()
         # Une petite base (statuts, battements) se recopie à chaque tour si elle a bougé ; une grosse, rarement.
         taille = sum(f[0] for f in sig.fichiers if f is not None)
-        intervalle = min(self.intervalle_s, PETITE_INTERVALLE_S) if taille <= PETITE_BASE else self.intervalle_s
+        if taille <= PETITE_BASE:
+            intervalle = min(self.intervalle_s, PETITE_INTERVALLE_S)
+        else:
+            # Au plus BUDGET_PAR_HEURE recopiés par heure pour une base : 40 Mo → toutes les 48 min, 200 Mo → 4 h.
+            intervalle = min(INTERVALLE_MAX_S, max(self.intervalle_s, taille / BUDGET_PAR_HEURE * 3600))
         if memo is not None and not forcer:
             ancienne, quand, valeur = memo
             if ancienne == sig or maintenant - quand < intervalle:

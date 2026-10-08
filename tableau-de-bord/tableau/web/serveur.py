@@ -165,6 +165,8 @@ class Gestionnaire(BaseHTTPRequestHandler):
         return None
 
     def _flux(self) -> None:
+        if self.command == "HEAD":
+            return self._envoyer(200, b"", "text/event-stream; charset=utf-8")
         diffuseur = self.server.source.diffuseur
         if not diffuseur.entrer():
             return self._refus(503, "trop de pages ouvertes")
@@ -195,7 +197,12 @@ class Gestionnaire(BaseHTTPRequestHandler):
     # --- POST ----------------------------------------------------------------------------------------------------
 
     def _post(self) -> None:
-        longueur = int(self.headers.get("Content-Length") or 0)
+        try:
+            longueur = int(self.headers.get("Content-Length") or 0)
+        except ValueError:
+            longueur = -1
+        if longueur < 0:
+            return self._refus(400, "longueur du corps illisible")
         if longueur > CORPS_MAX:
             return self._refus(413, "corps trop long")
         try:

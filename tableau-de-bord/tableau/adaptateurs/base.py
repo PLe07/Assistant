@@ -14,6 +14,7 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
+from tableau import config
 from tableau.adaptateurs.contexte import Contexte
 from tableau.caviardage import caviarder
 from tableau.module import DefModule, Observation, StatsLogs
@@ -109,7 +110,7 @@ class Adaptateur:
             fichiers.extend(sorted(dossier.glob("*.log")))
         uniques: list[Path] = []
         for f in fichiers:
-            if f not in uniques:
+            if f not in uniques and not config.dans_icloud(f, ctx.chemins.maison):  # iCloud : jamais lu
                 uniques.append(f)
         return uniques
 

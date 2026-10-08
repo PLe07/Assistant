@@ -549,3 +549,12 @@ def test_agent_periodique_ses_passages_ne_sont_pas_des_plantages(mac: Any, base:
     ctx.nouveau_tour()
     assert ad_base.Adaptateur().observer(periodique, ctx).relances == []
     assert len(ad_base.Adaptateur().observer(permanent, ctx).relances) == 4
+
+
+def test_jamais_de_journal_lu_dans_icloud(mac: Any, base: Base, horloge: Any) -> None:
+    dans = mac.icloud / "Module" / "logs"
+    dans.mkdir(parents=True)
+    (dans / "m.log").write_text("2026-10-07 10:00:00 ERROR secret\n")
+    defn = DefModule(id="m", nom="M", logs=[str(dans / "m.log")], dossier_logs=str(dans))
+    ctx = fabrique.contexte(mac, base, horloge, [defn])
+    assert ad_base.Adaptateur().fichiers_journaux(defn, ctx) == []
