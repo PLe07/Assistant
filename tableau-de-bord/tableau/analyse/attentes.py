@@ -125,6 +125,10 @@ def evaluer(base: Base, defn: DefModule, obs: Observation, maintenant: float) ->
             verdicts.append(v)
         elif a.genre == "periodique" and a.toutes_les_min:
             verdicts.append(periodique(base, a, preuve, maintenant, premier_vu))
+    for v in verdicts:
+        raison = obs.technique.get(f"raison:{v.attente.id}")
+        if v.statut == "manquee" and isinstance(raison, str) and raison:
+            v.detail = f"{v.detail} ; {defn.nom} dit : {raison}"
     return verdicts
 
 

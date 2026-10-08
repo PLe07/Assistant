@@ -166,7 +166,13 @@ class LecteurJournaux:
         cle = str(chemin)
         if cle not in self._tour:
             try:
-                self._tour[cle] = analyser(self._nouveau_texte(chemin).decode("utf-8", errors="replace"))
+                premiere = self._curseur(cle) is None
+                lignes = analyser(self._nouveau_texte(chemin).decode("utf-8", errors="replace"))
+                if premiere:
+                    # Première lecture : c'est de l'historique. Une ligne sans date y est d'un moment inconnu ; la
+                    # compter « maintenant » ferait un faux pic d'erreurs. Seules les lignes datées sont gardées.
+                    lignes = [lg for lg in lignes if lg.ts is not None]
+                self._tour[cle] = lignes
             except OSError:
                 self._tour[cle] = []
         return self._tour[cle]

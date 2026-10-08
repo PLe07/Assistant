@@ -2,8 +2,8 @@
 
 - Journaux : `~/Library/Logs/Bouclier/bouclier.log` (caviardé par Bouclier), `demon.sortie.log`, `demon.erreurs.log`.
 - `~/Library/Application Support/Bouclier/bouclier.db` (copie) : `meta.demon_battement` (toutes les 30 s),
-  `meta.gmail_releve_le` (la relève Gmail, toutes les 5 min par défaut), `meta.gmail_echecs`, dépenses Claude du mois
-  (`depenses_ia`).
+  `meta.gmail_releve_le` (la dernière relève Gmail **réussie**, toutes les 5 min par défaut), `meta.gmail_echecs` et
+  `meta.gmail_erreur` (pourquoi elle échoue : cité dans l'alerte), dépenses Claude du mois (`depenses_ia`).
 - `config.toml` : plafond (`[ia] budget_mensuel_usd`, 2 $), relève Gmail active et son intervalle (`[gmail]`).
 - `etat.json` : son interface publique (score d'hygiène, arnaques de la semaine), affichée dans le détail.
 - File : `iCloud Drive/Bouclier/entree/` (le raccourci « Arnaque ? »).
@@ -16,6 +16,7 @@ from typing import Any
 
 from tableau.adaptateurs.base import Adaptateur, debut_du_mois, en_nombre, mois_courant, somme_couts, valeur_cle
 from tableau.adaptateurs.contexte import Contexte
+from tableau.caviardage import caviarder
 from tableau.module import Credits, DefModule, Observation
 
 
@@ -25,6 +26,7 @@ def lire(mois: str, debut_mois: float) -> Any:
             "battement": en_nombre(valeur_cle(db, "meta", "demon_battement")),
             "gmail": en_nombre(valeur_cle(db, "meta", "gmail_releve_le")),
             "gmail_echecs": en_nombre(valeur_cle(db, "meta", "gmail_echecs")),
+            "gmail_erreur": valeur_cle(db, "meta", "gmail_erreur"),
             "mois_usd": somme_couts(db, "depenses_ia", mois, debut_mois),
         }
 
@@ -67,3 +69,6 @@ class Bouclier(Adaptateur):
             obs.activite = ("dernière relève Gmail", donnees["gmail"])
         if donnees.get("gmail_echecs"):
             obs.technique["gmail_echecs"] = int(donnees["gmail_echecs"] or 0)
+        erreur = donnees.get("gmail_erreur")
+        if isinstance(erreur, str) and erreur.strip():
+            obs.technique["raison:gmail"] = caviarder(erreur, 160)  # ce que Bouclier dit de sa relève

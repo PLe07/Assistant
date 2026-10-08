@@ -558,3 +558,25 @@ def test_jamais_de_journal_lu_dans_icloud(mac: Any, base: Base, horloge: Any) ->
     defn = DefModule(id="m", nom="M", logs=[str(dans / "m.log")], dossier_logs=str(dans))
     ctx = fabrique.contexte(mac, base, horloge, [defn])
     assert ad_base.Adaptateur().fichiers_journaux(defn, ctx) == []
+
+
+def test_bouclier_releve_gmail_en_echec_dit_pourquoi(mac: Any, base: Base, horloge: Any) -> None:
+    """Bouclier n'avance `gmail_releve_le` qu'après une relève réussie, et note la raison d'un échec : l'alerte la cite
+    (caviardée)."""
+    from tableau.analyse import attentes
+
+    db = mac.bases["bouclier"]
+    db.execute("UPDATE meta SET valeur = ? WHERE cle = 'gmail_releve_le'", (str(horloge() - 86400),))
+    db.execute("INSERT INTO meta VALUES ('gmail_erreur', 'Gmail refuse la connexion de alice@example.com (mot de "
+               "passe d''application révoqué)')")  # fmt: skip
+    ctx = fabrique.contexte(mac, base, horloge)
+    defn = ctx.module("bouclier")
+    assert defn is not None
+    base.ecrire_meta("premier_vu:bouclier", str(horloge() - 2 * 86400))
+    obs = adaptateurs.obtenir(defn.adaptateur).observer(defn, ctx)
+    gmail = next(v for v in attentes.evaluer(base, defn, obs, horloge()) if v.attente.id == "gmail")
+    assert gmail.statut == "manquee"
+    assert gmail.detail == (
+        "aucun passage depuis 1 j ; Bouclier dit : Gmail refuse la connexion de [e-mail] (mot de passe d'application "
+        "révoqué)"
+    )

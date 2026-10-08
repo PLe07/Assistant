@@ -323,3 +323,17 @@ relisant ; testés.
 
 **D-55 · Les passages d'un agent périodique ne sont pas des plantages ; sans rumps, pas de boucle de plantages.**
 Voir P8 (trouvés pendant la revue, avant le juge final).
+
+## 2026-10-08 · Installation réelle sur ton Mac
+
+**D-56 · À la première lecture d'un journal, une ligne sans date ne compte pas.** Le premier état réel affichait
+« Assistant : 320 erreurs dans la dernière heure » : à l'installation, le tableau de bord lit jusqu'à 256 Ko
+d'historique de chaque journal, et les erreurs **sans date** (sortie d'erreur brute, piles d'appels) y étaient
+comptées « maintenant ». Désormais, à la première lecture, seules les lignes datées comptent (à leur date) ; ensuite,
+une ligne sans date qui arrive est bien de maintenant. Les 320 déjà comptées sortent de la fenêtre d'une heure
+d'elles-mêmes, sans notification (silence de nuit, et jamais annoncées).
+
+**D-57 · Une attente manquée cite la raison donnée par le module.** Bouclier n'avance `gmail_releve_le` qu'après une
+relève **réussie** et note la cause d'un échec dans `gmail_erreur` : l'alerte « relève Gmail … n'a pas eu lieu » dit
+désormais « … ; Bouclier dit : <sa raison> » (caviardée). Mécanisme général : un adaptateur peut donner
+`raison:<id de l'attente>`.

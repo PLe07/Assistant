@@ -11,13 +11,13 @@ dépend pas du Mac est prouvé ici ; le reste est vérifié automatiquement par 
 
 | Point (§11) | État | Preuve |
 |---|---|---|
-| Intégrité : comparaison finale avec `etat_avant.json` identique | ✅ ici ; sur ton Mac, `install.sh` compare avant/après | ci-dessous (1) |
+| Intégrité : comparaison finale avec `etat_avant.json` identique | ✅ ici et sur ton Mac (1565 fichiers, 11 LaunchAgents) | (1) et (6) |
 | Lecture seule prouvée : faux écosystème vert, `lsof` propre, aucune trace | ✅ | ci-dessous (2) |
 | `./check.sh --complet` vert | ✅ | ci-dessous (3) |
 | Sécurité de la page validée | ✅ | 39 tests (4) |
 | Performance tenue (chiffres mesurés) | ✅ ici, avec le faux écosystème | ci-dessous (5) |
-| Démon actif, relancé après un kill ; barre des menus ; instantané iCloud | 🖥️ sur ton Mac : vérifié par `install.sh` (étapes 5 à 7) ; ici prouvé par les tests de bout en bout | (6) |
-| Premier état réel de tes modules | 🖥️ à coller après `./install.sh` (`tableau etat`) | ACTIONS_HUMAINES §1 |
+| Démon actif, relancé après un kill ; barre des menus ; instantané iCloud | ✅ sur ton Mac (`install.sh`, étapes 5 à 8) | (6) |
+| Premier état réel de tes modules | ✅ | (7) |
 | README en français | ✅ | README.md |
 | ACTIONS_HUMAINES.md minimal | ✅ | 1 étape indispensable, 2 facultatives |
 
@@ -171,7 +171,49 @@ SQLite hors de notre base est sur nos copies (refusée sinon) ; `launchctl`, `do
 blanche (`list`/`print`, `ps`/`inspect`/`stats --no-stream`, `rev-parse`/`log`/`status` avec `--no-optional-locks`) ;
 `healthz` de n8n en local sans mandataire ; aucune connexion sortante hors l'option du coût réel (éteinte).
 
-## Ce qui reste (sur ton Mac)
+## (6 bis) L'installation réelle sur ton Mac
 
-`./install.sh` (ACTIONS_HUMAINES §1), puis me coller `tableau etat` : c'est le seul point de la définition de
-« terminé » qui ne peut pas venir de ce conteneur.
+```
+▶ 2/8 Empreinte des autres projets (avant)
+Empreinte « avant » écrite : 2 projet(s), 1565 fichiers, 11 LaunchAgent(s), 7 réglage(s) Application Support, 5 élément(s) divers
+INTÉGRITÉ OK : identique à etat_avant.json (2 projet(s), 1565 fichiers, 11 LaunchAgent(s), 7 réglage(s) Application Support, 5 élément(s) divers)
+▶ 5/8 Démarrage du démon (launchd)
+  state = running
+  runs = 1
+▶ 6/8 Arrêt brutal, puis relance par launchd
+  relancé tout seul : pid 38968 → 39177
+▶ 7/8 Vérification : tours, page locale, premier état réel
+  ✅ le démon fait ses tours
+  ✅ page locale sur 127.0.0.1:47615, refusée sans jeton
+▶ 8/8 Bilan
+Démon : ✅ dernier tour à l'instant
+Base : 0 Mo, droits 600
+Réglages : OK
+Registre : OK
+Instantané iPhone : écrit (à l'instant)
+Commandes de lecture : launchctl ✅, docker —, lsof ✅, git ✅, osascript ✅
+INTÉGRITÉ OK : identique à avant_installation.json (2 projet(s), 1565 fichiers, 11 LaunchAgent(s), 7 réglage(s) Application Support, 5 élément(s) divers)
+✅ Le tableau de bord est installé.
+```
+
+## (7) Premier état réel de tes modules
+
+```
+🟡 3 choses à regarder
+Notifications : silence de nuit jusqu'à 8h
+
+🟡 Assistant : 320 erreurs dans la dernière heure (et 1 autre chose)
+🟡 Bouclier : « relève Gmail toutes les 5 min » : aucun passage depuis 1 j
+🟢 Corvées : Tourne depuis 2 j · dernière analyse il y a 2 h 32
+🟢 Nettoyeur : Tourne depuis 2 j · dernier inventaire du démarrage il y a 57 min
+🟢 Quotidien : Tourne depuis 1 j · dernier brief parti il y a 16 h
+🟢 Trieur : Tourne depuis 2 j · dernier document classé il y a 1 h 44
+⚪ Ambiance : Pas installé
+⚪ n8n : Pas installé
+```
+
+- 🟡 **Bouclier** : vrai. Sa relève Gmail n'a pas réussi depuis un jour (Bouclier n'en écrit la date qu'après une
+  relève réussie). `bouclier doctor` dit pourquoi ; l'alerte le cite désormais elle-même (D-57).
+- 🟡 **Assistant** : le nombre venait d'un défaut du tableau de bord à la première lecture des journaux (D-56), corrigé
+  et testé ; reste « 1 autre chose » à lire avec `tableau module assistant`.
+- 🟢 Corvées, Nettoyeur, Quotidien, Trieur ; ⚪ Ambiance et n8n ne sont pas installés sur ce Mac.

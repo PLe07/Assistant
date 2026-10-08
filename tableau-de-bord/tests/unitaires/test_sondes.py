@@ -292,6 +292,27 @@ def test_lecteur_rotation_troncature_reecriture(tmp_path: Path, base: Base, horl
     assert [lg.message for lg in lecteur.nouvelles_lignes(f)] == ["tout neuf"]
 
 
+def test_premiere_lecture_l_historique_non_date_ne_compte_pas(tmp_path: Path, base: Base, horloge: Any) -> None:
+    """Constaté sur un vrai Mac : 320 « erreurs dans la dernière heure » à l'installation, toutes de l'historique d'une
+    sortie d'erreur sans dates. À la première lecture, une ligne sans date est d'un moment inconnu : ignorée. Ensuite,
+    une ligne sans date qui arrive est bien de maintenant : comptée."""
+    f = tmp_path / "superviseur.launchd.log"
+    f.write_text("Traceback (most recent call last):\n  File \"x.py\", line 1\nValueError: vieux\n" * 300
+                 + "2026-10-07 09:59:00 ERROR [a] datée, elle\n")  # fmt: skip
+    lecteur = logs.LecteurJournaux(base, horloge)
+    lues = lecteur.nouvelles_lignes(f)
+    assert [lg.message for lg in lues] == ["datée, elle"]
+    logs.compter(base, "a", lues, horloge())
+    assert logs.statistiques(base, "a", horloge())["erreurs_1h"] == 1
+    with open(f, "a") as sortie:
+        sortie.write('Traceback (most recent call last):\n  File "x.py", line 2\nKeyError: nouveau\n')
+    lecteur.nouveau_tour()
+    nouvelles = lecteur.nouvelles_lignes(f)
+    assert [lg.message for lg in nouvelles] == ["KeyError: nouveau"]
+    logs.compter(base, "a", nouvelles, horloge())
+    assert logs.statistiques(base, "a", horloge())["erreurs_1h"] == 2
+
+
 def test_premiere_lecture_limitee_a_la_fin(tmp_path: Path, base: Base, horloge: Any) -> None:
     f = tmp_path / "gros.log"
     ligne = "2026-10-07 10:00:00 ERROR [a] " + "z" * 90 + "\n"

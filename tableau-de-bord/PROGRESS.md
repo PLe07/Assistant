@@ -355,3 +355,52 @@ TOTAL                                 5325    134    97%
 INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 730 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
 CHECK OK
 ```
+
+## Installation réelle sur ton Mac — 2026-10-08
+
+`./install.sh` du premier coup : empreinte des autres projets prise avant, démon lancé par launchd, **arrêt brutal
+puis relance automatique**, page locale qui répond (et refuse sans jeton), instantané iPhone écrit, empreinte
+identique après (extraits, sans nom) :
+
+```
+▶ 2/8 Empreinte des autres projets (avant)
+Empreinte « avant » écrite : 2 projet(s), 1565 fichiers, 11 LaunchAgent(s), 7 réglage(s) Application Support, 5 élément(s) divers
+INTÉGRITÉ OK : identique à etat_avant.json (2 projet(s), 1565 fichiers, 11 LaunchAgent(s), 7 réglage(s) Application Support, 5 élément(s) divers)
+▶ 5/8 Démarrage du démon (launchd)
+  state = running
+  runs = 1
+▶ 6/8 Arrêt brutal, puis relance par launchd
+  relancé tout seul : pid 38968 → 39177
+▶ 7/8 Vérification : tours, page locale, premier état réel
+  ✅ le démon fait ses tours
+  ✅ page locale sur 127.0.0.1:47615, refusée sans jeton
+▶ 8/8 Bilan
+Démon : ✅ dernier tour à l'instant
+Base : 0 Mo, droits 600
+Réglages : OK
+Registre : OK
+Instantané iPhone : écrit (à l'instant)
+Commandes de lecture : launchctl ✅, docker —, lsof ✅, git ✅, osascript ✅
+INTÉGRITÉ OK : identique à avant_installation.json (2 projet(s), 1565 fichiers, 11 LaunchAgent(s), 7 réglage(s) Application Support, 5 élément(s) divers)
+✅ Le tableau de bord est installé.
+```
+
+Premier état réel (`tableau etat`) :
+
+```
+🟡 3 choses à regarder
+Notifications : silence de nuit jusqu'à 8h
+
+🟡 Assistant : 320 erreurs dans la dernière heure (et 1 autre chose)
+🟡 Bouclier : « relève Gmail toutes les 5 min » : aucun passage depuis 1 j
+🟢 Corvées : Tourne depuis 2 j · dernière analyse il y a 2 h 32
+🟢 Nettoyeur : Tourne depuis 2 j · dernier inventaire du démarrage il y a 57 min
+🟢 Quotidien : Tourne depuis 1 j · dernier brief parti il y a 16 h
+🟢 Trieur : Tourne depuis 2 j · dernier document classé il y a 1 h 44
+⚪ Ambiance : Pas installé
+⚪ n8n : Pas installé
+```
+
+Lu de près : le 🟡 de Bouclier est **vrai** (sa relève Gmail n'a pas réussi depuis un jour : Bouclier n'en note la date
+qu'après une relève réussie) ; le chiffre de l'Assistant venait d'un défaut du tableau de bord (les erreurs sans date
+de l'historique comptées « maintenant », D-56), corrigé et testé. L'alerte de Bouclier cite désormais sa raison (D-57).
