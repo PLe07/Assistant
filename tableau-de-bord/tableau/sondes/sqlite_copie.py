@@ -189,7 +189,23 @@ class LecteurBases:
         self.horloge = horloge
         self.dormir = dormir
         self._cache: dict[tuple[str, str], tuple[Signature, float, Any]] = {}
+        self._confirme: dict[tuple[str, str], float] = {}  # dernier instant où la copie était encore à jour
+        self._suivi: list[float] | None = None
         self.erreurs: dict[str, str] = {}
+
+    def suivre(self) -> None:
+        """Commence à noter de quand datent les données rendues (le temps d'observer un module)."""
+        self._suivi = []
+
+    def fin_suivi(self) -> float | None:
+        """L'instant jusqu'auquel tout ce qui a été rendu depuis `suivre()` était à jour (le plus ancien), D-60."""
+        vus, self._suivi = self._suivi, None
+        return min(vus) if vus else None
+
+    def _rendre(self, valeur: Any, a_jour_le: float) -> Any:
+        if self._suivi is not None and valeur is not None:
+            self._suivi.append(a_jour_le)
+        return valeur
 
     def lire(self, source: Path, cle: str, fonction: Callable[[sqlite3.Connection], Any], forcer: bool = False) -> Any:
         """Le résultat de `fonction(copie)`, recalculé seulement si la base a bougé et que le délai est passé.
@@ -212,14 +228,20 @@ class LecteurBases:
             intervalle = min(INTERVALLE_MAX_S, max(self.intervalle_s, taille / BUDGET_PAR_HEURE * 3600))
         if memo is not None and not forcer:
             ancienne, quand, valeur = memo
-            if ancienne == sig or maintenant - quand < intervalle:
-                return valeur
+            if ancienne == sig:  # rien n'a bougé : la copie dit encore vrai
+                self._confirme[(str(source), cle)] = maintenant
+                return self._rendre(valeur, maintenant)
+            if maintenant - quand < intervalle:
+                return self._rendre(valeur, self._confirme.get((str(source), cle), quand))
         try:
             with copie(source, self.dossier, self.taille_max, dormir=self.dormir) as db:
                 valeur = fonction(db)
         except (CopieImpossible, sqlite3.DatabaseError, OSError) as e:
             self.erreurs[str(source)] = str(e) or e.__class__.__name__
-            return memo[2] if memo is not None else None
+            if memo is None:
+                return None
+            return self._rendre(memo[2], self._confirme.get((str(source), cle), memo[1]))
         self.erreurs.pop(str(source), None)
         self._cache[(str(source), cle)] = (sig, maintenant, valeur)
-        return valeur
+        self._confirme[(str(source), cle)] = maintenant
+        return self._rendre(valeur, maintenant)

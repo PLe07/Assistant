@@ -175,6 +175,30 @@ def test_attente_periodique_en_temps_eveille(base: Base) -> None:
     assert v.statut == "manquee" and "jamais vu" in v.detail
 
 
+def test_attente_jugee_a_l_heure_ou_les_donnees_disaient_vrai(base: Base) -> None:
+    """D-60 : une grosse base recopiée il y a 25 min ne fait pas croire à 25 min sans relevé."""
+    releve = Attente("releve", "periodique", "un relevé toutes les 2 min", toutes_les_min=2, tolerance_min=10)
+    analyse = Attente("analyse", "quotidienne", "analyse vers 21h", heure="21:00", tolerance_min=60)
+    defn = DefModule(id="nettoyeur", nom="Nettoyeur", attentes=[releve, analyse])
+    base.ecrire_meta("premier_vu:nettoyeur", str(local(2026, 10, 1, 0)))
+    m = local(2026, 10, 8, 22, 5)
+    preuves = {"releve": m - 25 * 60, "analyse": local(2026, 10, 7, 21, 10)}
+
+    def statuts(vues_le: float | None) -> dict[str, str]:
+        obs = Observation(preuves=preuves, donnees_vues_le=vues_le)
+        return {v.attente.id: v.statut for v in attentes.evaluer(base, defn, obs, m)}
+
+    # Copie d'il y a 24 min : le relevé d'il y a 25 min était le dernier attendu ; l'analyse, pas encore en retard.
+    assert statuts(m - 24 * 60) == {"releve": "tenue", "analyse": "en_attente"}
+    # Copie fraîche : là, c'est vraiment manqué.
+    assert statuts(m) == {"releve": "manquee", "analyse": "manquee"}
+    assert statuts(None) == {"releve": "manquee", "analyse": "manquee"}
+    # Une copie de plus de 7 h n'excuse plus rien.
+    assert statuts(m - 8 * 3600) == {"releve": "manquee", "analyse": "manquee"}
+    v = attentes.evaluer(base, defn, Observation(preuves=preuves, donnees_vues_le=m), m)[0]
+    assert v.detail == "aucun passage depuis 25 min"
+
+
 def test_evaluer_reglages_du_module_et_historique(base: Base) -> None:
     defn = DefModule(id="quotidien", nom="Quotidien", attentes=[BRIEF, GMAIL])
     obs = Observation(preuves={"brief": local(2026, 10, 7, 7, 31)})

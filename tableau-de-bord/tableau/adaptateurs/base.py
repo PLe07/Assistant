@@ -40,12 +40,16 @@ class Adaptateur:
             obs.technique["erreurs"] = {"installation": _raison(e)}
         if not obs.installe:
             return obs
-        for nom, etape in self.etapes():
-            try:
-                etape(defn, ctx, obs)
-            except Exception as e:  # noqa: BLE001 - une étape en panne n'emporte pas les autres
-                obs.inconnus.append(nom)
-                obs.technique.setdefault("erreurs", {})[nom] = _raison(e)
+        ctx.bases.suivre()
+        try:
+            for nom, etape in self.etapes():
+                try:
+                    etape(defn, ctx, obs)
+                except Exception as e:  # noqa: BLE001 - une étape en panne n'emporte pas les autres
+                    obs.inconnus.append(nom)
+                    obs.technique.setdefault("erreurs", {})[nom] = _raison(e)
+        finally:
+            obs.donnees_vues_le = ctx.bases.fin_suivi()
         return obs
 
     def etapes(self) -> list[tuple[str, Etape]]:

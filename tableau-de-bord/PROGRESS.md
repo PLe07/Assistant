@@ -411,3 +411,8 @@ l'installation ; la raison de Bouclier est une panne de réseau (nom du serveur 
 Deux défauts du tableau de bord en sont sortis, corrigés avec un test chacun : l'aide citait `python`, absent d'un
 Mac (D-58) ; la taille de l'Assistant comptait ses modèles de traduction (~1,4 Go, taille fixe) et les données de
 Corvées, Nettoyeur et Trieur une deuxième fois (D-59).
+
+Troisième lecture (`tableau etat` après la mise à jour) : l'alerte « Nettoyeur : aucun relevé depuis 25 min » était
+fausse (copie de sa base vieille de 25 min, D-60) ; la page est passée au port 47616 parce que l'ancien refroidissait
+encore (D-61). Les deux sont corrigés, avec un test chacun ; le faux écosystème reste vert. La raison de Bouclier
+s'affiche bien dans l'alerte (D-57) : le Mac ne trouvait pas l'adresse de Gmail au moment de ses essais.

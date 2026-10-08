@@ -349,3 +349,18 @@ de traduction (téléchargés une fois, ~1,4 Go, taille fixe) et des données de
 comptées chez eux. Ne comptent plus pour l'assistant : `donnees/traduction/modele`, `donnees/traduction/nllb`,
 `donnees/oreilles/modeles`, et le dossier de données de chaque module qu'il supervise. Le reste (mémoire, captures,
 état…) compte toujours, seuil (500 Mo) et croissance inchangés.
+
+**D-60 · Une attente est jugée à l'heure où ses données disaient vrai.** Une grosse base n'est recopiée que de temps
+en temps (D-53) ; le Nettoyeur garde un relevé toutes les 2 min pendant 60 jours, sa base dépasse vite 4 Mo, et sur
+ton Mac le tableau de bord a dit « aucun relevé depuis 25 min » en lisant une copie vieille de 25 min. Désormais le
+lecteur de bases sait jusqu'à quand chaque valeur rendue était vraie (copie fraîche, ou base inchangée depuis : à
+l'instant ; base qui a bougé mais pas recopiée : la dernière fois qu'on l'a vue inchangée), et l'attente (périodique
+ou quotidienne) est jugée à cet instant-là. Un module mort reste vu tout de suite (battement par la date de ses
+fichiers) ; un module vivant qui ne fait plus son travail est vu à la copie suivante. Une copie de plus de 7 h
+n'excuse plus rien : on juge à maintenant.
+
+**D-61 · Un port qui refroidit est attendu, pas abandonné.** Après l'arrêt du démon avec une page ouverte, macOS
+refuse encore son port ~30 s (TIME_WAIT) alors que plus personne ne l'écoute : le démon relancé passait à 47616 et
+le retenait pour toujours (vu sur ton Mac). Désormais, si personne n'écoute vraiment le port souhaité, le démon
+l'attend jusqu'à 65 s ; un vrai autre programme dessus : un autre port tout de suite, comme avant. Toujours sans
+`SO_REUSEADDR`.

@@ -8,14 +8,18 @@ Actions (POST, jeton dans l'adresse **et** dans `X-Jeton`, corps JSON) :
 `/action/diagnostic/<id>` (la commande de diagnostic du module, seulement sur ton clic).
 
 Le port : celui des réglages (47615) s'il est libre, sinon le premier libre de 47616 à 47639, retenu dans les
-réglages. Aucun journal des requêtes (les adresses contiennent le jeton).
+réglages. Un port que personne n'écoute mais qui refuse encore (il « refroidit » une trentaine de secondes après
+l'arrêt du démon, si une page était ouverte) est attendu au lieu d'être abandonné (D-61). Aucun journal des requêtes
+(les adresses contiennent le jeton).
 """
 
 from __future__ import annotations
 
+import errno
 import json
 import socket
 import threading
+import time
 from collections.abc import Callable
 from functools import cache
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -279,16 +283,41 @@ class Serveur(ThreadingHTTPServer):
         return rendu.lien(f"http://127.0.0.1:{self.port}/", self.jeton)
 
 
+ATTENTE_PORT_S = 65.0  # TIME_WAIT : 30 s sur macOS, 60 s sur Linux
+
+
+def quelqu_un_ecoute(port: int) -> bool:
+    """Un programme écoute-t-il vraiment sur ce port ? (Sinon il refroidit après notre propre arrêt.)"""
+    try:
+        with socket.create_connection(("127.0.0.1", port), timeout=0.5):
+            return True
+    except OSError:
+        return False
+
+
 def ouvrir(
     source: vues.Source,
     jeton: str,
     port_souhaite: int,
     retenir: Callable[[int], None] | None = None,
     ports_de_repli: range = config.PORTS_DE_REPLI,
+    attente_s: float = ATTENTE_PORT_S,
+    dormir: Callable[[float], None] = time.sleep,
 ) -> Serveur:
-    """Le serveur sur le port souhaité, ou le premier libre des ports de repli (retenu par `retenir`)."""
+    """Le serveur sur le port souhaité (attendu s'il refroidit), ou le premier libre des ports de repli (retenu par
+    `retenir`)."""
     derniere: OSError | None = None
-    for port in [port_souhaite, *[p for p in ports_de_repli if p != port_souhaite]]:
+    attendu = 0.0
+    while True:
+        try:
+            return Serveur(source, jeton, port_souhaite)
+        except OSError as e:
+            derniere = e
+            if e.errno != errno.EADDRINUSE or attendu >= attente_s or quelqu_un_ecoute(port_souhaite):
+                break
+        dormir(1.0)
+        attendu += 1.0
+    for port in [p for p in ports_de_repli if p != port_souhaite]:
         try:
             serveur = Serveur(source, jeton, port)
         except OSError as e:

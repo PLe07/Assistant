@@ -7,6 +7,9 @@
 - **Périodique** (« relève Gmail toutes les 5 min », tolérance 15 min) : manquée si le **temps éveillé** depuis la
   dernière trace dépasse la plus grande de 3 périodes et de période + tolérance.
 - Une attente éteinte chez le module (relève Gmail désactivée dans Bouclier) est « inactive ».
+- Une grosse base n'est recopiée que de temps en temps (D-53) : une attente est jugée **à l'instant où ses données
+  disaient vrai**, pas maintenant (D-60). Sans ça, une copie vieille de 25 min ferait croire à 25 min sans relevé.
+  Une copie de plus de 7 h n'excuse plus rien (la copie elle-même est en panne : on juge à maintenant).
 """
 
 from __future__ import annotations
@@ -17,8 +20,10 @@ from typing import Any
 from tableau import planif, textes
 from tableau.db import Base
 from tableau.module import Attente, DefModule, Observation
+from tableau.sondes.sqlite_copie import INTERVALLE_MAX_S
 
 AVANCE_MAX_S = 30 * 60
+FRAICHEUR_MAX_S = INTERVALLE_MAX_S + 3600
 
 
 @dataclass
@@ -63,7 +68,17 @@ def _limite_avec_rattrapage(base: Base, echeance: float, tolerance_s: float) -> 
     return limite
 
 
-def quotidienne(base: Base, a: Attente, preuve: float | None, maintenant: float, premier_vu: float) -> Verdict:
+def a_jour_jusqua(obs: Observation, maintenant: float) -> float:
+    """L'instant jusqu'auquel on sait ce que le module a fait : celui de ses données (D-60)."""
+    vu = obs.donnees_vues_le
+    if vu is None or vu >= maintenant or maintenant - vu > FRAICHEUR_MAX_S:
+        return maintenant
+    return vu
+
+
+def quotidienne(
+    base: Base, a: Attente, preuve: float | None, maintenant: float, premier_vu: float, jusqua: float | None = None
+) -> Verdict:
     assert a.heure is not None
     aujourdhui = planif.echeance_locale(maintenant, a.heure)
     echeance = aujourdhui if maintenant >= aujourdhui else planif.echeance_locale(maintenant, a.heure, -1)
@@ -75,22 +90,24 @@ def quotidienne(base: Base, a: Attente, preuve: float | None, maintenant: float,
     if echeance < premier_vu:
         return Verdict(a, "en_attente", echeance, prochaine, preuve, "pas encore observé à cette heure-là")
     limite = _limite_avec_rattrapage(base, echeance, tolerance_s)
-    if maintenant <= limite:
+    if (maintenant if jusqua is None else jusqua) <= limite:
         return Verdict(a, "en_attente", echeance, prochaine, preuve, f"attendu vers {textes.heure_texte(a.heure)}")
     return Verdict(a, "manquee", echeance, prochaine, preuve, f"pas fait (attendu vers {textes.heure_texte(a.heure)})")
 
 
-def periodique(base: Base, a: Attente, preuve: float | None, maintenant: float, premier_vu: float) -> Verdict:
+def periodique(
+    base: Base, a: Attente, preuve: float | None, maintenant: float, premier_vu: float, jusqua: float | None = None
+) -> Verdict:
     assert a.toutes_les_min is not None
     periode = a.toutes_les_min * 60
     limite = max(3 * periode, periode + a.tolerance_min * 60)
     reference = preuve if preuve is not None else premier_vu
-    eveille = planif.temps_eveille(base, reference, maintenant)
     prochaine = (preuve + periode) if preuve is not None else None
-    if eveille <= limite:
+    if planif.temps_eveille(base, reference, maintenant if jusqua is None else jusqua) <= limite:
         statut = "tenue" if preuve is not None else "en_attente"
         detail = f"dernier passage {textes.il_y_a(preuve, maintenant)}" if preuve else "pas encore vu"
         return Verdict(a, statut, None, prochaine, preuve, detail)
+    eveille = planif.temps_eveille(base, reference, maintenant)
     detail = f"aucun passage depuis {textes.duree(eveille)}" if preuve else f"jamais vu en {textes.duree(eveille)}"
     return Verdict(a, "manquee", None, prochaine, preuve, detail)
 
@@ -106,6 +123,7 @@ def evaluer(base: Base, defn: DefModule, obs: Observation, maintenant: float) ->
         premier_vu = maintenant
     else:
         premier_vu = float(premier)
+    jusqua = a_jour_jusqua(obs, maintenant)
     verdicts: list[Verdict] = []
     for brute in defn.attentes:
         a, active = reglee(brute, obs)
@@ -114,7 +132,7 @@ def evaluer(base: Base, defn: DefModule, obs: Observation, maintenant: float) ->
             continue
         preuve = obs.preuves.get(a.cle_preuve)
         if a.genre == "quotidienne" and a.heure:
-            v = quotidienne(base, a, preuve, maintenant, premier_vu)
+            v = quotidienne(base, a, preuve, maintenant, premier_vu, jusqua)
             if v.echeance is not None and v.statut in ("tenue", "manquee"):
                 base.executer(
                     "INSERT INTO attentes (module, attente, echeance, statut, constate_le, detail) "
@@ -124,7 +142,7 @@ def evaluer(base: Base, defn: DefModule, obs: Observation, maintenant: float) ->
                 )
             verdicts.append(v)
         elif a.genre == "periodique" and a.toutes_les_min:
-            verdicts.append(periodique(base, a, preuve, maintenant, premier_vu))
+            verdicts.append(periodique(base, a, preuve, maintenant, premier_vu, jusqua))
     for v in verdicts:
         raison = obs.technique.get(f"raison:{v.attente.id}")
         if v.statut == "manquee" and isinstance(raison, str) and raison:

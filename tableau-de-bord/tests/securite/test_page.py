@@ -3,6 +3,7 @@ personnel dans les réponses, aucune commande d'un autre module sans un POST exp
 
 from __future__ import annotations
 
+import errno
 import html
 import os
 import socket
@@ -163,6 +164,52 @@ def test_fichiers_statiques_seulement_la_liste(site: Any) -> None:
 def test_trop_de_pages_en_direct(site: Any, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(sse, "CLIENTS_MAX", 0)
     assert requete(site.port, "/evenements").code == 503
+
+
+def test_port_qui_refroidit_apres_un_arret_est_attendu_pas_abandonne(
+    site: Any, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """D-61 : après l'arrêt du démon avec une page ouverte, le port reste refusé ~30 s (TIME_WAIT) alors que plus
+    personne ne l'écoute. Le démon relancé l'attend au lieu d'en retenir un autre pour toujours."""
+    # Un vrai TIME_WAIT : le serveur ferme le premier une connexion acceptée, puis s'arrête.
+    ecoute = socket.socket()
+    ecoute.bind(("127.0.0.1", 0))
+    ecoute.listen()
+    port = ecoute.getsockname()[1]
+    client = socket.create_connection(("127.0.0.1", port))
+    accepte, _ = ecoute.accept()
+    accepte.close()
+    time.sleep(0.1)
+    client.close()
+    ecoute.close()
+    assert not serveur.quelqu_un_ecoute(port)
+    attentes: list[float] = []
+    retenus: list[int] = []
+    s = serveur.ouvrir(site.source, JETON, port, retenus.append, range(port + 1, port + 40), attente_s=3,
+                       dormir=attentes.append)  # fmt: skip
+    try:
+        # Il refroidit plus longtemps que l'attente permise ici (3 s) : attendu d'abord, puis un autre, retenu.
+        assert attentes == [1.0, 1.0, 1.0] and s.port != port and retenus == [s.port]
+    finally:
+        s.server_close()
+    # Il se libère pendant l'attente : on le reprend, rien n'est retenu.
+    vrai = serveur.Serveur
+    refus = [2]
+
+    def serveur_qui_refroidit(source: Any, jeton: str, p: int) -> Any:
+        if p == port and refus[0]:
+            refus[0] -= 1
+            raise OSError(errno.EADDRINUSE, "Address already in use")
+        return vrai(source, jeton, 0)
+
+    monkeypatch.setattr(serveur, "Serveur", serveur_qui_refroidit)
+    attentes.clear()
+    retenus.clear()
+    s = serveur.ouvrir(site.source, JETON, port, retenus.append, range(port + 1, port + 40), dormir=attentes.append)
+    try:
+        assert attentes == [1.0, 1.0] and retenus == []
+    finally:
+        s.server_close()
 
 
 def test_port_pris_un_autre_est_choisi_et_retenu(site: Any, maison: Any) -> None:

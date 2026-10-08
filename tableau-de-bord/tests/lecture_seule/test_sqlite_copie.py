@@ -309,3 +309,42 @@ def test_grosse_base_un_budget_de_copie_par_heure(tmp_path: Path, monkeypatch: p
         t[0] += 60
     assert len(lectures) == n + 3
     db.close()
+
+
+def test_on_sait_de_quand_datent_les_donnees_rendues(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """D-60 : une grosse base qui bouge n'est recopiée que de temps en temps ; ce qu'on en a lu dit vrai jusqu'à la
+    dernière fois qu'on l'a vue inchangée, pas jusqu'à maintenant."""
+    source = tmp_path / "grosse.db"
+    db = base_wal(source)
+    t = [1000.0]
+    bouge = [0]
+    vraie = sqlite_copie.signature
+
+    def signature(chemin: Path) -> sqlite_copie.Signature:
+        s = vraie(chemin)
+        principal = s.fichiers[0]
+        if principal is None:
+            return s
+        return sqlite_copie.Signature(((40 * 1024 * 1024, principal[1] + bouge[0], principal[2]), *s.fichiers[1:]))
+
+    monkeypatch.setattr(sqlite_copie, "signature", signature)
+    lecteur = sqlite_copie.LecteurBases(tmp_path / "copies", intervalle_s=600, horloge=lambda: t[0],
+                                        dormir=lambda _s: None)  # fmt: skip
+
+    def lire() -> float | None:
+        lecteur.suivre()
+        lecteur.lire(source, "x", lambda d: 1)
+        return lecteur.fin_suivi()
+
+    assert lire() == 1000.0  # copiée à l'instant
+    t[0] = 1300.0
+    assert lire() == 1300.0  # inchangée : toujours vraie
+    bouge[0] = 1
+    t[0] = 1600.0
+    assert lire() == 1300.0  # a bougé, pas recopiée (budget) : vraie jusqu'à 1300 seulement
+    t[0] = 1000.0 + 3600  # 40 Mo (et son journal) : au plus une copie toutes les ~48 min
+    assert lire() == t[0]  # recopiée
+    lecteur.suivre()
+    assert lecteur.lire(tmp_path / "absente.db", "x", lambda d: 1) is None and lecteur.fin_suivi() is None
+    assert lecteur.fin_suivi() is None  # hors d'un suivi : rien
+    db.close()

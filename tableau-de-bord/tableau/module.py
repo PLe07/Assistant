@@ -155,6 +155,7 @@ class Observation:
     files: list[FileAttente] = field(default_factory=list)
     credits: Credits | None = None
     preuves: dict[str, float] = field(default_factory=dict)  # attente → dernier instant où c'était fait
+    donnees_vues_le: float | None = None  # ses bases (copiées) disaient vrai jusqu'à cet instant (D-60)
     relances: list[float] = field(default_factory=list)  # instants des plantages vus (journal du superviseur)
     tailles: tuple[int, int] | None = None  # (données, journaux) en octets
     n8n: dict[str, Any] | None = None
