@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta name="color-scheme" content="light dark">
+<title>$titre · Tableau de bord</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="$css">
+<script src="$js" defer></script>
+</head>
+<body>
+<a class="evitement" href="#contenu">Aller au contenu</a>
+<header class="entete">
+  <div class="entete-ligne">
+    <a class="marque" href="$accueil">Tableau de bord</a>
+    <span id="etat-direct" class="direct" role="status">Mise à jour en direct</span>
+    <button id="theme" class="bouton-discret" type="button" aria-pressed="false">Clair / sombre</button>
+  </div>
+  <nav aria-label="Vues">
+    <ul class="onglets">$onglets</ul>
+  </nav>
+</header>
+<main>
+  <div id="resultat" class="resultat" role="status" aria-live="polite"></div>
+  <div id="contenu" data-fragment="$fragment" tabindex="-1">$contenu</div>
+</main>
+</body>
+</html>

@@ -10,7 +10,7 @@ Chaque phase se termine par `./check.sh` vert, l'intégrité identique, un commi
 | P2 — registre et adaptateurs | ✅ | « Tableau de bord P2 » |
 | P3 — analyses | ✅ | « Tableau de bord P3 » |
 | P4 — alertes, sourdine, rapport de la semaine | ✅ | « Tableau de bord P4 » |
-| P5 — page web | ⏳ | |
+| P5 — page web | ✅ | « Tableau de bord P5 » |
 | P6 — barre des menus, instantané iCloud, CLI | ⏳ | |
 | P7 — faux écosystème complet | ⏳ | |
 | P8 — installation | ⏳ | |
@@ -183,6 +183,46 @@ Success: no issues found in 41 source files
 41 passed in 1.96s     (adaptateurs)
 19 passed in 3.29s     (empreinte + gardien)
 TOTAL                                 3708     84    98%
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 730 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
+CHECK OK
+```
+
+## P5 — 2026-10-08
+
+- `vues.py` : une seule source pour la page, la CLI, l'iPhone et la barre des menus (`Source` : états publiés à
+  chaque tour, base, registre, gardien, alertes) ; textes déjà caviardés ; les trois actions (nouvelle référence,
+  pas normal, sourdine) et le diagnostic à la demande sont des méthodes explicites.
+- `web/securite.py` : 127.0.0.1, jeton dans l'adresse (comparé en temps constant), Host exact (rebond DNS refusé),
+  POST avec `X-Jeton`, corps JSON et Origin absente ou la nôtre, `Sec-Fetch-Site: cross-site` refusé ; CSP stricte
+  sans `unsafe-inline` ni `unsafe-eval`, `Referrer-Policy: no-referrer`, pas de cadre, pas de cache.
+- `web/serveur.py` : accueil, détail (7 / 30 jours), Crédits, Ressources, Intégrité, Journal (filtre par module),
+  fragments, API JSON, SSE, fichiers statiques en liste fermée ; port 47615 ou le premier libre de 47616 à 47639,
+  retenu dans les réglages ; aucun journal de requêtes (le jeton est dans l'adresse).
+- `web/sse.py` (8 pages en direct au plus, battement 15 s), `web/rendu.py` + `templates/base.html`,
+  `web/graphiques.py` (SVG : barres fines, courbe de 2 px, une mesure par graphique, infobulles, tableau des
+  chiffres), `static/app.css` (clair et sombre, AA) et `static/app.js` (direct, actions, thème ; aucun script en
+  ligne).
+- Tests : 38 de sécurité (sans jeton ou faux jeton sur chaque adresse, 11 Host étrangers, Host absent, 6 Origin
+  étrangères, `Sec-Fetch-Site`, `X-Jeton`, type du corps, méthodes, en-têtes partout, **vrai `lsof`** : écoute
+  sur 127.0.0.1 seulement, rien de personnel dans les réponses, **aucune commande lancée sans POST** (espion),
+  aucun jeton dans les journaux, chemins détournés, port pris) ; 14 de rendu (cartes, pastilles, détail, séries,
+  vues, SSE, actions, vitesse < 300 ms, graphiques) ; 9 dans **Chromium sans fenêtre** (aucune erreur de console,
+  contrastes AA mesurés sur chaque texte en clair et en sombre, 375 px sans défilement horizontal, clavier,
+  direct, boutons avec confirmation, chargement < 300 ms).
+
+Preuve (`./check.sh`) :
+
+```
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 730 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
+All checks passed!
+Success: no issues found in 47 source files
+163 passed in 11.66s   (unitaires)
+14 passed in 13.23s    (lecture seule)
+41 passed in 3.77s     (adaptateurs)
+19 passed in 5.07s     (empreinte + gardien)
+38 passed in 21.10s    (page web : sécurité)
+23 passed in 23.63s    (page web : rendu, direct, navigateur)
+TOTAL                                 4420     98    98%
 INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 730 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
 CHECK OK
 ```

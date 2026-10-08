@@ -208,3 +208,28 @@ l'ancien est clos sans message, le nouveau est annoncé. Un module que tu étein
 d'un jour (installation récente). « Bien tourné » = au moins 95 % des tours en 🟢 (hors ⚪). Les crédits de la
 semaine = le total du mois maintenant moins celui du rapport précédent (fin du mois précédent comprise au
 changement de mois) ; tendance « en hausse » au-delà de + 20 %, « en baisse » en dessous de − 20 %.
+
+## 2026-10-08 · P5 — Page web
+
+**D-30 · Une seule façon de dessiner : côté serveur.** Le direct (SSE) n'envoie qu'un numéro de version ; la page
+recharge son propre fragment. Pas de second rendu en JavaScript qui pourrait diverger, et la page marche même si le
+direct est coupé (un simple rechargement suffit).
+
+**D-31 · Le jeton partout dans l'adresse, aucun cookie.** Feuille de style et script compris. Un cookie serait
+partagé avec tout autre service sur 127.0.0.1 ; le jeton dans l'adresse ne fuit pas grâce à
+`Referrer-Policy: no-referrer` et à l'absence de tout lien vers l'extérieur. La page d'erreur n'a aucun lien.
+
+**D-32 · Une Origin absente est acceptée sur un POST, pas une Origin étrangère.** Les navigateurs envoient toujours
+Origin sur un POST ; `curl` non. Le jeton reste exigé deux fois (adresse et `X-Jeton`), et le corps JSON oblige un
+site étranger à une requête préalable que nous ne servons pas (`OPTIONS` → 405).
+
+**D-33 · Graphiques dessinés en SVG, sans bibliothèque.** Une mesure par graphique (jamais deux axes), barres fines
+posées sur la ligne de base, courbe de 2 px coupée là où le Mac n'a rien observé, infobulle par colonne et tableau
+des chiffres pour chaque graphique. Rien à citer dans CREDITS.md pour les graphiques.
+
+**D-34 · Le bandeau compte les choses à regarder, pas les modules.** Chaque problème d'un module 🔴 ou 🟡 compte ;
+un module 🟡 sans problème précis (état inconnu) compte pour un.
+
+**D-35 · Le diagnostic d'un module : sur ton clic, confirmé, un à la fois.** Une boîte de confirmation, puis
+`executer_diagnostic` avec la preuve de ta demande ; sa sortie est caviardée avant d'être montrée. Deux clics
+rapides ne lancent pas deux diagnostics.

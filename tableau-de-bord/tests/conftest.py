@@ -81,3 +81,19 @@ def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item
     for item in items:
         if item.get_closest_marker("mac") and not est_mac:
             item.add_marker(pytest.mark.skip(reason="seulement sur un Mac (lancé par install.sh)"))
+
+
+@pytest.fixture
+def site(maison: Path) -> Iterator[Any]:
+    """La page locale servie sur un port libre, avec le jeu de données de `tests/fabrique_web.py`."""
+    from tableau.web import serveur
+    from tests import fabrique_web
+
+    source, notif = fabrique_web.construire(maison)
+    s = serveur.Serveur(source, fabrique_web.JETON, 0, battement_s=0.5).demarrer()
+    s.notificateur = notif  # type: ignore[attr-defined]
+    try:
+        yield s
+    finally:
+        s.arreter()
+        source.base.fermer()
