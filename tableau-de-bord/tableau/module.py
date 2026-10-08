@@ -5,7 +5,7 @@ Tout champ qu'on n'a pas pu lire vaut `None` (« inconnu ») : un adaptateur ne 
 
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, fields
 from enum import StrEnum
 from pathlib import Path
 from typing import Any
@@ -23,7 +23,7 @@ LIBELLE = {
     Pastille.VERT: "tout va bien",
     Pastille.JAUNE: "à regarder",
     Pastille.ROUGE: "problème",
-    Pastille.GRIS: "pas installé",
+    Pastille.GRIS: "éteint ou pas installé",
 }
 ORDRE = {Pastille.ROUGE: 0, Pastille.JAUNE: 1, Pastille.VERT: 2, Pastille.GRIS: 3}
 
@@ -208,3 +208,24 @@ class EtatModule:
         d["pastille"] = str(self.pastille)
         d["emoji_pastille"] = EMOJI[self.pastille]
         return d
+
+    @classmethod
+    def depuis_dict(cls, d: dict[str, Any]) -> EtatModule:
+        """L'état relu depuis notre base (CLI, page après un redémarrage). Tolérant : un champ inconnu est ignoré."""
+        connus = {f.name for f in fields(cls)}
+        valeurs = {k: v for k, v in d.items() if k in connus}
+        try:
+            valeurs["pastille"] = Pastille(str(d.get("pastille", "gris")))
+        except ValueError:
+            valeurs["pastille"] = Pastille.GRIS
+        champs_probleme = {f.name for f in fields(Probleme)}
+        valeurs["problemes"] = [
+            Probleme(**{k: v for k, v in p.items() if k in champs_probleme})
+            for p in d.get("problemes") or []
+            if isinstance(p, dict) and {"module", "genre", "gravite", "message", "resolution"} <= set(p)
+        ]
+        valeurs.setdefault("id", "?")
+        valeurs.setdefault("nom", valeurs["id"])
+        valeurs.setdefault("emoji", "🧩")
+        valeurs.setdefault("phrase", "")
+        return cls(**valeurs)

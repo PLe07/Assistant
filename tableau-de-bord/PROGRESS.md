@@ -9,7 +9,7 @@ Chaque phase se termine par `./check.sh` vert, l'intégrité identique, un commi
 | P1 — sondes en lecture seule | ✅ | « Tableau de bord P1 » |
 | P2 — registre et adaptateurs | ✅ | « Tableau de bord P2 » |
 | P3 — analyses | ✅ | « Tableau de bord P3 » |
-| P4 — alertes, sourdine, rapport de la semaine | ⏳ | |
+| P4 — alertes, sourdine, rapport de la semaine | ✅ | « Tableau de bord P4 » |
 | P5 — page web | ⏳ | |
 | P6 — barre des menus, instantané iCloud, CLI | ⏳ | |
 | P7 — faux écosystème complet | ⏳ | |
@@ -146,6 +146,43 @@ Success: no issues found in 38 source files
 41 passed in 2.09s     (adaptateurs)
 19 passed in 3.55s     (empreinte + gardien)
 TOTAL                               3236     80    98%
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 730 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
+CHECK OK
+```
+
+## P4 — 2026-10-08
+
+- `notifier.py` : notification du Mac par `osascript -e 'display notification …'` (seule forme permise par la liste
+  blanche), texte échappé pour AppleScript et borné à 400 caractères ; hors d'un Mac, notée seulement ; un double
+  en mémoire pour les tests et le faux écosystème.
+- `analyse/alertes.py` : chaque problème a une clé stable et vit dans notre base (pas de doublon après un
+  redémarrage). Confirmé avant d'alerter (2 tours et 90 s), une alerte, un rappel toutes les 24 h, une résolution
+  après 150 s d'absence ; revenu avant : rien n'est répété. **3 notifications par jour au plus**, ce qui arrive
+  ensemble part dans une seule (on attend jusqu'à 2 min ce qui va être confirmé ou réglé). **Silence de 23 h à 8 h**
+  sauf boucle de plantages qui consomme. 10 min de calme après un réveil ou un redémarrage. **Sourdine** (« 1h »,
+  « 30min », « 2h30 », « fin »). Familles : la boucle devenue arrêt, le budget passé de 80 à 100 % ferment l'ancien
+  problème sans faux « ✅ ». Module éteint : alerte close (avec message seulement si elle avait été annoncée) ;
+  module retiré du registre ou code accepté : clos sans bruit. Notificateur en panne : noté, pas de boucle.
+- `analyse/rapport_semaine.py` : dimanche 20 h (réglable), rattrapé au réveil, une seule fois, jamais pour une
+  semaine non observée ; ce qui a tourné (part du temps en 🟢, attentes tenues/manquées), ce qui a coincé (réglé ou
+  en cours), crédits (semaine, mois, projection, tendance), intégrité ; page autonome en 600, gardée 90 jours ;
+  la notification part avec les règles des alertes.
+- `db.py` : colonnes ajoutées sans perte à une base existante ; agrégats journaliers par **jours entiers** (une
+  heure d'un jour à cheval sur la limite était perdue : corrigé et testé). `EtatModule.depuis_dict` relit un état
+  enregistré (CLI, page après redémarrage).
+- Tests : 18 d'alertes, 9 du rapport et de la base.
+
+Preuve (`./check.sh`) :
+
+```
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 730 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
+All checks passed!
+Success: no issues found in 41 source files
+163 passed in 11.32s   (unitaires)
+14 passed in 12.89s    (lecture seule)
+41 passed in 1.96s     (adaptateurs)
+19 passed in 3.29s     (empreinte + gardien)
+TOTAL                                 3708     84    98%
 INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 730 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
 CHECK OK
 ```

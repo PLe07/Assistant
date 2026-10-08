@@ -39,7 +39,8 @@ CREATE TABLE IF NOT EXISTS problemes (
   cle TEXT PRIMARY KEY, module TEXT NOT NULL, genre TEXT NOT NULL, gravite TEXT NOT NULL, message TEXT NOT NULL,
   resolution TEXT NOT NULL DEFAULT '', nuit_permise INTEGER NOT NULL DEFAULT 0,
   ouvert_le REAL NOT NULL, vu_le REAL NOT NULL, observations INTEGER NOT NULL DEFAULT 1,
-  absent_depuis REAL, notifie_le REAL, rappel_le REAL, resolu_le REAL, resolution_envoyee INTEGER NOT NULL DEFAULT 0
+  absent_depuis REAL, notifie_le REAL, rappel_le REAL, resolu_le REAL, resolution_envoyee INTEGER NOT NULL DEFAULT 0,
+  confirme_le REAL, phrase TEXT NOT NULL DEFAULT ''
 );
 CREATE TABLE IF NOT EXISTS notifications (
   id INTEGER PRIMARY KEY, ts REAL NOT NULL, titre TEXT NOT NULL, texte TEXT NOT NULL, cles TEXT NOT NULL,
@@ -82,6 +83,9 @@ CREATE TABLE IF NOT EXISTS integrite_etat (
 CREATE TABLE IF NOT EXISTS etat_modules (module TEXT PRIMARY KEY, json TEXT NOT NULL, maj REAL NOT NULL);
 """
 
+# Colonnes venues après la première version : ajoutées à une base existante, sans rien perdre.
+COLONNES_AJOUTEES = {"problemes": [("confirme_le", "REAL"), ("phrase", "TEXT NOT NULL DEFAULT ''")]}
+
 
 class DisquePlein(Exception):
     """Plus de place : l'écriture du tour est abandonnée, le tableau de bord continue."""
@@ -119,6 +123,11 @@ class Base:
         db.execute("PRAGMA synchronous=NORMAL")
         db.execute("PRAGMA busy_timeout=5000")
         db.executescript(SCHEMA)
+        for table, colonnes in COLONNES_AJOUTEES.items():
+            presentes = {r[1] for r in db.execute(f"PRAGMA table_info({table})")}
+            for nom, genre in colonnes:
+                if nom not in presentes:
+                    db.execute(f"ALTER TABLE {table} ADD COLUMN {nom} {genre}")
         os.chmod(self.chemin, 0o600)
         return db
 
@@ -233,7 +242,8 @@ class Base:
     def entretenir(self, maintenant: float) -> None:
         """Agrège les mesures brutes de plus de 48 h en heures, les heures de plus de 90 jours en jours."""
         limite_brut = maintenant - 48 * 3600
-        limite_heures = maintenant - 90 * 86400
+        # Des jours entiers seulement : toutes les heures d'un jour passent ensemble dans son agrégat journalier.
+        limite_heures = (int(maintenant - 90 * 86400) // 86400) * 86400
         with self.transaction():
             self._agreger("h", 3600, "echantillons", limite_brut)
             self.db.execute("DELETE FROM echantillons WHERE ts < ?", (limite_brut,))

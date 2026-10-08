@@ -46,6 +46,7 @@ DEFAUTS: dict[str, Any] = {
         "confirmation_s": 90,
         "resolution_s": 150,
         "reveil_grace_s": 600,
+        "regroupement_s": 120,
     },
     "seuils": {
         "file_bloquee_min": 30,

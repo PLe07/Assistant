@@ -184,3 +184,27 @@ déclenchent rien.
 **D-24 · Une pastille, une raison.** 🔴 si un problème grave, 🟡 si quelque chose à regarder ou si l'état est
 inconnu, ⚪ si pas installé, éteint ou en pause (seul le code changé y est encore signalé), sinon 🟢. La phrase de
 la carte est celle du premier problème, suivie de « (et N autres choses) ».
+
+## 2026-10-08 · P4 — Alertes et rapport
+
+**D-25 · Une alerte se mérite : deux tours et 90 secondes.** Un problème vu une seule fois (un processus entre deux
+relances, une copie de base ratée) ne réveille personne. Il disparaît depuis 150 s : il est réglé. Il revient avant :
+rien n'a été dit, rien n'est répété.
+
+**D-26 · Trois notifications par jour, ferme.** Ce qui dépasse attend le lendemain matin et ne part que si c'est
+encore vrai (sinon la page et le journal le montrent). Le rapport de la semaine compte dans les trois. Une
+notification que le Mac refuse d'afficher compte comme partie (la page la montre) : pas de nouvelle tentative en
+boucle.
+
+**D-27 · La nuit, seule une boucle qui consomme passe.** Une boucle de plantages est « qui consomme » si elle a
+relancé au moins 2 × le seuil (6 fois en 10 min) ou si le processus dépasse 25 % de processeur. Le reste part à
+8 h, en une seule notification. La sourdine retient tout, boucle comprise : c'est toi qui l'as demandée.
+
+**D-28 · Un problème remplacé ne se « résout » pas.** La boucle devenue arrêt, le budget passé de 80 à 100 % :
+l'ancien est clos sans message, le nouveau est annoncé. Un module que tu éteins : son alerte est close avec
+« ⚪ … est éteint, en pause ou désinstallé ». Un code changé que tu acceptes : clos sans message.
+
+**D-29 · Le rapport de la semaine est fait une fois, rattrapé au réveil.** Jamais pour une semaine observée moins
+d'un jour (installation récente). « Bien tourné » = au moins 95 % des tours en 🟢 (hors ⚪). Les crédits de la
+semaine = le total du mois maintenant moins celui du rapport précédent (fin du mois précédent comprise au
+changement de mois) ; tendance « en hausse » au-delà de + 20 %, « en baisse » en dessous de − 20 %.
