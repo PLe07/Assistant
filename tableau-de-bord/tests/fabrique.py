@@ -119,6 +119,26 @@ class FauxMac:
     launchd: FauxLaunchd
     docker: FauxDocker
     ecrivains: list[sqlite3.Connection] = field(default_factory=list)
+    bases: dict[str, sqlite3.Connection] = field(default_factory=dict)
+
+    def vivre(self, maintenant: float) -> None:
+        """Les modules font leur travail à `maintenant` : battements, relève Gmail, relevés du Nettoyeur."""
+        b = self.bases
+        if "etat" in b:
+            b["etat"].execute("UPDATE cles SET valeur = ?, maj = ? WHERE cle = 'superviseur_vivant'",
+                              (str(maintenant), maintenant))  # fmt: skip
+            b["etat"].execute("UPDATE modules SET maj = ?", (maintenant,))
+        if "corvees" in b:
+            b["corvees"].execute("UPDATE etat SET valeur = ?, maj = ? WHERE cle = 'battement'",
+                                 (json.dumps(maintenant), maintenant))  # fmt: skip
+        if "nettoyeur" in b:
+            b["nettoyeur"].execute("UPDATE etat SET valeur = ? WHERE cle = 'battement'", (json.dumps(maintenant),))
+            b["nettoyeur"].execute("INSERT OR IGNORE INTO releves VALUES (?, 'normal', 3.5)", (maintenant,))
+        for nom in ("bouclier", "quotidien"):
+            if nom in b:
+                b[nom].execute("UPDATE meta SET valeur = ? WHERE cle = 'demon_battement'", (str(maintenant),))
+        if "bouclier" in b:
+            b["bouclier"].execute("UPDATE meta SET valeur = ? WHERE cle = 'gmail_releve_le'", (str(maintenant),))
 
     @property
     def assistant(self) -> Path:
@@ -194,6 +214,7 @@ def faux_mac(maison: Path, maintenant: float, complet: bool = True) -> FauxMac:
                  "(?, 'mails', 'sonnet', 0, 999999, 0, 'panne')",
                  (maintenant - 3600, maintenant - 60, maintenant - 30))  # fmt: skip
     m.ecrivains.append(etat)
+    m.bases["etat"] = etat
     mails = base_depuis(a / "donnees" / "mails" / "memoire.db", schema("mails"))
     mails.execute("INSERT INTO mails (id, statut, traite_le) VALUES ('m1', 'trie', ?)",
                   (time.strftime("%Y-%m-%dT%H:%M:%S", time.localtime(maintenant - 120)),))  # fmt: skip
@@ -206,17 +227,20 @@ def faux_mac(maison: Path, maintenant: float, complet: bool = True) -> FauxMac:
     trieur.execute("INSERT INTO depenses_ia (quand, mois, cout_usd) VALUES (?, ?, 0.12), (?, '2020-01', 5)",
                    (maintenant - 50, time.strftime("%Y-%m", time.localtime(maintenant)), maintenant - 10**8))  # fmt: skip
     m.ecrivains.append(trieur)
+    m.bases["trieur"] = trieur
     corvees = base_depuis(a / "donnees" / "corvees" / "corvees.db", schema("corvees"))
     corvees.execute("INSERT INTO etat VALUES ('battement', ?, ?)", (json.dumps(maintenant - 30), maintenant - 30))
     corvees.execute("INSERT INTO etat VALUES ('derniere_analyse', ?, ?)", (json.dumps(maintenant - 13 * 3600), 0))
     corvees.execute("INSERT INTO couts (quand, mois, cout_usd, ok) VALUES (?, ?, 0.30, 1)",
                     (maintenant - 86400, time.strftime("%Y-%m", time.localtime(maintenant))))  # fmt: skip
     m.ecrivains.append(corvees)
+    m.bases["corvees"] = corvees
     nettoyeur = base_depuis(a / "donnees" / "demarrage" / "demarrage.db", schema("nettoyeur"))
     nettoyeur.execute("INSERT INTO etat VALUES ('battement', ?)", (json.dumps(maintenant - 40),))
     nettoyeur.execute("INSERT INTO releves VALUES (?, 'normal', 3.5)", (maintenant - 60,))
     nettoyeur.execute("INSERT INTO scans VALUES (1, ?, '{}')", (maintenant - 5 * 3600,))
     m.ecrivains.append(nettoyeur)
+    m.bases["nettoyeur"] = nettoyeur
     for d in ("BoiteMac", "Bouclier/entree", "Quotidien/entree"):
         (m.icloud / d).mkdir(parents=True, exist_ok=True)
     if complet:
@@ -250,6 +274,7 @@ def _bouclier(m: FauxMac, agents: Path) -> None:
     db.execute("INSERT INTO depenses_ia (date, mois, cout_usd, jetons_entree, jetons_sortie, usage) VALUES "
                "(?, ?, 0.40, 1000, 100, 'arnaque')", (m.maintenant - 3600, time.strftime("%Y-%m", time.localtime(m.maintenant))))  # fmt: skip
     m.ecrivains.append(db)
+    m.bases["bouclier"] = db
 
 
 def _quotidien(m: FauxMac, agents: Path) -> None:
@@ -272,6 +297,7 @@ def _quotidien(m: FauxMac, agents: Path) -> None:
     db.execute("INSERT INTO depenses_ia (date, mois, cout_usd, jetons_entree, jetons_sortie, usage) VALUES "
                "(?, ?, 0.05, 100, 10, 'frigo')", (m.maintenant - 60, time.strftime("%Y-%m", time.localtime(m.maintenant))))  # fmt: skip
     m.ecrivains.append(db)
+    m.bases["quotidien"] = db
 
 
 def contexte(

@@ -11,7 +11,7 @@ Chaque phase se termine par `./check.sh` vert, l'intégrité identique, un commi
 | P3 — analyses | ✅ | « Tableau de bord P3 » |
 | P4 — alertes, sourdine, rapport de la semaine | ✅ | « Tableau de bord P4 » |
 | P5 — page web | ✅ | « Tableau de bord P5 » |
-| P6 — barre des menus, instantané iCloud, CLI | ⏳ | |
+| P6 — barre des menus, instantané iCloud, CLI | ✅ | « Tableau de bord P6 » |
 | P7 — faux écosystème complet | ⏳ | |
 | P8 — installation | ⏳ | |
 | P9 — 30 min réelles, performance | ⏳ | |
@@ -223,6 +223,46 @@ Success: no issues found in 47 source files
 38 passed in 21.10s    (page web : sécurité)
 23 passed in 23.63s    (page web : rendu, direct, navigateur)
 TOTAL                                 4420     98    98%
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 730 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
+CHECK OK
+```
+
+## P6 — 2026-10-08
+
+- `daemon.py` : le tour d'une minute (heure et veille, découverte toutes les 10 min, gardien toutes les 30 min et sur
+  FSEvents, observation de chaque module, attentes, santé, mesures gardées, alertes, rapport de la semaine, page en
+  direct, instantané iPhone, entretien quotidien, coût réel si l'option est allumée). Chaque étape isolée, disque
+  plein sans plantage, verrou d'instance unique, `os.nice(10)`, arrêt propre sur SIGTERM, journal caviardé et
+  tournant (1 Mo × 3). Un tour du faux Mac : 12 ms.
+- `barre_menus.py` (modèle et actions, testés partout) + `barre_menus_natif.py` (rumps, Mac seulement) : point
+  🟢 🟠 🔴, une ligne par module, « Ouvrir le tableau de bord », « Mettre les alertes en sourdine 1 h » / « Lever la
+  sourdine », « Rapport de la semaine ».
+- `instantane_icloud.py` : `iCloud Drive/Tableau/Etat.html` sur changement ou toutes les 15 min ; seulement
+  pastilles, compteurs et crédits ; **bloqué** si un motif sensible apparaît (e-mail, `/Users/`, jeton, clé…).
+- `cli.py` : `tableau etat | ouvrir | module <nom> | credits | integrite [accepter <nom>] | sourdine <durée> |
+  rapport | doctor | diagnostic <nom> | demon`. Elle lit ce que le démon a enregistré, ne réécrit jamais le
+  registre, et dit si le démon est arrêté.
+- Faux Mac **vivant** (`FauxMac.vivre`) : ses modules écrivent leurs battements et relevés à chaque tour.
+- Tests (12 de bout en bout) : **30 min d'écosystème sain → tout 🟢, 0 notification** ; une panne → une alerte,
+  redémarrage du démon pendant la panne → pas de doublon, retour → une résolution ; code changé → alerte, accepté →
+  clos sans message ; disque plein ; étape en panne ; verrou ; coût réel (clé absente, refus, valeur) ; CLI complète ;
+  `tableau demon` pour un tour, avec et sans barre des menus. 6 tests des interfaces (menu, actions, instantané,
+  blocage des motifs sensibles, iCloud absent, écriture impossible).
+
+Preuve (`./check.sh`) :
+
+```
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 730 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
+All checks passed!
+Success: no issues found in 53 source files
+169 passed in 13.21s
+14 passed in 13.48s
+41 passed in 4.68s
+19 passed in 5.84s
+38 passed in 20.78s
+23 passed in 24.86s
+12 passed in 14.50s
+TOTAL                                 5088    123    98%
 INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 730 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
 CHECK OK
 ```

@@ -233,3 +233,24 @@ un module 🟡 sans problème précis (état inconnu) compte pour un.
 **D-35 · Le diagnostic d'un module : sur ton clic, confirmé, un à la fois.** Une boîte de confirmation, puis
 `executer_diagnostic` avec la preuve de ta demande ; sa sortie est caviardée avant d'être montrée. Deux clics
 rapides ne lancent pas deux diagnostics.
+
+## 2026-10-08 · P6 — Démon, barre des menus, iPhone, CLI
+
+**D-36 · Un seul processus : le démon porte l'icône.** Sur le Mac, rumps tient le fil principal (exigence de macOS),
+les tours tournent dans un fil à côté ; la page locale dans un troisième. Pas de bouton « Quitter » dans le menu :
+launchd relancerait le démon aussitôt (`KeepAlive`), l'arrêt se fait par `./uninstall.sh`.
+
+**D-37 · L'iPhone ne voit aucun texte venu d'un module.** Ni la phrase d'état (qui peut citer un nom de fichier),
+ni l'activité : seulement pastilles, nombres (erreurs, documents en attente, choses à regarder) et crédits. Écrit
+quand l'un d'eux change, sinon toutes les 15 minutes.
+
+**D-38 · La CLI lit, le démon écrit.** La CLI lit notre base et le registre sans jamais réécrire le registre ; ses
+seules écritures sont dans notre base (référence acceptée, sourdine). Elle marche démon arrêté et le signale.
+
+**D-39 · « Rapport de la semaine » du menu : à la demande, à part.** Il couvre les 7 derniers jours jusqu'à
+maintenant et va dans `rapports/a-la-demande/` ; le rapport du dimanche reste celui du dimanche.
+
+**D-40 · Les tests du démon font vivre le faux Mac.** Un écosystème figé produirait de vraies attentes manquées au
+bout de 15 minutes : chaque tour de test fait d'abord travailler les faux modules (battements, relève Gmail,
+relevés). Les modules supervisés tournent vraiment : un petit superviseur de test lance de vrais processus
+`python -m modules.<nom>`, tués à la fin du test.
