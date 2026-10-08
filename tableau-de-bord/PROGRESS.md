@@ -8,7 +8,7 @@ Chaque phase se termine par `./check.sh` vert, l'intégrité identique, un commi
 | P0 — environnement, empreinte, découverte, échantillons, squelette, check.sh | ✅ | « Tableau de bord P0 » |
 | P1 — sondes en lecture seule | ✅ | « Tableau de bord P1 » |
 | P2 — registre et adaptateurs | ✅ | « Tableau de bord P2 » |
-| P3 — analyses | ⏳ | |
+| P3 — analyses | ✅ | « Tableau de bord P3 » |
 | P4 — alertes, sourdine, rapport de la semaine | ⏳ | |
 | P5 — page web | ⏳ | |
 | P6 — barre des menus, instantané iCloud, CLI | ⏳ | |
@@ -108,5 +108,44 @@ Success: no issues found in 31 source files
 113 passed (unitaires) · 14 passed (lecture seule) · 41 passed (adaptateurs) · 12 passed (empreinte)
 TOTAL                               2453     91    96%
 INTÉGRITÉ OK : identique à etat_avant.json (…)
+CHECK OK
+```
+
+## P3 — 2026-10-08
+
+- `planif.py` : le temps qui passe vraiment. Échéances locales par `mktime` (changement d'heure compris), veilles
+  notées (écart entre horloge murale et horloge monotone > 45 s, ou trou entre deux tours), **temps éveillé** entre
+  deux instants, échéancier des tâches du démon.
+- `analyse/attentes.py` : quotidienne (tenue avec jusqu'à 30 min d'avance, manquée après la tolérance, **reportée au
+  réveil** si le Mac dormait), périodique **en temps éveillé** (une nuit de veille n'est pas un retard), réglages lus
+  chez le module (heure changée, attente éteinte → « inactive »), historique des échéances pour les graphiques.
+- `analyse/sante.py` : pastille et phrase simple, et les problèmes avec leur message calme et leur message de
+  résolution : arrêté, boucle de plantages (seule exception permise la nuit si elle consomme), figé, échec d'un
+  passage, attente manquée, file bloquée, pic d'erreurs (≥ 3 × la moyenne de 7 jours et ≥ 10/h), budget 80 % /
+  100 %, données > 500 Mo ou + 50 %/semaine, processeur élevé longtemps, n8n, code changé. launchd muet → 🟡
+  « état inconnu », jamais une alerte ; éteint → ⚪.
+- `analyse/credits.py` (estimé par module, projection fin de mois, mois précédent, équivalent API de l'assistant) et
+  `analyse/credits_reels.py` (option éteinte par défaut, clé dans le trousseau, une requête par heure au plus).
+- `analyse/ressources.py` : processeur, mémoire, énergie estimée, en une phrase.
+- `analyse/integrite.py` : le gardien. Référence, contrôle rapide (taille, date, numéro) toutes les 30 min, relecture
+  complète une fois par jour, écarts ajouté/modifié/supprimé avec date et dernier commit, « nouvelle référence »,
+  commande `git diff` à lancer soi-même (rien n'est jamais restauré), **FSEvents** (watchdog) qui marque seulement le
+  module dont le périmètre est touché, après 20 s de calme. git toujours avec `--no-optional-locks`.
+- Tests : 136 unitaires (textes, veille vue par les deux horloges, changement d'heure du 25 octobre, attentes,
+  santé de chaque problème, crédits, coût réel avec un faux serveur, ressources) et 7 du gardien, dont une
+  empreinte avant/après de tout le monde imité, `.git` compris : identique.
+
+Preuve (`./check.sh`) :
+
+```
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 730 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
+All checks passed!
+Success: no issues found in 38 source files
+136 passed in 11.43s   (unitaires)
+14 passed in 12.94s    (lecture seule)
+41 passed in 2.09s     (adaptateurs)
+19 passed in 3.55s     (empreinte + gardien)
+TOTAL                               3236     80    98%
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 730 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
 CHECK OK
 ```

@@ -42,7 +42,9 @@ def veilles(base: Base, depuis: float, jusqua: float | None = None) -> list[tupl
     fin = jusqua if jusqua is not None else float("inf")
     return [
         (float(r["debut"]), float(r["fin"]))
-        for r in base.lignes("SELECT debut, fin FROM veilles WHERE fin >= ? AND debut <= ? ORDER BY debut", (depuis, fin))
+        for r in base.lignes(
+            "SELECT debut, fin FROM veilles WHERE fin >= ? AND debut <= ? ORDER BY debut", (depuis, fin)
+        )
     ]
 
 

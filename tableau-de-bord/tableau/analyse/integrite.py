@@ -16,7 +16,8 @@ import hashlib
 import json
 import os
 import re
-from collections.abc import Callable, Iterator
+import threading
+from collections.abc import Callable, Iterable, Iterator
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -78,8 +79,14 @@ def _sha(chemin: Path) -> str:
 
 
 class Gardien:
-    def __init__(self, base: Base, maison: Path, launch_agents: Path, horloge: Callable[[], float],
-                 executer: Callable[[list[str]], systeme.Resultat] | None = None) -> None:  # fmt: skip
+    def __init__(
+        self,
+        base: Base,
+        maison: Path,
+        launch_agents: Path,
+        horloge: Callable[[], float],
+        executer: Callable[[list[str]], systeme.Resultat] | None = None,
+    ) -> None:
         self.base = base
         self.maison = maison
         self.launch_agents = launch_agents
@@ -123,8 +130,8 @@ class Gardien:
         if support is not None and support.is_dir():
             for chemin in sorted(support.rglob("*")):
                 rel = chemin.relative_to(support).as_posix()
-                if (chemin.is_file() and chemin.suffix.lower() in EXTENSIONS_REGLAGES
-                        and not ETATS_VIVANTS_SUPPORT.search(rel) and not _vivant(rel)):  # fmt: skip
+                reglage = chemin.suffix.lower() in EXTENSIONS_REGLAGES
+                if reglage and chemin.is_file() and not ETATS_VIVANTS_SUPPORT.search(rel) and not _vivant(rel):
                     yield f"reglages:{rel}", chemin
 
     # --- référence et contrôle --------------------------------------------------------------------------------------
@@ -145,8 +152,12 @@ class Gardien:
             except OSError:
                 continue
             ancienne = connues.get(nom)
-            if (not complet and ancienne is not None and ancienne.taille == st.st_size
-                    and ancienne.mtime_ns == st.st_mtime_ns and ancienne.inode == st.st_ino):  # fmt: skip
+            inchangee = ancienne is not None and (ancienne.taille, ancienne.mtime_ns, ancienne.inode) == (
+                st.st_size,
+                st.st_mtime_ns,
+                st.st_ino,
+            )
+            if not complet and ancienne is not None and inchangee:
                 resultat[nom] = ancienne
                 continue
             try:
@@ -175,10 +186,12 @@ class Gardien:
     def prendre_reference(self, defn: DefModule) -> int:
         fiches = self.empreinte(defn, {}, complet=True)
         maintenant = self.horloge()
+        head = self._head(defn)
         with self.base.transaction():
             self.base.db.execute("DELETE FROM integrite_reference WHERE module = ?", (defn.id,))
             self.base.db.executemany(
-                "INSERT INTO integrite_reference (module, chemin, sha256, taille, mtime_ns, inode) VALUES (?, ?, ?, ?, ?, ?)",
+                "INSERT INTO integrite_reference (module, chemin, sha256, taille, mtime_ns, inode) "
+                "VALUES (?, ?, ?, ?, ?, ?)",
                 [(defn.id, nom, f.sha256, f.taille, f.mtime_ns, f.inode) for nom, f in fiches.items()],
             )
             self.base.db.execute(
@@ -186,7 +199,7 @@ class Gardien:
                 "VALUES (?, ?, ?, '[]', ?, ?) ON CONFLICT(module) DO UPDATE SET reference_le = excluded.reference_le, "
                 "controle_le = excluded.controle_le, ecarts = '[]', head = excluded.head, "
                 "head_reference = excluded.head_reference, signale_le = NULL",
-                (defn.id, maintenant, maintenant, self._head(defn), self._head(defn)),
+                (defn.id, maintenant, maintenant, head, head),
             )
         return len(fiches)
 
@@ -246,3 +259,92 @@ class Gardien:
             chemins = " ".join(f"'{c}'" for c in defn.perimetre_code if c != ".")
             return f"cd {affiche} && git status && git diff {('-- ' + chemins) if chemins else ''}".rstrip()
         return f"cd {affiche} && ls -la"
+
+
+class Surveillance:
+    """FSEvents (par watchdog) sur le périmètre de code : un changement marque le module « à recontrôler ».
+
+    Lecture seule : l'observateur ne fait que recevoir les notifications du système. Le démon contrôle ensuite les
+    modules marqués à son prochain tour, après un court délai (une sauvegarde touche souvent plusieurs fichiers).
+    Plusieurs modules peuvent partager un dépôt : seul celui dont le périmètre est touché est marqué."""
+
+    def __init__(self, horloge: Callable[[], float]) -> None:
+        self.horloge = horloge
+        self._verrou = threading.Lock()
+        self._marques: dict[str, float] = {}
+        self._perimetres: list[tuple[str, list[Path], list[Path]]] = []
+        self._observateur: Any = None
+
+    @staticmethod
+    def perimetre(gardien: Gardien, defn: DefModule) -> tuple[list[Path], list[Path]]:
+        """(chemins surveillés, chemins exclus) d'un module, tels que le gardien les lit."""
+        racine = gardien.racine(defn)
+        if racine is None or not racine.is_dir():
+            return [], []
+        base = racine.resolve()
+        inclus = [base if c == "." else (base / c).resolve() for c in defn.perimetre_code]
+        exclus = [(base / e).resolve() for e in defn.perimetre_exclu] + [RACINE_TABLEAU]
+        return inclus, exclus
+
+    def noter(self, chemin: str) -> None:
+        """Un fichier a bougé : les modules dont il touche le périmètre (hors fichiers vivants) sont marqués."""
+        p = Path(chemin)
+        for module, inclus, exclus in self._perimetres:
+            if any(p == e or p.is_relative_to(e) for e in exclus):
+                continue
+            for dossier in inclus:
+                if p == dossier or (p.is_relative_to(dossier) and not _vivant(p.relative_to(dossier).as_posix())):
+                    with self._verrou:
+                        self._marques.setdefault(module, self.horloge())
+                    break
+
+    def a_controler(self, delai_s: float = 20) -> list[str]:
+        """Les modules marqués depuis au moins `delai_s` secondes (et on les démarque)."""
+        maintenant = self.horloge()
+        with self._verrou:
+            prets = sorted(m for m, quand in self._marques.items() if maintenant - quand >= delai_s)
+            for m in prets:
+                del self._marques[m]
+        return prets
+
+    def demarrer(self, gardien: Gardien, defs: Iterable[DefModule]) -> int:
+        """Surveille le périmètre de chaque module. Renvoie le nombre de dossiers suivis (0 : les 30 min suffisent)."""
+        self._perimetres = []
+        racines: set[Path] = set()
+        for defn in defs:
+            inclus, exclus = self.perimetre(gardien, defn)
+            if inclus:
+                self._perimetres.append((defn.id, inclus, exclus))
+                racines.update(d if d.is_dir() else d.parent for d in inclus if d.exists())
+        # Un dossier déjà couvert par un parent surveillé n'est pas suivi deux fois.
+        racines = {r for r in racines if not any(r != a and r.is_relative_to(a) for a in racines)}
+        if not racines:
+            return 0
+        try:
+            from watchdog.events import FileSystemEvent, FileSystemEventHandler
+            from watchdog.observers import Observer
+        except ImportError:  # pragma: no cover - watchdog fait partie des dépendances
+            return 0
+        surveillance = self
+
+        class Recepteur(FileSystemEventHandler):
+            def on_any_event(self, event: FileSystemEvent) -> None:
+                if event.event_type in ("opened", "closed_no_write"):
+                    return
+                for brut in (event.src_path, getattr(event, "dest_path", "")):
+                    if brut:
+                        surveillance.noter(brut if isinstance(brut, str) else bytes(brut).decode(errors="replace"))
+
+        observateur = Observer()
+        for racine in sorted(racines):
+            observateur.schedule(Recepteur(), str(racine), recursive=True)
+        observateur.daemon = True
+        observateur.start()
+        self._observateur = observateur
+        return len(racines)
+
+    def arreter(self) -> None:
+        if self._observateur is not None:
+            self._observateur.stop()
+            self._observateur.join(timeout=5)
+            self._observateur = None

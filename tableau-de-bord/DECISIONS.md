@@ -160,3 +160,27 @@ publics (relevés le 2026-10-06 dans la documentation d'Anthropic) ; les alias �
 désignent la génération actuelle (`claude-haiku-5-5` 0,10/0,50 $, `claude-sonnet-5-5` 2/10 $, `claude-opus-5-5`
 4/20 $ par million de jetons). Affiché « estimé », sans plafond ; le nombre d'appels du jour est comparé à
 `appels_max_par_jour`.
+
+## 2026-10-08 · P3 — Analyses
+
+**D-20 · Le retard se compte en temps éveillé.** Un Mac qui dort ne fait rien, et ce n'est pas une panne : une
+attente périodique, un battement figé se mesurent en minutes où le Mac était réveillé. Une attente quotidienne dont
+l'échéance tombe pendant la veille a sa limite **reportée au réveil + tolérance** : le module a le temps de rattraper.
+Une échéance d'avant la première fois où le tableau de bord a vu le module ne compte pas (pas de fausse alerte le
+jour de l'installation).
+
+**D-21 · Une trace jusqu'à 30 min avant l'heure compte.** Le brief de 7h15 fait à 6h50 est « tenu » ; fait la
+veille au soir, non.
+
+**D-22 · Le gardien relit tout une fois par jour.** Toutes les 30 min (et à chaque signal FSEvents), un fichier dont
+la taille, la date et le numéro n'ont pas bougé n'est pas relu : le contrôle reste sous la seconde. Une fois par jour,
+tout est relu, même ce qui paraît identique.
+
+**D-23 · FSEvents attend 20 s de calme et ne marque que le bon module.** Une sauvegarde touche souvent plusieurs
+fichiers : le contrôle part 20 s après le premier signal. Plusieurs modules partagent le dépôt de l'assistant : seul
+celui dont le périmètre de code est touché est recontrôlé. Les fichiers vivants (bases, journaux, caches) ne
+déclenchent rien.
+
+**D-24 · Une pastille, une raison.** 🔴 si un problème grave, 🟡 si quelque chose à regarder ou si l'état est
+inconnu, ⚪ si pas installé, éteint ou en pause (seul le code changé y est encore signalé), sinon 🟢. La phrase de
+la carte est celle du premier problème, suivie de « (et N autres choses) ».

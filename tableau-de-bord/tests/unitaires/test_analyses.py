@@ -144,7 +144,10 @@ def test_attente_rattrapee_au_reveil(base: Base) -> None:
     planif.noter_veille(base, local(2026, 10, 6, 23), local(2026, 10, 7, 9))
     premier = local(2026, 10, 1, 0)
     assert attentes.quotidienne(base, BRIEF, None, local(2026, 10, 7, 9, 10), premier).statut == "en_attente"
-    assert attentes.quotidienne(base, BRIEF, local(2026, 10, 7, 9, 2), local(2026, 10, 7, 9, 30), premier).statut == "tenue"
+    assert (
+        attentes.quotidienne(base, BRIEF, local(2026, 10, 7, 9, 2), local(2026, 10, 7, 9, 30), premier).statut
+        == "tenue"
+    )
     assert attentes.quotidienne(base, BRIEF, None, local(2026, 10, 7, 9, 21), premier).statut == "manquee"
 
 
@@ -164,9 +167,11 @@ def test_attente_periodique_en_temps_eveille(base: Base) -> None:
     # Dernière relève à 22h, Mac endormi de 22h05 à 9h55 : à 10h, 10 min éveillées seulement.
     planif.noter_veille(base, local(2026, 10, 6, 22, 5), local(2026, 10, 7, 9, 55))
     assert attentes.periodique(base, GMAIL, local(2026, 10, 6, 22), m, premier).statut == "tenue"
-    # Jamais vu : on laisse le temps au module.
+    # Jamais vu depuis 9 h, mais le Mac n'est réveillé que depuis 9h55 : 5 min éveillées, on attend encore.
+    assert attentes.periodique(base, GMAIL, None, m, m - 3600).statut == "en_attente"
+    # Jamais vu : on laisse le temps au module ; au-delà de 20 min éveillées, c'est manqué.
     assert attentes.periodique(base, GMAIL, None, m, m - 60).statut == "en_attente"
-    v = attentes.periodique(base, GMAIL, None, m, m - 3600)
+    v = attentes.periodique(base, GMAIL, None, local(2026, 10, 7, 12), m)
     assert v.statut == "manquee" and "jamais vu" in v.detail
 
 
@@ -268,11 +273,17 @@ def test_fige_en_temps_eveille(base: Base, reglages: config.Reglages, horloge: A
     assert sante.problemes(module_launchd(), obs, [], base, reglages, m) == []
 
 
-def test_files_attentes_erreurs_budget_donnees_cpu_integrite(base: Base, reglages: config.Reglages, horloge: Any) -> None:
+def test_files_attentes_erreurs_budget_donnees_cpu_integrite(
+    base: Base, reglages: config.Reglages, horloge: Any
+) -> None:
     m = horloge()
     obs = en_marche()
-    obs.files = [FileAttente("iCloud/BoiteMac", 2, 45 * 60), FileAttente("documents en attente", 1, 16 * 60, seuil_min=15),
-                 FileAttente("ok", 1, 10 * 60), FileAttente("vide", 0, 0)]  # fmt: skip
+    obs.files = [
+        FileAttente("iCloud/BoiteMac", 2, 45 * 60),
+        FileAttente("documents en attente", 1, 16 * 60, seuil_min=15),
+        FileAttente("ok", 1, 10 * 60),
+        FileAttente("vide", 0, 0),
+    ]
     obs.logs = StatsLogs(erreurs_1h=12, erreurs_24h=30)
     obs.technique["moyenne_erreurs_horaire_7j"] = 1.5
     obs.credits = Credits(1.7, 2.0)
@@ -282,8 +293,12 @@ def test_files_attentes_erreurs_budget_donnees_cpu_integrite(base: Base, reglage
 
     t.noter(base, "bouclier", m - 8 * 86400, 100 * 1024 * 1024, 0)
     t.noter(base, "bouclier", m, 200 * 1024 * 1024, 0)
-    base.plusieurs("INSERT INTO echantillons VALUES ('bouclier', ?, 'vert', 80, 10, 0, 0, 0)", [(m - i * 60,) for i in range(8)])
-    p = sante.problemes(module_launchd(), obs, [v, v2], base, reglages, m, {"ecarts": [{"chemin": "a.py"}, {"chemin": "b"}]})
+    base.plusieurs(
+        "INSERT INTO echantillons VALUES ('bouclier', ?, 'vert', 80, 10, 0, 0, 0)", [(m - i * 60,) for i in range(8)]
+    )
+    p = sante.problemes(
+        module_launchd(), obs, [v, v2], base, reglages, m, {"ecarts": [{"chemin": "a.py"}, {"chemin": "b"}]}
+    )
     genres = [(x.genre, x.sous_cle) for x in p]
     assert genres == [("attente", "brief"), ("attente", "gmail"), ("file", "iCloud/BoiteMac"),
                       ("file", "documents en attente"), ("pic_erreurs", ""), ("budget80", ""), ("donnees", ""),
@@ -362,8 +377,15 @@ def test_noter_et_synthese(base: Base) -> None:
     etats = [
         EtatModule("trieur", "Trieur", "🗂", Pastille.VERT, "", credits_mois=0.12, plafond_usd=1.0),
         EtatModule("bouclier", "Bouclier", "🛡️", Pastille.VERT, "", credits_mois=0.40, plafond_usd=2.0),
-        EtatModule("assistant", "Assistant", "🤖", Pastille.VERT, "", credits_mois=0.41,
-                   technique={"credits_source": "estimation", "credits_detail": "2 appels"}),  # fmt: skip
+        EtatModule(
+            "assistant",
+            "Assistant",
+            "🤖",
+            Pastille.VERT,
+            "",
+            credits_mois=0.41,
+            technique={"credits_source": "estimation", "credits_detail": "2 appels"},
+        ),  # fmt: skip
         EtatModule("n8n", "n8n", "🔗", Pastille.VERT, ""),
     ]
     credits.noter(base, etats, m)
@@ -371,8 +393,8 @@ def test_noter_et_synthese(base: Base) -> None:
     s = credits.synthese(base, etats, m, reel_usd=0.6)
     assert s["total_usd"] == pytest.approx(0.52) and s["plafonds_usd"] == 3.0
     assert s["abonnement_equivalent_usd"] == pytest.approx(0.41) and s["reel_usd"] == 0.6
-    assert s["mois_precedent_usd"] == pytest.approx(0.80) and [x["id"] for x in s["modules"]] == ["assistant",
-                                                                                                   "bouclier", "trieur"]  # fmt: skip
+    assert s["mois_precedent_usd"] == pytest.approx(0.80)
+    assert [x["id"] for x in s["modules"]] == ["assistant", "bouclier", "trieur"]
     assert credits.mois_precedent(local(2026, 1, 5, 0)) == "2025-12"
     assert credits.synthese(base, [], m)["mois_precedent_usd"] is None
 
@@ -399,7 +421,9 @@ def test_cout_reel_admin_api() -> None:
 
     total = credits_reels.cout_du_mois("sk-ant-admin01-x", local(2026, 10, 7, 10), ouvrir)
     assert total == pytest.approx(2.0)
-    assert vues[0].full_url.startswith("https://api.anthropic.com/v1/organizations/cost_report?starting_at=2026-10-01T00")
+    assert vues[0].full_url.startswith(
+        "https://api.anthropic.com/v1/organizations/cost_report?starting_at=2026-10-01T00"
+    )
     assert "limit=31" in vues[0].full_url and "page=page_2" in vues[1].full_url
     assert vues[0].get_header("X-api-key") == "sk-ant-admin01-x"
     assert vues[0].get_header("Anthropic-version") == "2023-06-01"

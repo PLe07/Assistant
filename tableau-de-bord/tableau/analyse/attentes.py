@@ -57,7 +57,7 @@ def reglee(a: Attente, obs: Observation) -> tuple[Attente, bool]:
 
 def _limite_avec_rattrapage(base: Base, echeance: float, tolerance_s: float) -> float:
     limite = echeance + tolerance_s
-    for debut, fin in planif.veilles(base, echeance - tolerance_s, limite):
+    for _debut, fin in planif.veilles(base, echeance - tolerance_s, limite):
         if fin > echeance - tolerance_s:
             limite = max(limite, fin + tolerance_s)
     return limite
@@ -117,9 +117,9 @@ def evaluer(base: Base, defn: DefModule, obs: Observation, maintenant: float) ->
             v = quotidienne(base, a, preuve, maintenant, premier_vu)
             if v.echeance is not None and v.statut in ("tenue", "manquee"):
                 base.executer(
-                    "INSERT INTO attentes (module, attente, echeance, statut, constate_le, detail) VALUES (?, ?, ?, ?, ?, ?) "
-                    "ON CONFLICT(module, attente, echeance) DO UPDATE SET statut = excluded.statut, "
-                    "constate_le = excluded.constate_le, detail = excluded.detail",
+                    "INSERT INTO attentes (module, attente, echeance, statut, constate_le, detail) "
+                    "VALUES (?, ?, ?, ?, ?, ?) ON CONFLICT(module, attente, echeance) DO UPDATE SET "
+                    "statut = excluded.statut, constate_le = excluded.constate_le, detail = excluded.detail",
                     (defn.id, a.id, v.echeance, v.statut, maintenant, v.detail),
                 )
             verdicts.append(v)
@@ -132,7 +132,8 @@ def historique(base: Base, module: str, depuis: float) -> list[dict[str, Any]]:
     return [
         dict(r)
         for r in base.lignes(
-            "SELECT attente, echeance, statut, detail FROM attentes WHERE module = ? AND echeance >= ? ORDER BY echeance",
+            "SELECT attente, echeance, statut, detail FROM attentes "
+            "WHERE module = ? AND echeance >= ? ORDER BY echeance",
             (module, depuis),
         )
     ]

@@ -4,7 +4,7 @@
   Quotidien, Ambiance si l'option est active). L'assistant, lui, passe par ton abonnement Claude Code : son coût est
   un **équivalent API** (jetons × tarif public), pour comparer, pas une facture.
 - **Réel** (facultatif, éteint par défaut) : le rapport de coûts officiel de l'organisation, avec une clé Admin rangée
-  dans le trousseau (voir `admin_anthropic.py`).
+  dans le trousseau (voir `credits_reels.py`).
 
 Tarifs publics par million de jetons (entrée, sortie), relevés le 2026-10-06 dans la documentation d'Anthropic. Les
 alias de Claude Code (« haiku », « sonnet », « opus ») désignent la génération actuelle.
@@ -96,9 +96,7 @@ def noter(base: Any, etats: list[Any], maintenant: float) -> None:
     """Le coût du mois de chaque module, gardé pour la tendance et le rapport de la semaine."""
     mois = time.strftime("%Y-%m", time.localtime(maintenant))
     lignes = [
-        (e.id, mois, float(e.credits_mois), e.plafond_usd, maintenant)
-        for e in etats
-        if e.credits_mois is not None
+        (e.id, mois, float(e.credits_mois), e.plafond_usd, maintenant) for e in etats if e.credits_mois is not None
     ]
     if lignes:
         base.plusieurs(

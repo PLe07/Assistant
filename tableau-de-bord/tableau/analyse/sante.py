@@ -65,93 +65,143 @@ def problemes(
 ) -> list[Probleme]:
     s = reglages["seuils"]
     nom = defn.nom
+    conseil = _conseil(defn)
     p: list[Probleme] = []
+
+    def ajouter(genre: str, gravite: str, message: str, resolution: str, phrase: str, **autres: Any) -> None:
+        p.append(Probleme(defn.id, genre, gravite, message, resolution, phrase=phrase, **autres))
+
     tourne = _tourne(defn, obs)
     # Plantages en boucle (vus par launchd ou dans le journal du superviseur).
     fenetre = int(s["boucle_fenetre_min"]) * 60
     recentes = relances(base, defn.id, maintenant - fenetre)
     if recentes >= int(s["boucle_relances"]):
         cpu = obs.processus.cpu_pct if obs.processus and obs.processus.cpu_pct else 0.0
-        p.append(Probleme(
-            defn.id, "boucle", "grave",
-            f"🔴 {nom} s'est arrêté {recentes} fois en {fenetre // 60} min.{_conseil(defn)}",
+        aujourdhui = textes.pluriel(relances(base, defn.id, debut_du_jour(maintenant)), "fois", "fois")
+        ajouter(
+            "boucle",
+            "grave",
+            f"🔴 {nom} s'est arrêté {recentes} fois en {fenetre // 60} min.{conseil}",
             f"✅ {nom} tourne de nouveau sans s'arrêter.",
+            f"{nom} s'est arrêté {aujourdhui} depuis ce matin",
             nuit_permise=recentes >= 2 * int(s["boucle_relances"]) or cpu >= 25,
-            phrase=f"{nom} s'est arrêté {textes.pluriel(relances(base, defn.id, debut_du_jour(maintenant)), 'fois', 'fois')}"
-                   " depuis ce matin",
-        ))  # fmt: skip
+        )
     elif defn.doit_tourner and tourne is False:
         if obs.n8n is not None:
-            raison = "Docker est éteint" if not obs.n8n.get("docker") else f"son conteneur est « {obs.n8n.get('etat')} »"
-            p.append(Probleme(defn.id, "n8n", "grave", f"🔴 n8n ne répond plus : {raison}.{_conseil(defn)}",
-                              "✅ n8n répond de nouveau.", phrase=f"n8n ne répond plus ({raison})"))  # fmt: skip
+            etat_n8n = obs.n8n.get("etat")
+            raison = "Docker est éteint" if not obs.n8n.get("docker") else f"son conteneur est « {etat_n8n} »"
+            ajouter(
+                "n8n",
+                "grave",
+                f"🔴 n8n ne répond plus : {raison}.{conseil}",
+                "✅ n8n répond de nouveau.",
+                f"n8n ne répond plus ({raison})",
+            )
         else:
-            sup = obs.superviseur or {}
-            pourquoi = " (le superviseur de l'assistant ne tourne pas)" if sup.get("superviseur_en_marche") is False else ""
-            p.append(Probleme(defn.id, "arrete", "grave",
-                              f"🔴 {nom} est arrêté alors qu'il devrait tourner{pourquoi}.{_conseil(defn)}",
-                              f"✅ {nom} tourne de nouveau.", phrase=f"Arrêté alors qu'il devrait tourner{pourquoi}"))  # fmt: skip
+            sup_arrete = (obs.superviseur or {}).get("superviseur_en_marche") is False
+            pourquoi = " (le superviseur de l'assistant ne tourne pas)" if sup_arrete else ""
+            ajouter(
+                "arrete",
+                "grave",
+                f"🔴 {nom} est arrêté alors qu'il devrait tourner{pourquoi}.{conseil}",
+                f"✅ {nom} tourne de nouveau.",
+                f"Arrêté alors qu'il devrait tourner{pourquoi}",
+            )
     elif obs.n8n is not None and tourne and not obs.n8n.get("repond"):
-        p.append(Probleme(defn.id, "n8n", "grave", f"🔴 n8n tourne mais ne répond pas ({obs.n8n.get('healthz')}).",
-                          "✅ n8n répond de nouveau.", phrase="Tourne, mais ne répond pas"))  # fmt: skip
+        ajouter(
+            "n8n",
+            "grave",
+            f"🔴 n8n tourne mais ne répond pas ({obs.n8n.get('healthz')}).",
+            "✅ n8n répond de nouveau.",
+            "Tourne, mais ne répond pas",
+        )
     # Figé : il tourne, mais son battement ne bouge plus (en temps éveillé).
     if tourne and obs.battement_ts and obs.battement_periode_s and not any(x.genre in ("boucle", "arrete") for x in p):
         age = temps_eveille(base, obs.battement_ts, maintenant)
         seuil = max(180.0, float(s["battement_facteur"]) * obs.battement_periode_s)
         if age > seuil:
-            p.append(Probleme(defn.id, "fige", "grave",
-                              f"🔴 {nom} semble figé : aucun signe de vie depuis {textes.duree(age)}.{_conseil(defn)}",
-                              f"✅ {nom} donne de nouveau signe de vie.", phrase=f"Figé : aucun signe de vie depuis "
-                              f"{textes.duree(age)}"))  # fmt: skip
+            ajouter(
+                "fige",
+                "grave",
+                f"🔴 {nom} semble figé : aucun signe de vie depuis {textes.duree(age)}.{conseil}",
+                f"✅ {nom} donne de nouveau signe de vie.",
+                f"Figé : aucun signe de vie depuis {textes.duree(age)}",
+            )
     # Un agent périodique dont le dernier passage a échoué.
-    if not defn.doit_tourner and obs.launchd and obs.launchd[0].dernier_code not in (None, 0) and not obs.launchd[0].pid:
-        code = obs.launchd[0].dernier_code
-        p.append(Probleme(defn.id, "echec", "attention", f"🟡 {nom} a échoué à son dernier passage (code {code}).",
-                          f"✅ {nom} a refait un passage sans erreur.", phrase=f"Dernier passage en échec (code {code})"))  # fmt: skip
+    principal = obs.launchd[0] if obs.launchd else None
+    if not defn.doit_tourner and principal and principal.dernier_code not in (None, 0) and not principal.pid:
+        code = principal.dernier_code
+        ajouter(
+            "echec",
+            "attention",
+            f"🟡 {nom} a échoué à son dernier passage (code {code}).",
+            f"✅ {nom} a refait un passage sans erreur.",
+            f"Dernier passage en échec (code {code})",
+        )
     # Attentes manquées.
     for v in verdicts:
         if v.statut != "manquee":
             continue
         a = v.attente
         if a.genre == "quotidienne" and a.heure:
-            message = f"🟡 {nom} : « {a.libelle} » n'a pas eu lieu (attendu vers {textes.heure_texte(a.heure)})."
+            pourquoi = f"attendu vers {textes.heure_texte(a.heure)}"
         else:
-            message = f"🟡 {nom} : « {a.libelle} » n'a pas eu lieu ({v.detail})."
-        p.append(Probleme(defn.id, "attente", "attention", message + _conseil(defn),
-                          f"✅ {nom} : « {a.libelle} » a de nouveau eu lieu.", sous_cle=a.id,
-                          phrase=f"« {a.libelle} » : {v.detail}"))  # fmt: skip
+            pourquoi = v.detail
+        ajouter(
+            "attente",
+            "attention",
+            f"🟡 {nom} : « {a.libelle} » n'a pas eu lieu ({pourquoi}).{conseil}",
+            f"✅ {nom} : « {a.libelle} » a de nouveau eu lieu.",
+            f"« {a.libelle} » : {v.detail}",
+            sous_cle=a.id,
+        )
     # Files bloquées.
     for f in obs.files:
         seuil_min = f.seuil_min or int(s["file_bloquee_min"])
         if f.n > 0 and f.plus_vieux_s > seuil_min * 60:
-            attente = f"{textes.pluriel(f.n, 'document')} attend{'ent' if f.n > 1 else ''} depuis {textes.duree(f.plus_vieux_s)}"
-            p.append(Probleme(defn.id, "file", "attention",
-                              f"🟡 {nom} : {attente} dans « {f.nom} ».{_conseil(defn)}",
-                              f"✅ {nom} : la file « {f.nom} » s'est vidée.", sous_cle=f.nom,
-                              phrase=f"{attente} dans « {f.nom} »"))  # fmt: skip
+            verbe = "attendent" if f.n > 1 else "attend"
+            attente = f"{textes.pluriel(f.n, 'document')} {verbe} depuis {textes.duree(f.plus_vieux_s)}"
+            ajouter(
+                "file",
+                "attention",
+                f"🟡 {nom} : {attente} dans « {f.nom} ».{conseil}",
+                f"✅ {nom} : la file « {f.nom} » s'est vidée.",
+                f"{attente} dans « {f.nom} »",
+                sous_cle=f.nom,
+            )
     # Pic d'erreurs.
     if obs.logs is not None:
         moyenne = float(obs.technique.get("moyenne_erreurs_horaire_7j") or 0.0)
         e1h = obs.logs.erreurs_1h
         if e1h >= int(s["pic_erreurs_min_par_heure"]) and e1h >= float(s["pic_erreurs_facteur"]) * moyenne:
             habitude = f" (d'habitude {moyenne:.1f} par heure)".replace(".", ",") if moyenne >= 0.1 else ""
-            p.append(Probleme(defn.id, "pic_erreurs", "attention",
-                              f"🟡 {nom} écrit beaucoup d'erreurs : {e1h} dans la dernière heure{habitude}.{_conseil(defn)}",
-                              f"✅ {nom} est revenu à la normale côté erreurs.",
-                              phrase=f"{e1h} erreurs dans la dernière heure{habitude}"))  # fmt: skip
+            ajouter(
+                "pic_erreurs",
+                "attention",
+                f"🟡 {nom} écrit beaucoup d'erreurs : {e1h} dans la dernière heure{habitude}.{conseil}",
+                f"✅ {nom} est revenu à la normale côté erreurs.",
+                f"{e1h} erreurs dans la dernière heure{habitude}",
+            )
     # Budget de crédits.
     if obs.credits is not None and obs.credits.mois_usd is not None and obs.credits.plafond_usd:
         pct = obs.credits.mois_usd / obs.credits.plafond_usd * 100
         montant = f"{textes.dollars(obs.credits.mois_usd)} sur {textes.dollars(obs.credits.plafond_usd)}"
         if pct >= float(s["budget_depasse_pct"]):
-            p.append(Probleme(defn.id, "budget100", "grave",
-                              f"🔴 {nom} a dépassé son budget Claude du mois ({montant}).{_conseil(defn)}",
-                              f"✅ {nom} est revenu sous son budget Claude.", phrase=f"Budget du mois dépassé ({montant})"))  # fmt: skip
+            ajouter(
+                "budget100",
+                "grave",
+                f"🔴 {nom} a dépassé son budget Claude du mois ({montant}).{conseil}",
+                f"✅ {nom} est revenu sous son budget Claude.",
+                f"Budget du mois dépassé ({montant})",
+            )
         elif pct >= float(s["budget_attention_pct"]):
-            p.append(Probleme(defn.id, "budget80", "attention",
-                              f"🟡 {nom} a utilisé {pct:.0f} % de son budget Claude du mois ({montant}).",
-                              f"✅ {nom} est revenu sous {s['budget_attention_pct']} % de son budget.",
-                              phrase=f"{pct:.0f} % du budget du mois ({montant})"))  # fmt: skip
+            ajouter(
+                "budget80",
+                "attention",
+                f"🟡 {nom} a utilisé {pct:.0f} % de son budget Claude du mois ({montant}).",
+                f"✅ {nom} est revenu sous {s['budget_attention_pct']} % de son budget.",
+                f"{pct:.0f} % du budget du mois ({montant})",
+            )
     # Données qui gonflent.
     total, croissance = tailles.croissance_semaine(base, defn.id, maintenant)
     if total is not None:
@@ -160,25 +210,35 @@ def problemes(
         gonfle = croissance is not None and croissance > float(s["donnees_croissance_pct_semaine"]) and mo_total > 50
         if trop or gonfle:
             detail = f"{textes.mo(mo_total)}" + (f", +{croissance:.0f} % en une semaine" if gonfle else "")
-            p.append(Probleme(defn.id, "donnees", "attention", f"🟡 Les données de {nom} pèsent {detail}.",
-                              f"✅ Les données de {nom} ont retrouvé une taille normale.",
-                              phrase=f"Ses données pèsent {detail}"))  # fmt: skip
+            ajouter(
+                "donnees",
+                "attention",
+                f"🟡 Les données de {nom} pèsent {detail}.",
+                f"✅ Les données de {nom} ont retrouvé une taille normale.",
+                f"Ses données pèsent {detail}",
+            )
     # Processeur très élevé, longtemps.
     duree_min = int(s["cpu_eleve_min"])
     moyen, n = cpu_moyen(base, defn.id, maintenant - duree_min * 60)
     if moyen is not None and n >= max(2, duree_min // 2) and moyen >= float(s["cpu_eleve_pct"]):
-        p.append(Probleme(defn.id, "cpu", "attention",
-                          f"🟡 {nom} utilise beaucoup le processeur ({moyen:.0f} % en moyenne depuis {duree_min} min).",
-                          f"✅ {nom} est revenu à un usage normal du processeur.",
-                          phrase=f"Processeur élevé : {moyen:.0f} % depuis {duree_min} min"))  # fmt: skip
+        ajouter(
+            "cpu",
+            "attention",
+            f"🟡 {nom} utilise beaucoup le processeur ({moyen:.0f} % en moyenne depuis {duree_min} min).",
+            f"✅ {nom} est revenu à un usage normal du processeur.",
+            f"Processeur élevé : {moyen:.0f} % depuis {duree_min} min",
+        )
     # Intégrité du code.
     if integrite and integrite.get("ecarts"):
         n_fichiers = len(integrite["ecarts"])
-        p.append(Probleme(defn.id, "integrite", "attention",
-                          f"⚠️ Le code de {nom} a changé : {textes.pluriel(n_fichiers, 'fichier modifié', 'fichiers modifiés')}."
-                          " C'était voulu ?",
-                          f"✅ Le code de {nom} est de nouveau celui de la référence.",
-                          phrase=f"Code changé : {textes.pluriel(n_fichiers, 'fichier', 'fichiers')} à vérifier"))  # fmt: skip
+        modifies = textes.pluriel(n_fichiers, "fichier modifié", "fichiers modifiés")
+        ajouter(
+            "integrite",
+            "attention",
+            f"⚠️ Le code de {nom} a changé : {modifies}. C'était voulu ?",
+            f"✅ Le code de {nom} est de nouveau celui de la référence.",
+            f"Code changé : {textes.pluriel(n_fichiers, 'fichier', 'fichiers')} à vérifier",
+        )
     return p
 
 
@@ -211,7 +271,9 @@ def evaluer(
     prochaines = [v for v in verdicts if v.prochaine and v.attente.genre == "quotidienne" and v.statut != "inactive"]
     if prochaines:
         v = min(prochaines, key=lambda x: x.prochaine or 0)
-        etat.prochaine = f"{v.attente.libelle.split(' chaque')[0].split(' vers')[0]} {textes.quand(v.prochaine or 0, maintenant)}"
+        etat.prochaine = (
+            f"{v.attente.libelle.split(' chaque')[0].split(' vers')[0]} {textes.quand(v.prochaine or 0, maintenant)}"
+        )
     if obs.actif is False:
         etat.pastille = Pastille.GRIS
         etat.phrase = f"Éteint : {obs.raison_inactif}" if obs.raison_inactif else "Éteint"
@@ -229,8 +291,8 @@ def evaluer(
         etat.phrase = attention[0].phrase or attention[0].message
     elif _tourne(defn, obs) is None and defn.doit_tourner and ("launchd" in obs.inconnus or not obs.launchd):
         etat.pastille = Pastille.JAUNE
-        etat.phrase = "État inconnu pour l'instant (launchd ne répond pas)" if "launchd" in obs.inconnus else (
-            "État inconnu pour l'instant")  # fmt: skip
+        muet = " (launchd ne répond pas)" if "launchd" in obs.inconnus else ""
+        etat.phrase = f"État inconnu pour l'instant{muet}"
     else:
         etat.phrase = _phrase_tout_va_bien(obs, maintenant)
     if len(etat.problemes) > 1:
@@ -262,8 +324,10 @@ def _remplir_mesures(etat: EtatModule, obs: Observation, maintenant: float) -> N
             etat.projection_usd = projeter(obs.credits.mois_usd, obs.credits.plafond_usd, maintenant).projection_usd
         etat.technique["credits_source"] = obs.credits.source
         etat.technique["credits_detail"] = obs.credits.detail
-    etat.files = [{"nom": f.nom, "n": f.n, "plus_vieux_s": f.plus_vieux_s, "pas_encore_telecharges":
-                   f.pas_encore_telecharges} for f in obs.files]  # fmt: skip
+    etat.files = [
+        {"nom": f.nom, "n": f.n, "plus_vieux_s": f.plus_vieux_s, "pas_encore_telecharges": f.pas_encore_telecharges}
+        for f in obs.files
+    ]
     if obs.tailles is not None:
         etat.technique["tailles"] = {"donnees": obs.tailles[0], "journaux": obs.tailles[1]}
 
