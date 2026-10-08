@@ -23,7 +23,7 @@ from tableau.adaptateurs import quotidien as ad_quotidien
 from tableau.adaptateurs import trieur as ad_trieur
 from tableau.db import Base
 from tableau.decouverte import decouvrir, projet_du_programme
-from tableau.module import DefModule
+from tableau.module import DefModule, Observation
 from tests import fabrique
 from tests.fabrique import PREFIXE
 
@@ -519,3 +519,33 @@ def test_outils_communs(tmp_path: Path) -> None:
     assert ad_base.lire_plist(tmp_path / "liste.plist") == {}
     assert ad_base.nom_de_file("~/Desktop/À trier", tmp_path) == "~/Desktop/À trier"
     assert ad_base.nom_de_file("/x/y", Path("/x/y")) == "y"
+
+
+def test_seuil_de_file_propre_au_module(mac: Any, base: Base, horloge: Any) -> None:
+    """`file_max_min` du registre s'applique à toutes les files du module (sinon le seuil général des réglages)."""
+    entree = mac.maison / "Entree"
+    entree.mkdir()
+    (entree / "a.pdf").write_text("x")
+    propre = DefModule(id="m", nom="M", files=["~/Entree"], file_max_min=5)
+    general = DefModule(id="n", nom="N", files=["~/Entree"])
+    ctx = fabrique.contexte(mac, base, horloge, [propre, general])
+    a, b = Observation(), Observation()
+    ad_base.Adaptateur().lire_files(propre, ctx, a)
+    ad_base.Adaptateur().lire_files(general, ctx, b)
+    assert a.files[0].seuil_min == 5 and a.files[0].n == 1
+    assert b.files[0].seuil_min is None
+
+
+def test_agent_periodique_ses_passages_ne_sont_pas_des_plantages(mac: Any, base: Base, horloge: Any) -> None:
+    label = f"com.{PREFIXE}.releve"
+    fabrique.ecrire_plist(mac.maison / "Library" / "LaunchAgents", label, StartInterval=120)
+    mac.launchd.agents[label] = {"pid": None, "statut": 0, "runs": 5}
+    periodique = DefModule(id="releve", nom="Relevé", labels=[label], doit_tourner=False)
+    permanent = DefModule(id="permanent", nom="Permanent", labels=[label], doit_tourner=True)
+    ctx = fabrique.contexte(mac, base, horloge, [periodique, permanent])
+    for defn in (periodique, permanent):
+        ad_base.Adaptateur().observer(defn, ctx)
+    mac.launchd.agents[label].update(runs=9, statut=1)  # 4 passages de plus (le dernier en échec)
+    ctx.nouveau_tour()
+    assert ad_base.Adaptateur().observer(periodique, ctx).relances == []
+    assert len(ad_base.Adaptateur().observer(permanent, ctx).relances) == 4

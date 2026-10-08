@@ -4,6 +4,7 @@ et la CLI `tableau` sur ce que le démon a enregistré."""
 
 from __future__ import annotations
 
+import json
 import os
 import signal
 import subprocess
@@ -112,6 +113,10 @@ def test_un_ecosysteme_sain_sans_fausse_alerte(eco: Ecosysteme) -> None:
     assert base.valeur("SELECT COUNT(DISTINCT module) FROM echantillons") == 8
     assert len(base.etats_modules()) == 8 and base.lire_meta("battement_demon") is not None
     assert eco.demon.source.etat("trieur") is not None and eco.demon.dernier_tour_s < 2
+    resume = json.loads(eco.demon.chemins.etat_json.read_text(encoding="utf-8"))
+    assert resume["bandeau"] == "✅ Tout va bien" and len(resume["modules"]) == 8
+    assert {"id", "nom", "pastille", "phrase"} == set(resume["modules"][0])
+    assert oct(eco.demon.chemins.etat_json.stat().st_mode & 0o777) == "0o600"
     # L'instantané iPhone : écrit, sans rien de sensible, lisible par toi seul.
     page = eco.demon.chemins.icloud / "Etat.html"
     texte = page.read_text(encoding="utf-8")
@@ -283,7 +288,7 @@ def test_lancer_le_demon_pour_un_tour(maison: Path, monkeypatch: pytest.MonkeyPa
     """`tableau demon --sans-barre` : verrou, page locale, un tour, arrêt propre (journal écrit, verrou rendu)."""
     origine = daemon.Demon.boucle
     monkeypatch.setattr(daemon.Demon, "boucle", lambda self, tours_max=None: origine(self, 1))
-    monkeypatch.setattr(daemon, "NotificateurMac", NotificateurMemoire)
+    monkeypatch.setenv("TABLEAU_NOTIFICATIONS", "coupees")
     assert cli.main(["demon", "--sans-barre"]) == 0
     c = config.chemins()
     journal = (c.logs / "tableau.log").read_text(encoding="utf-8")
@@ -333,8 +338,33 @@ def test_lancer_avec_la_barre_des_menus(maison: Path, monkeypatch: pytest.Monkey
 
     monkeypatch.setattr(systeme, "est_un_mac", lambda: True)
     monkeypatch.setattr(barre_menus, "lancer", fausse_barre)
-    monkeypatch.setattr(daemon, "NotificateurMac", NotificateurMemoire)
+    monkeypatch.setenv("TABLEAU_NOTIFICATIONS", "coupees")
     assert daemon.lancer() == 0
     assert len(vus) == 1 and vus[0].startswith("http://127.0.0.1:") and "?t=" in vus[0]
     journal = (config.chemins().logs / "tableau.log").read_text(encoding="utf-8")
     assert "arrêté proprement" in journal
+
+
+def test_sans_rumps_le_demon_tourne_quand_meme(maison: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Sur un Mac où l'icône est impossible (rumps absent) : pas de boucle de plantages, le démon continue."""
+    from tableau import barre_menus
+
+    def sans_rumps(*_a: Any) -> None:
+        raise ImportError("No module named 'rumps'")
+
+    tours: list[int] = []
+    origine = daemon.Demon.tour
+
+    def un_tour(self: daemon.Demon) -> Any:
+        tours.append(1)
+        etats = origine(self)
+        self.arret.set()  # un tour suffit
+        return etats
+
+    monkeypatch.setattr(systeme, "est_un_mac", lambda: True)
+    monkeypatch.setattr(barre_menus, "lancer", sans_rumps)
+    monkeypatch.setattr(daemon.Demon, "tour", un_tour)
+    monkeypatch.setenv("TABLEAU_NOTIFICATIONS", "coupees")
+    assert daemon.lancer() == 0 and tours == [1]
+    journal = (config.chemins().logs / "tableau.log").read_text(encoding="utf-8")
+    assert "icône de la barre des menus impossible (ImportError)" in journal and "arrêté proprement" in journal

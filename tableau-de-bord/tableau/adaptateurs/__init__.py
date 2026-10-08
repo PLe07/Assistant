@@ -22,6 +22,7 @@ ADAPTATEURS: dict[str, type[Adaptateur]] = {
     "bouclier": Bouclier,
     "quotidien": Quotidien,
     "ambiance": Ambiance,
+    "tolerant": Ambiance,  # pour un futur module : battement, coûts et preuves lus s'ils existent
     "n8n": N8n,
 }
 

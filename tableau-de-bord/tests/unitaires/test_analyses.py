@@ -244,9 +244,40 @@ def test_arrete_et_boucle(base: Base, reglages: config.Reglages, horloge: Any) -
     boucle = sante.evaluer(module_launchd(), en_marche(pid=None), [], base, reglages, m)
     p = boucle.problemes[0]
     assert p.genre == "boucle" and "4 fois en 10 min" in p.message and not p.nuit_permise
-    assert boucle.phrase == "Bouclier s'est arrêté 4 fois depuis ce matin"
+    assert boucle.phrase == "Bouclier s'est arrêté 4 fois aujourd'hui"
     base.plusieurs("INSERT INTO relances VALUES ('bouclier', ?)", [(m - 1 - i,) for i in range(4)])
     assert sante.problemes(module_launchd(), en_marche(pid=None), [], base, reglages, m)[0].nuit_permise
+
+
+def test_boucle_sans_pic_d_erreurs_en_double(base: Base, reglages: config.Reglages, horloge: Any) -> None:
+    """Chaque plantage écrit son erreur : pendant une boucle, une seule alerte (la boucle), pas un pic d'erreurs."""
+    m = horloge()
+    obs = en_marche(pid=None)
+    obs.logs = StatsLogs(erreurs_1h=40, erreurs_24h=40)
+    assert [p.genre for p in sante.problemes(module_launchd(), obs, [], base, reglages, m)] == ["arrete", "pic_erreurs"]
+    base.plusieurs("INSERT INTO relances VALUES ('bouclier', ?)", [(m - i * 60,) for i in range(4)])
+    assert [p.genre for p in sante.problemes(module_launchd(), obs, [], base, reglages, m)] == ["boucle"]
+    # La boucle est finie depuis 20 min (le module tourne) : ses erreurs de l'heure ne font pas un « pic ».
+    assert sante.problemes(module_launchd(), en_marche(), [], base, reglages, m + 20 * 60) == []
+    # Une heure plus tard, un vrai pic d'erreurs est de nouveau signalé.
+    vrai_pic = en_marche()
+    vrai_pic.logs = StatsLogs(erreurs_1h=40, erreurs_24h=80)
+    assert [p.genre for p in sante.problemes(module_launchd(), vrai_pic, [], base, reglages, m + 3700)] == [
+        "pic_erreurs"
+    ]
+
+
+def test_attente_manquee_pendant_une_panne_sans_alerte_en_double(
+    base: Base, reglages: config.Reglages, horloge: Any
+) -> None:
+    m = horloge()
+    v = attentes.Verdict(GMAIL, "manquee", detail="aucun passage depuis 30 min")
+    assert [p.genre for p in sante.problemes(module_launchd(), en_marche(), [v], base, reglages, m)] == ["attente"]
+    assert [p.genre for p in sante.problemes(module_launchd(), en_marche(pid=None), [v], base, reglages, m)] == [
+        "arrete"
+    ]
+    etat = sante.evaluer(module_launchd(), en_marche(pid=None), [v], base, reglages, m)
+    assert etat.attentes[0]["statut"] == "manquee"  # le détail le montre toujours
 
 
 def test_supervise_arrete(base: Base, reglages: config.Reglages, horloge: Any) -> None:

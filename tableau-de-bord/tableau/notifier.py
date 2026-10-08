@@ -8,6 +8,7 @@ la chaîne.
 
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass, field
 from typing import Protocol
 
@@ -50,3 +51,15 @@ class NotificateurMemoire:
             return False, "notificateur en panne (test)"
         self.envoyees.append((titre, texte))
         return True, ""
+
+
+class NotificateurCoupe:
+    """Notifications coupées (faux écosystème, mesures) : chacune est notée dans notre base, aucune n'est affichée."""
+
+    def envoyer(self, titre: str, texte: str) -> tuple[bool, str]:
+        return False, "notifications coupées (test)"
+
+
+def choisir() -> Notificateur:
+    """`TABLEAU_NOTIFICATIONS=coupees` : rien ne s'affiche (tests sur ton Mac) ; sinon le Centre de notifications."""
+    return NotificateurCoupe() if os.environ.get("TABLEAU_NOTIFICATIONS") == "coupees" else NotificateurMac()

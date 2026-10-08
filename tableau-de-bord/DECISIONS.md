@@ -254,3 +254,50 @@ maintenant et va dans `rapports/a-la-demande/` ; le rapport du dimanche reste ce
 bout de 15 minutes : chaque tour de test fait d'abord travailler les faux modules (battements, relève Gmail,
 relevés). Les modules supervisés tournent vraiment : un petit superviseur de test lance de vrais processus
 `python -m modules.<nom>`, tués à la fin du test.
+
+## 2026-10-08 · P7 — Faux écosystème
+
+**D-41 · Le juge fait tourner le vrai démon, comme sur ton Mac.** `python -m tableau demon` dans son propre processus,
+avec sa vraie page, ses vrais tours et ses vraies commandes ; les 7 faux modules sont de vrais petits démons Python
+(journal, base SQLite en WAL) gardés en vie par un launchd (le faux ici : KeepAlive, ThrottleInterval, `launchctl
+list/print` au format de macOS ; le vrai sur ton Mac avec `TDB_VRAI_LAUNCHD=1`, agents `com.<ta session>.tdbtest.*`
+retirés dans le `finally`). Un **espion d'audit Python dans le processus du démon** note toute écriture, toute
+suppression et toute connexion SQLite sous les dossiers des modules : le fichier doit rester vide.
+
+**D-42 · Réglages resserrés pour le juge, normaux pour la performance.** Le juge tourne en quelques minutes : un tour
+toutes les 10 s, confirmation et résolution en 30 s, processeur élevé sur 1 min, boucle sur 3 min, file bloquée après
+1 min pour le module « File » ; quota et silence de nuit levés (ils ont leurs tests propres). La mesure de
+performance de 30 min garde les réglages normaux (un tour par minute). Les notifications du démon testé sont
+coupées (`TABLEAU_NOTIFICATIONS=coupees`) : notées dans la base, jamais affichées.
+
+**D-43 · Une panne, une seule alerte.** Le juge l'a montré : un module en boucle de plantages écrit une erreur à
+chaque plantage et ne fait plus son travail. Pendant un arrêt, une boucle, un figement ou n8n injoignable, ni le pic
+d'erreurs ni les attentes manquées ne font d'alerte à part : l'alerte de la panne dit déjà tout (le détail du module
+continue de les montrer). Et dans l'heure qui suit la fin d'une boucle, ses erreurs ne font pas un « pic d'erreurs ».
+
+**D-44 · `file_max_min` vaut pour toutes les files du module.** Le registre le promettait, seul l'adaptateur du
+Trieur l'appliquait : l'adaptateur de base l'applique désormais à chaque file déclarée.
+
+**D-45 · L'adaptateur `tolerant` pour tout futur module.** Celui d'Ambiance, qui lit s'ils existent un battement, des
+dépenses et maintenant des preuves d'attente (`preuve:<id>` dans `meta` ou `etat`). Le README explique comment
+déclarer un nouveau module avec lui.
+
+**D-46 · « s'est arrêté N fois aujourd'hui ».** Le compte part de minuit : « depuis ce matin » était faux le soir.
+
+## 2026-10-08 · P8 — Installation
+
+**D-47 · L'installation agit seulement sur notre propre agent.** `install.sh` fait `bootstrap` de
+`com.<toi>.tableau`, puis l'arrêt brutal (`kill -9` de **notre** démon) et vérifie que launchd le relance : c'est ce
+que la mission demande (P8). La règle « launchctl print et list seulement » vaut pour le tableau de bord face aux
+autres modules, et un test vérifie que les deux scripts n'appellent launchctl en écriture que sur notre label.
+
+**D-48 · L'agent : RunAtLoad, KeepAlive, ThrottleInterval 30 s, Nice 10, entrées-sorties en priorité basse, session
+graphique (Aqua).** L'icône de la barre des menus a besoin de ta session ; le démon ne tourne donc qu'une fois tu es
+connecté, comme les autres agents de ta session.
+
+**D-49 · La désinstallation ne laisse rien.** Agent, commande `~/.local/bin/tableau`, données, journaux, instantané
+iCloud (et le dossier `Tableau` s'il est vide), `.venv` (seulement s'il a été créé par `install.sh`) ; la clé Admin
+facultative seulement si tu dis oui. Ce qui n'est pas à nous (même nom, autre contenu) n'est jamais touché.
+
+**D-50 · `etat.json` pour l'assistant.** Un résumé de quelques lignes (bandeau, pastille et phrase de chaque module,
+caviardées) dans notre dossier, réécrit à chaque tour : l'assistant peut le lire sans rien appeler (INTEGRATION.md).

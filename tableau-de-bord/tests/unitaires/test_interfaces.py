@@ -31,7 +31,7 @@ def test_modele_du_menu() -> None:
     assert titre == "🔴"
     assert [e.titre for e in elements] == [
         "🟢 Bouclier — Une phrase beaucoup trop longue pour tenir dans…",
-        "🔴 Trieur — Trieur s'est arrêté 5 fois depuis ce matin",
+        "🔴 Trieur — Trieur s'est arrêté 5 fois aujourd'hui",
         "🟡 Quotidien — « brief » : pas fait (attendu vers 7h15)",
         "⚪ Corvées — Éteint : en pause",
         "-",

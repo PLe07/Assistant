@@ -78,7 +78,9 @@ class Adaptateur:
                 obs.technique["launchd"] = ctx.launchd.erreur or "launchctl ne répond pas"
                 return
             obs.launchd.append(etat)
-            noter_lancements(ctx, defn.id, label, etat.lancements, obs)
+            if defn.doit_tourner:
+                # Un agent périodique est relancé à chaque passage : ce ne sont pas des plantages.
+                noter_lancements(ctx, defn.id, label, etat.lancements, obs)
 
     def pids(self, defn: DefModule, ctx: Contexte, obs: Observation) -> list[int]:
         return [e.pid for e in obs.launchd if e.pid]
@@ -152,6 +154,8 @@ class Adaptateur:
                 continue
             f = files_attente.mesurer(chemin, ctx.base, ctx.maintenant, nom_de_file(brut, chemin))
             if f is not None:
+                if f.seuil_min is None and defn.file_max_min:
+                    f.seuil_min = defn.file_max_min  # le seuil propre au module, s'il en a un
                 obs.files.append(f)
 
     def dossiers_donnees(self, defn: DefModule, ctx: Contexte) -> list[Path]:

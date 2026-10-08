@@ -83,7 +83,7 @@ def problemes(
             "grave",
             f"🔴 {nom} s'est arrêté {recentes} fois en {fenetre // 60} min.{conseil}",
             f"✅ {nom} tourne de nouveau sans s'arrêter.",
-            f"{nom} s'est arrêté {aujourdhui} depuis ce matin",
+            f"{nom} s'est arrêté {aujourdhui} aujourd'hui",
             nuit_permise=recentes >= 2 * int(s["boucle_relances"]) or cpu >= 25,
         )
     elif defn.doit_tourner and tourne is False:
@@ -138,8 +138,10 @@ def problemes(
             f"✅ {nom} a refait un passage sans erreur.",
             f"Dernier passage en échec (code {code})",
         )
-    # Attentes manquées.
-    for v in verdicts:
+    # Attentes manquées (sauf si le module est arrêté, figé ou en boucle : c'en est la conséquence, et l'alerte de
+    # l'arrêt dit déjà tout ; le détail du module continue de les montrer).
+    en_panne = any(x.genre in ("boucle", "arrete", "fige", "n8n") for x in p)
+    for v in [] if en_panne else verdicts:
         if v.statut != "manquee":
             continue
         a = v.attente
@@ -169,8 +171,10 @@ def problemes(
                 f"{attente} dans « {f.nom} »",
                 sous_cle=f.nom,
             )
-    # Pic d'erreurs.
-    if obs.logs is not None:
+    # Pic d'erreurs, sauf pendant une boucle de plantages et dans l'heure qui suit : chaque plantage écrit son erreur,
+    # ces erreurs-là sont celles de la boucle (déjà annoncée, et sa fin aussi).
+    boucle_dans_l_heure = relances(base, defn.id, maintenant - 3600) >= int(s["boucle_relances"])
+    if obs.logs is not None and not boucle_dans_l_heure and not any(x.genre == "boucle" for x in p):
         moyenne = float(obs.technique.get("moyenne_erreurs_horaire_7j") or 0.0)
         e1h = obs.logs.erreurs_1h
         if e1h >= int(s["pic_erreurs_min_par_heure"]) and e1h >= float(s["pic_erreurs_facteur"]) * moyenne:

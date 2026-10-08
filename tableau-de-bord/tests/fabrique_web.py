@@ -37,7 +37,7 @@ def definitions(maison: Path) -> dict[str, DefModule]:
 
 def etats() -> list[EtatModule]:
     boucle = Probleme("trieur", "boucle", "grave", "🔴 Trieur s'est arrêté 5 fois en 10 min. Tape « trieur doctor ».",
-                      "✅ Trieur tourne de nouveau.", phrase="Trieur s'est arrêté 5 fois depuis ce matin")  # fmt: skip
+                      "✅ Trieur tourne de nouveau.", phrase="Trieur s'est arrêté 5 fois aujourd'hui")  # fmt: skip
     attente = Probleme("quotidien", "attente", "attention", "🟡 Quotidien : le brief n'a pas eu lieu.", "✅",
                        sous_cle="brief", phrase="« brief » : pas fait (attendu vers 7h15)")  # fmt: skip
     return [

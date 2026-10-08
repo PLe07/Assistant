@@ -22,6 +22,7 @@ import json
 import shutil
 import sys
 import time
+from pathlib import Path
 from typing import Any
 
 from tableau import config, registre, systeme, textes, vues
@@ -247,6 +248,27 @@ def diagnostic(s: vues.Source, nom: str) -> str:
     return d["sortie"]
 
 
+def installation_(action: str, python: Path | None, projet: Path | None) -> int:
+    from tableau import installation
+
+    c = config.chemins()
+    reglages = config.charger(c.reglages)
+    if action == "label":
+        print(reglages.label())
+        return 0
+    if action == "preparer":
+        if python is None or projet is None:
+            print("tableau installation preparer --python <python> --projet <dossier>", file=sys.stderr)
+            return 2
+        b = installation.preparer(c, reglages, python, projet)
+    elif action == "verifier":
+        b = installation.verifier(c)
+    else:
+        b = installation.desinstaller(c, reglages)
+    print(b.texte())
+    return 1 if b.refus else 0
+
+
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(prog="tableau", description="Le tableau de bord de ton assistant.")
     p.add_argument("--version", action="version", version=f"tableau {VERSION}")
@@ -267,6 +289,10 @@ def main(argv: list[str] | None = None) -> int:
     dg.add_argument("nom")
     de = sous.add_parser("demon", help="le démon (lancé par launchd)")
     de.add_argument("--sans-barre", action="store_true", help="sans l'icône de la barre des menus")
+    ins = sous.add_parser("installation", help="utilisé par install.sh et uninstall.sh")
+    ins.add_argument("action", choices=["preparer", "label", "verifier", "desinstaller"])
+    ins.add_argument("--python", type=Path)
+    ins.add_argument("--projet", type=Path)
     a = p.parse_args(argv)
     if a.commande is None:
         a.commande = "etat"
@@ -274,6 +300,8 @@ def main(argv: list[str] | None = None) -> int:
         from tableau import daemon
 
         return daemon.lancer(barre=False if a.sans_barre else None)
+    if a.commande == "installation":
+        return installation_(a.action, a.python, a.projet)
     s = source()
     try:
         if a.commande == "etat":

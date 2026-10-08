@@ -1,0 +1,42 @@
+#!/usr/bin/env python3
+"""Le faux `launchctl` du faux écosystème : `list` et `print gui/<uid>/<label>`, au format de macOS, d'après l'état
+que tient le faux launchd du test (`TDB_ETAT_LAUNCHD`, un fichier JSON). Seulement la lecture, comme le vrai l'est
+pour le tableau de bord."""
+
+import json
+import os
+import sys
+
+
+def main() -> int:
+    try:
+        with open(os.environ["TDB_ETAT_LAUNCHD"], encoding="utf-8") as f:
+            agents = json.load(f)
+    except (KeyError, OSError, ValueError):
+        agents = {}
+    args = sys.argv[1:]
+    if args[:1] == ["list"] and len(args) == 1:
+        print("PID\tStatus\tLabel")
+        for label, a in sorted(agents.items()):
+            print(f"{a.get('pid') or '-'}\t{a.get('statut', 0)}\t{label}")
+        return 0
+    if args[:1] == ["print"] and len(args) == 2:
+        label = args[1].split("/", 2)[-1]
+        a = agents.get(label)
+        if a is None:
+            print(f'Could not find service "{label}" in domain for port', file=sys.stderr)
+            return 113
+        pid = a.get("pid")
+        print(f"gui/{os.getuid()}/{label} = {{")
+        print(f"\tstate = {'running' if pid else 'not running'}")
+        print(f"\truns = {a.get('runs', 1)}")
+        if pid:
+            print(f"\tpid = {pid}")
+        print(f"\tlast exit code = {a.get('statut', 0) if a.get('runs', 1) > 1 or not pid else '(never exited)'}")
+        print("}")
+        return 0
+    print("faux launchctl : seulement list et print", file=sys.stderr)
+    return 64
+
+
+sys.exit(main())

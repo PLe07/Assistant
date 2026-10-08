@@ -24,7 +24,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-from tableau import adaptateurs, caviardage, config, planif, registre, systeme
+from tableau import adaptateurs, caviardage, config, notifier, planif, registre, systeme, vues
 from tableau.adaptateurs.contexte import Contexte
 from tableau.analyse import attentes, credits, credits_reels, rapport_semaine, sante
 from tableau.analyse.alertes import Alertes
@@ -33,7 +33,7 @@ from tableau.db import Base, DisquePlein
 from tableau.decouverte import decouvrir
 from tableau.instantane_icloud import Instantane
 from tableau.module import DefModule, EtatModule
-from tableau.notifier import Notificateur, NotificateurMac
+from tableau.notifier import Notificateur
 from tableau.sondes import docker_n8n, processus
 from tableau.sondes.docker_n8n import SondeDocker
 from tableau.sondes.launchd import SondeLaunchd
@@ -75,7 +75,7 @@ def configurer_journal(chemins: config.Chemins) -> None:
 class Branchements:
     """Ce que les tests (et le faux écosystème) remplacent : commandes, horloges, notifications, n8n."""
 
-    notificateur: Notificateur = field(default_factory=NotificateurMac)
+    notificateur: Notificateur = field(default_factory=notifier.choisir)
     launchctl: Callable[[list[str]], systeme.Resultat] | None = None
     docker: Callable[[list[str]], systeme.Resultat] | None = None
     healthz: Callable[[int], tuple[bool, str]] = docker_n8n.healthz
@@ -230,6 +230,7 @@ class Demon:
                 JOURNAL.info("notification %s : %s", "envoyée" if envoi.envoyee else "non affichée",
                              envoi.texte.replace("\n", " · "))  # fmt: skip
             self.source.publier(etats)
+            self._etape("etat_json", lambda: self.ecrire_etat_json(etats, maintenant))
             if self.reglages["instantane"]["actif"]:
                 self._etape("instantane", lambda: self.ecrire_instantane(etats, maintenant))
             if self.echeancier.du("entretien", ENTRETIEN_S, maintenant):
@@ -247,6 +248,22 @@ class Demon:
 
     def rapport(self, etats: list[EtatModule], maintenant: float) -> rapport_semaine.Rapport | None:
         return rapport_semaine.faire_si_du(self.base, self.reglages, etats, self.chemins.rapports, maintenant)
+
+    def ecrire_etat_json(self, etats: list[EtatModule], maintenant: float) -> None:
+        """`etat.json` : l'état en bref, pour l'assistant ou un autre outil (INTEGRATION.md). Rien de personnel."""
+        d = vues.bandeau(etats, self.alertes.retenue(maintenant))
+        contenu = {
+            "maj": maintenant,
+            "bandeau": d["texte"],
+            "niveau": d["niveau"],
+            "modules": [{"id": e.id, "nom": e.nom, "pastille": str(e.pastille),
+                         "phrase": caviardage.caviarder(e.phrase, 200)} for e in etats],
+        }  # fmt: skip
+        temporaire = self.chemins.etat_json.with_suffix(".tmp")
+        descripteur = os.open(temporaire, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+        with os.fdopen(descripteur, "w", encoding="utf-8") as f:
+            json.dump(contenu, f, ensure_ascii=False)
+        temporaire.replace(self.chemins.etat_json)
 
     def ecrire_instantane(self, etats: list[EtatModule], maintenant: float) -> None:
         r = self.instantane.ecrire_si_utile(etats, credits.synthese(self.base, etats, maintenant), maintenant)
@@ -356,7 +373,13 @@ def lancer(barre: bool | None = None) -> int:
 
             fil = threading.Thread(target=demon.boucle, name="tours", daemon=True)
             fil.start()
-            barre_menus.lancer(demon.source, page.adresse, demon.arret)  # rend la main quand on quitte
+            try:
+                barre_menus.lancer(demon.source, page.adresse, demon.arret)  # rend la main quand on quitte
+            except Exception as e:  # noqa: BLE001 - sans icône (rumps absent, pas de session), le démon continue
+                JOURNAL.warning("icône de la barre des menus impossible (%s) : le tableau de bord tourne sans elle",
+                                e.__class__.__name__)  # fmt: skip
+                while fil.is_alive() and not demon.arret.is_set():
+                    demon.arret.wait(60)
             demon.arreter()
             fil.join(timeout=30)
         else:

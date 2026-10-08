@@ -12,8 +12,8 @@ Chaque phase se termine par `./check.sh` vert, l'intégrité identique, un commi
 | P4 — alertes, sourdine, rapport de la semaine | ✅ | « Tableau de bord P4 » |
 | P5 — page web | ✅ | « Tableau de bord P5 » |
 | P6 — barre des menus, instantané iCloud, CLI | ✅ | « Tableau de bord P6 » |
-| P7 — faux écosystème complet | ⏳ | |
-| P8 — installation | ⏳ | |
+| P7 — faux écosystème complet | ✅ | « Tableau de bord P7-P8 » |
+| P8 — installation | ✅ (scripts et tests) ; réelle sur ton Mac : ACTIONS_HUMAINES §1 | « Tableau de bord P7-P8 » |
 | P9 — 30 min réelles, performance | ⏳ | |
 | P10 — revue hostile en deux passes | ⏳ | |
 
@@ -263,6 +263,58 @@ Success: no issues found in 53 source files
 23 passed in 24.86s
 12 passed in 14.50s
 TOTAL                                 5088    123    98%
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 730 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
+CHECK OK
+```
+
+## P7 — 2026-10-08 · Faux écosystème (le juge principal, §9.1)
+
+- `tests/faux_ecosysteme/` : 7 faux modules **vrais processus** (`faux_module.py` : journal, base SQLite en WAL avec
+  un délai d'attente nul, piloté par un fichier `comportement`) — sain, boucle de plantages, file bloquée, pic
+  d'erreurs, budget 85 % puis 102 %, attente manquée, processeur élevé + code injecté — et un module absent ; un
+  launchd (faux ici, KeepAlive et ThrottleInterval ; le vrai sur ton Mac avec `TDB_VRAI_LAUNCHD=1`) ; le **vrai
+  démon** lancé comme par launchd, avec un **espion d'audit dans son processus**.
+- Trois passages pour arriver au vert, chacun a trouvé un vrai défaut, corrigé dans le code (pas dans le test) :
+  la file bloquée ignorait le seuil du module (D-44) ; une boucle de plantages donnait aussi un « pic d'erreurs »,
+  une « attente manquée », puis un pic après sa résolution (D-43).
+- Critères tenus (3e passage, 6 min 14 s) : 8 états détectés en moins de 2 min ; chaque alerte émise une fois, sa
+  résolution une fois après réparation (boucle, file, attente, processeur, code) ; 0 alerte pour le module sain ;
+  l'absent ⚪ sans alerte ; espion vide ; `lsof` sans fichier des modules ; aucun « database is locked » chez les
+  modules ; code des modules identique (empreinte et date) ; plus aucun processus ni bac à sable à la fin.
+
+```
+tests/faux_ecosysteme/test_faux_ecosysteme.py .                          [100%]
+1 passed in 374.42s (0:06:14)
+```
+
+## P8 — 2026-10-08 · Installation
+
+- `install.sh` (8 étapes) : Python ≥ 3.11, empreinte des autres projets avant, `.venv`, `tableau installation
+  preparer` (dossiers, jeton, registre, commande `~/.local/bin/tableau`, agent), `bootstrap` de notre agent seul,
+  `launchctl print`, **arrêt brutal puis relance par launchd**, vérification (tours, page qui répond avec le jeton et
+  refuse sans), premier état réel (`tableau etat`), `tableau doctor`, empreinte comparée. Relançable.
+- `uninstall.sh` : `bootout` de notre agent, retrait de tout ce qui est à nous (rien d'autre), clé Admin seulement
+  si tu dis oui, empreinte comparée.
+- `tableau/installation.py` + tests (plist conforme, relance sans effet de bord, refus de ce qui n'est pas à nous,
+  vérification réelle d'un démon, désinstallation propre, scripts sans sudo et launchctl seulement sur notre label).
+- Revue hostile en cours de route : sans rumps, le démon continue sans icône (au lieu de planter en boucle) ; les
+  passages d'un agent périodique ne sont plus comptés comme des plantages.
+- L'installation réelle se fait sur ton Mac (ACTIONS_HUMAINES §1) : ce conteneur n'a pas de launchd.
+
+Preuve (`./check.sh`) :
+
+```
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 730 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
+All checks passed!
+Success: no issues found in 54 source files
+171 passed in 12.94s
+14 passed in 13.42s
+43 passed in 4.39s
+19 passed in 5.07s
+38 passed in 21.07s
+23 passed in 24.22s
+19 passed in 15.35s
+TOTAL                                 5294    136    97%
 INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 730 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 5 élément(s) divers)
 CHECK OK
 ```

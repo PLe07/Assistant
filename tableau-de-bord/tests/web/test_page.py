@@ -27,7 +27,7 @@ def test_accueil_bandeau_et_cartes(site: Any) -> None:
     assert "🔴 2 choses à regarder" in t
     assert cartes(r.texte) == {"trieur": "rouge", "quotidien": "jaune", "bouclier": "vert", "corvees": "gris"}
     assert list(cartes(r.texte)) == ["trieur", "quotidien", "bouclier", "corvees"]  # le plus grave d'abord
-    for morceau in ("Trieur s'est arrêté 5 fois depuis ce matin", "0,95 $ sur 1,00 $", "Erreurs sur 24 h",
+    for morceau in ("Trieur s'est arrêté 5 fois aujourd'hui", "0,95 $ sur 1,00 $", "Erreurs sur 24 h",
                     "Prochaine tâche", "brief demain à 7h15", "31,0 %", "80 Mo", "analyse il y a 5 min",
                     "Mettre les alertes en sourdine 1 h", "éteint ou pas installé"):  # fmt: skip
         assert morceau in t, morceau
