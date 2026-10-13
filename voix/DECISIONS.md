@@ -173,3 +173,44 @@ fichier de leurs dossiers, et ne les arrête ni ne les relance. Pendant la const
 `osascript` avec le message en argument). Le journal garde les 100 dernières commandes (texte, intention, résultat ;
 jamais d'audio), e-mails et longues suites de chiffres masqués ; `voix journal` l'affiche, `voix oublier` l'efface,
 `[journal] actif = false` l'arrête.
+
+**D-21 · La fin de phrase : Silero, plus l'énergie relative à ta voix (2026-10-13).**
+Silero VAD (seuil 0,5) décide « parole » trame par trame (32 ms) ; une trame plus faible de 8 dB que ta voix (80e
+centile de tes trames de parole) compte comme du silence, même si Silero y entend des voix. Mesuré sur le corpus : sans
+cette règle, le brouhaha d'un café à 10 dB repoussait la fin de 2,4 s (médiane) ; avec elle, 0,5 s, sans aucune
+phrase coupée (10 dB essayés : moins bon au café ; 8 dB retenus). Début : 96 ms de parole continue, 300 ms gardées
+avant. Fin : 500 ms de silence (réglable), 8 s au plus, 5 s sans parole en appui simple → « rien ». WebRTC VAD en
+repli (agressivité 2), moins bon sur le bruit de clavier (mesuré).
+
+**D-22 · La transcription commence pendant le silence (2026-10-13).**
+Après 200 ms de silence, le moteur lance déjà la transcription ; si tu reprends la parole, elle est jetée et refaite.
+À la fin (500 ms), il ne reste que la part de la transcription qui dépasse 300 ms. Sans cela, la latence ressentie
+serait 500 ms + toute la transcription ; avec, max(500, 200 + transcription). C'est ce qui rend tenable l'objectif de
+800 ms au 90e centile avec Whisper `small`.
+
+**D-23 · Le filtre anti-hallucination (2026-10-13).**
+Rejeté : les phrases connues inventées par Whisper (« Sous-titres réalisés par… », « Merci d'avoir regardé »…),
+entières ou collées en fin de phrase (on les retire) ; une transcription sans parole entendue par le détecteur
+(moins de 0,09 s : un « non » dit vite fait 0,13 s, un premier seuil à 0,15 s l'aurait rejeté) ; une suite de 1 à
+4 mots répétée trois fois ; plus de 6 mots par seconde de parole (+ 4) ; un texte sans lettres ou d'un autre
+alphabet ; et, de Whisper lui-même, « pas de parole » > 0,6 avec une vraisemblance < −1. Un rejet répond « Je n'ai
+rien entendu. », jamais une action.
+
+**D-24 · Le moteur : un seul fil de travail, un socket privé (2026-10-13).**
+Tout le travail du moteur (audio, transcription, compréhension, actions, tic) passe par un seul fil, dans l'ordre
+d'arrivée : pas d'accès concurrents. Seules les réponses de l'app aux ordres du pont sont traitées tout de suite par
+le fil du socket (le travailleur peut justement les attendre). Socket `voix.sock` en 0600 dans un dossier 0700, une
+ligne JSON par message (`"v": 1`, 1 Mio au plus, chaque champ vérifié) ; une ligne invalide est ignorée et comptée.
+Un seul moteur à la fois (verrou), un vieux socket est remplacé, un fichier inattendu à sa place n'est pas touché.
+`etat.json` (0600) dit à `voix doctor` le moteur de transcription choisi et pourquoi, la latence moyenne, les rejets.
+
+**D-25 · Whisper : mlx sur ton Mac, et ce qui n'a pas pu être mesuré ici (2026-10-13).**
+Sur ton Mac (Apple Silicon) : `mlx-whisper`, modèle `small`, décodage direct d'un seul morceau (pas la boucle de
+`transcribe`), une passe à température 0, français forcé, sans horodatage, invite avec les commandes et tes noms.
+Modèle chargé à la demande, libéré après 5 min sans servir. Vérifié par `EMPREINTES.json` (tailles à chaque
+chargement, SHA-256 à l'installation et dans `voix doctor`) ; absent ou corrompu → Apple Speech, et on le dit.
+Ici : Hugging Face est bloqué, et le téléchargement des conversions ONNX depuis un paquet npm tiers (D-05) a été
+**refusé** par le contrôle de sécurité du conteneur. Je ne l'ai pas contourné. Le banc d'essai tourne donc ici en
+mode « oracle » (texte exact, sans reconnaissance) : il mesure la détection de voix, le filtre et la compréhension ;
+les scores Whisper de §9.2 seront mesurés sur ton Mac (`./check.sh --complet`, puis `voix verifier`). Le moteur
+« onnx » n'est donc pas écrit : non testable ici, inutile sur Apple Silicon.

@@ -69,6 +69,7 @@ etape "socle (unitaires)" groupe tests/unitaires
 etape "compréhension : grammaire et corpus de phrases (§9.1)" groupe tests/nlu
 etape "actions, annulation, confirmation (§9.3)" groupe tests/actions
 etape "sécurité : injection, recherche automatisée (§9.3)" groupe tests/securite
+etape "corpus audio : fabrication, banc d'essai rapide (§9.2)" groupe tests/corpus_audio
 etape "intégration : moteur, socket, démon" groupe tests/integration
 etape "gardien d'intégrité" groupe tests/integrite
 if [ $COMPLET -eq 1 ]; then

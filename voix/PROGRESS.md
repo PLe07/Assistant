@@ -8,7 +8,7 @@ collée ici (sortie réelle).
 | P0 — environnement, empreinte, squelettes, check.sh | ✅ |
 | P1 — compréhension et corpus de phrases | ✅ réglage ; ⚠️ anti-triche 86–89 % < 95 % (D-13) |
 | P2 — actions, annulation, confirmation, modules, sécurité | ✅ |
-| P3 — moteur audio et corpus audio | ⏳ |
+| P3 — moteur audio et corpus audio | ✅ ; ⚠️ scores Whisper à mesurer sur le Mac (D-25) |
 | P4 — app Swift | ⏳ |
 | P5 — mot d'éveil et suspension pendant les appels | ⏳ |
 | P6 — banc d'essai complet, choix du moteur | ⏳ |
@@ -180,6 +180,80 @@ All checks passed!
 15 passed in 3.68s
   ✅ gardien d'intégrité
 TOTAL                         3061    111    96%
+  ✅ couverture ≥ 90 % sur voix/
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 853 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 6 élément(s) divers)
+  ✅ intégrité des autres projets (fin)
+CHECK OK
+```
+
+
+## P3 — moteur audio et corpus audio ✅ (sauf les scores Whisper : à mesurer sur ton Mac, D-25)
+
+- **Détection de voix** (`voix/audio/vad.py`) : Silero (modèle du paquet PyPI, empreinte vérifiée, sans torch),
+  WebRTC en repli ; fin de phrase par 500 ms de silence, 8 s au plus, ou la touche relâchée ; une trame 8 dB sous ta
+  voix compte comme silence (D-21) ; événement « pause » à 200 ms pour lancer la transcription en avance (D-22).
+- **Filtre anti-hallucination** (`voix/audio/anti_hallucination.py`, D-23) et **Whisper** (`voix/audio/whisper_local.py`) :
+  mlx sur ton Mac, une passe, français forcé, invite avec tes noms ; modèle vérifié par empreintes, libéré après
+  5 min ; absent ou corrompu → Apple Speech (D-25). Testé ici avec un faux mlx (ce que Voix lui demande).
+- **Moteur, socket, démon** (`voix/moteur.py`, `voix/protocole.py`, `voix/socket_serveur.py`, `voix/demon.py`, D-24) :
+  écoute → fin → transcription anticipée → filtre → compréhension → réponse ; mode Apple (l'app transcrit) ; ordres
+  du pont vers l'app et leurs réponses ; `voix demon`, `voix dire "phrase"`. Testé de bout en bout sur un vrai socket
+  Unix avec une fausse app : audio par morceaux de 100 ms, ordre « quitter Spotify » et sa réponse, lignes invalides
+  ignorées, second moteur refusé, vieux socket remplacé, fichier inattendu non touché, aucun fichier audio écrit.
+- **Corpus audio** (`outils/corpus_audio.py`) : 234 phrases (204 ordres de 68 intentions sur 69, 30 hors catalogue), les 7
+  voix MBROLA françaises ici (`say` et toutes ses voix françaises sur ton Mac), 3 débits à tour de rôle, sans bruit
+  et café (brouhaha + tintements), clavier, rue à 20 et 10 dB ; tout en mémoire. 10 minutes sans parole (silence,
+  souffle, clavier, rue, ventilateur).
+- Corrigé en route (mesuré, pas supposé) : la condition « sans bruit » ajoutait un souffle à pleine échelle (bug du
+  générateur) ; le brouhaha à 10 dB empêchait de trouver la fin (règle des 8 dB) ; un « non » dit vite (0,13 s de
+  parole) aurait été rejeté par un seuil à 0,15 s (abaissé à 0,09 s).
+- **Banc d'essai** (`outils/banc_audio.py`), `./check.sh --complet`, transcription « oracle » (texte exact : ce que
+  valent la détection de fin, le filtre et la compréhension ; Whisper n'a pas pu être téléchargé ici) — sortie réelle :
+
+```
+| Condition | Ordres | Intention | Paramètres | Hors catalogue : actions | Fin manquée | Latence p50 | Latence p90 |
+|---|---|---|---|---|---|---|---|
+| sans bruit | 204 | 100.0 % | 100.0 % | 0 / 30 | 0 | 475 ms | 512 ms |
+| 10 dB | 612 | 100.0 % | 100.0 % | 0 / 90 | 0 | 494 ms | 672 ms |
+| 20 dB | 612 | 100.0 % | 100.0 % | 0 / 90 | 0 | 475 ms | 510 ms |
+10 min sans parole : 0 écoute(s) déclenchée(s), 0 transcription(s), 0 hallucination(s)
+2 passed, 1 skipped, 6 deselected in 81.54s (0:01:21)
+```
+
+  La latence ci-dessus ne compte pas encore Whisper : avec la transcription anticipée, Whisper ne s'ajoute que pour
+  ce qui dépasse 300 ms. L'épreuve sans parole est faite avec un faux Whisper qui inventerait « ouvre Safari » à
+  chaque écoute : rien ne passe, car le détecteur n'a jamais déclenché d'écoute sur ces 10 minutes. Le test
+  « Whisper réel » est marqué `mac` (ignoré ici en le disant, rejoué sur ton Mac).
+
+- `./check.sh` (sortie réelle, lignes de résultat) :
+
+```
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 853 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 6 élément(s) divers)
+  ✅ intégrité des autres projets (début)
+  ✅ swift build -c release
+controles-core : 2 réussi(s), 0 échec(s)
+  ✅ swift : contrôles du Core (sans XCTest)
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.103 (0.103) seconds
+  ✅ swift test (XCTest)
+All checks passed!
+  ✅ ruff check
+  ✅ ruff format
+  ✅ mypy
+77 passed in 1.38s
+  ✅ socle (unitaires)
+216 passed in 42.28s
+  ✅ compréhension : grammaire et corpus de phrases (§9.1)
+133 passed in 38.05s
+  ✅ actions, annulation, confirmation (§9.3)
+45 passed in 4.05s
+  ✅ sécurité : injection, recherche automatisée (§9.3)
+6 passed, 3 deselected in 2.08s
+  ✅ corpus audio : fabrication, banc d'essai rapide (§9.2)
+18 passed in 2.03s
+  ✅ intégration : moteur, socket, démon
+15 passed in 4.08s
+  ✅ gardien d'intégrité
+TOTAL                               4060    147    96%
   ✅ couverture ≥ 90 % sur voix/
 INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 853 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 6 élément(s) divers)
   ✅ intégrité des autres projets (fin)

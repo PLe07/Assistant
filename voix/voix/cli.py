@@ -5,6 +5,8 @@ voix raccourci [--export FICHIER]   le raccourci retenu, et les raccourcis du sy
 voix comprendre "PHRASE"            ce que Voix comprend de cette phrase (sans rien faire)
 voix journal                        les dernières commandes (texte compris, action, résultat ; jamais d'audio)
 voix oublier                        efface le journal
+voix demon                          le moteur (lancé par launchd ; à la main pour essayer)
+voix dire "PHRASE"                  envoie une phrase tapée au moteur qui tourne, et affiche sa réponse
 """
 
 from __future__ import annotations
@@ -124,6 +126,25 @@ def cmd_oublier(_args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_demon(_args: argparse.Namespace) -> int:
+    from voix import demon
+
+    return demon.lancer()
+
+
+def cmd_dire(args: argparse.Namespace) -> int:
+    from voix import demon
+
+    r = demon.dire(" ".join(args.phrase), config.chemins_par_defaut().socket)
+    if r is None:
+        print("Le moteur Voix n'est pas lancé.")
+        return 1
+    print(r.get("texte") or "(rien)")
+    for s in r.get("suggestions") or []:
+        print(f"  Essaie : « {s} »")
+    return 0 if r.get("statut") not in ("erreur", "incompris") else 1
+
+
 def construire() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="voix", description="Commandes vocales en français, 100 % locales.")
     sous = p.add_subparsers(dest="commande")
@@ -134,6 +155,9 @@ def construire() -> argparse.ArgumentParser:
     c.add_argument("phrase", nargs="+")
     sous.add_parser("journal", help="les dernières commandes")
     sous.add_parser("oublier", help="efface le journal")
+    sous.add_parser("demon", help="le moteur (lancé par launchd)")
+    d = sous.add_parser("dire", help="envoie une phrase tapée au moteur qui tourne")
+    d.add_argument("phrase", nargs="+")
     return p
 
 
@@ -144,7 +168,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Voix {VERSION}")
         return 0
     commandes = {"raccourci": cmd_raccourci, "comprendre": cmd_comprendre, "journal": cmd_journal,
-                 "oublier": cmd_oublier}  # fmt: skip
+                 "oublier": cmd_oublier, "demon": cmd_demon, "dire": cmd_dire}  # fmt: skip
     if args.commande in commandes:
         return commandes[args.commande](args)
     p.print_help()
