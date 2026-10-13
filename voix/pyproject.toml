@@ -31,6 +31,8 @@ select = ["E", "F", "W", "I", "B", "UP", "S102", "S307", "S602", "S604", "S605"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["B011"]
+# Les jeux de phrases sont des tables de données : une phrase par ligne, quelle que soit sa longueur.
+"outils/corpus_phrases*.py" = ["E501"]
 
 [tool.mypy]
 python_version = "3.11"

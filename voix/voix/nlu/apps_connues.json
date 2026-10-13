@@ -1,0 +1,860 @@
+{
+ "com.apple.Safari": {
+  "nom": "Safari",
+  "formes": [
+   "safari",
+   "safarie",
+   "le navigateur safari"
+  ]
+ },
+ "com.apple.mail": {
+  "nom": "Mail",
+  "formes": [
+   "mail",
+   "mails",
+   "apple mail",
+   "courrier",
+   "mes mails",
+   "messagerie"
+  ]
+ },
+ "com.apple.MobileSMS": {
+  "nom": "Messages",
+  "formes": [
+   "messages",
+   "message",
+   "imessage",
+   "i message",
+   "textos",
+   "sms"
+  ]
+ },
+ "com.apple.FaceTime": {
+  "nom": "FaceTime",
+  "formes": [
+   "facetime",
+   "face time",
+   "fesse time",
+   "fesse taime",
+   "faisse taime"
+  ]
+ },
+ "com.apple.Notes": {
+  "nom": "Notes",
+  "formes": [
+   "notes",
+   "note",
+   "apple notes",
+   "bloc notes",
+   "nautes"
+  ]
+ },
+ "com.apple.reminders": {
+  "nom": "Rappels",
+  "formes": [
+   "rappels",
+   "rappel",
+   "reminders",
+   "mes rappels"
+  ]
+ },
+ "com.apple.iCal": {
+  "nom": "Calendrier",
+  "formes": [
+   "calendrier",
+   "agenda",
+   "calendar",
+   "mon agenda",
+   "mon calendrier"
+  ]
+ },
+ "com.apple.AddressBook": {
+  "nom": "Contacts",
+  "formes": [
+   "contacts",
+   "contact",
+   "carnet d adresses"
+  ]
+ },
+ "com.apple.Maps": {
+  "nom": "Plans",
+  "formes": [
+   "plans",
+   "maps",
+   "apple plans",
+   "apple maps",
+   "cartes"
+  ]
+ },
+ "com.apple.Photos": {
+  "nom": "Photos",
+  "formes": [
+   "photos",
+   "photo",
+   "apple photos",
+   "mes photos"
+  ]
+ },
+ "com.apple.Music": {
+  "nom": "Musique",
+  "formes": [
+   "musique",
+   "music",
+   "apple music",
+   "itunes"
+  ]
+ },
+ "com.apple.podcasts": {
+  "nom": "Podcasts",
+  "formes": [
+   "podcasts",
+   "podcast"
+  ]
+ },
+ "com.apple.TV": {
+  "nom": "TV",
+  "formes": [
+   "tv",
+   "apple tv",
+   "la tele",
+   "tele"
+  ]
+ },
+ "com.apple.iBooksX": {
+  "nom": "Livres",
+  "formes": [
+   "livres",
+   "books",
+   "apple books",
+   "ibooks"
+  ]
+ },
+ "com.apple.AppStore": {
+  "nom": "App Store",
+  "formes": [
+   "app store",
+   "appstore",
+   "apple store",
+   "apestore"
+  ]
+ },
+ "com.apple.systempreferences": {
+  "nom": "Réglages Système",
+  "formes": [
+   "reglages systeme",
+   "reglages",
+   "preferences systeme",
+   "parametres",
+   "parametres systeme",
+   "preferences",
+   "reglages du mac"
+  ]
+ },
+ "com.apple.calculator": {
+  "nom": "Calculette",
+  "formes": [
+   "calculette",
+   "calculatrice",
+   "calculator",
+   "calculettes"
+  ]
+ },
+ "com.apple.TextEdit": {
+  "nom": "TextEdit",
+  "formes": [
+   "textedit",
+   "text edit",
+   "texte edit",
+   "editeur de texte"
+  ]
+ },
+ "com.apple.Preview": {
+  "nom": "Aperçu",
+  "formes": [
+   "apercu",
+   "preview"
+  ]
+ },
+ "com.apple.Terminal": {
+  "nom": "Terminal",
+  "formes": [
+   "terminal",
+   "le terminal"
+  ]
+ },
+ "com.apple.ActivityMonitor": {
+  "nom": "Moniteur d'activité",
+  "formes": [
+   "moniteur d activite",
+   "moniteur activite",
+   "gestionnaire des taches",
+   "activity monitor"
+  ]
+ },
+ "com.apple.finder": {
+  "nom": "Finder",
+  "formes": [
+   "finder",
+   "faindeur",
+   "fainedeur",
+   "explorateur de fichiers"
+  ]
+ },
+ "com.apple.shortcuts": {
+  "nom": "Raccourcis",
+  "formes": [
+   "raccourcis",
+   "app raccourcis",
+   "shortcuts"
+  ]
+ },
+ "com.apple.weather": {
+  "nom": "Météo",
+  "formes": [
+   "meteo",
+   "weather",
+   "app meteo"
+  ]
+ },
+ "com.apple.clock": {
+  "nom": "Horloge",
+  "formes": [
+   "horloge",
+   "clock"
+  ]
+ },
+ "com.apple.VoiceMemos": {
+  "nom": "Dictaphone",
+  "formes": [
+   "dictaphone",
+   "memos vocaux",
+   "voice memos",
+   "enregistreur vocal",
+   "enregistreur",
+   "mémos vocaux"
+  ]
+ },
+ "com.apple.freeform": {
+  "nom": "Freeform",
+  "formes": [
+   "freeform",
+   "free form"
+  ]
+ },
+ "com.apple.QuickTimePlayerX": {
+  "nom": "QuickTime Player",
+  "formes": [
+   "quicktime",
+   "quick time",
+   "quicktime player"
+  ]
+ },
+ "com.apple.Home": {
+  "nom": "Maison",
+  "formes": [
+   "maison",
+   "app maison",
+   "domotique"
+  ]
+ },
+ "com.apple.findmy": {
+  "nom": "Localiser",
+  "formes": [
+   "localiser",
+   "find my"
+  ]
+ },
+ "com.apple.Passwords": {
+  "nom": "Mots de passe",
+  "formes": [
+   "mots de passe",
+   "mot de passe",
+   "passwords"
+  ]
+ },
+ "com.apple.PhotoBooth": {
+  "nom": "Photo Booth",
+  "formes": [
+   "photo booth",
+   "photobooth"
+  ]
+ },
+ "com.apple.DiskUtility": {
+  "nom": "Utilitaire de disque",
+  "formes": [
+   "utilitaire de disque",
+   "disk utility"
+  ]
+ },
+ "com.apple.Dictionary": {
+  "nom": "Dictionnaire",
+  "formes": [
+   "dictionnaire",
+   "dictionary"
+  ]
+ },
+ "com.apple.Chess": {
+  "nom": "Échecs",
+  "formes": [
+   "echecs",
+   "jeu d echecs",
+   "chess"
+  ]
+ },
+ "com.apple.iWork.Numbers": {
+  "nom": "Numbers",
+  "formes": [
+   "numbers",
+   "nombeurse",
+   "numbeurs",
+   "nombeurs"
+  ]
+ },
+ "com.apple.iWork.Pages": {
+  "nom": "Pages",
+  "formes": [
+   "pages"
+  ]
+ },
+ "com.apple.iWork.Keynote": {
+  "nom": "Keynote",
+  "formes": [
+   "keynote",
+   "ki note",
+   "kinote",
+   "kinoute"
+  ]
+ },
+ "com.apple.dt.Xcode": {
+  "nom": "Xcode",
+  "formes": [
+   "xcode",
+   "x code",
+   "ixe code",
+   "ix code"
+  ]
+ },
+ "com.apple.garageband10": {
+  "nom": "GarageBand",
+  "formes": [
+   "garageband",
+   "garage band"
+  ]
+ },
+ "com.apple.iMovieApp": {
+  "nom": "iMovie",
+  "formes": [
+   "imovie",
+   "i movie",
+   "aille movie"
+  ]
+ },
+ "com.apple.Stocks": {
+  "nom": "Bourse",
+  "formes": [
+   "bourse",
+   "stocks"
+  ]
+ },
+ "com.apple.ScreenSharing": {
+  "nom": "Partage d'écran",
+  "formes": [
+   "partage d ecran",
+   "partage ecran"
+  ]
+ },
+ "com.apple.FontBook": {
+  "nom": "Livre des polices",
+  "formes": [
+   "livre des polices",
+   "font book"
+  ]
+ },
+ "com.apple.Console": {
+  "nom": "Console",
+  "formes": [
+   "console"
+  ]
+ },
+ "com.apple.keychainaccess": {
+  "nom": "Trousseau d'accès",
+  "formes": [
+   "trousseau",
+   "trousseau d acces"
+  ]
+ },
+ "com.apple.SystemProfiler": {
+  "nom": "Informations système",
+  "formes": [
+   "informations systeme",
+   "infos systeme"
+  ]
+ },
+ "com.apple.Automator": {
+  "nom": "Automator",
+  "formes": [
+   "automator",
+   "automatore"
+  ]
+ },
+ "com.apple.ScriptEditor2": {
+  "nom": "Éditeur de script",
+  "formes": [
+   "editeur de script",
+   "script editor"
+  ]
+ },
+ "com.apple.Image_Capture": {
+  "nom": "Transfert d'images",
+  "formes": [
+   "transfert d images"
+  ]
+ },
+ "com.apple.Stickies": {
+  "nom": "Stickies",
+  "formes": [
+   "stickies",
+   "pense bete"
+  ]
+ },
+ "com.apple.tips": {
+  "nom": "Astuces",
+  "formes": [
+   "astuces",
+   "tips"
+  ]
+ },
+ "com.apple.news": {
+  "nom": "News",
+  "formes": [
+   "news",
+   "apple news"
+  ]
+ },
+ "com.apple.iphonesimulator": {
+  "nom": "Simulator",
+  "formes": [
+   "simulator",
+   "simulateur"
+  ]
+ },
+ "com.microsoft.VSCode": {
+  "nom": "Visual Studio Code",
+  "formes": [
+   "vs code",
+   "vscode",
+   "visual studio code",
+   "visual studio",
+   "vi es code",
+   "vi esse code",
+   "ve esse code",
+   "v s code",
+   "vez code",
+   "vesse code"
+  ]
+ },
+ "com.googlecode.iterm2": {
+  "nom": "iTerm",
+  "formes": [
+   "iterm",
+   "i term",
+   "aille terme",
+   "ail terme",
+   "aille term",
+   "ail term",
+   "ai terme",
+   "iterme",
+   "aillterme"
+  ]
+ },
+ "notion.id": {
+  "nom": "Notion",
+  "formes": [
+   "notion",
+   "notion app",
+   "nocion",
+   "notionne"
+  ]
+ },
+ "com.spotify.client": {
+  "nom": "Spotify",
+  "formes": [
+   "spotify",
+   "spotifaille",
+   "spotifai",
+   "spoti",
+   "spotifaï"
+  ]
+ },
+ "com.google.Chrome": {
+  "nom": "Google Chrome",
+  "formes": [
+   "chrome",
+   "google chrome",
+   "krome",
+   "crome"
+  ]
+ },
+ "org.mozilla.firefox": {
+  "nom": "Firefox",
+  "formes": [
+   "firefox",
+   "fire fox",
+   "faille re fox",
+   "fayeur fox",
+   "fayerfox",
+   "faillerfox"
+  ]
+ },
+ "com.tinyspeck.slackmacgap": {
+  "nom": "Slack",
+  "formes": [
+   "slack",
+   "slaque",
+   "slak"
+  ]
+ },
+ "com.hnc.Discord": {
+  "nom": "Discord",
+  "formes": [
+   "discord",
+   "discorde"
+  ]
+ },
+ "net.whatsapp.WhatsApp": {
+  "nom": "WhatsApp",
+  "formes": [
+   "whatsapp",
+   "whats app",
+   "watsap",
+   "ouatsap",
+   "ouatsape",
+   "watsapp",
+   "wats app"
+  ]
+ },
+ "us.zoom.xos": {
+  "nom": "Zoom",
+  "formes": [
+   "zoom",
+   "zoum"
+  ]
+ },
+ "com.microsoft.teams2": {
+  "nom": "Microsoft Teams",
+  "formes": [
+   "teams",
+   "microsoft teams",
+   "tims"
+  ]
+ },
+ "com.microsoft.Word": {
+  "nom": "Microsoft Word",
+  "formes": [
+   "word",
+   "microsoft word",
+   "ouorde",
+   "worde",
+   "ouord"
+  ]
+ },
+ "com.microsoft.Excel": {
+  "nom": "Microsoft Excel",
+  "formes": [
+   "excel",
+   "microsoft excel",
+   "ixel",
+   "exel"
+  ]
+ },
+ "com.microsoft.Powerpoint": {
+  "nom": "Microsoft PowerPoint",
+  "formes": [
+   "powerpoint",
+   "power point",
+   "paoueur point",
+   "pauweur point"
+  ]
+ },
+ "com.microsoft.Outlook": {
+  "nom": "Microsoft Outlook",
+  "formes": [
+   "outlook",
+   "microsoft outlook",
+   "aoutlouk",
+   "out look"
+  ]
+ },
+ "com.microsoft.onenote.mac": {
+  "nom": "OneNote",
+  "formes": [
+   "onenote",
+   "one note",
+   "ouane note"
+  ]
+ },
+ "com.openai.chat": {
+  "nom": "ChatGPT",
+  "formes": [
+   "chatgpt",
+   "chat gpt",
+   "tchat gpt",
+   "chat g p t",
+   "chat j ai pete",
+   "tchat j ai pete",
+   "chat gepete",
+   "chat gpt app"
+  ]
+ },
+ "com.anthropic.claudefordesktop": {
+  "nom": "Claude",
+  "formes": [
+   "claude",
+   "clode",
+   "claude app",
+   "app claude"
+  ]
+ },
+ "md.obsidian": {
+  "nom": "Obsidian",
+  "formes": [
+   "obsidian",
+   "obsidienne"
+  ]
+ },
+ "com.figma.Desktop": {
+  "nom": "Figma",
+  "formes": [
+   "figma",
+   "figmat"
+  ]
+ },
+ "org.videolan.vlc": {
+  "nom": "VLC",
+  "formes": [
+   "vlc",
+   "ve elle ce",
+   "v l c",
+   "vlc media player"
+  ]
+ },
+ "ru.keepcoder.Telegram": {
+  "nom": "Telegram",
+  "formes": [
+   "telegram",
+   "telegramme"
+  ]
+ },
+ "org.whispersystems.signal-desktop": {
+  "nom": "Signal",
+  "formes": [
+   "signal",
+   "signal app"
+  ]
+ },
+ "com.1password.1password": {
+  "nom": "1Password",
+  "formes": [
+   "1password",
+   "one password",
+   "1 password",
+   "ouane password"
+  ]
+ },
+ "com.docker.docker": {
+  "nom": "Docker",
+  "formes": [
+   "docker",
+   "doqueur",
+   "docker desktop"
+  ]
+ },
+ "com.linguee.DeepLCopyTranslator": {
+  "nom": "DeepL",
+  "formes": [
+   "deepl app",
+   "app deepl"
+  ]
+ },
+ "com.brave.Browser": {
+  "nom": "Brave",
+  "formes": [
+   "brave",
+   "brave browser",
+   "brève"
+  ]
+ },
+ "com.microsoft.edgemac": {
+  "nom": "Microsoft Edge",
+  "formes": [
+   "edge",
+   "microsoft edge"
+  ]
+ },
+ "company.thebrowser.Browser": {
+  "nom": "Arc",
+  "formes": [
+   "arc",
+   "navigateur arc",
+   "arc browser"
+  ]
+ },
+ "com.readdle.smartemail-Mac": {
+  "nom": "Spark",
+  "formes": [
+   "spark"
+  ]
+ },
+ "com.amazon.Kindle": {
+  "nom": "Kindle",
+  "formes": [
+   "kindle"
+  ]
+ },
+ "com.todoist.mac.Todoist": {
+  "nom": "Todoist",
+  "formes": [
+   "todoist",
+   "to do ist",
+   "todo iste"
+  ]
+ },
+ "com.culturedcode.ThingsMac": {
+  "nom": "Things",
+  "formes": [
+   "things",
+   "things 3"
+  ]
+ },
+ "com.getdropbox.dropbox": {
+  "nom": "Dropbox",
+  "formes": [
+   "dropbox app",
+   "app dropbox"
+  ]
+ },
+ "com.deezer.deezer-desktop": {
+  "nom": "Deezer",
+  "formes": [
+   "deezer app",
+   "app deezer"
+  ]
+ },
+ "com.postmanlabs.mac": {
+  "nom": "Postman",
+  "formes": [
+   "postman"
+  ]
+ },
+ "com.jetbrains.pycharm": {
+  "nom": "PyCharm",
+  "formes": [
+   "pycharm",
+   "py charm",
+   "paille charme",
+   "pie charm"
+  ]
+ },
+ "com.sublimetext.4": {
+  "nom": "Sublime Text",
+  "formes": [
+   "sublime text",
+   "sublime"
+  ]
+ },
+ "com.todesktop.230313mzl4w4u92": {
+  "nom": "Cursor",
+  "formes": [
+   "cursor",
+   "curseur"
+  ]
+ },
+ "dev.warp.Warp-Stable": {
+  "nom": "Warp",
+  "formes": [
+   "warp",
+   "ouarp"
+  ]
+ },
+ "com.mitchellh.ghostty": {
+  "nom": "Ghostty",
+  "formes": [
+   "ghostty",
+   "ghosty",
+   "gosti"
+  ]
+ },
+ "com.colliderli.iina": {
+  "nom": "IINA",
+  "formes": [
+   "iina",
+   "i i n a",
+   "ina"
+  ]
+ },
+ "com.raycast.macos": {
+  "nom": "Raycast",
+  "formes": [
+   "raycast",
+   "ray cast",
+   "réquaste"
+  ]
+ },
+ "com.adobe.Reader": {
+  "nom": "Adobe Acrobat Reader",
+  "formes": [
+   "acrobat",
+   "acrobat reader",
+   "adobe reader"
+  ]
+ },
+ "com.canva.CanvaDesktop": {
+  "nom": "Canva",
+  "formes": [
+   "canva app",
+   "app canva"
+  ]
+ },
+ "com.bitwarden.desktop": {
+  "nom": "Bitwarden",
+  "formes": [
+   "bitwarden",
+   "bit warden"
+  ]
+ },
+ "com.evernote.Evernote": {
+  "nom": "Evernote",
+  "formes": [
+   "evernote",
+   "ever note"
+  ]
+ },
+ "com.skype.skype": {
+  "nom": "Skype",
+  "formes": [
+   "skype",
+   "skaipe"
+  ]
+ },
+ "com.apple.logic10": {
+  "nom": "Logic Pro",
+  "formes": [
+   "logic pro",
+   "logic"
+  ]
+ },
+ "com.apple.FinalCut": {
+  "nom": "Final Cut Pro",
+  "formes": [
+   "final cut",
+   "final cut pro"
+  ]
+ },
+ "com.utmapp.UTM": {
+  "nom": "UTM",
+  "formes": [
+   "utm",
+   "u t m"
+  ]
+ }
+}

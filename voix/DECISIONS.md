@@ -67,3 +67,64 @@ torch (torch ne sert qu'à convertir des modèles).
 **D-10 · Les noms d'agents : `com.<ta session>.voix` et `com.<ta session>.voix.app` (2026-10-13).**
 Comme les autres modules : le préfixe est le nom de ta session macOS (réglable dans `reglages.toml`,
 `[installation] prefixe_label`), jamais écrit dans le dépôt.
+
+**D-11 · La compréhension : deux lectures, toutes deux déterministes et strictes (2026-10-13).**
+1. La **grammaire** reconnaît la phrase entière (verbes, objets du catalogue, nombres, durées) ; c'est la lecture
+   rapide et sûre des tournures connues.
+2. Si elle ne reconnaît rien, une **seconde lecture** essaie, dans l'ordre :
+   - la même demande **remise dans l'ordre** (« Safari, ouvre-le », « dans une heure rappelle-moi… », « ouvre Safari…
+     non, Chrome », « garde que Word et cache le reste »), puis repassée par toute la grammaire ;
+   - la demande **sans ce qui l'entoure** : le but (« pour la réunion »), une proposition de plus (« il rame »), une fin
+     sans liaison (« le bébé dort ») ; seulement si la fin coupée n'a ni négation, ni nombre, ni complément (« de la
+     guitare », « dans la voiture »), si la phrase ne commence pas par un article (un avis : « le mode sombre, c'est
+     joli »), et pour une fin sans liaison, seulement un ordre simple sans objet ;
+   - le **nom exact** d'un objet suivi d'une fin (« ouvre Excel le fichier des ventes ») : score ≥ 0,97, jamais un nom
+     commun seul (« le dossier secret de la NASA » n'ouvre pas ton dossier) ;
+   - les **questions par mots** (`questions.py`) et les **sacs de mots** (`sacs.py`) : l'ordre des mots est libre, mais
+     **chaque** mot doit être expliqué (un mot du sujet, un mot permis, ou un mot-outil) ; un seul mot inexpliqué et
+     rien n'est reconnu ; deux intentions possibles et rien non plus ; jamais de nombre.
+   Garde-fous communs : un participe n'est pas un ordre (« j'ai cherché partout ») ; « va chercher » n'est pas
+   « cherche » ; « oui »/« non » se disent franchement (« d'accord, je vois » n'est pas une confirmation) ; une
+   information (heure, météo…) n'est jamais tirée d'une phrase coupée (« quelle heure est-il à Tokyo » reste incomprise).
+Pourquoi : la grammaire seule tenait 100 % sur ses tournures mais tombait à 66–92 % sur des tournures neuves (D-13).
+
+**D-12 · Les conventions de sens, appliquées partout et dans les jeux de phrases (2026-10-13).**
+Un nom seul n'est pas un ordre (« musique », « Safari » : pas compris, avec suggestions). Une plainte non plus (« c'est
+trop fort »). « Mode muet » est la voix de l'assistant (« passe en mode muet » = se taire). « Cherche X » sans moteur
+= Spotlight (« cherche sur Google X » = le web) ; Spotlight retire l'article (« la facture » → « facture »). Les verbes
+faibles (« mets », « joue », « écoute ») n'ouvrent qu'un nom dit presque exactement, jamais « à » quelque chose (« joue
+aux cartes »). Un raccourci au nom exact passe avant un mode d'Ambiance absent (« lance mode lecture »). Un nom dit
+exactement passe avant la priorité des genres (« lance Révisions » = la playlist). Commander, réserver, payer : refus.
+Un ordre composé (« ferme Chrome et Safari ») n'est pas pris en charge.
+
+**D-13 · La mesure anti-triche : protocole et résultats, sans retouche (2026-10-13).**
+Protocole : un jeu de phrases écrit d'un bloc, à la main, sans relire la grammaire ; passé **une seule fois** ; le
+premier résultat est consigné tel quel ; ensuite seulement, le jeu sert au réglage (et un jeu neuf devient la mesure).
+Depuis le jeu 7, chaque ordre est vérifié **jamais vu** (texte normalisé absent de tous les jeux précédents) avant le
+passage. Premiers passages (seuils anti-triche : intention ≥ 95 %, paramètres ≥ 93 %) :
+
+| Jeu | Nature | Ordres | Intention | Paramètres | Hors catalogue : actions | Sensibles |
+|---|---|---|---|---|---|---|
+| 2 | premier jeu écrit à la main | 327 | 70,6 % | (non conservé) | — | — |
+| 3 | tournures orales | 463 | 91,8 % | 99,3 % | 2 / 58 | 15/16 |
+| 4 | **hostile** (tournures choisies pour casser) | 405 | 65,7 % | 98,5 % | 1 / 59 | 9/14 |
+| 5 | **hostile** | 408 | 89,7 % | 99,5 % | 1 / 60 | 14/15 |
+| 6 | représentatif (57 % d'ordres déjà vus) | 371 | 98,1 % | 100 % | 1 / 60 | 12/12 |
+| 6 | … ses 158 ordres neufs seulement | 158 | 95,6 % | — | — | — |
+| 7 | 416 ordres **jamais vus** | 416 | **89,2 %** | 99,5 % | 2 / 60 | 11/12 |
+| 8 | 413 ordres **jamais vus** | 413 | **86,4 %** | 98,9 % | 4 / 60 | 11/11 |
+
+Conclusion honnête : sur des phrases vraiment neuves, la compréhension par règles reconnaît **86 à 89 %** des ordres
+du premier coup ; le seuil de 95 % **n'est pas atteint**. Les paramètres, eux, sont justes à ≥ 98,9 % dès qu'une
+intention est reconnue, et un ordre non reconnu ne fait **rien** (« pas compris » + 3 suggestions). Après réglage, les
+8 jeux (4 838 ordres, 617 hors catalogue) sont à ≥ 98 % d'intentions, ≥ 99,5 % de paramètres, 0 action hors catalogue.
+J'ai arrêté là : chaque tour de réglage ajoutait des règles (et des risques de faux positifs, vus et corrigés au jeu 8)
+sans faire monter le premier passage. Pistes, à décider avec toi : l'aide-mémoire (P7) avec les tournures qui marchent
+à coup sûr ; l'IA optionnelle (éteinte par défaut) pour traduire une phrase non comprise en une intention de la liste
+blanche, toujours validée et confirmée ; tes propres phrases ajoutées à la volée (`commandes.toml`).
+
+**D-14 · Les objets : nom partiel et nom exact (2026-10-13).**
+Un mot de 4 lettres ou plus qui fait partie du nom d'**un seul** objet suffit (« ma playlist jazz » → « Jazz du
+soir », score 0,84 ; plusieurs objets → « lequel ? »). Un nom dit exactement n'est jamais battu par un nom seulement
+proche d'un genre prioritaire. Les synonymes français courants sont dans `apps_connues.json` (« enregistreur vocal »
+→ Dictaphone, « agenda » → Calendrier).

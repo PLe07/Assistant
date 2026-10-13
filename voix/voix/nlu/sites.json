@@ -1,0 +1,463 @@
+[
+ {
+  "nom": "YouTube",
+  "url": "https://www.youtube.com",
+  "formes": [
+   "youtube",
+   "you tube",
+   "yout"
+  ]
+ },
+ {
+  "nom": "Google",
+  "url": "https://www.google.fr",
+  "formes": [
+   "google",
+   "gougueule"
+  ]
+ },
+ {
+  "nom": "Gmail",
+  "url": "https://mail.google.com",
+  "formes": [
+   "gmail",
+   "g mail",
+   "ge mail",
+   "gemail"
+  ]
+ },
+ {
+  "nom": "Google Drive",
+  "url": "https://drive.google.com",
+  "formes": [
+   "google drive",
+   "drive"
+  ]
+ },
+ {
+  "nom": "Google Maps",
+  "url": "https://maps.google.fr",
+  "formes": [
+   "google maps",
+   "google map"
+  ]
+ },
+ {
+  "nom": "Google Docs",
+  "url": "https://docs.google.com",
+  "formes": [
+   "google docs",
+   "google doc"
+  ]
+ },
+ {
+  "nom": "Google Traduction",
+  "url": "https://translate.google.fr",
+  "formes": [
+   "google traduction",
+   "google translate",
+   "traducteur google"
+  ]
+ },
+ {
+  "nom": "Wikipédia",
+  "url": "https://fr.wikipedia.org",
+  "formes": [
+   "wikipedia",
+   "wiki",
+   "wikipedia francais"
+  ]
+ },
+ {
+  "nom": "Netflix",
+  "url": "https://www.netflix.com",
+  "formes": [
+   "netflix",
+   "netflixe"
+  ]
+ },
+ {
+  "nom": "Amazon",
+  "url": "https://www.amazon.fr",
+  "formes": [
+   "amazon",
+   "amazone"
+  ]
+ },
+ {
+  "nom": "Leboncoin",
+  "url": "https://www.leboncoin.fr",
+  "formes": [
+   "leboncoin",
+   "le bon coin",
+   "bon coin"
+  ]
+ },
+ {
+  "nom": "Le Monde",
+  "url": "https://www.lemonde.fr",
+  "formes": [
+   "le monde",
+   "lemonde"
+  ]
+ },
+ {
+  "nom": "LinkedIn",
+  "url": "https://www.linkedin.com",
+  "formes": [
+   "linkedin",
+   "linked in",
+   "linkedine"
+  ]
+ },
+ {
+  "nom": "Facebook",
+  "url": "https://www.facebook.com",
+  "formes": [
+   "facebook",
+   "face book",
+   "fesse bouc"
+  ]
+ },
+ {
+  "nom": "Instagram",
+  "url": "https://www.instagram.com",
+  "formes": [
+   "instagram",
+   "insta"
+  ]
+ },
+ {
+  "nom": "X (Twitter)",
+  "url": "https://x.com",
+  "formes": [
+   "twitter",
+   "x com"
+  ]
+ },
+ {
+  "nom": "Reddit",
+  "url": "https://www.reddit.com",
+  "formes": [
+   "reddit",
+   "redite",
+   "red it"
+  ]
+ },
+ {
+  "nom": "GitHub",
+  "url": "https://github.com",
+  "formes": [
+   "github",
+   "git hub",
+   "guit hub"
+  ]
+ },
+ {
+  "nom": "ChatGPT (site)",
+  "url": "https://chatgpt.com",
+  "formes": [
+   "chatgpt com",
+   "site de chatgpt"
+  ]
+ },
+ {
+  "nom": "Claude (site)",
+  "url": "https://claude.ai",
+  "formes": [
+   "claude ai",
+   "site de claude"
+  ]
+ },
+ {
+  "nom": "DeepL",
+  "url": "https://www.deepl.com/translator",
+  "formes": [
+   "deepl",
+   "deep l",
+   "dipel",
+   "dip l"
+  ]
+ },
+ {
+  "nom": "Doctolib",
+  "url": "https://www.doctolib.fr",
+  "formes": [
+   "doctolib",
+   "docto lib",
+   "doctolibe"
+  ]
+ },
+ {
+  "nom": "Ameli",
+  "url": "https://www.ameli.fr",
+  "formes": [
+   "ameli",
+   "ameli fr",
+   "assurance maladie"
+  ]
+ },
+ {
+  "nom": "Impots.gouv",
+  "url": "https://www.impots.gouv.fr",
+  "formes": [
+   "impots",
+   "impot gouv",
+   "impots gouv",
+   "site des impots"
+  ]
+ },
+ {
+  "nom": "CAF",
+  "url": "https://www.caf.fr",
+  "formes": [
+   "caf",
+   "la caf",
+   "caisse d allocations familiales"
+  ]
+ },
+ {
+  "nom": "France Travail",
+  "url": "https://www.francetravail.fr",
+  "formes": [
+   "france travail",
+   "pole emploi"
+  ]
+ },
+ {
+  "nom": "La Poste",
+  "url": "https://www.laposte.fr",
+  "formes": [
+   "la poste",
+   "laposte"
+  ]
+ },
+ {
+  "nom": "SNCF Connect",
+  "url": "https://www.sncf-connect.com",
+  "formes": [
+   "sncf",
+   "sncf connect",
+   "oui sncf"
+  ]
+ },
+ {
+  "nom": "BlaBlaCar",
+  "url": "https://www.blablacar.fr",
+  "formes": [
+   "blablacar",
+   "bla bla car"
+  ]
+ },
+ {
+  "nom": "Booking",
+  "url": "https://www.booking.com",
+  "formes": [
+   "booking",
+   "bouking"
+  ]
+ },
+ {
+  "nom": "Airbnb",
+  "url": "https://www.airbnb.fr",
+  "formes": [
+   "airbnb",
+   "air bnb",
+   "air b and b",
+   "erbiennbi"
+  ]
+ },
+ {
+  "nom": "Deezer",
+  "url": "https://www.deezer.com",
+  "formes": [
+   "deezer",
+   "dizeur"
+  ]
+ },
+ {
+  "nom": "Twitch",
+  "url": "https://www.twitch.tv",
+  "formes": [
+   "twitch",
+   "touitch"
+  ]
+ },
+ {
+  "nom": "TikTok",
+  "url": "https://www.tiktok.com",
+  "formes": [
+   "tiktok",
+   "tik tok",
+   "tic toc"
+  ]
+ },
+ {
+  "nom": "Pinterest",
+  "url": "https://www.pinterest.fr",
+  "formes": [
+   "pinterest",
+   "pinteresse"
+  ]
+ },
+ {
+  "nom": "WhatsApp Web",
+  "url": "https://web.whatsapp.com",
+  "formes": [
+   "whatsapp web",
+   "watsap web"
+  ]
+ },
+ {
+  "nom": "Outlook (web)",
+  "url": "https://outlook.live.com",
+  "formes": [
+   "outlook web",
+   "hotmail"
+  ]
+ },
+ {
+  "nom": "Le Figaro",
+  "url": "https://www.lefigaro.fr",
+  "formes": [
+   "le figaro",
+   "figaro"
+  ]
+ },
+ {
+  "nom": "Libération",
+  "url": "https://www.liberation.fr",
+  "formes": [
+   "liberation",
+   "libe"
+  ]
+ },
+ {
+  "nom": "France Info",
+  "url": "https://www.francetvinfo.fr",
+  "formes": [
+   "france info",
+   "franceinfo"
+  ]
+ },
+ {
+  "nom": "L'Équipe",
+  "url": "https://www.lequipe.fr",
+  "formes": [
+   "l equipe",
+   "lequipe"
+  ]
+ },
+ {
+  "nom": "Allociné",
+  "url": "https://www.allocine.fr",
+  "formes": [
+   "allocine",
+   "allo cine"
+  ]
+ },
+ {
+  "nom": "Marmiton",
+  "url": "https://www.marmiton.org",
+  "formes": [
+   "marmiton"
+  ]
+ },
+ {
+  "nom": "Météo-France",
+  "url": "https://meteofrance.com",
+  "formes": [
+   "meteo france",
+   "site meteo"
+  ]
+ },
+ {
+  "nom": "Vinted",
+  "url": "https://www.vinted.fr",
+  "formes": [
+   "vinted",
+   "vintede"
+  ]
+ },
+ {
+  "nom": "Cdiscount",
+  "url": "https://www.cdiscount.com",
+  "formes": [
+   "cdiscount",
+   "c discount",
+   "ce discount"
+  ]
+ },
+ {
+  "nom": "Fnac",
+  "url": "https://www.fnac.com",
+  "formes": [
+   "fnac",
+   "la fnac"
+  ]
+ },
+ {
+  "nom": "Stack Overflow",
+  "url": "https://stackoverflow.com",
+  "formes": [
+   "stack overflow",
+   "stackoverflow"
+  ]
+ },
+ {
+  "nom": "Canva",
+  "url": "https://www.canva.com",
+  "formes": [
+   "canva",
+   "canvas"
+  ]
+ },
+ {
+  "nom": "Dropbox",
+  "url": "https://www.dropbox.com",
+  "formes": [
+   "dropbox",
+   "drop box"
+  ]
+ },
+ {
+  "nom": "iCloud.com",
+  "url": "https://www.icloud.com",
+  "formes": [
+   "icloud com",
+   "site icloud",
+   "icloud point com"
+  ]
+ },
+ {
+  "nom": "Larousse",
+  "url": "https://www.larousse.fr",
+  "formes": [
+   "larousse",
+   "dictionnaire larousse"
+  ]
+ },
+ {
+  "nom": "Service Public",
+  "url": "https://www.service-public.fr",
+  "formes": [
+   "service public",
+   "service-public"
+  ]
+ },
+ {
+  "nom": "Légifrance",
+  "url": "https://www.legifrance.gouv.fr",
+  "formes": [
+   "legifrance"
+  ]
+ },
+ {
+  "nom": "Boursorama",
+  "url": "https://www.boursorama.com",
+  "formes": [
+   "boursorama",
+   "bourso"
+  ]
+ }
+]
