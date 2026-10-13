@@ -63,6 +63,23 @@ def test_objet_inconnu_et_suggestions(ctx: Contexte) -> None:
     assert ("app.ouvrir", "ouvre Notion") in exemples(ctx)
 
 
+@pytest.mark.parametrize("modules", [frozenset(), frozenset({"tableau", "ambiance", "quotidien", "bouclier"})])
+def test_chaque_suggestion_marche_chez_toi(modules: frozenset[str]) -> None:
+    """Une suggestion est une phrase qui marche **ici** : comprise comme son intention, jamais un module absent,
+    une routine, un alias ou une playlist que tu n'as pas."""
+    c = Contexte(ref.catalogue(), ref.commandes(), modules=modules)
+    equivalentes = {("ouvre Météo", "systeme.meteo")}  # l'app Météo, ouverte par « la météo » : même effet
+    for intention, phrase in exemples(c):
+        r = comprendre(phrase, c)
+        assert r.intention == intention or (phrase, r.intention) in equivalentes, (phrase, intention, r)
+    phrases = [p for _, p in exemples(c)]
+    assert "lance la routine matin" not in phrases and "lance la routine révision" in phrases
+    assert ("ouvre le tableau de bord" in phrases) is bool(modules)
+    assert "ouvre le dossier Musique" in phrases and "ouvre Musique (dossier)" not in phrases
+    nu = Contexte(Catalogue([]))
+    assert {i for i, _ in exemples(nu)} & {"routine.lancer", "alias.ouvrir", "musique.playlist"} == set()
+
+
 @pytest.mark.parametrize(
     ("phrase", "statut", "raison"),
     [

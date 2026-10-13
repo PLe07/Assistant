@@ -146,7 +146,8 @@ def test_raccourcis_installes_et_commande_de_lecture() -> None:
     r = catalogue_apps.raccourcis_installes(faux)
     assert [o.nom for o in r] == ["Envoyer au Mac", "Activer concentration"] and r[0].genre == "raccourci"
     assert catalogue_apps.raccourcis_installes(lambda a, d: (1, "")) == []
-    assert catalogue_apps.executer(["true"], 5) == (0, "")
+    # Lecture par l'exécuteur de la liste blanche : un programme hors liste n'est jamais lancé.
+    assert catalogue_apps.executer(["true"], 5) == (127, "")
     assert catalogue_apps.executer(["/chemin/qui/n/existe/pas"], 5) == (127, "")
     assert catalogue_apps.executer(["sleep", "5"], 0.2) == (127, "")
 

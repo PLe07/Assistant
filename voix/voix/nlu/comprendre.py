@@ -800,16 +800,37 @@ def _phrase_de_routine(t: str, ctx: Contexte) -> Comprehension | None:
     return _compris("routine.lancer", meilleur[0], objet=objet)
 
 
+# Des intentions dont les exemples nomment un objet qui n'existe pas forcément chez toi (« la compta », « la routine
+# matin ») : les suggestions les remplacent par tes vrais alias, playlists, raccourcis et routines.
+NOMMEES = ("alias.ouvrir", "musique.playlist", "raccourci.lancer", "routine.lancer")
+
+
+def _disponible(intention: str, ctx: Contexte) -> bool:
+    if intention in NOMMEES:
+        return False
+    if intention.startswith("module."):  # module.tableau_ouvrir → tableau
+        return intention.split(".")[1].split("_")[0] in ctx.modules
+    return INTENTIONS[intention].famille != "Refus"
+
+
 def exemples(ctx: Contexte) -> list[tuple[str, str]]:
-    """Des phrases d'exemple (intention, phrase) : celles de la liste blanche, avec tes apps et tes sites."""
-    resultat = [(i.ident, ex) for i in INTENTIONS.values() if i.famille != "Refus" for ex in i.exemples]
+    """Des phrases d'exemple (intention, phrase) qui marchent chez toi : celles de la liste blanche (sans les modules
+    absents), avec tes apps, sites, dossiers, alias, playlists, raccourcis et routines."""
+    resultat = [(i.ident, ex) for i in INTENTIONS.values() if _disponible(i.ident, ctx) for ex in i.exemples]
+    phrases = {
+        "app": (("app.ouvrir", "ouvre {}"), ("app.fermer", "ferme {}")),
+        "site": (("web.ouvrir_site", "ouvre {}"),),
+        "dossier": (("dossier.ouvrir", "ouvre {}"),),
+        "alias": (("alias.ouvrir", "ouvre {}"),),
+        "playlist": (("musique.playlist", "lance la playlist {}"),),
+        "raccourci": (("raccourci.lancer", "lance le raccourci {}"),),
+        "routine": (("routine.lancer", "lance la routine {}"),),
+    }
     for objet in ctx.catalogue.objets:
-        if objet.genre == "app":
-            resultat += [("app.ouvrir", f"ouvre {objet.nom}"), ("app.fermer", f"ferme {objet.nom}")]
-        elif objet.genre == "site":
-            resultat.append(("web.ouvrir_site", f"ouvre {objet.nom}"))
-        elif objet.genre == "dossier":
-            resultat.append(("dossier.ouvrir", f"ouvre {objet.nom}"))
+        if objet.nom.endswith(" (dossier)"):  # « Musique (dossier) » : l'app Musique passe devant « ouvre Musique »
+            resultat.append(("dossier.ouvrir", f"ouvre le dossier {objet.nom.removesuffix(' (dossier)')}"))
+            continue
+        resultat += [(intention, modele.format(objet.nom)) for intention, modele in phrases.get(objet.genre, ())]
     return resultat
 
 

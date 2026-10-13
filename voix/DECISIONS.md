@@ -128,3 +128,48 @@ Un mot de 4 lettres ou plus qui fait partie du nom d'**un seul** objet suffit (�
 soir », score 0,84 ; plusieurs objets → « lequel ? »). Un nom dit exactement n'est jamais battu par un nom seulement
 proche d'un genre prioritaire. Les synonymes français courants sont dans `apps_connues.json` (« enregistreur vocal »
 → Dictaphone, « agenda » → Calendrier).
+
+**D-15 · Les actions qui demandent une autorisation passent par l'app, avec des ordres fermés (2026-10-13).**
+Quitter ou cacher une app, piloter Musique et Spotify, changer l'apparence, verrouiller l'écran, afficher une
+notification : le moteur Python envoie à l'app « Commandes Vocales » un **ordre de la liste** (`app.quitter`,
+`musique.pause`, `apparence.regler`…) et des paramètres validés (identifiant d'app, lecteur, booléen) ; l'app ne reçoit
+jamais de script. Alternative : `osascript` depuis le moteur. Raison : macOS demande l'autorisation « Automatisation »
+au nom du programme qui envoie l'Apple Event ; depuis l'app, tu vois « Commandes Vocales » dans Réglages, pas un Python
+anonyme, et une seule autorisation suffit. Le volume reste par `osascript` (aucune autorisation demandée), le niveau
+passé en argument (`on run argv`), jamais collé dans le script.
+
+**D-16 · Ce que la voix lance : une liste blanche, des arguments un par un (2026-10-13).**
+Huit programmes du système (`open`, `osascript`, `networksetup`, `pmset`, `shortcuts`, `mdfind`, `defaults` en
+lecture, `say`) cherchés dans `/usr/bin`, `/bin`, `/usr/sbin`, `/sbin` ; quatre commandes publiques de tes modules
+(`tableau`, `ambiance`, `quotidien`, `bouclier`) cherchées dans `~/.local/bin`, Homebrew et ton PATH. Jamais de shell,
+un délai maximum, un environnement réduit. Un seul fichier lance des programmes (`actions/executeur.py`, plus la
+lecture des raccourcis clavier dans `cli.py`) ; un test le vérifie dans tout le code, avec l'absence de `shell=`,
+`eval`, `os.system`. Le lecteur du catalogue (`mdfind`, `shortcuts list`) passe aussi par l'exécuteur.
+
+**D-17 · Ce que la voix accepte d'ouvrir (2026-10-13).**
+Un chemin absolu, existant, **dans ta maison** (ou une app d'un dossier Applications) ; jamais un fichier qui s'exécute à
+l'ouverture (`.command`, `.sh`, `.app` hors Applications, `.workflow`, `.pkg`, `.webloc`…) ni un fichier exécutable ;
+jamais un lien qui sort de ta maison. Les adresses : `https` seulement. Un alias de `commandes.toml` qui viole ces
+règles est refusé au chargement (et l'erreur est affichée) ; un résultat Spotlight qui les viole n'est pas ouvert.
+
+**D-18 · « Annule » et « Tu confirmes ? » (2026-10-13).**
+« Annule » défait la dernière action **réversible** — volume, son coupé, apparence, Wi-Fi, concentration — en remettant
+exactement l'état lu juste avant (pas « l'inverse supposé ») ; jusqu'à 20 actions en arrière. Ouvrir, fermer ou
+chercher ne s'annule pas, et Voix le dit. Les actions sensibles (mise en veille, « ferme tout », « ferme tout sauf »,
+Wi-Fi coupé, routine marquée `sensible = true`) demandent « Tu confirmes ? » : « oui » dans les 5 s → fait ; « non »,
+silence ou n'importe quelle autre phrase → rien (« D'accord, je ne fais rien. »). Un « oui » arrivé trop tard ne fait
+rien non plus.
+
+**D-19 · Tes modules : découverts, jamais touchés (2026-10-13).**
+`which` (dans les dossiers de D-16) dit lesquels sont installés ; un module absent répond « … n'est pas installé ».
+Les modes d'Ambiance viennent de son README, lu en **lecture seule** à côté de sa commande ; un mode qu'il n'annonce pas
+est refusé. Délai maximum 10 s (`[modules] delai_s`), sortie résumée à 300 caractères. Voix n'ouvre ni n'écrit aucun
+fichier de leurs dossiers, et ne les arrête ni ne les relance. Pendant la construction, seuls de faux exécutables
+(qui notent leurs arguments) ont été lancés.
+
+**D-20 · La météo, les minuteurs, le journal : sans réseau et sur ton disque seulement (2026-10-13).**
+« La météo » ouvre l'app Météo (aucun appel réseau depuis Voix). Les minuteurs et rappels (20 au plus) sont gardés dans
+`minuteurs.json` (0600) et survivent à un redémarrage du moteur ; à l'échéance, une notification par l'app (repli :
+`osascript` avec le message en argument). Le journal garde les 100 dernières commandes (texte, intention, résultat ;
+jamais d'audio), e-mails et longues suites de chiffres masqués ; `voix journal` l'affiche, `voix oublier` l'efface,
+`[journal] actif = false` l'arrête.

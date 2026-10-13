@@ -7,7 +7,7 @@ collée ici (sortie réelle).
 |---|---|
 | P0 — environnement, empreinte, squelettes, check.sh | ✅ |
 | P1 — compréhension et corpus de phrases | ✅ réglage ; ⚠️ anti-triche 86–89 % < 95 % (D-13) |
-| P2 — actions, annulation, confirmation, modules, sécurité | ⏳ |
+| P2 — actions, annulation, confirmation, modules, sécurité | ✅ |
 | P3 — moteur audio et corpus audio | ⏳ |
 | P4 — app Swift | ⏳ |
 | P5 — mot d'éveil et suspension pendant les appels | ⏳ |
@@ -108,6 +108,78 @@ All checks passed!
 15 passed in 3.78s
   ✅ gardien d'intégrité
 TOTAL                         1883     23    99%
+  ✅ couverture ≥ 90 % sur voix/
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 853 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 6 élément(s) divers)
+  ✅ intégrité des autres projets (fin)
+CHECK OK
+```
+
+
+## P2 — actions, annulation, confirmation, modules, sécurité ✅
+
+- **Actions** des 69 intentions (`voix/actions/`) : apps, fichiers et dossiers, Spotlight et « ouvre le 2 », sites et
+  recherches web, son et musique, système (veille, écran, apparence, Wi-Fi, batterie, heure, date, météo), raccourcis
+  Apple et concentration, minuteurs et rappels (gardés sur disque, 0600), tes modules, routines (12 étapes au plus,
+  étapes de la liste seulement). Chaque intention a son action (`ACTIONS` = `INTENTIONS`, vérifié par un test).
+- **Exécuteur** à liste blanche (D-16), **pont** vers l'app avec des ordres fermés (D-15), chemins et adresses filtrés
+  (D-17), « Annule » exact et « Tu confirmes ? » (D-18), modules découverts sans y toucher (D-19), journal (D-20).
+- **Faux Mac** pour les tests : de faux `open`, `osascript`, `networksetup`, `pmset`, `shortcuts`, `mdfind`,
+  `defaults`, `say`, `tableau`, `ambiance`, `quotidien`, `bouclier` qui notent leurs arguments et simulent l'état.
+  52 phrases vérifiées **argument par argument** ; les 8 jeux de phrases exécutés sur le faux Mac (un échantillon par
+  intention et toutes les sensibles) : aucune erreur, chaque appel d'une forme permise, 100 % des actions sensibles
+  passent par « Tu confirmes ? » **avant** le moindre appel, les phrases hors catalogue ne lancent **rien**.
+- **Sécurité** : 37 phrases piégées (« ouvre ; rm -rf ~ », « cherche $(touch …) », « rappelle-moi … do shell
+  script », chemins hors maison, `javascript:`, `file://`…) passent par toute la chaîne : aucun fichier témoin créé,
+  aucun appel hors forme permise. Recherche automatisée dans tout le code : pas de `shell=`, pas d'`eval`, pas
+  d'`os.system`, un seul endroit lance des programmes ; aucune intention de suppression, d'envoi, de paiement ou
+  d'extinction.
+- **Commande** : `voix comprendre "phrase"` (sans rien faire), `voix journal`, `voix oublier`. Sortie réelle (dossier
+  de test, sans apps installées) :
+
+```
+$ voix comprendre "mets le volume à trente"
+Compris : Régler le volume [son.regler]
+  niveau : 30
+$ voix comprendre "éteins le Mac"
+Refus : Je ne fais pas ça, par sécurité.
+$ voix comprendre "ferme tout"
+Compris : Fermer toutes les apps [app.fermer_tout]
+  ⚠️ action sensible : Voix demandera « Tu confirmes ? »
+$ voix comprendre "la soupe de ma grand-mère"
+Pas compris.
+  Essaie : « verrouille l'écran » ; « état de la batterie » ; « mets la musique en pause »
+```
+
+- Corrigé en route : les suggestions proposaient des phrases qui ne marchaient pas chez toi (« lance la routine
+  matin » sans routine « matin », un module absent) ; elles ne proposent plus que tes vrais alias, playlists,
+  raccourcis, routines et modules installés, et un test vérifie que chaque suggestion est comprise.
+
+- `./check.sh` (sortie réelle, lignes de résultat) :
+
+```
+INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 853 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 6 élément(s) divers)
+  ✅ intégrité des autres projets (début)
+  ✅ swift build -c release
+controles-core : 2 réussi(s), 0 échec(s)
+  ✅ swift : contrôles du Core (sans XCTest)
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.002 (0.002) seconds
+  ✅ swift test (XCTest)
+All checks passed!
+  ✅ ruff check
+  ✅ ruff format
+  ✅ mypy
+25 passed in 1.01s
+  ✅ socle (unitaires)
+216 passed in 41.08s
+  ✅ compréhension : grammaire et corpus de phrases (§9.1)
+133 passed in 38.72s
+  ✅ actions, annulation, confirmation (§9.3)
+45 passed in 3.90s
+  ✅ sécurité : injection, recherche automatisée (§9.3)
+  ✅ intégration : moteur, socket, démon
+15 passed in 3.68s
+  ✅ gardien d'intégrité
+TOTAL                         3061    111    96%
   ✅ couverture ≥ 90 % sur voix/
 INTÉGRITÉ OK : identique à etat_avant.json (1 projet(s), 853 fichiers, 0 LaunchAgent(s), 0 réglage(s) Application Support, 6 élément(s) divers)
   ✅ intégrité des autres projets (fin)

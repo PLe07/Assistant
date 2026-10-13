@@ -69,15 +69,15 @@ etapes = [{ intention = "app.fermer_tout" }]
 RACCOURCIS = ["Envoyer au Mac", "Activer concentration", "Désactiver concentration", "Mode lecture", "Heure du café"]
 
 
-def commandes() -> Commandes:
-    return lire(COMMANDES, MAISON)
+def commandes(maison: Path = MAISON) -> Commandes:
+    return lire(COMMANDES, maison)
 
 
-def catalogue(classes: bool = True) -> Catalogue:
+def catalogue(classes: bool = True, maison: Path = MAISON) -> Catalogue:
     connues = apps_connues()
     objets = [objet_app(b, nom, f"/Applications/{nom}.app", connues) for b, nom in APPS]
-    objets += dossiers(MAISON, existe=lambda _p: classes)
+    objets += dossiers(maison, existe=lambda _p: classes)
     objets += sites()
     objets += [Objet("raccourci", r, r, f"raccourci:{r}", (r.lower(),)) for r in RACCOURCIS]
-    objets += commandes().objets()
+    objets += commandes(maison).objets()
     return Catalogue(objets)

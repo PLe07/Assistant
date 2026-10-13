@@ -12,10 +12,10 @@ from __future__ import annotations
 
 import plistlib
 import re
-import subprocess
 from collections.abc import Callable, Iterable
 from pathlib import Path
 
+from voix.actions.executeur import Executeur, ProgrammeRefuse
 from voix.nlu.catalogue import Objet, apps_connues, objet_app
 
 APPS_MAX = 2000
@@ -26,12 +26,12 @@ Executer = Callable[[list[str], float], tuple[int, str]]
 
 
 def executer(args: list[str], delai: float) -> tuple[int, str]:
-    """Une commande de lecture, sans shell, avec un délai maximum."""
+    """Une commande de lecture, par l'exécuteur de la liste blanche (sans shell, avec un délai maximum)."""
     try:
-        proc = subprocess.run(args, capture_output=True, text=True, timeout=delai, check=False)
-    except (OSError, subprocess.TimeoutExpired):
+        r = Executeur().lancer(args[0], args[1:], delai)
+    except ProgrammeRefuse:
         return 127, ""
-    return proc.returncode, proc.stdout
+    return r.code, r.sortie
 
 
 def racines(maison: Path) -> list[Path]:
