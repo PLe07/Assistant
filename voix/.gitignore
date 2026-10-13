@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+app/.build/
+app/.swiftpm/
+# Empreinte « avant » prise sur ton Mac par install.sh (chemins personnels : jamais sur GitHub).
+integrite/mac/
+# Corpus audio et modèles générés ou téléchargés pour le banc d'essai (gros, régénérables).
+.cache-corpus/
+.cache-modeles/
+sorties/

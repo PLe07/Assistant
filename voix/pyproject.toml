@@ -1,0 +1,54 @@
+[project]
+name = "voix"
+version = "1.0.0"
+description = "Commandes vocales en français pour le Mac, 100 % locales"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=1.26",
+    "onnxruntime>=1.17",
+    "rapidfuzz>=3.6",
+    "tokenizers>=0.15",
+    "webrtcvad-wheels>=2.0.14",
+]
+
+[project.optional-dependencies]
+# Apple Silicon : Whisper sur le processeur graphique (installé par install.sh, sans torch).
+mlx = ["mlx>=0.20", "mlx-whisper>=0.4", "numba", "tiktoken", "more-itertools", "tqdm", "scipy", "huggingface_hub"]
+# Mot d'éveil : openwakeword 0.5.1 (modèles inclus), installé sans dépendances par install.sh.
+eveil = ["scipy", "scikit-learn", "tqdm"]
+ia = ["anthropic>=1.0"]
+dev = ["pytest>=8", "pytest-cov>=5", "ruff>=0.6", "mypy>=1.10"]
+
+[project.scripts]
+voix = "voix.cli:main"
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S102", "S307", "S602", "S604", "S605"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["B011"]
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
+warn_unused_ignores = true
+check_untyped_defs = true
+
+[tool.pytest.ini_options]
+addopts = "-m 'not complet'"
+markers = [
+    "complet: long (corpus audio, banc d'essai, mot d'éveil) : ./check.sh --complet",
+    "mac: demande un vrai Mac (sinon ignoré proprement, rejoué par voix verifier)",
+]
+
+[tool.coverage.run]
+source = ["voix"]
+branch = false
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
